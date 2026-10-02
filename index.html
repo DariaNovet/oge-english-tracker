@@ -1,1336 +1,638 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>ОГЭ Английский — Трекер</title>
+    <title>ОГЭ Английский</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <script src="./data/tasks.js"></script>
 
-
     <style>
-
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
-
 
         body {
-
+            margin: 0;
             font-family: Arial, sans-serif;
-
-            background: #f7f3ff;
-
-            color: #29243a;
-
-            min-height: 100vh;
-
+            background: #f4f6fb;
+            color: #202124;
         }
 
-
-        button,
-        textarea {
-            font-family: inherit;
-        }
-
-
-        .app {
-
-            max-width: 600px;
-
+        .container {
+            max-width: 700px;
             margin: 0 auto;
-
             padding: 20px 16px 40px;
-
         }
 
-
-        .hidden {
-            display: none !important;
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
         }
 
-
-        .header {
-
-            background: white;
-
-            border-radius: 24px;
-
-            padding: 24px 20px;
-
-            margin-bottom: 16px;
-
-            box-shadow:
-                0 4px 20px rgba(100, 80, 150, 0.08);
-
+        h2 {
+            margin-top: 0;
         }
 
-
-        .header h1 {
-
-            font-size: 26px;
-
-            margin-bottom: 8px;
-
+        .subtitle {
+            color: #777;
+            margin-bottom: 22px;
         }
-
-
-        .header p {
-
-            color: #817a91;
-
-            font-size: 14px;
-
-        }
-
-
-        .back-button {
-
-            border: none;
-
-            background: transparent;
-
-            color: #7656a3;
-
-            font-size: 15px;
-
-            padding: 0;
-
-            margin-bottom: 16px;
-
-            cursor: pointer;
-
-        }
-
 
         /* =========================
-           ГЛАВНАЯ
+           ПОИСК
         ========================= */
 
-
-        .motivation {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #e9ddff,
-                    #f4ecff
-                );
-
-            border-radius: 20px;
-
-            padding: 18px;
-
-            margin-bottom: 16px;
-
+        .search-box {
+            background: white;
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
         }
 
-
-        .motivation-title {
-
-            font-size: 13px;
-
-            color: #8064ad;
-
-            margin-bottom: 6px;
-
-            font-weight: bold;
-
-        }
-
-
-        .motivation-text {
-
+        .search-title {
+            font-weight: 700;
             font-size: 17px;
-
-            font-weight: 600;
-
-            line-height: 1.4;
-
+            margin-bottom: 10px;
         }
 
-
-        .section-title {
-
-            font-size: 20px;
-
-            font-weight: bold;
-
-            margin: 24px 0 12px;
-
+        .search-input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #d8dce5;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            background: #f8f9fc;
         }
 
+        .search-input:focus {
+            border-color: #6c63ff;
+            background: white;
+        }
+
+        .search-results {
+            margin-top: 12px;
+        }
+
+        .search-result {
+            background: #f8f9fc;
+            border-radius: 12px;
+            padding: 13px;
+            margin-top: 8px;
+            cursor: pointer;
+            border: 1px solid #e4e6ed;
+        }
+
+        .search-result:hover {
+            background: #f0efff;
+        }
+
+        .search-result-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .search-result-code {
+            font-family: monospace;
+            color: #666;
+        }
+
+        .search-result-status {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .search-empty {
+            color: #777;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* =========================
+           РАЗДЕЛЫ
+        ========================= */
 
         .sections {
-
             display: grid;
-
             gap: 12px;
-
         }
-
 
         .section {
-
             background: white;
-
-            border-radius: 20px;
-
             padding: 18px;
-
-            box-shadow:
-                0 4px 20px rgba(100, 80, 150, 0.06);
-
+            border-radius: 16px;
             cursor: pointer;
-
-            transition: 0.2s;
-
-        }
-
-
-        .section:active {
-
-            transform: scale(0.98);
-
-        }
-
-
-        .section-number {
-
-            color: #8666b5;
-
-            font-size: 13px;
-
-            font-weight: bold;
-
-            margin-bottom: 5px;
-
-        }
-
-
-        .section-name {
-
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
             font-size: 17px;
-
-            font-weight: 600;
-
+            font-weight: 700;
         }
 
-
-        .bottom {
-
-            margin-top: 24px;
-
-            display: grid;
-
-            grid-template-columns: 1fr 1fr;
-
-            gap: 12px;
-
+        .section:hover {
+            background: #f8f7ff;
         }
-
-
-        .bottom-button {
-
-            border: none;
-
-            background: white;
-
-            border-radius: 18px;
-
-            padding: 16px 10px;
-
-            font-size: 14px;
-
-            color: #40364e;
-
-            box-shadow:
-                0 4px 20px rgba(100, 80, 150, 0.06);
-
-            cursor: pointer;
-
-        }
-
 
         /* =========================
-           ЗАДАНИЯ
+           СТРАНИЦЫ
         ========================= */
 
+        .page {
+            display: none;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 9px 14px;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+
+        /* =========================
+           ВАРИАНТЫ И ЗАДАНИЯ
+        ========================= */
+
+        .variant {
+            margin-bottom: 24px;
+        }
 
         .variant-title {
-
             font-size: 18px;
-
-            font-weight: bold;
-
-            margin: 24px 0 12px;
-
+            font-weight: 700;
+            margin-bottom: 10px;
         }
-
 
         .task-card {
-
             background: white;
-
-            border-radius: 20px;
-
-            padding: 18px;
-
-            margin-bottom: 12px;
-
-            box-shadow:
-                0 4px 20px rgba(100, 80, 150, 0.06);
-
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 8px;
             cursor: pointer;
-
-            position: relative;
-
+            border: 1px solid #e5e7ed;
         }
 
-
-        .task-number {
-
-            font-size: 18px;
-
-            font-weight: bold;
-
+        .task-card:hover {
+            background: #fafaff;
         }
 
+        .task-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .task-name {
+            font-weight: 700;
+        }
 
         .task-code {
-
-            display: inline-block;
-
-            margin-top: 8px;
-
-            padding: 6px 10px;
-
-            background: #f0e8ff;
-
-            border-radius: 8px;
-
-            color: #74539e;
-
-            font-size: 13px;
-
             font-family: monospace;
-
+            color: #666;
+            margin-top: 5px;
         }
-
 
         .task-status {
-
-            position: absolute;
-
-            right: 18px;
-
-            top: 18px;
-
-            font-size: 13px;
-
-            font-weight: bold;
-
+            margin-top: 8px;
+            font-size: 14px;
+            color: #777;
         }
-
 
         .status-correct {
-
-            color: #25a35a;
-
+            color: #258a48;
+            font-weight: 600;
         }
-
 
         .status-wrong {
-
-            color: #e34c59;
-
+            color: #d43b3b;
+            font-weight: 600;
         }
-
-
-        .status-none {
-
-            color: #aaa;
-
-        }
-
-
-        .task-progress {
-
-            margin-top: 10px;
-
-            font-size: 12px;
-
-            color: #817a91;
-
-        }
-
-
-        /* =========================
-           МОДАЛЬНОЕ ОКНО
-        ========================= */
-
-
-        .modal {
-
-            position: fixed;
-
-            inset: 0;
-
-            background: rgba(41, 36, 58, 0.45);
-
-            display: flex;
-
-            align-items: flex-end;
-
-            justify-content: center;
-
-            z-index: 1000;
-
-            padding: 12px;
-
-        }
-
-
-        .modal-content {
-
-            width: 100%;
-
-            max-width: 600px;
-
-            background: white;
-
-            border-radius: 28px;
-
-            padding: 24px 20px 28px;
-
-            max-height: 90vh;
-
-            overflow-y: auto;
-
-        }
-
-
-        .modal-title {
-
-            font-size: 23px;
-
-            font-weight: bold;
-
-            margin-bottom: 6px;
-
-        }
-
-
-        .modal-code {
-
-            display: inline-block;
-
-            background: #f0e8ff;
-
-            color: #74539e;
-
-            border-radius: 8px;
-
-            padding: 6px 10px;
-
-            font-family: monospace;
-
-            font-size: 13px;
-
-            margin-bottom: 20px;
-
-        }
-
-
-        .modal-subtitle {
-
-            font-size: 14px;
-
-            color: #817a91;
-
-            margin-bottom: 12px;
-
-        }
-
-
-        .result-buttons {
-
-            display: grid;
-
-            grid-template-columns: 1fr 1fr;
-
-            gap: 12px;
-
-            margin-bottom: 20px;
-
-        }
-
-
-        .result-button {
-
-            border: none;
-
-            border-radius: 16px;
-
-            padding: 16px;
-
-            font-size: 16px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-        }
-
-
-        .correct-button {
-
-            background: #dcf7e7;
-
-            color: #20834a;
-
-        }
-
-
-        .wrong-button {
-
-            background: #ffe0e3;
-
-            color: #c93645;
-
-        }
-
-
-        /* =========================
-           ПОЛЕ ОШИБКИ
-        ========================= */
-
-
-        .error-form {
-
-            margin-top: 8px;
-
-        }
-
-
-        .error-label {
-
-            display: block;
-
-            font-size: 15px;
-
-            font-weight: bold;
-
-            margin-bottom: 8px;
-
-        }
-
-
-        .error-textarea {
-
-            width: 100%;
-
-            min-height: 110px;
-
-            resize: vertical;
-
-            border: 1px solid #ddd6e8;
-
-            border-radius: 14px;
-
-            padding: 13px;
-
-            font-size: 14px;
-
-            color: #29243a;
-
-            background: #faf8ff;
-
-            outline: none;
-
-        }
-
-
-        .error-textarea:focus {
-
-            border-color: #9b7bd0;
-
-            background: white;
-
-        }
-
-
-        .error-textarea::placeholder {
-
-            color: #aaa2b3;
-
-        }
-
-
-        .save-error-button {
-
-            width: 100%;
-
-            margin-top: 10px;
-
-            border: none;
-
-            border-radius: 15px;
-
-            padding: 14px;
-
-            background: #ffe0e3;
-
-            color: #c93645;
-
-            font-size: 15px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-        }
-
-
-        /* =========================
-           ИСТОРИЯ
-        ========================= */
-
-
-        .history {
-
-            margin-top: 24px;
-
-        }
-
-
-        .history-title {
-
-            font-size: 17px;
-
-            font-weight: bold;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        .history-item {
-
-            background: #f8f6fc;
-
-            border-radius: 14px;
-
-            padding: 12px;
-
-            margin-bottom: 8px;
-
-        }
-
-
-        .history-top {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-        }
-
-
-        .history-result {
-
-            font-weight: bold;
-
-            font-size: 14px;
-
-        }
-
-
-        .history-date {
-
-            font-size: 12px;
-
-            color: #817a91;
-
-            margin-top: 5px;
-
-        }
-
-
-        .history-error {
-
-            font-size: 13px;
-
-            line-height: 1.4;
-
-            margin-top: 8px;
-
-            background: white;
-
-            border-radius: 10px;
-
-            padding: 9px;
-
-        }
-
-
-        .history-actions {
-
-            display: flex;
-
-            gap: 6px;
-
-            margin-top: 9px;
-
-        }
-
-
-        .small-button {
-
-            border: none;
-
-            border-radius: 9px;
-
-            padding: 7px 10px;
-
-            font-size: 12px;
-
-            cursor: pointer;
-
-        }
-
-
-        .edit-button {
-
-            background: #e9ddff;
-
-            color: #684a94;
-
-        }
-
-
-        .delete-button {
-
-            background: #ffe3e5;
-
-            color: #c93645;
-
-        }
-
-
-        .close-button {
-
-            width: 100%;
-
-            margin-top: 18px;
-
-            border: none;
-
-            background: #f0edf5;
-
-            color: #554c63;
-
-            border-radius: 15px;
-
-            padding: 14px;
-
-            font-size: 15px;
-
-            cursor: pointer;
-
-        }
-
 
         /* =========================
            СТАТИСТИКА
         ========================= */
 
-
         .stats-grid {
-
             display: grid;
-
-            grid-template-columns: 1fr 1fr;
-
-            gap: 12px;
-
-            margin-bottom: 16px;
-
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
         }
-
 
         .stat-card {
-
             background: white;
-
-            border-radius: 20px;
-
-            padding: 18px;
-
-            box-shadow:
-                0 4px 20px rgba(100, 80, 150, 0.06);
-
+            border-radius: 14px;
+            padding: 16px;
         }
 
-
-        .stat-value {
-
-            font-size: 27px;
-
-            font-weight: bold;
-
-            margin-bottom: 5px;
-
+        .stat-number {
+            font-size: 25px;
+            font-weight: 700;
         }
-
 
         .stat-label {
-
-            color: #817a91;
-
-            font-size: 13px;
-
+            color: #777;
+            margin-top: 5px;
         }
-
-
-        .stats-block {
-
-            background: white;
-
-            border-radius: 20px;
-
-            padding: 18px;
-
-            margin-bottom: 12px;
-
-            box-shadow:
-                0 4px 20px rgba(100, 80, 150, 0.06);
-
-        }
-
-
-        .stats-block-title {
-
-            font-size: 17px;
-
-            font-weight: bold;
-
-            margin-bottom: 14px;
-
-        }
-
-
-        .stats-row {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: flex-start;
-
-            gap: 10px;
-
-            padding: 10px 0;
-
-            border-bottom: 1px solid #eeeaf3;
-
-            font-size: 14px;
-
-        }
-
-
-        .stats-row:last-child {
-
-            border-bottom: none;
-
-        }
-
-
-        .stats-row-value {
-
-            font-weight: bold;
-
-        }
-
-
-        .empty {
-
-            background: white;
-
-            border-radius: 20px;
-
-            padding: 24px;
-
-            color: #817a91;
-
-            text-align: center;
-
-        }
-
 
         /* =========================
            ОШИБКИ
         ========================= */
 
-
         .error-card {
-
             background: white;
-
-            border-radius: 20px;
-
-            padding: 18px;
-
-            margin-bottom: 12px;
-
-            box-shadow:
-                0 4px 20px rgba(100, 80, 150, 0.06);
-
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 10px;
             cursor: pointer;
-
         }
 
-
-        .error-card-title {
-
-            font-size: 17px;
-
-            font-weight: bold;
-
+        .error-card:hover {
+            background: #fffafa;
         }
 
+        .error-title {
+            font-weight: 700;
+        }
 
-        .error-card-code {
-
+        .error-code {
             font-family: monospace;
-
-            font-size: 13px;
-
-            color: #74539e;
-
-            margin-top: 7px;
-
+            color: #666;
+            margin-top: 4px;
         }
 
+        .error-count {
+            color: #d43b3b;
+            font-size: 14px;
+            margin-top: 6px;
+        }
 
-        .error-card-info {
+        .error-text {
+            margin-top: 10px;
+            color: #444;
+            white-space: pre-wrap;
+        }
 
-            font-size: 12px;
+        /* =========================
+           МОДАЛЬНОЕ ОКНО
+        ========================= */
 
-            color: #817a91;
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
+        .modal {
+            background: white;
+            max-width: 600px;
+            margin: 30px auto;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .modal-title {
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .modal-code {
+            font-family: monospace;
+            color: #666;
+            margin: 8px 0 18px;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .modal-button {
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .correct-button {
+            background: #dff5e5;
+        }
+
+        .wrong-button {
+            background: #ffe2e2;
+        }
+
+        .close-button {
+            margin-top: 10px;
+            width: 100%;
+            background: #eee;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .wrong-form {
+            margin-top: 16px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 110px;
+            resize: vertical;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #d8dce5;
+            font-family: inherit;
+            font-size: 15px;
+        }
+
+        .save-button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 13px;
+            border: none;
+            border-radius: 12px;
+            background: #6c63ff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* =========================
+           ИСТОРИЯ
+        ========================= */
+
+        .history {
+            margin-top: 20px;
+        }
+
+        .history-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .history-item {
+            background: #f6f7fa;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .history-result {
+            font-weight: 700;
+        }
+
+        .history-date {
+            color: #777;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .history-error {
             margin-top: 8px;
-
+            white-space: pre-wrap;
         }
 
-
-        .error-card-note {
-
-            margin-top: 9px;
-
-            padding: 10px;
-
-            background: #fff6f6;
-
-            border-radius: 10px;
-
-            font-size: 13px;
-
-            line-height: 1.4;
-
+        .history-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
         }
 
+        .small-button {
+            border: none;
+            border-radius: 8px;
+            padding: 7px 10px;
+            cursor: pointer;
+        }
 
+        .edit-button {
+            background: #e7e5ff;
+        }
+
+        .delete-button {
+            background: #ffe0e0;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 14px;
+            padding: 18px;
+            color: #777;
+        }
     </style>
-
 </head>
-
 
 <body>
 
+<div class="container">
 
-<div class="app">
+    <!-- =========================
+         ГЛАВНАЯ
+    ========================= -->
 
+    <div id="homePage" class="page" style="display: block;">
 
-    <!-- ГЛАВНАЯ -->
+        <h1>ОГЭ Английский</h1>
 
-
-    <div id="home-page">
-
-
-        <div class="header">
-
-            <h1>ОГЭ Английский 🇬🇧</h1>
-
-            <p>Трекер подготовки</p>
-
+        <div class="subtitle">
+            Трекер подготовки
         </div>
 
+        <!-- ПОИСК -->
 
-        <div class="motivation">
+        <div class="search-box">
 
-            <div class="motivation-title">
-                МОТИВАЦИЯ НА СЕГОДНЯ
+            <div class="search-title">
+                🔎 Поиск по коду задания
             </div>
 
-
-            <div
-                class="motivation-text"
-                id="motivation-text"
+            <input
+                id="searchInput"
+                class="search-input"
+                type="text"
+                placeholder="Введите код, например 42BF66"
+                autocomplete="off"
+                oninput="searchTasks()"
             >
-                Маленький шаг сегодня — большой результат на экзамене 💜
-            </div>
+
+            <div id="searchResults" class="search-results"></div>
 
         </div>
 
-
-        <div class="section-title">
-            Разделы
-        </div>
-
+        <!-- РАЗДЕЛЫ -->
 
         <div class="sections">
 
-
-            <div
-                class="section"
-                onclick="openSection('1-5')"
-            >
-
-                <div class="section-number">
-                    РАЗДЕЛ 1
-                </div>
-
-                <div class="section-name">
-                    Задания 1–5
-                </div>
-
+            <div class="section" onclick="openSection('1-5')">
+                1–5
             </div>
 
-
-            <div
-                class="section"
-                onclick="openSection('6-11')"
-            >
-
-                <div class="section-number">
-                    РАЗДЕЛ 2
-                </div>
-
-                <div class="section-name">
-                    Задания 6–11
-                </div>
-
+            <div class="section" onclick="openSection('6-11')">
+                6–11
             </div>
 
-
-            <div
-                class="section"
-                onclick="openSection('12')"
-            >
-
-                <div class="section-number">
-                    РАЗДЕЛ 3
-                </div>
-
-                <div class="section-name">
-                    Задание 12
-                </div>
-
+            <div class="section" onclick="openSection('12')">
+                12
             </div>
 
-
-            <div
-                class="section"
-                onclick="openSection('13-19')"
-            >
-
-                <div class="section-number">
-                    РАЗДЕЛ 4
-                </div>
-
-                <div class="section-name">
-                    Задания 13–19
-                </div>
-
+            <div class="section" onclick="openSection('13-19')">
+                13–19
             </div>
 
-
-            <div
-                class="section"
-                onclick="openSection('20-28')"
-            >
-
-                <div class="section-number">
-                    РАЗДЕЛ 5
-                </div>
-
-                <div class="section-name">
-                    Задания 20–28
-                </div>
-
+            <div class="section" onclick="openSection('20-28')">
+                20–28
             </div>
 
-
-            <div
-                class="section"
-                onclick="openSection('29-34')"
-            >
-
-                <div class="section-number">
-                    РАЗДЕЛ 6
-                </div>
-
-                <div class="section-name">
-                    Задания 29–34
-                </div>
-
+            <div class="section" onclick="openSection('29-34')">
+                29–34
             </div>
 
-
-        </div>
-
-
-        <div class="bottom">
-
-
-            <button
-                class="bottom-button"
-                onclick="showStats()"
-            >
+            <div class="section" onclick="openStats()">
                 📊 Статистика
-            </button>
+            </div>
 
-
-            <button
-                class="bottom-button"
-                onclick="showErrors()"
-            >
+            <div class="section" onclick="openErrors()">
                 ❌ Мои ошибки
-            </button>
-
+            </div>
 
         </div>
-
 
     </div>
 
 
-    <!-- РАЗДЕЛ -->
+    <!-- =========================
+         РАЗДЕЛ
+    ========================= -->
 
+    <div id="sectionPage" class="page">
 
-    <div
-        id="section-page"
-        class="hidden"
-    >
-
-
-        <button
-            class="back-button"
-            onclick="goHome()"
-        >
+        <div class="back-button" onclick="goHome()">
             ← Назад
-        </button>
-
-
-        <div class="header">
-
-            <h1 id="section-title"></h1>
-
-            <p>
-                Нажми на задание, чтобы отметить результат
-            </p>
-
         </div>
 
+        <h2 id="sectionTitle"></h2>
 
-        <div id="tasks-list"></div>
-
+        <div id="sectionContent"></div>
 
     </div>
 
 
-    <!-- СТАТИСТИКА -->
+    <!-- =========================
+         СТАТИСТИКА
+    ========================= -->
 
+    <div id="statsPage" class="page">
 
-    <div
-        id="stats-page"
-        class="hidden"
-    >
-
-
-        <button
-            class="back-button"
-            onclick="goHome()"
-        >
+        <div class="back-button" onclick="goHome()">
             ← Назад
-        </button>
-
-
-        <div class="header">
-
-            <h1>📊 Статистика</h1>
-
-            <p>
-                Твоя подготовка
-            </p>
-
         </div>
 
+        <h2>📊 Статистика</h2>
 
-        <div id="stats-content"></div>
-
+        <div id="statsContent"></div>
 
     </div>
 
 
-    <!-- МОИ ОШИБКИ -->
+    <!-- =========================
+         МОИ ОШИБКИ
+    ========================= -->
 
+    <div id="errorsPage" class="page">
 
-    <div
-        id="errors-page"
-        class="hidden"
-    >
-
-
-        <button
-            class="back-button"
-            onclick="goHome()"
-        >
+        <div class="back-button" onclick="goHome()">
             ← Назад
-        </button>
-
-
-        <div class="header">
-
-            <h1>❌ Мои ошибки</h1>
-
-            <p>
-                Здесь сохраняются задания, в которых были ошибки
-            </p>
-
         </div>
 
+        <h2>❌ Мои ошибки</h2>
 
-        <div id="errors-content"></div>
-
+        <div id="errorsContent"></div>
 
     </div>
-
 
 </div>
 
 
-<!-- МОДАЛЬНОЕ ОКНО -->
+<!-- =========================
+     МОДАЛЬНОЕ ОКНО ЗАДАНИЯ
+========================= -->
 
+<div id="modalOverlay" class="modal-overlay">
 
-<div
-    id="task-modal"
-    class="modal hidden"
-    onclick="closeModalOutside(event)"
->
+    <div class="modal">
 
+        <div id="modalTitle" class="modal-title"></div>
 
-    <div
-        class="modal-content"
-        onclick="event.stopPropagation()"
-    >
+        <div id="modalCode" class="modal-code"></div>
 
-
-        <div
-            class="modal-title"
-            id="modal-task-title"
-        ></div>
-
-
-        <div
-            class="modal-code"
-            id="modal-task-code"
-        ></div>
-
-
-        <div class="modal-subtitle">
-            Как выполнено задание?
-        </div>
-
-
-        <div class="result-buttons">
-
+        <div class="modal-buttons">
 
             <button
-                class="result-button correct-button"
+                class="modal-button correct-button"
                 onclick="saveCorrectAttempt()"
             >
                 ✓ Верно
             </button>
 
-
             <button
-                class="result-button wrong-button"
-                onclick="showErrorForm()"
+                class="modal-button wrong-button"
+                onclick="showWrongForm()"
             >
                 ✕ Неверно
             </button>
-
 
         </div>
 
 
         <!-- ФОРМА ОШИБКИ -->
 
+        <div id="wrongForm" class="wrong-form" style="display: none;">
 
-        <div
-            id="error-form"
-            class="error-form hidden"
-        >
-
-
-            <label
-                class="error-label"
-                for="error-text"
-            >
+            <div>
                 В чём была ошибка?
-            </label>
-
+            </div>
 
             <textarea
-                id="error-text"
-                class="error-textarea"
-                placeholder="Например: перепутала Present Perfect и Past Simple"
+                id="wrongText"
+                placeholder="Напишите своими словами, что было неправильно..."
             ></textarea>
 
-
             <button
-                class="save-error-button"
+                class="save-button"
                 onclick="saveWrongAttempt()"
             >
                 Сохранить ошибку
             </button>
-
 
         </div>
 
 
         <!-- ИСТОРИЯ -->
 
+        <div class="history">
 
-        <div
-            id="history-section"
-            class="history"
-        ></div>
+            <div class="history-title">
+                История попыток
+            </div>
+
+            <div id="historyContent"></div>
+
+        </div>
 
 
         <button
@@ -1340,816 +642,669 @@
             Закрыть
         </button>
 
-
     </div>
-
 
 </div>
 
 
 <script>
 
+    /* =====================================================
+       НАСТРОЙКИ
+    ===================================================== */
 
-    /* =========================
-       TELEGRAM
-    ========================= */
-
-
-    const tg =
-        window.Telegram &&
-        window.Telegram.WebApp
-            ? window.Telegram.WebApp
-            : null;
-
-
-    if (tg) {
-
-        tg.ready();
-
-        tg.expand();
-
-    }
-
-
-    /* =========================
-       ХРАНЕНИЕ
-    ========================= */
-
-
-    const STORAGE_KEY =
-        "oge_english_tracker_attempts";
-
-
-    let attempts;
-
-
-    try {
-
-        attempts =
-            JSON.parse(
-                localStorage.getItem(
-                    STORAGE_KEY
-                ) || "[]"
-            );
-
-        if (!Array.isArray(attempts)) {
-
-            attempts = [];
-
-        }
-
-    } catch (error) {
-
-        attempts = [];
-
-    }
-
+    const STORAGE_KEY = "oge_english_tracker_attempts";
 
     let selectedTask = null;
 
 
-    /* =========================
-       СОХРАНЕНИЕ
-    ========================= */
+    /* =====================================================
+       LOCAL STORAGE
+    ===================================================== */
+
+    function getAttempts() {
+
+        try {
+
+            const data = localStorage.getItem(STORAGE_KEY);
+
+            if (!data) {
+                return [];
+            }
+
+            const parsed = JSON.parse(data);
+
+            return Array.isArray(parsed) ? parsed : [];
+
+        } catch (error) {
+
+            console.error("Ошибка чтения данных:", error);
+
+            return [];
+        }
+    }
 
 
-    function saveData() {
+    function saveAttempts(attempts) {
 
         localStorage.setItem(
             STORAGE_KEY,
             JSON.stringify(attempts)
         );
-
     }
 
 
-    /* =========================
-       МОТИВАЦИЯ
-    ========================= */
+    /* =====================================================
+       ПОИСК
+    ===================================================== */
+
+    function searchTasks() {
+
+        const input = document
+            .getElementById("searchInput")
+            .value
+            .trim()
+            .toUpperCase();
+
+        const results = document.getElementById("searchResults");
+
+        results.innerHTML = "";
 
 
-    const motivations = [
-
-        "Маленький шаг сегодня — большой результат на экзамене 💜",
-
-        "Не нужно сделать всё сразу. Сделай одно задание сегодня ✨",
-
-        "Каждая ошибка показывает, что именно нужно повторить 💜",
-
-        "Регулярность важнее идеального результата.",
-
-        "Ты уже готовишься — значит, становишься сильнее с каждым днём.",
-
-        "Ещё одно задание — ещё один шаг к цели 🌷",
-
-        "Ошибки — это часть подготовки, а не провал."
-
-    ];
+        if (!input) {
+            return;
+        }
 
 
-    function setMotivation() {
+        const found = TASKS.filter(function(task) {
 
-        const today =
-            new Date();
+            const code = String(task.code).toUpperCase();
 
+            const variant = String(task.variant);
 
-        const dayNumber =
-            Math.floor(
-                today.getTime() /
-                (1000 * 60 * 60 * 24)
+            const number = String(task.number);
+
+            return (
+                code.includes(input) ||
+                variant.includes(input) ||
+                number.includes(input)
             );
 
-
-        const index =
-            dayNumber %
-            motivations.length;
+        });
 
 
-        document.getElementById(
-            "motivation-text"
-        ).textContent =
-            motivations[index];
+        if (found.length === 0) {
+
+            results.innerHTML = `
+                <div class="search-empty">
+                    Ничего не найдено
+                </div>
+            `;
+
+            return;
+        }
+
+
+        found.forEach(function(task) {
+
+            const status = getTaskStatus(task.id);
+
+            const result = document.createElement("div");
+
+            result.className = "search-result";
+
+            result.innerHTML = `
+                <div class="search-result-title">
+                    Вариант ${task.variant} · Задание ${task.number}
+                </div>
+
+                <div class="search-result-code">
+                    ${escapeHtml(task.code)}
+                </div>
+
+                <div class="search-result-status">
+                    ${status.text}
+                </div>
+            `;
+
+            result.onclick = function() {
+
+                openTask(task);
+
+            };
+
+            results.appendChild(result);
+
+        });
 
     }
 
 
-    /* =========================
-       РАЗДЕЛ
-    ========================= */
+    /* =====================================================
+       ГЛАВНАЯ / НАВИГАЦИЯ
+    ===================================================== */
 
+    function hideAllPages() {
+
+        document.getElementById("homePage").style.display = "none";
+
+        document.getElementById("sectionPage").style.display = "none";
+
+        document.getElementById("statsPage").style.display = "none";
+
+        document.getElementById("errorsPage").style.display = "none";
+
+    }
+
+
+    function goHome() {
+
+        hideAllPages();
+
+        document.getElementById("homePage").style.display = "block";
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* =====================================================
+       ОТКРЫТИЕ РАЗДЕЛА
+    ===================================================== */
 
     function openSection(section) {
 
+        hideAllPages();
 
-        document.getElementById(
-            "home-page"
-        ).classList.add(
-            "hidden"
-        );
+        document.getElementById("sectionPage").style.display = "block";
 
+        const title = document.getElementById("sectionTitle");
 
-        document.getElementById(
-            "stats-page"
-        ).classList.add(
-            "hidden"
-        );
+        const content = document.getElementById("sectionContent");
+
+        title.textContent = "Задания " + section;
+
+        content.innerHTML = "";
 
 
-        document.getElementById(
-            "errors-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "section-page"
-        ).classList.remove(
-            "hidden"
-        );
-
-
-        const titles = {
-
-            "1-5": "Задания 1–5",
-
-            "6-11": "Задания 6–11",
-
-            "12": "Задание 12",
-
-            "13-19": "Задания 13–19",
-
-            "20-28": "Задания 20–28",
-
-            "29-34": "Задания 29–34"
-
-        };
-
-
-        document.getElementById(
-            "section-title"
-        ).textContent =
-            titles[section];
-
-
-        const list =
-            document.getElementById(
-                "tasks-list"
-            );
-
-
-        list.innerHTML = "";
-
+        /*
+            Пока реальные коды есть только для раздела 1–5.
+        */
 
         if (section !== "1-5") {
 
-            list.innerHTML = `
-
+            content.innerHTML = `
                 <div class="empty">
-
                     Задания пока не добавлены.
-
                 </div>
-
             `;
 
-            return;
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
 
+            return;
         }
 
 
-        let currentVariant = 0;
+        for (let variant = 1; variant <= 19; variant++) {
 
+            const variantTasks = TASKS.filter(function(task) {
 
-        TASKS.forEach(
-            task => {
+                return task.variant === variant;
 
+            });
 
-                if (
-                    task.variant !==
-                    currentVariant
-                ) {
 
-
-                    currentVariant =
-                        task.variant;
-
-
-                    const variantTitle =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    variantTitle.className =
-                        "variant-title";
-
-
-                    variantTitle.textContent =
-                        "Вариант " +
-                        task.variant;
-
-
-                    list.appendChild(
-                        variantTitle
-                    );
-
-                }
-
-
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                card.className =
-                    "task-card";
-
-
-                card.onclick =
-                    function() {
-
-                        openTask(task);
-
-                    };
-
-
-                const taskAttempts =
-                    attempts.filter(
-                        attempt =>
-                            attempt.taskId ===
-                            task.id
-                    );
-
-
-                let statusText =
-                    "Не выполнено";
-
-
-                let statusClass =
-                    "status-none";
-
-
-                if (
-                    taskAttempts.length
-                ) {
-
-
-                    const lastAttempt =
-                        taskAttempts[
-                            taskAttempts.length - 1
-                        ];
-
-
-                    if (
-                        lastAttempt.result ===
-                        "correct"
-                    ) {
-
-                        statusText =
-                            "✓ Верно";
-
-                        statusClass =
-                            "status-correct";
-
-                    } else {
-
-                        statusText =
-                            "✕ Ошибка";
-
-                        statusClass =
-                            "status-wrong";
-
-                    }
-
-                }
-
-
-                card.innerHTML = `
-
-                    <div class="task-number">
-
-                        Задание ${task.number}
-
-                    </div>
-
-
-                    <div class="task-code">
-
-                        ${task.code}
-
-                    </div>
-
-
-                    <div
-                        class="task-status ${statusClass}"
-                    >
-
-                        ${statusText}
-
-                    </div>
-
-
-                    ${
-                        taskAttempts.length
-                        ?
-
-                        `<div class="task-progress">
-                            Попыток: ${taskAttempts.length}
-                        </div>`
-
-                        :
-
-                        ""
-                    }
-
-                `;
-
-
-                list.appendChild(card);
-
+            if (variantTasks.length === 0) {
+                continue;
             }
-        );
 
-    }
 
+            const variantBlock = document.createElement("div");
 
-    /* =========================
-       ОТКРЫТЬ ЗАДАНИЕ
-    ========================= */
+            variantBlock.className = "variant";
 
 
-    function openTask(task) {
+            const variantTitle = document.createElement("div");
 
+            variantTitle.className = "variant-title";
 
-        selectedTask =
-            task;
+            variantTitle.textContent = "Вариант " + variant;
 
 
-        document.getElementById(
-            "modal-task-title"
-        ).textContent =
-            "Задание " +
-            task.number;
+            variantBlock.appendChild(variantTitle);
 
 
-        document.getElementById(
-            "modal-task-code"
-        ).textContent =
-            task.code;
+            variantTasks.forEach(function(task) {
 
+                const card = createTaskCard(task);
 
-        document.getElementById(
-            "error-form"
-        ).classList.add(
-            "hidden"
-        );
+                variantBlock.appendChild(card);
 
+            });
 
-        document.getElementById(
-            "error-text"
-        ).value =
-            "";
 
-
-        renderHistory();
-
-
-        document.getElementById(
-            "task-modal"
-        ).classList.remove(
-            "hidden"
-        );
-
-    }
-
-
-    /* =========================
-       ПОКАЗАТЬ ПОЛЕ ОШИБКИ
-    ========================= */
-
-
-    function showErrorForm() {
-
-
-        document.getElementById(
-            "error-form"
-        ).classList.remove(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "error-text"
-        ).focus();
-
-    }
-
-
-    /* =========================
-       ВЕРНО
-    ========================= */
-
-
-    function saveCorrectAttempt() {
-
-
-        if (!selectedTask) {
-            return;
-        }
-
-
-        const attempt = {
-
-            id:
-                Date.now().toString() +
-                Math.random()
-                    .toString(16)
-                    .slice(2),
-
-            taskId:
-                selectedTask.id,
-
-            variant:
-                selectedTask.variant,
-
-            number:
-                selectedTask.number,
-
-            code:
-                selectedTask.code,
-
-            result:
-                "correct",
-
-            errorText:
-                "",
-
-            date:
-                new Date().toISOString()
-
-        };
-
-
-        attempts.push(
-            attempt
-        );
-
-
-        saveData();
-
-
-        closeModal();
-
-
-        openSection("1-5");
-
-    }
-
-
-    /* =========================
-       ОШИБКА
-    ========================= */
-
-
-    function saveWrongAttempt() {
-
-
-        if (!selectedTask) {
-            return;
-        }
-
-
-        const errorText =
-            document.getElementById(
-                "error-text"
-            ).value.trim();
-
-
-        if (!errorText) {
-
-            alert(
-                "Напиши, в чём была ошибка."
-            );
-
-            return;
+            content.appendChild(variantBlock);
 
         }
 
 
-        const attempt = {
-
-            id:
-                Date.now().toString() +
-                Math.random()
-                    .toString(16)
-                    .slice(2),
-
-            taskId:
-                selectedTask.id,
-
-            variant:
-                selectedTask.variant,
-
-            number:
-                selectedTask.number,
-
-            code:
-                selectedTask.code,
-
-            result:
-                "wrong",
-
-            errorText:
-                errorText,
-
-            date:
-                new Date().toISOString()
-
-        };
-
-
-        attempts.push(
-            attempt
-        );
-
-
-        saveData();
-
-
-        closeModal();
-
-
-        openSection("1-5");
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
 
     }
 
 
-    /* =========================
-       ИСТОРИЯ
-    ========================= */
+    /* =====================================================
+       СОЗДАНИЕ КАРТОЧКИ ЗАДАНИЯ
+    ===================================================== */
+
+    function createTaskCard(task) {
+
+        const card = document.createElement("div");
+
+        card.className = "task-card";
+
+        const status = getTaskStatus(task.id);
 
 
-    function renderHistory() {
+        let statusClass = "";
 
+        if (status.result === "correct") {
 
-        if (!selectedTask) {
-            return;
+            statusClass = "status-correct";
+
+        } else if (status.result === "wrong") {
+
+            statusClass = "status-wrong";
+
         }
 
 
-        const history =
-            document.getElementById(
-                "history-section"
-            );
+        card.innerHTML = `
 
+            <div class="task-top">
 
-        const taskAttempts =
-            attempts.filter(
-                attempt =>
-                    attempt.taskId ===
-                    selectedTask.id
-            );
-
-
-        if (
-            taskAttempts.length === 0
-        ) {
-
-            history.innerHTML = `
-
-                <div class="history-title">
-                    История
+                <div class="task-name">
+                    Задание ${task.number}
                 </div>
 
-                <div class="empty">
-                    Пока нет попыток.
-                </div>
+            </div>
 
-            `;
+            <div class="task-code">
+                ${escapeHtml(task.code)}
+            </div>
 
-            return;
-
-        }
-
-
-        history.innerHTML = `
-
-            <div class="history-title">
-                История попыток
+            <div class="task-status ${statusClass}">
+                ${status.text}
             </div>
 
         `;
 
 
-        [...taskAttempts]
+        card.onclick = function() {
+
+            openTask(task);
+
+        };
+
+
+        return card;
+
+    }
+
+
+    /* =====================================================
+       СТАТУС ЗАДАНИЯ
+    ===================================================== */
+
+    function getTaskStatus(taskId) {
+
+        const attempts = getAttempts().filter(function(attempt) {
+
+            return attempt.taskId === taskId;
+
+        });
+
+
+        if (attempts.length === 0) {
+
+            return {
+                text: "Не выполнено",
+                result: null
+            };
+
+        }
+
+
+        const lastAttempt = attempts[attempts.length - 1];
+
+
+        if (lastAttempt.result === "correct") {
+
+            return {
+                text: "✓ Верно",
+                result: "correct"
+            };
+
+        }
+
+
+        return {
+            text: "✕ Ошибка",
+            result: "wrong"
+        };
+
+    }
+
+
+    /* =====================================================
+       ОТКРЫТИЕ ЗАДАНИЯ
+    ===================================================== */
+
+    function openTask(task) {
+
+        selectedTask = task;
+
+
+        document.getElementById("modalTitle").textContent =
+            "Вариант " +
+            task.variant +
+            " · Задание " +
+            task.number;
+
+
+        document.getElementById("modalCode").textContent =
+            "Код: " + task.code;
+
+
+        document.getElementById("wrongForm").style.display = "none";
+
+        document.getElementById("wrongText").value = "";
+
+
+        document.getElementById("modalOverlay").style.display = "block";
+
+        renderHistory();
+
+
+        document.body.style.overflow = "hidden";
+
+    }
+
+
+    /* =====================================================
+       ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА
+    ===================================================== */
+
+    function closeModal() {
+
+        document.getElementById("modalOverlay").style.display = "none";
+
+        document.body.style.overflow = "";
+
+        selectedTask = null;
+
+    }
+
+
+    /* =====================================================
+       ФОРМА ОШИБКИ
+    ===================================================== */
+
+    function showWrongForm() {
+
+        document.getElementById("wrongForm").style.display = "block";
+
+        document.getElementById("wrongText").focus();
+
+    }
+
+
+    /* =====================================================
+       СОХРАНЕНИЕ «ВЕРНО»
+    ===================================================== */
+
+    function saveCorrectAttempt() {
+
+        if (!selectedTask) {
+            return;
+        }
+
+
+        const attempts = getAttempts();
+
+
+        attempts.push({
+
+            id: Date.now().toString(),
+
+            taskId: selectedTask.id,
+
+            variant: selectedTask.variant,
+
+            number: selectedTask.number,
+
+            code: selectedTask.code,
+
+            result: "correct",
+
+            errorText: "",
+
+            date: new Date().toISOString()
+
+        });
+
+
+        saveAttempts(attempts);
+
+
+        renderHistory();
+
+        updateVisibleContent();
+
+
+        alert("Результат сохранён: ✓ Верно");
+
+    }
+
+
+    /* =====================================================
+       СОХРАНЕНИЕ «НЕВЕРНО»
+    ===================================================== */
+
+    function saveWrongAttempt() {
+
+        if (!selectedTask) {
+            return;
+        }
+
+
+        const textarea = document.getElementById("wrongText");
+
+        const errorText = textarea.value.trim();
+
+
+        if (!errorText) {
+
+            alert("Напишите, в чём была ошибка.");
+
+            textarea.focus();
+
+            return;
+        }
+
+
+        const attempts = getAttempts();
+
+
+        attempts.push({
+
+            id: Date.now().toString(),
+
+            taskId: selectedTask.id,
+
+            variant: selectedTask.variant,
+
+            number: selectedTask.number,
+
+            code: selectedTask.code,
+
+            result: "wrong",
+
+            errorText: errorText,
+
+            date: new Date().toISOString()
+
+        });
+
+
+        saveAttempts(attempts);
+
+
+        textarea.value = "";
+
+        document.getElementById("wrongForm").style.display = "none";
+
+
+        renderHistory();
+
+        updateVisibleContent();
+
+
+        alert("Ошибка сохранена.");
+
+    }
+
+
+    /* =====================================================
+       ИСТОРИЯ ПО ЗАДАНИЮ
+    ===================================================== */
+
+    function renderHistory() {
+
+        const container = document.getElementById("historyContent");
+
+        container.innerHTML = "";
+
+
+        if (!selectedTask) {
+            return;
+        }
+
+
+        const attempts = getAttempts().filter(function(attempt) {
+
+            return attempt.taskId === selectedTask.id;
+
+        });
+
+
+        if (attempts.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty">
+                    Попыток пока нет.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        attempts
+            .slice()
             .reverse()
-            .forEach(
-                attempt => {
+            .forEach(function(attempt) {
+
+                const item = document.createElement("div");
+
+                item.className = "history-item";
 
 
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
+                const resultText =
+                    attempt.result === "correct"
+                        ? "✓ Верно"
+                        : "✕ Ошибка";
 
 
-                    item.className =
-                        "history-item";
+                const resultClass =
+                    attempt.result === "correct"
+                        ? "status-correct"
+                        : "status-wrong";
 
 
-                    const resultText =
-                        attempt.result ===
-                        "correct"
-                            ? "✓ Верно"
-                            : "✕ Неверно";
+                const date = formatDate(attempt.date);
 
 
-                    const resultClass =
-                        attempt.result ===
-                        "correct"
-                            ? "status-correct"
-                            : "status-wrong";
+                item.innerHTML = `
+
+                    <div class="history-result ${resultClass}">
+                        ${resultText}
+                    </div>
+
+                    <div class="history-date">
+                        ${date}
+                    </div>
+
+                    ${
+                        attempt.errorText
+                            ? `
+                                <div class="history-error">
+                                    ${escapeHtml(attempt.errorText)}
+                                </div>
+                              `
+                            : ""
+                    }
+
+                    <div class="history-actions">
+
+                        <button
+                            class="small-button edit-button"
+                            onclick="editAttempt('${attempt.id}')"
+                        >
+                            Изменить
+                        </button>
+
+                        <button
+                            class="small-button delete-button"
+                            onclick="deleteAttempt('${attempt.id}')"
+                        >
+                            Удалить
+                        </button>
+
+                    </div>
+
+                `;
 
 
-                    const date =
-                        new Date(
-                            attempt.date
-                        );
+                container.appendChild(item);
 
-
-                    const formattedDate =
-                        date.toLocaleString(
-                            "ru-RU"
-                        );
-
-
-                    item.innerHTML = `
-
-                        <div class="history-top">
-
-                            <div
-                                class="history-result ${resultClass}"
-                            >
-
-                                ${resultText}
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="history-date">
-
-                            ${formattedDate}
-
-                        </div>
-
-
-                        ${
-                            attempt.errorText
-                            ?
-
-                            `<div class="history-error">
-                                ${escapeHtml(
-                                    attempt.errorText
-                                )}
-                            </div>`
-
-                            :
-
-                            ""
-                        }
-
-
-                        <div class="history-actions">
-
-
-                            <button
-                                class="small-button edit-button"
-                                onclick="editAttempt('${attempt.id}')"
-                            >
-                                Изменить
-                            </button>
-
-
-                            <button
-                                class="small-button delete-button"
-                                onclick="deleteAttempt('${attempt.id}')"
-                            >
-                                Удалить
-                            </button>
-
-
-                        </div>
-
-                    `;
-
-
-                    history.appendChild(
-                        item
-                    );
-
-                }
-            );
+            });
 
     }
 
 
-    /* =========================
-       ЗАЩИТА ТЕКСТА
-    ========================= */
+    /* =====================================================
+       РЕДАКТИРОВАНИЕ ПОПЫТКИ
+    ===================================================== */
 
+    function editAttempt(attemptId) {
 
-    function escapeHtml(text) {
+        const attempts = getAttempts();
 
-        return String(text)
+        const attempt = attempts.find(function(item) {
 
-            .replace(
-                /&/g,
-                "&amp;"
-            )
+            return item.id === attemptId;
 
-            .replace(
-                /</g,
-                "&lt;"
-            )
-
-            .replace(
-                />/g,
-                "&gt;"
-            )
-
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-    }
-
-
-    /* =========================
-       ИЗМЕНИТЬ ПОПЫТКУ
-    ========================= */
-
-
-    function editAttempt(
-        attemptId
-    ) {
-
-
-        const attempt =
-            attempts.find(
-                item =>
-                    item.id ===
-                    attemptId
-            );
+        });
 
 
         if (!attempt) {
@@ -2157,314 +1312,168 @@
         }
 
 
-        if (
-            attempt.result ===
-            "correct"
-        ) {
+        if (attempt.result === "wrong") {
+
+            const newText = prompt(
+                "Измените описание ошибки:",
+                attempt.errorText || ""
+            );
 
 
-            const change =
-                confirm(
-                    "Эта попытка сейчас отмечена как «Верно».\n\nОК — оставить «Верно».\nОтмена — изменить на «Неверно»."
-                );
-
-
-            if (change) {
+            if (newText === null) {
                 return;
             }
 
 
-            const newError =
-                prompt(
-                    "Напиши, в чём была ошибка:"
-                );
+            if (!newText.trim()) {
 
-
-            if (
-                newError === null ||
-                newError.trim() === ""
-            ) {
+                alert("Описание ошибки не может быть пустым.");
 
                 return;
-
             }
 
 
-            attempt.result =
-                "wrong";
-
-
-            attempt.errorText =
-                newError.trim();
-
+            attempt.errorText = newText.trim();
 
         } else {
 
-
-            const change =
-                confirm(
-                    "Эта попытка сейчас отмечена как «Неверно».\n\nОК — изменить на «Верно».\nОтмена — оставить «Неверно» и изменить описание ошибки."
-                );
+            const choice = confirm(
+                "Изменить результат с «Верно» на «Ошибка»?"
+            );
 
 
-            if (change) {
-
-
-                attempt.result =
-                    "correct";
-
-
-                attempt.errorText =
-                    "";
-
-
-            } else {
-
-
-                const newError =
-                    prompt(
-                        "Измени описание ошибки:",
-                        attempt.errorText || ""
-                    );
-
-
-                if (
-                    newError !== null
-                ) {
-
-                    attempt.errorText =
-                        newError.trim();
-
-                }
-
+            if (!choice) {
+                return;
             }
+
+
+            const newText = prompt(
+                "Напишите, в чём была ошибка:"
+            );
+
+
+            if (!newText || !newText.trim()) {
+                return;
+            }
+
+
+            attempt.result = "wrong";
+
+            attempt.errorText = newText.trim();
 
         }
 
 
-        saveData();
-
+        saveAttempts(attempts);
 
         renderHistory();
+
+        updateVisibleContent();
 
     }
 
 
-    /* =========================
-       УДАЛИТЬ
-    ========================= */
+    /* =====================================================
+       УДАЛЕНИЕ ПОПЫТКИ
+    ===================================================== */
+
+    function deleteAttempt(attemptId) {
+
+        const shouldDelete = confirm(
+            "Удалить эту попытку?"
+        );
 
 
-    function deleteAttempt(
-        attemptId
-    ) {
-
-
-        const confirmed =
-            confirm(
-                "Удалить эту попытку?"
-            );
-
-
-        if (!confirmed) {
+        if (!shouldDelete) {
             return;
         }
 
 
-        attempts =
-            attempts.filter(
-                attempt =>
-                    attempt.id !==
-                    attemptId
-            );
+        const attempts = getAttempts().filter(function(attempt) {
+
+            return attempt.id !== attemptId;
+
+        });
 
 
-        saveData();
-
+        saveAttempts(attempts);
 
         renderHistory();
 
-    }
-
-
-    /* =========================
-       ЗАКРЫТЬ
-    ========================= */
-
-
-    function closeModal() {
-
-
-        document.getElementById(
-            "task-modal"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        selectedTask =
-            null;
+        updateVisibleContent();
 
     }
 
 
-    function closeModalOutside(
-        event
-    ) {
-
-
-        if (
-            event.target.id ===
-            "task-modal"
-        ) {
-
-            closeModal();
-
-        }
-
-    }
-
-
-    /* =========================
-       ДОМОЙ
-    ========================= */
-
-
-    function goHome() {
-
-
-        document.getElementById(
-            "section-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "stats-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "errors-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "home-page"
-        ).classList.remove(
-            "hidden"
-        );
-
-    }
-
-
-    /* =========================
+    /* =====================================================
        СТАТИСТИКА
-    ========================= */
+    ===================================================== */
 
+    function openStats() {
 
-    function showStats() {
+        hideAllPages();
 
-
-        document.getElementById(
-            "home-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "section-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "errors-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "stats-page"
-        ).classList.remove(
-            "hidden"
-        );
-
+        document.getElementById("statsPage").style.display = "block";
 
         renderStats();
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
 
     }
 
 
     function renderStats() {
 
+        const container = document.getElementById("statsContent");
 
-        const container =
-            document.getElementById(
-                "stats-content"
-            );
+        const attempts = getAttempts();
 
 
-        const total =
-            attempts.length;
+        const uniqueTaskIds = new Set(
+            attempts.map(function(attempt) {
+                return attempt.taskId;
+            })
+        );
 
 
-        const correct =
-            attempts.filter(
-                attempt =>
-                    attempt.result ===
-                    "correct"
-            ).length;
+        const correctCount = attempts.filter(function(attempt) {
+
+            return attempt.result === "correct";
+
+        }).length;
 
 
-        const wrong =
-            attempts.filter(
-                attempt =>
-                    attempt.result ===
-                    "wrong"
-            ).length;
+        const wrongCount = attempts.filter(function(attempt) {
+
+            return attempt.result === "wrong";
+
+        }).length;
 
 
-        const uniqueTasks =
-            new Set(
-                attempts.map(
-                    attempt =>
-                        attempt.taskId
-                )
-            ).size;
+        const total = attempts.length;
 
 
-        const accuracy =
-            total > 0
-                ? Math.round(
-                    correct /
-                    total *
-                    100
-                )
-                : 0;
+        const accuracy = total > 0
+            ? Math.round((correctCount / total) * 100)
+            : 0;
 
 
         container.innerHTML = `
 
             <div class="stats-grid">
 
-
                 <div class="stat-card">
 
-                    <div class="stat-value">
-                        ${uniqueTasks}
+                    <div class="stat-number">
+                        ${uniqueTaskIds.size}
                     </div>
 
                     <div class="stat-label">
-                        Выполнено заданий
+                        Заданий выполнено
                     </div>
 
                 </div>
@@ -2472,7 +1481,7 @@
 
                 <div class="stat-card">
 
-                    <div class="stat-value">
+                    <div class="stat-number">
                         ${total}
                     </div>
 
@@ -2485,10 +1494,8 @@
 
                 <div class="stat-card">
 
-                    <div
-                        class="stat-value status-correct"
-                    >
-                        ${correct}
+                    <div class="stat-number">
+                        ${correctCount}
                     </div>
 
                     <div class="stat-label">
@@ -2500,64 +1507,28 @@
 
                 <div class="stat-card">
 
-                    <div
-                        class="stat-value status-wrong"
-                    >
-                        ${wrong}
+                    <div class="stat-number">
+                        ${wrongCount}
                     </div>
 
                     <div class="stat-label">
-                        Ошибочных
+                        Ошибок
                     </div>
 
                 </div>
 
 
-            </div>
+                <div class="stat-card">
 
+                    <div class="stat-number">
+                        ${accuracy}%
+                    </div>
 
-            <div class="stats-block">
+                    <div class="stat-label">
+                        Точность
+                    </div>
 
-                <div class="stats-block-title">
-                    Процент правильных ответов
                 </div>
-
-
-                <div
-                    style="
-                        font-size:32px;
-                        font-weight:bold;
-                        color:#74539e;
-                    "
-                >
-                    ${accuracy}%
-                </div>
-
-            </div>
-
-
-            <div class="stats-block">
-
-                <div class="stats-block-title">
-                    Ошибки
-                </div>
-
-                ${
-                    wrong === 0
-
-                    ?
-
-                    `<div class="empty">
-                        Ошибок пока нет 💜
-                    </div>`
-
-                    :
-
-                    `<div class="stats-row">
-                        <span>Всего ошибок</span>
-                        <span class="stats-row-value">${wrong}</span>
-                    </div>`
-                }
 
             </div>
 
@@ -2566,223 +1537,282 @@
     }
 
 
-    /* =========================
+    /* =====================================================
        МОИ ОШИБКИ
-    ========================= */
+    ===================================================== */
 
+    function openErrors() {
 
-    function showErrors() {
+        hideAllPages();
 
-
-        document.getElementById(
-            "home-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "section-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "stats-page"
-        ).classList.add(
-            "hidden"
-        );
-
-
-        document.getElementById(
-            "errors-page"
-        ).classList.remove(
-            "hidden"
-        );
-
+        document.getElementById("errorsPage").style.display = "block";
 
         renderErrors();
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
 
     }
 
 
     function renderErrors() {
 
+        const container = document.getElementById("errorsContent");
 
-        const container =
-            document.getElementById(
-                "errors-content"
-            );
+        container.innerHTML = "";
 
 
-        const wrongAttempts =
-            attempts.filter(
-                attempt =>
-                    attempt.result ===
-                    "wrong"
-            );
+        const attempts = getAttempts();
 
 
-        if (
-            wrongAttempts.length === 0
-        ) {
+        const wrongAttempts = attempts.filter(function(attempt) {
 
+            return attempt.result === "wrong";
+
+        });
+
+
+        if (wrongAttempts.length === 0) {
 
             container.innerHTML = `
-
                 <div class="empty">
+                    Ошибок пока нет 🎉
+                </div>
+            `;
 
-                    Пока ошибок нет 💜
+            return;
+        }
 
+
+        /*
+            Объединяем ошибки одного задания.
+        */
+
+        const grouped = {};
+
+
+        wrongAttempts.forEach(function(attempt) {
+
+            if (!grouped[attempt.taskId]) {
+
+                grouped[attempt.taskId] = [];
+
+            }
+
+
+            grouped[attempt.taskId].push(attempt);
+
+        });
+
+
+        Object.keys(grouped).forEach(function(taskId) {
+
+            const taskAttempts = grouped[taskId];
+
+            const latest =
+                taskAttempts[taskAttempts.length - 1];
+
+
+            const task = TASKS.find(function(item) {
+
+                return item.id === taskId;
+
+            });
+
+
+            if (!task) {
+                return;
+            }
+
+
+            const card = document.createElement("div");
+
+            card.className = "error-card";
+
+
+            card.innerHTML = `
+
+                <div class="error-title">
+                    Вариант ${task.variant} · Задание ${task.number}
+                </div>
+
+                <div class="error-code">
+                    ${escapeHtml(task.code)}
+                </div>
+
+                <div class="error-count">
+                    Ошибок: ${taskAttempts.length}
+                </div>
+
+                <div class="error-text">
+                    ${escapeHtml(latest.errorText || "Описание отсутствует")}
                 </div>
 
             `;
 
 
-            return;
+            card.onclick = function() {
 
-        }
+                openTask(task);
 
-
-        const uniqueTasks = [];
-
-
-        wrongAttempts.forEach(
-            attempt => {
+            };
 
 
-                const exists =
-                    uniqueTasks.find(
-                        item =>
-                            item.taskId ===
-                            attempt.taskId
-                    );
+            container.appendChild(card);
 
-
-                if (!exists) {
-
-                    uniqueTasks.push(
-                        attempt
-                    );
-
-                }
-
-            }
-        );
-
-
-        let html = "";
-
-
-        uniqueTasks.forEach(
-            attempt => {
-
-
-                const count =
-                    wrongAttempts.filter(
-                        item =>
-                            item.taskId ===
-                            attempt.taskId
-                    ).length;
-
-
-                html += `
-
-                    <div
-                        class="error-card"
-                        onclick="openTaskById('${attempt.taskId}')"
-                    >
-
-
-                        <div class="error-card-title">
-
-                            Вариант ${attempt.variant}
-                            —
-                            Задание ${attempt.number}
-
-                        </div>
-
-
-                        <div class="error-card-code">
-
-                            ${attempt.code}
-
-                        </div>
-
-
-                        <div class="error-card-info">
-
-                            Ошибок: ${count}
-
-                        </div>
-
-
-                        ${
-                            attempt.errorText
-
-                            ?
-
-                            `<div class="error-card-note">
-                                ${escapeHtml(
-                                    attempt.errorText
-                                )}
-                            </div>`
-
-                            :
-
-                            ""
-                        }
-
-
-                    </div>
-
-                `;
-
-            }
-        );
-
-
-        container.innerHTML =
-            html;
+        });
 
     }
 
 
-    function openTaskById(
-        taskId
+    /* =====================================================
+       ОБНОВЛЕНИЕ ОТКРЫТОЙ СТРАНИЦЫ
+    ===================================================== */
+
+    function updateVisibleContent() {
+
+        const sectionPage =
+            document.getElementById("sectionPage");
+
+
+        const statsPage =
+            document.getElementById("statsPage");
+
+
+        const errorsPage =
+            document.getElementById("errorsPage");
+
+
+        if (sectionPage.style.display !== "none") {
+
+            const title =
+                document.getElementById("sectionTitle")
+                    .textContent;
+
+
+            if (title === "Задания 1-5") {
+
+                openSection("1-5");
+
+            } else if (title === "Задания 6-11") {
+
+                openSection("6-11");
+
+            } else if (title === "Задания 12") {
+
+                openSection("12");
+
+            } else if (title === "Задания 13-19") {
+
+                openSection("13-19");
+
+            } else if (title === "Задания 20-28") {
+
+                openSection("20-28");
+
+            } else if (title === "Задания 29-34") {
+
+                openSection("29-34");
+
+            }
+
+        }
+
+
+        if (statsPage.style.display !== "none") {
+
+            renderStats();
+
+        }
+
+
+        if (errorsPage.style.display !== "none") {
+
+            renderErrors();
+
+        }
+
+
+        searchTasks();
+
+    }
+
+
+    /* =====================================================
+       ДАТА
+    ===================================================== */
+
+    function formatDate(dateString) {
+
+        const date = new Date(dateString);
+
+
+        return date.toLocaleString(
+            "ru-RU",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       ЗАЩИТА HTML
+    ===================================================== */
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =====================================================
+       ЗАКРЫТИЕ МОДАЛКИ ПО НАЖАТИЮ НА ФОН
+    ===================================================== */
+
+    document
+        .getElementById("modalOverlay")
+        .addEventListener("click", function(event) {
+
+            if (event.target === this) {
+
+                closeModal();
+
+            }
+
+        });
+
+
+    /* =====================================================
+       TELEGRAM
+    ===================================================== */
+
+    if (
+        window.Telegram &&
+        window.Telegram.WebApp
     ) {
 
+        window.Telegram.WebApp.ready();
 
-        const task =
-            TASKS.find(
-                item =>
-                    item.id ===
-                    taskId
-            );
-
-
-        if (!task) {
-            return;
-        }
-
-
-        openTask(task);
+        window.Telegram.WebApp.expand();
 
     }
-
-
-    /* =========================
-       ЗАПУСК
-    ========================= */
-
-
-    setMotivation();
-
 
 </script>
 
-
 </body>
-
 </html>
