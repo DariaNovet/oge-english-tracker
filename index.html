@@ -44,8 +44,6 @@
             padding: 16px;
         }
 
-        /* ===== HEADER ===== */
-
         .hero {
             position: relative;
             overflow: hidden;
@@ -114,8 +112,6 @@
             transition: width 0.3s ease;
         }
 
-        /* ===== SEARCH ===== */
-
         .card {
             background: white;
             border-radius: 22px;
@@ -151,8 +147,6 @@
             padding: 13px 0;
             color: #172033;
         }
-
-        /* ===== MENU ===== */
 
         .menu-grid {
             display: grid;
@@ -207,8 +201,6 @@
             background: linear-gradient(135deg, #10b981, #059669);
         }
 
-        /* ===== SCREENS ===== */
-
         .screen {
             display: none;
         }
@@ -236,8 +228,6 @@
             margin: 5px 0 15px;
         }
 
-        /* ===== TASK BLOCKS ===== */
-
         .block-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -251,7 +241,7 @@
             text-align: left;
             background: white;
             box-shadow: 0 6px 20px rgba(30,41,59,0.07);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            transition: transform 0.15s ease;
         }
 
         .block-btn:active {
@@ -289,8 +279,6 @@
         .block-btn:nth-child(6) .block-number {
             color: #ef4444;
         }
-
-        /* ===== VARIANTS ===== */
 
         .variant-card {
             background: white;
@@ -344,11 +332,6 @@
             color: #dc2626;
         }
 
-        .task-btn.empty {
-            background: #f4f5f8;
-            color: #a0a7b5;
-        }
-
         .task-number {
             display: block;
             font-size: 15px;
@@ -361,8 +344,6 @@
             opacity: 0.7;
             word-break: break-all;
         }
-
-        /* ===== EMPTY BLOCK ===== */
 
         .empty-block {
             text-align: center;
@@ -387,8 +368,6 @@
             line-height: 1.5;
             font-size: 14px;
         }
-
-        /* ===== SEARCH RESULTS ===== */
 
         .search-result {
             display: flex;
@@ -418,8 +397,6 @@
             border-radius: 12px;
             font-weight: 700;
         }
-
-        /* ===== STATS ===== */
 
         .stats-grid {
             display: grid;
@@ -464,8 +441,6 @@
             background: linear-gradient(90deg, #6366f1, #ec4899);
         }
 
-        /* ===== ERRORS ===== */
-
         .error-item {
             background: white;
             border-radius: 19px;
@@ -500,13 +475,34 @@
             line-height: 1.45;
         }
 
-        /* ===== REPORT ===== */
+        /* ===== PDF REPORT ===== */
 
         .report-card {
             background: white;
             border-radius: 22px;
             padding: 20px;
             box-shadow: 0 5px 20px rgba(30,41,59,0.06);
+        }
+
+        .report-header {
+            margin-bottom: 20px;
+        }
+
+        .report-header h2 {
+            margin: 0 0 5px;
+            font-size: 24px;
+        }
+
+        .report-header p {
+            margin: 0;
+            color: #7c8597;
+            font-size: 13px;
+        }
+
+        .report-section-title {
+            margin: 24px 0 12px;
+            font-size: 18px;
+            font-weight: 900;
         }
 
         .report-row {
@@ -528,6 +524,47 @@
             font-weight: 800;
         }
 
+        .report-error {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            background: #fff5f5;
+            border-left: 4px solid #ef4444;
+        }
+
+        .report-error-title {
+            font-weight: 900;
+            color: #172033;
+            margin-bottom: 4px;
+        }
+
+        .report-error-code {
+            color: #ef4444;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 9px;
+        }
+
+        .report-error-reason {
+            color: #5f2930;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .report-error-date {
+            color: #8b929f;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        .no-report-errors {
+            padding: 18px;
+            border-radius: 15px;
+            background: #f0fdf4;
+            color: #166534;
+            font-size: 14px;
+        }
+
         .print-btn {
             width: 100%;
             margin-top: 16px;
@@ -537,8 +574,6 @@
             color: white;
             font-weight: 800;
         }
-
-        /* ===== MODAL ===== */
 
         .modal {
             display: none;
@@ -670,15 +705,11 @@
             color: #dc2626;
         }
 
-        /* ===== NO RESULTS ===== */
-
         .no-results {
             text-align: center;
             padding: 25px;
             color: #7b8495;
         }
-
-        /* ===== MOBILE ===== */
 
         @media (max-width: 500px) {
             .app {
@@ -720,22 +751,26 @@
             }
         }
 
-        /* ===== PRINT ===== */
+        /* ===== ПЕЧАТЬ / PDF ===== */
 
         @media print {
+
             body {
                 background: white;
+                color: #172033;
             }
 
             .app {
                 max-width: none;
+                padding: 0;
             }
 
-            .no-print,
+            .hero,
+            .menu-grid,
+            .search-card,
             .back-btn,
             .print-btn,
-            .menu-grid,
-            .search-card {
+            .no-print {
                 display: none !important;
             }
 
@@ -747,9 +782,42 @@
                 display: block !important;
             }
 
+            .screen-title {
+                display: none;
+            }
+
             .report-card {
                 box-shadow: none;
-                border: 1px solid #ddd;
+                border: none;
+                padding: 0;
+            }
+
+            .report-header {
+                display: block;
+            }
+
+            .report-header h2 {
+                font-size: 26px;
+            }
+
+            .report-row {
+                padding: 9px 0;
+            }
+
+            .report-section-title {
+                margin-top: 22px;
+            }
+
+            .report-error {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border: 1px solid #f1caca;
+                border-left: 4px solid #ef4444;
+            }
+
+            @page {
+                size: A4;
+                margin: 16mm;
             }
         }
     </style>
@@ -762,19 +830,27 @@
     <!-- ================= HEADER ================= -->
 
     <div class="hero">
+
         <h1>ОГЭ Английский</h1>
+
         <p>Трекер подготовки</p>
 
         <div class="progress-wrap">
+
             <div class="progress-info">
                 <span>Общий прогресс</span>
                 <span id="progressText">0 / 95</span>
             </div>
 
             <div class="progress-bg">
-                <div class="progress-fill" id="progressFill"></div>
+                <div
+                    class="progress-fill"
+                    id="progressFill"
+                ></div>
             </div>
+
         </div>
+
     </div>
 
 
@@ -783,42 +859,61 @@
     <div id="homeScreen" class="screen active">
 
         <div class="card search-card">
-            <div class="search-title">Поиск задания</div>
+
+            <div class="search-title">
+                Поиск задания
+            </div>
 
             <div class="search-box">
+
                 <span>⌕</span>
+
                 <input
                     id="searchInput"
                     type="text"
                     placeholder="Введите код, например 42BF66"
                     oninput="searchTasks()"
                 >
+
             </div>
+
         </div>
 
         <div id="searchResults"></div>
 
         <div class="menu-grid">
 
-            <button class="menu-card purple" onclick="openScreen('statsScreen')">
+            <button
+                class="menu-card purple"
+                onclick="openScreen('statsScreen')"
+            >
                 <div class="icon">📊</div>
                 <div class="title">Моя статистика</div>
                 <div class="small">Прогресс и результаты</div>
             </button>
 
-            <button class="menu-card pink" onclick="openScreen('errorsScreen')">
+            <button
+                class="menu-card pink"
+                onclick="openScreen('errorsScreen')"
+            >
                 <div class="icon">❌</div>
                 <div class="title">Мои ошибки</div>
                 <div class="small">Ошибки и причины</div>
             </button>
 
-            <button class="menu-card blue" onclick="openReport()">
+            <button
+                class="menu-card blue"
+                onclick="openReport()"
+            >
                 <div class="icon">📄</div>
                 <div class="title">Мой отчёт</div>
                 <div class="small">Статистика для преподавателя</div>
             </button>
 
-            <button class="menu-card green" onclick="openTasksScreen()">
+            <button
+                class="menu-card green"
+                onclick="openTasksScreen()"
+            >
                 <div class="icon">📝</div>
                 <div class="title">Задания</div>
                 <div class="small">Выбрать нужный блок</div>
@@ -829,46 +924,81 @@
     </div>
 
 
-    <!-- ================= TASKS BLOCKS ================= -->
+    <!-- ================= TASKS ================= -->
 
     <div id="tasksScreen" class="screen">
 
-        <button class="back-btn" onclick="openScreen('homeScreen')">
+        <button
+            class="back-btn"
+            onclick="openScreen('homeScreen')"
+        >
             ← Назад
         </button>
 
-        <div class="screen-title">Задания</div>
+        <div class="screen-title">
+            Задания
+        </div>
 
         <div class="block-grid">
 
-            <button class="block-btn" onclick="openBlock('1-5')">
+            <button
+                class="block-btn"
+                onclick="openBlock('1-5')"
+            >
                 <div class="block-number">1–5</div>
-                <div class="block-description">Выбрать задания</div>
+                <div class="block-description">
+                    Выбрать задания
+                </div>
             </button>
 
-            <button class="block-btn" onclick="openBlock('6-11')">
+            <button
+                class="block-btn"
+                onclick="openBlock('6-11')"
+            >
                 <div class="block-number">6–11</div>
-                <div class="block-description">Выбрать задания</div>
+                <div class="block-description">
+                    Выбрать задания
+                </div>
             </button>
 
-            <button class="block-btn" onclick="openBlock('12')">
+            <button
+                class="block-btn"
+                onclick="openBlock('12')"
+            >
                 <div class="block-number">12</div>
-                <div class="block-description">Выбрать задание</div>
+                <div class="block-description">
+                    Выбрать задание
+                </div>
             </button>
 
-            <button class="block-btn" onclick="openBlock('13-19')">
+            <button
+                class="block-btn"
+                onclick="openBlock('13-19')"
+            >
                 <div class="block-number">13–19</div>
-                <div class="block-description">Выбрать задания</div>
+                <div class="block-description">
+                    Выбрать задания
+                </div>
             </button>
 
-            <button class="block-btn" onclick="openBlock('20-28')">
+            <button
+                class="block-btn"
+                onclick="openBlock('20-28')"
+            >
                 <div class="block-number">20–28</div>
-                <div class="block-description">Выбрать задания</div>
+                <div class="block-description">
+                    Выбрать задания
+                </div>
             </button>
 
-            <button class="block-btn" onclick="openBlock('29-34')">
+            <button
+                class="block-btn"
+                onclick="openBlock('29-34')"
+            >
                 <div class="block-number">29–34</div>
-                <div class="block-description">Выбрать задания</div>
+                <div class="block-description">
+                    Выбрать задания
+                </div>
             </button>
 
         </div>
@@ -876,15 +1006,21 @@
     </div>
 
 
-    <!-- ================= SELECTED BLOCK ================= -->
+    <!-- ================= BLOCK ================= -->
 
     <div id="blockScreen" class="screen">
 
-        <button class="back-btn" onclick="openScreen('tasksScreen')">
+        <button
+            class="back-btn"
+            onclick="openScreen('tasksScreen')"
+        >
             ← Все задания
         </button>
 
-        <div class="screen-title" id="blockTitle"></div>
+        <div
+            class="screen-title"
+            id="blockTitle"
+        ></div>
 
         <div id="variantsContainer"></div>
 
@@ -895,40 +1031,86 @@
 
     <div id="statsScreen" class="screen">
 
-        <button class="back-btn" onclick="openScreen('homeScreen')">
+        <button
+            class="back-btn"
+            onclick="openScreen('homeScreen')"
+        >
             ← Назад
         </button>
 
-        <div class="screen-title">Моя статистика</div>
+        <div class="screen-title">
+            Моя статистика
+        </div>
 
         <div class="stats-grid">
 
             <div class="stat-card">
-                <div class="stat-number" id="statCompleted">0</div>
-                <div class="stat-label">решено заданий</div>
+                <div
+                    class="stat-number"
+                    id="statCompleted"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    решено заданий
+                </div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-number" id="statCorrect">0</div>
-                <div class="stat-label">правильных ответов</div>
+                <div
+                    class="stat-number"
+                    id="statCorrect"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    правильных ответов
+                </div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-number" id="statWrong">0</div>
-                <div class="stat-label">ошибок</div>
+                <div
+                    class="stat-number"
+                    id="statWrong"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    ошибок
+                </div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-number" id="statAccuracy">0%</div>
-                <div class="stat-label">точность</div>
+                <div
+                    class="stat-number"
+                    id="statAccuracy"
+                >
+                    0%
+                </div>
+
+                <div class="stat-label">
+                    точность
+                </div>
             </div>
 
             <div class="stat-card wide-stat">
-                <div class="stat-label">Прогресс по заданиям</div>
+
+                <div class="stat-label">
+                    Прогресс по заданиям
+                </div>
 
                 <div class="bar-bg">
-                    <div class="bar-fill" id="statProgressBar"></div>
+
+                    <div
+                        class="bar-fill"
+                        id="statProgressBar"
+                    ></div>
+
                 </div>
+
             </div>
 
         </div>
@@ -940,11 +1122,16 @@
 
     <div id="errorsScreen" class="screen">
 
-        <button class="back-btn" onclick="openScreen('homeScreen')">
+        <button
+            class="back-btn"
+            onclick="openScreen('homeScreen')"
+        >
             ← Назад
         </button>
 
-        <div class="screen-title">Мои ошибки</div>
+        <div class="screen-title">
+            Мои ошибки
+        </div>
 
         <div id="errorsContainer"></div>
 
@@ -955,49 +1142,142 @@
 
     <div id="reportScreen" class="screen">
 
-        <button class="back-btn no-print" onclick="openScreen('homeScreen')">
+        <button
+            class="back-btn no-print"
+            onclick="openScreen('homeScreen')"
+        >
             ← Назад
         </button>
 
-        <div class="screen-title">Мой отчёт</div>
+        <div class="screen-title">
+            Мой отчёт
+        </div>
 
         <div class="report-card">
 
-            <h2 style="margin-top:0;">ОГЭ Английский</h2>
+            <div class="report-header">
 
-            <div class="report-row">
-                <span class="report-label">Всего заданий</span>
-                <span class="report-value">95</span>
+                <h2>ОГЭ Английский</h2>
+
+                <p>
+                    Отчёт о подготовке
+                </p>
+
+            </div>
+
+
+            <!-- ОБЩАЯ СТАТИСТИКА -->
+
+            <div class="report-section-title">
+                Общая статистика
             </div>
 
             <div class="report-row">
-                <span class="report-label">Решено</span>
-                <span class="report-value" id="reportCompleted">0</span>
+
+                <span class="report-label">
+                    Всего заданий
+                </span>
+
+                <span
+                    class="report-value"
+                    id="reportTotal"
+                >
+                    95
+                </span>
+
             </div>
 
             <div class="report-row">
-                <span class="report-label">Правильных</span>
-                <span class="report-value" id="reportCorrect">0</span>
+
+                <span class="report-label">
+                    Решено
+                </span>
+
+                <span
+                    class="report-value"
+                    id="reportCompleted"
+                >
+                    0
+                </span>
+
             </div>
 
             <div class="report-row">
-                <span class="report-label">Ошибок</span>
-                <span class="report-value" id="reportWrong">0</span>
+
+                <span class="report-label">
+                    Правильных
+                </span>
+
+                <span
+                    class="report-value"
+                    id="reportCorrect"
+                >
+                    0
+                </span>
+
             </div>
 
             <div class="report-row">
-                <span class="report-label">Точность</span>
-                <span class="report-value" id="reportAccuracy">0%</span>
+
+                <span class="report-label">
+                    Ошибок
+                </span>
+
+                <span
+                    class="report-value"
+                    id="reportWrong"
+                >
+                    0
+                </span>
+
             </div>
 
             <div class="report-row">
-                <span class="report-label">Прогресс</span>
-                <span class="report-value" id="reportProgress">0%</span>
+
+                <span class="report-label">
+                    Точность
+                </span>
+
+                <span
+                    class="report-value"
+                    id="reportAccuracy"
+                >
+                    0%
+                </span>
+
             </div>
+
+            <div class="report-row">
+
+                <span class="report-label">
+                    Прогресс
+                </span>
+
+                <span
+                    class="report-value"
+                    id="reportProgress"
+                >
+                    0%
+                </span>
+
+            </div>
+
+
+            <!-- ОШИБКИ -->
+
+            <div class="report-section-title">
+                Ошибки
+            </div>
+
+            <div id="reportErrors"></div>
 
         </div>
 
-        <button class="print-btn no-print" onclick="window.print()">
+
+        <button
+            class="print-btn no-print"
+            onclick="printReport()"
+        >
             📄 Сохранить отчёт в PDF
         </button>
 
@@ -1008,31 +1288,56 @@
 
 <!-- ================= MODAL ================= -->
 
-<div class="modal" id="taskModal">
+<div
+    class="modal"
+    id="taskModal"
+>
 
     <div class="modal-content">
 
-        <button class="modal-close" onclick="closeModal()">×</button>
+        <button
+            class="modal-close"
+            onclick="closeModal()"
+        >
+            ×
+        </button>
 
-        <div class="modal-title" id="modalTitle">
+        <div
+            class="modal-title"
+            id="modalTitle"
+        >
             Задание
         </div>
 
-        <div class="modal-code" id="modalCode"></div>
+        <div
+            class="modal-code"
+            id="modalCode"
+        ></div>
+
 
         <div class="answer-buttons">
 
-            <button class="correct-btn" onclick="saveCorrectAttempt()">
+            <button
+                class="correct-btn"
+                onclick="saveCorrectAttempt()"
+            >
                 ✓ Правильно
             </button>
 
-            <button class="wrong-btn" onclick="showWrongForm()">
+            <button
+                class="wrong-btn"
+                onclick="showWrongForm()"
+            >
                 ✕ Ошибка
             </button>
 
         </div>
 
-        <div id="wrongForm" style="display:none;">
+
+        <div
+            id="wrongForm"
+            style="display:none;"
+        >
 
             <label class="reason-label">
                 Почему ошиблась?
@@ -1053,6 +1358,7 @@
 
         </div>
 
+
         <div class="history-title">
             История попыток
         </div>
@@ -1066,53 +1372,62 @@
 
 <script>
 
-    /* =========================================================
-       НАСТРОЙКИ
-    ========================================================= */
+    /* =====================================================
+       ОСНОВНЫЕ ДАННЫЕ
+    ===================================================== */
 
-    const STORAGE_KEY = "oge_english_tracker_attempts";
+    const STORAGE_KEY =
+        "oge_english_tracker_attempts";
 
-    let attempts = JSON.parse(
-        localStorage.getItem(STORAGE_KEY) || "[]"
-    );
+    let attempts =
+        JSON.parse(
+            localStorage.getItem(STORAGE_KEY) || "[]"
+        );
 
     let currentTask = null;
 
 
-    /* =========================================================
+    /* =====================================================
        TELEGRAM
-    ========================================================= */
+    ===================================================== */
 
-    if (window.Telegram && Telegram.WebApp) {
+    if (
+        window.Telegram &&
+        Telegram.WebApp
+    ) {
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
     }
 
 
-    /* =========================================================
+    /* =====================================================
        СОХРАНЕНИЕ
-    ========================================================= */
+    ===================================================== */
 
     function saveData() {
+
         localStorage.setItem(
             STORAGE_KEY,
             JSON.stringify(attempts)
         );
 
         updateAll();
+
     }
 
 
-    /* =========================================================
+    /* =====================================================
        НАВИГАЦИЯ
-    ========================================================= */
+    ===================================================== */
 
     function openScreen(screenId) {
 
         document
             .querySelectorAll(".screen")
             .forEach(screen => {
+
                 screen.classList.remove("active");
+
             });
 
         document
@@ -1125,26 +1440,32 @@
         });
 
         updateAll();
+
     }
 
 
     function openTasksScreen() {
+
         openScreen("tasksScreen");
+
     }
 
 
-    /* =========================================================
+    /* =====================================================
        БЛОКИ ЗАДАНИЙ
-    ========================================================= */
+    ===================================================== */
 
     function openBlock(block) {
 
-        document.getElementById("blockTitle").textContent =
-            "Задания " + block;
+        document
+            .getElementById("blockTitle")
+            .textContent =
+                "Задания " + block;
 
         renderBlock(block);
 
         openScreen("blockScreen");
+
     }
 
 
@@ -1167,120 +1488,163 @@
         }
 
         if (block === "20-28") {
-            return [20, 21, 22, 23, 24, 25, 26, 27, 28];
+            return [20,21,22,23,24,25,26,27,28];
         }
 
         if (block === "29-34") {
-            return [29, 30, 31, 32, 33, 34];
+            return [29,30,31,32,33,34];
         }
 
         return [];
+
     }
 
 
     function renderBlock(block) {
 
         const container =
-            document.getElementById("variantsContainer");
+            document.getElementById(
+                "variantsContainer"
+            );
 
         container.innerHTML = "";
 
-        const numbers = getBlockNumbers(block);
+        const numbers =
+            getBlockNumbers(block);
 
 
-        /*
-         * Сейчас в tasks.js реально есть коды только
-         * для заданий 1–5.
-         *
-         * Поэтому для 6–34 мы показываем красивый
-         * экран-заглушку, а не придумываем несуществующие коды.
-         */
+        const availableNumbers =
+            numbers.filter(number => {
 
-        const availableNumbers = numbers.filter(number => {
+                return TASKS.some(task =>
+                    task.number === number
+                );
 
-            return TASKS.some(task =>
-                task.number === number
-            );
-
-        });
+            });
 
 
         if (availableNumbers.length === 0) {
 
             container.innerHTML = `
-                <div class="empty-block">
-                    <div class="empty-icon">📝</div>
 
-                    <h3>Задания ${block}</h3>
+                <div class="empty-block">
+
+                    <div class="empty-icon">
+                        📝
+                    </div>
+
+                    <h3>
+                        Задания ${block}
+                    </h3>
 
                     <p>
-                        Этот блок уже добавлен в приложение.
-                        Коды заданий для него можно будет добавить
-                        в файл <b>data/tasks.js</b>.
+                        Этот блок уже добавлен
+                        в приложение.
+                        Коды заданий для него
+                        будут добавлены
+                        в data/tasks.js.
                     </p>
+
                 </div>
+
             `;
 
             return;
+
         }
 
 
-        /*
-         * Показываем варианты.
-         */
+        for (
+            let variant = 1;
+            variant <= 19;
+            variant++
+        ) {
 
-        for (let variant = 1; variant <= 19; variant++) {
+            const variantTasks =
+                TASKS.filter(task =>
 
-            const variantTasks = TASKS.filter(task =>
-                task.variant === variant &&
-                numbers.includes(task.number)
-            );
+                    task.variant === variant &&
+                    numbers.includes(task.number)
 
-            if (variantTasks.length === 0) {
+                );
+
+
+            if (
+                variantTasks.length === 0
+            ) {
                 continue;
             }
 
-            const completed = variantTasks.filter(task =>
-                getTaskStatus(task.id) === "correct"
-            ).length;
 
-            const wrong = variantTasks.filter(task =>
-                getTaskStatus(task.id) === "wrong"
-            ).length;
+            const completed =
+                variantTasks.filter(task =>
+
+                    getTaskStatus(task.id) ===
+                    "correct"
+
+                ).length;
 
 
-            const card = document.createElement("div");
+            const wrong =
+                variantTasks.filter(task =>
 
-            card.className = "variant-card";
+                    getTaskStatus(task.id) ===
+                    "wrong"
+
+                ).length;
+
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "variant-card";
+
 
             card.innerHTML = `
+
                 <div class="variant-header">
-                    <span>Вариант ${variant}</span>
+
+                    <span>
+                        Вариант ${variant}
+                    </span>
 
                     <span class="variant-progress">
                         ${completed}/${variantTasks.length}
-                        ${wrong > 0 ? " · " + wrong + " ошибок" : ""}
+                        ${wrong > 0
+                            ? " · " + wrong + " ошибок"
+                            : ""
+                        }
                     </span>
+
                 </div>
 
                 <div class="tasks-list"></div>
+
             `;
 
 
             const list =
-                card.querySelector(".tasks-list");
+                card.querySelector(
+                    ".tasks-list"
+                );
 
 
             variantTasks.forEach(task => {
 
                 const button =
-                    document.createElement("button");
+                    document.createElement(
+                        "button"
+                    );
+
 
                 const status =
                     getTaskStatus(task.id);
 
+
                 button.className =
-                    "task-btn " + (
+                    "task-btn " +
+                    (
                         status === "correct"
                             ? "done"
                             : status === "wrong"
@@ -1288,7 +1652,9 @@
                                 : ""
                     );
 
+
                 button.innerHTML = `
+
                     <span class="task-number">
                         ${task.number}
                     </span>
@@ -1296,10 +1662,13 @@
                     <span class="task-code">
                         ${task.code}
                     </span>
+
                 `;
+
 
                 button.onclick = () =>
                     openTask(task.id);
+
 
                 list.appendChild(button);
 
@@ -1307,19 +1676,23 @@
 
 
             container.appendChild(card);
+
         }
+
     }
 
 
-    /* =========================================================
-       СТАТУС ЗАДАНИЯ
-    ========================================================= */
+    /* =====================================================
+       СТАТУС
+    ===================================================== */
 
     function getTaskAttempts(taskId) {
 
         return attempts.filter(
-            attempt => attempt.taskId === taskId
+            attempt =>
+                attempt.taskId === taskId
         );
+
     }
 
 
@@ -1328,44 +1701,69 @@
         const taskAttempts =
             getTaskAttempts(taskId);
 
-        if (taskAttempts.length === 0) {
+
+        if (
+            taskAttempts.length === 0
+        ) {
             return "none";
         }
 
+
         const last =
-            taskAttempts[taskAttempts.length - 1];
+            taskAttempts[
+                taskAttempts.length - 1
+            ];
+
 
         return last.result;
+
     }
 
 
-    /* =========================================================
-       МОДАЛЬНОЕ ОКНО
-    ========================================================= */
+    /* =====================================================
+       ОТКРЫТИЕ ЗАДАНИЯ
+    ===================================================== */
 
     function openTask(taskId) {
 
         currentTask =
-            TASKS.find(task => task.id === taskId);
+            TASKS.find(
+                task => task.id === taskId
+            );
+
 
         if (!currentTask) {
             return;
         }
 
-        document.getElementById("modalTitle").textContent =
-            `Вариант ${currentTask.variant} · Задание ${currentTask.number}`;
 
-        document.getElementById("modalCode").textContent =
-            `Код: ${currentTask.code}`;
+        document
+            .getElementById("modalTitle")
+            .textContent =
+                `Вариант ${currentTask.variant} · Задание ${currentTask.number}`;
 
-        document.getElementById("reasonInput").value = "";
 
-        document.getElementById("wrongForm").style.display =
-            "none";
+        document
+            .getElementById("modalCode")
+            .textContent =
+                `Код: ${currentTask.code}`;
+
+
+        document
+            .getElementById("reasonInput")
+            .value = "";
+
+
+        document
+            .getElementById("wrongForm")
+            .style.display = "none";
+
 
         renderHistory();
 
-        document.getElementById("taskModal")
+
+        document
+            .getElementById("taskModal")
             .classList.add("active");
 
     }
@@ -1373,27 +1771,32 @@
 
     function closeModal() {
 
-        document.getElementById("taskModal")
+        document
+            .getElementById("taskModal")
             .classList.remove("active");
 
         currentTask = null;
+
     }
 
 
     function showWrongForm() {
 
-        document.getElementById("wrongForm")
+        document
+            .getElementById("wrongForm")
             .style.display = "block";
 
-        document.getElementById("reasonInput")
+
+        document
+            .getElementById("reasonInput")
             .focus();
 
     }
 
 
-    /* =========================================================
-       СОХРАНЕНИЕ ПРАВИЛЬНОГО ОТВЕТА
-    ========================================================= */
+    /* =====================================================
+       ПРАВИЛЬНЫЙ ОТВЕТ
+    ===================================================== */
 
     function saveCorrectAttempt() {
 
@@ -1401,41 +1804,57 @@
             return;
         }
 
+
         attempts.push({
+
             id: Date.now(),
-            taskId: currentTask.id,
-            result: "correct",
-            reason: "",
-            date: new Date().toISOString()
+
+            taskId:
+                currentTask.id,
+
+            result:
+                "correct",
+
+            reason:
+                "",
+
+            date:
+                new Date().toISOString()
+
         });
+
 
         saveData();
 
-        renderHistory();
-
         closeModal();
 
-        /*
-         * Если пользователь сейчас находится
-         * внутри блока, обновляем его.
-         */
 
         const blockTitle =
-            document.getElementById("blockTitle").textContent;
+            document
+                .getElementById("blockTitle")
+                .textContent;
 
-        if (blockTitle.startsWith("Задания ")) {
+
+        if (
+            blockTitle.startsWith("Задания ")
+        ) {
 
             const block =
-                blockTitle.replace("Задания ", "");
+                blockTitle.replace(
+                    "Задания ",
+                    ""
+                );
 
             renderBlock(block);
+
         }
+
     }
 
 
-    /* =========================================================
-       СОХРАНЕНИЕ ОШИБКИ
-    ========================================================= */
+    /* =====================================================
+       ОШИБКА
+    ===================================================== */
 
     function saveWrongAttempt() {
 
@@ -1443,43 +1862,64 @@
             return;
         }
 
+
         const reason =
-            document.getElementById("reasonInput")
+            document
+                .getElementById("reasonInput")
                 .value
                 .trim();
 
 
         attempts.push({
+
             id: Date.now(),
-            taskId: currentTask.id,
-            result: "wrong",
-            reason: reason,
-            date: new Date().toISOString()
+
+            taskId:
+                currentTask.id,
+
+            result:
+                "wrong",
+
+            reason:
+                reason,
+
+            date:
+                new Date().toISOString()
+
         });
 
-        saveData();
 
-        renderHistory();
+        saveData();
 
         closeModal();
 
 
         const blockTitle =
-            document.getElementById("blockTitle").textContent;
+            document
+                .getElementById("blockTitle")
+                .textContent;
 
-        if (blockTitle.startsWith("Задания ")) {
+
+        if (
+            blockTitle.startsWith("Задания ")
+        ) {
 
             const block =
-                blockTitle.replace("Задания ", "");
+                blockTitle.replace(
+                    "Задания ",
+                    ""
+                );
 
             renderBlock(block);
+
         }
+
     }
 
 
-    /* =========================================================
-       ИСТОРИЯ
-    ========================================================= */
+    /* =====================================================
+       ИСТОРИЯ ПОПЫТОК
+    ===================================================== */
 
     function renderHistory() {
 
@@ -1487,81 +1927,124 @@
             return;
         }
 
+
         const history =
-            document.getElementById("taskHistory");
+            document.getElementById(
+                "taskHistory"
+            );
+
 
         const taskAttempts =
-            getTaskAttempts(currentTask.id)
-                .slice()
-                .reverse();
+            getTaskAttempts(
+                currentTask.id
+            )
+            .slice()
+            .reverse();
 
 
-        if (taskAttempts.length === 0) {
+        if (
+            taskAttempts.length === 0
+        ) {
 
             history.innerHTML = `
+
                 <div class="history-item">
                     Попыток пока нет
                 </div>
+
             `;
 
             return;
+
         }
 
 
         history.innerHTML =
-            taskAttempts.map((attempt, index) => {
+            taskAttempts
+                .map(attempt => {
 
-                const date =
-                    new Date(attempt.date)
-                        .toLocaleString("ru-RU");
+                    const date =
+                        formatDate(
+                            attempt.date
+                        );
 
-                if (attempt.result === "correct") {
+
+                    if (
+                        attempt.result ===
+                        "correct"
+                    ) {
+
+                        return `
+
+                            <div class="history-item history-correct">
+
+                                ✓ Правильно
+
+                                <br>
+
+                                <small>
+                                    ${date}
+                                </small>
+
+                            </div>
+
+                        `;
+
+                    }
+
 
                     return `
-                        <div class="history-item history-correct">
-                            ✓ Правильно
+
+                        <div class="history-item history-wrong">
+
+                            ✕ Ошибка
+
+                            ${
+                                attempt.reason
+                                    ? `
+                                        <br>
+                                        Причина:
+                                        ${escapeHtml(attempt.reason)}
+                                    `
+                                    : ""
+                            }
+
                             <br>
-                            <small>${date}</small>
+
+                            <small>
+                                ${date}
+                            </small>
+
                         </div>
+
                     `;
 
-                }
-
-
-                return `
-                    <div class="history-item history-wrong">
-                        ✕ Ошибка
-
-                        ${
-                            attempt.reason
-                                ? `<br>Причина: ${escapeHtml(attempt.reason)}`
-                                : ""
-                        }
-
-                        <br>
-                        <small>${date}</small>
-                    </div>
-                `;
-
-            }).join("");
+                })
+                .join("");
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        ПОИСК
-    ========================================================= */
+    ===================================================== */
 
     function searchTasks() {
 
         const input =
-            document.getElementById("searchInput")
+            document
+                .getElementById(
+                    "searchInput"
+                )
                 .value
                 .trim()
                 .toUpperCase();
 
+
         const results =
-            document.getElementById("searchResults");
+            document.getElementById(
+                "searchResults"
+            );
 
 
         if (!input) {
@@ -1569,81 +2052,107 @@
             results.innerHTML = "";
 
             return;
+
         }
 
 
         const found =
             TASKS.filter(task =>
-                task.code.toUpperCase().includes(input)
+                task.code
+                    .toUpperCase()
+                    .includes(input)
             );
 
 
-        if (found.length === 0) {
+        if (
+            found.length === 0
+        ) {
 
             results.innerHTML = `
+
                 <div class="no-results">
                     Ничего не найдено
                 </div>
+
             `;
 
             return;
+
         }
 
 
         results.innerHTML =
-            found.map(task => {
+            found
+                .map(task => {
 
-                const status =
-                    getTaskStatus(task.id);
-
-                let statusText = "";
-
-                if (status === "correct") {
-                    statusText = " ✓";
-                }
-
-                if (status === "wrong") {
-                    statusText = " ✕";
-                }
+                    const status =
+                        getTaskStatus(
+                            task.id
+                        );
 
 
-                return `
-                    <div class="search-result">
+                    let statusText = "";
 
-                        <div>
-                            <div class="search-result-main">
-                                Вариант ${task.variant},
-                                задание ${task.number}${statusText}
+
+                    if (
+                        status === "correct"
+                    ) {
+                        statusText = " ✓";
+                    }
+
+
+                    if (
+                        status === "wrong"
+                    ) {
+                        statusText = " ✕";
+                    }
+
+
+                    return `
+
+                        <div class="search-result">
+
+                            <div>
+
+                                <div class="search-result-main">
+
+                                    Вариант ${task.variant},
+                                    задание ${task.number}${statusText}
+
+                                </div>
+
+                                <div class="search-result-code">
+                                    ${task.code}
+                                </div>
+
                             </div>
 
-                            <div class="search-result-code">
-                                ${task.code}
-                            </div>
+                            <button
+                                class="search-result-btn"
+                                onclick="openTask('${task.id}')"
+                            >
+                                Открыть
+                            </button>
+
                         </div>
 
-                        <button
-                            class="search-result-btn"
-                            onclick="openTask('${task.id}')"
-                        >
-                            Открыть
-                        </button>
+                    `;
 
-                    </div>
-                `;
-
-            }).join("");
+                })
+                .join("");
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        СТАТИСТИКА
-    ========================================================= */
+    ===================================================== */
 
     function getUniqueCompletedTasks() {
 
         return TASKS.filter(task =>
-            getTaskAttempts(task.id).length > 0
+            getTaskAttempts(task.id)
+                .length > 0
         );
 
     }
@@ -1652,7 +2161,8 @@
     function getCorrectTasks() {
 
         return TASKS.filter(task =>
-            getTaskStatus(task.id) === "correct"
+            getTaskStatus(task.id) ===
+            "correct"
         );
 
     }
@@ -1661,7 +2171,8 @@
     function getWrongTasks() {
 
         return TASKS.filter(task =>
-            getTaskStatus(task.id) === "wrong"
+            getTaskStatus(task.id) ===
+            "wrong"
         );
 
     }
@@ -1670,21 +2181,36 @@
     function calculateStats() {
 
         const completed =
-            getUniqueCompletedTasks().length;
+            getUniqueCompletedTasks()
+                .length;
+
 
         const correct =
-            getCorrectTasks().length;
+            getCorrectTasks()
+                .length;
+
 
         const wrong =
-            getWrongTasks().length;
+            getWrongTasks()
+                .length;
+
 
         const accuracy =
             completed > 0
-                ? Math.round((correct / completed) * 100)
+                ? Math.round(
+                    (correct / completed) *
+                    100
+                )
                 : 0;
 
+
         const progress =
-            Math.round((completed / TASKS.length) * 100);
+            TASKS.length > 0
+                ? Math.round(
+                    (completed / TASKS.length) *
+                    100
+                )
+                : 0;
 
 
         return {
@@ -1704,155 +2230,224 @@
             calculateStats();
 
 
-        document.getElementById("statCompleted")
-            .textContent = stats.completed;
+        document
+            .getElementById(
+                "statCompleted"
+            )
+            .textContent =
+                stats.completed;
 
-        document.getElementById("statCorrect")
-            .textContent = stats.correct;
 
-        document.getElementById("statWrong")
-            .textContent = stats.wrong;
+        document
+            .getElementById(
+                "statCorrect"
+            )
+            .textContent =
+                stats.correct;
 
-        document.getElementById("statAccuracy")
-            .textContent = stats.accuracy + "%";
 
-        document.getElementById("statProgressBar")
-            .style.width = stats.progress + "%";
+        document
+            .getElementById(
+                "statWrong"
+            )
+            .textContent =
+                stats.wrong;
+
+
+        document
+            .getElementById(
+                "statAccuracy"
+            )
+            .textContent =
+                stats.accuracy + "%";
+
+
+        document
+            .getElementById(
+                "statProgressBar"
+            )
+            .style.width =
+                stats.progress + "%";
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        ГЛАВНЫЙ ПРОГРЕСС
-       ========================================================= */
+    ===================================================== */
 
     function updateProgress() {
 
         const completed =
-            getUniqueCompletedTasks().length;
+            getUniqueCompletedTasks()
+                .length;
+
 
         const total =
             TASKS.length;
 
+
         const percent =
             total > 0
-                ? (completed / total) * 100
+                ? (completed / total) *
+                  100
                 : 0;
 
 
-        document.getElementById("progressText")
+        document
+            .getElementById(
+                "progressText"
+            )
             .textContent =
-            `${completed} / ${total}`;
+                `${completed} / ${total}`;
 
-        document.getElementById("progressFill")
+
+        document
+            .getElementById(
+                "progressFill"
+            )
             .style.width =
-            percent + "%";
+                percent + "%";
 
     }
 
 
-    /* =========================================================
-       ОШИБКИ
-    ========================================================= */
+    /* =====================================================
+       МОИ ОШИБКИ
+    ===================================================== */
 
     function updateErrors() {
 
         const container =
-            document.getElementById("errorsContainer");
+            document.getElementById(
+                "errorsContainer"
+            );
 
 
         const errors =
             attempts
-                .filter(attempt =>
-                    attempt.result === "wrong"
+                .filter(
+                    attempt =>
+                        attempt.result ===
+                        "wrong"
                 )
                 .slice()
                 .reverse();
 
 
-        if (errors.length === 0) {
+        if (
+            errors.length === 0
+        ) {
 
             container.innerHTML = `
-                <div class="empty-block">
-                    <div class="empty-icon">🎉</div>
 
-                    <h3>Ошибок пока нет</h3>
+                <div class="empty-block">
+
+                    <div class="empty-icon">
+                        🎉
+                    </div>
+
+                    <h3>
+                        Ошибок пока нет
+                    </h3>
 
                     <p>
                         Здесь появятся задания,
                         в которых ты допустила ошибку.
                     </p>
+
                 </div>
+
             `;
 
             return;
+
         }
 
 
         container.innerHTML =
-            errors.map(attempt => {
+            errors
+                .map(attempt => {
 
-                const task =
-                    TASKS.find(
-                        item => item.id === attempt.taskId
-                    );
-
-
-                if (!task) {
-                    return "";
-                }
+                    const task =
+                        TASKS.find(
+                            item =>
+                                item.id ===
+                                attempt.taskId
+                        );
 
 
-                return `
-                    <div class="error-item">
+                    if (!task) {
+                        return "";
+                    }
 
-                        <div class="error-top">
 
-                            <div>
-                                <div class="error-task">
-                                    Вариант ${task.variant},
-                                    задание ${task.number}
+                    return `
+
+                        <div class="error-item">
+
+                            <div class="error-top">
+
+                                <div>
+
+                                    <div class="error-task">
+
+                                        Вариант ${task.variant},
+                                        задание ${task.number}
+
+                                    </div>
+
+                                    <div class="error-code">
+
+                                        ${task.code}
+
+                                    </div>
+
                                 </div>
 
-                                <div class="error-code">
-                                    ${task.code}
-                                </div>
                             </div>
+
+                            ${
+                                attempt.reason
+                                    ? `
+                                        <div class="error-reason">
+
+                                            <b>Причина:</b>
+
+                                            ${escapeHtml(
+                                                attempt.reason
+                                            )}
+
+                                        </div>
+                                    `
+                                    : `
+                                        <div class="error-reason">
+                                            Причина не указана
+                                        </div>
+                                    `
+                            }
 
                         </div>
 
-                        ${
-                            attempt.reason
-                                ? `
-                                    <div class="error-reason">
-                                        <b>Причина:</b>
-                                        ${escapeHtml(attempt.reason)}
-                                    </div>
-                                `
-                                : `
-                                    <div class="error-reason">
-                                        Причина не указана
-                                    </div>
-                                `
-                        }
+                    `;
 
-                    </div>
-                `;
-
-            }).join("");
+                })
+                .join("");
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        ОТЧЁТ
-    ========================================================= */
+    ===================================================== */
 
-    function openReport(refresh = false) {
+    function openReport() {
 
         updateReport();
 
-        openScreen("reportScreen");
+        openScreen(
+            "reportScreen"
+        );
 
     }
 
@@ -1863,71 +2458,274 @@
             calculateStats();
 
 
-        document.getElementById("reportCompleted")
-            .textContent = stats.completed;
+        document
+            .getElementById(
+                "reportTotal"
+            )
+            .textContent =
+                TASKS.length;
 
-        document.getElementById("reportCorrect")
-            .textContent = stats.correct;
 
-        document.getElementById("reportWrong")
-            .textContent = stats.wrong;
+        document
+            .getElementById(
+                "reportCompleted"
+            )
+            .textContent =
+                stats.completed;
 
-        document.getElementById("reportAccuracy")
-            .textContent = stats.accuracy + "%";
 
-        document.getElementById("reportProgress")
-            .textContent = stats.progress + "%";
+        document
+            .getElementById(
+                "reportCorrect"
+            )
+            .textContent =
+                stats.correct;
+
+
+        document
+            .getElementById(
+                "reportWrong"
+            )
+            .textContent =
+                stats.wrong;
+
+
+        document
+            .getElementById(
+                "reportAccuracy"
+            )
+            .textContent =
+                stats.accuracy + "%";
+
+
+        document
+            .getElementById(
+                "reportProgress"
+            )
+            .textContent =
+                stats.progress + "%";
+
+
+        renderReportErrors();
 
     }
 
 
-    /* =========================================================
-       ОБНОВЛЕНИЕ ВСЕГО
-    ========================================================= */
+    /* =====================================================
+       ОШИБКИ В PDF
+    ===================================================== */
 
-    function updateAll() {
+    function renderReportErrors() {
 
-        updateProgress();
-        updateStats();
-        updateErrors();
+        const container =
+            document.getElementById(
+                "reportErrors"
+            );
+
+
+        const errors =
+            attempts
+                .filter(
+                    attempt =>
+                        attempt.result ===
+                        "wrong"
+                )
+                .slice()
+                .reverse();
+
+
+        if (
+            errors.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="no-report-errors">
+
+                    Ошибок пока нет.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            errors
+                .map(attempt => {
+
+                    const task =
+                        TASKS.find(
+                            item =>
+                                item.id ===
+                                attempt.taskId
+                        );
+
+
+                    if (!task) {
+                        return "";
+                    }
+
+
+                    const reason =
+                        attempt.reason &&
+                        attempt.reason.trim()
+                            ? escapeHtml(
+                                attempt.reason
+                              )
+                            : "Причина не указана";
+
+
+                    return `
+
+                        <div class="report-error">
+
+                            <div class="report-error-title">
+
+                                Вариант ${task.variant}
+                                · Задание ${task.number}
+
+                            </div>
+
+
+                            <div class="report-error-code">
+
+                                Код задания:
+                                ${task.code}
+
+                            </div>
+
+
+                            <div class="report-error-reason">
+
+                                <b>Причина ошибки:</b>
+                                ${reason}
+
+                            </div>
+
+
+                            <div class="report-error-date">
+
+                                Дата попытки:
+                                ${formatDate(
+                                    attempt.date
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                })
+                .join("");
+
+    }
+
+
+    /* =====================================================
+       ПЕЧАТЬ PDF
+    ===================================================== */
+
+    function printReport() {
+
         updateReport();
 
+        setTimeout(() => {
+
+            window.print();
+
+        }, 100);
+
     }
 
 
-    /* =========================================================
-       ЗАЩИТА ТЕКСТА
-    ========================================================= */
+    /* =====================================================
+       ДАТА
+    ===================================================== */
+
+    function formatDate(dateString) {
+
+        if (!dateString) {
+            return "Дата не указана";
+        }
+
+
+        const date =
+            new Date(dateString);
+
+
+        return date.toLocaleString(
+            "ru-RU",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       БЕЗОПАСНЫЙ ВЫВОД ТЕКСТА
+    ===================================================== */
 
     function escapeHtml(text) {
 
         return String(text)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
 
     }
 
 
-    /* =========================================================
-       ЗАКРЫТИЕ MODAL ПО КЛИКУ ВНЕ ОКНА
-    ========================================================= */
+    /* =====================================================
+       ЗАКРЫТИЕ MODAL
+    ===================================================== */
 
-    document.getElementById("taskModal")
-        .addEventListener("click", function(event) {
+    document
+        .getElementById("taskModal")
+        .addEventListener(
+            "click",
+            function(event) {
 
-            if (event.target === this) {
-                closeModal();
+                if (
+                    event.target === this
+                ) {
+                    closeModal();
+                }
+
             }
+        );
 
-        });
 
-
-    /* =========================================================
-       СТАРТ
-    ========================================================= */
+    /* =====================================================
+       ЗАПУСК
+    ===================================================== */
 
     updateAll();
 
