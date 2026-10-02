@@ -103,12 +103,6 @@
             font-weight: 600;
         }
 
-        .section-description {
-            margin-top: 6px;
-            color: #8a8495;
-            font-size: 13px;
-        }
-
         .bottom {
             margin-top: 24px;
             display: grid;
@@ -169,6 +163,12 @@
             font-family: monospace;
         }
 
+        .variant-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 24px 0 12px;
+        }
+
         .empty {
             background: white;
             border-radius: 20px;
@@ -193,6 +193,7 @@
 
         <div class="motivation">
             <div class="motivation-title">МОТИВАЦИЯ НА СЕГОДНЯ</div>
+
             <div class="motivation-text" id="motivation-text">
                 Маленький шаг сегодня — большой результат на экзамене 💜
             </div>
@@ -207,54 +208,37 @@
             <div class="section" onclick="openSection('1-5')">
                 <div class="section-number">РАЗДЕЛ 1</div>
                 <div class="section-name">Задания 1–5</div>
-                <div class="section-description">
-                    Аудирование
-                </div>
             </div>
 
             <div class="section" onclick="openSection('6-11')">
                 <div class="section-number">РАЗДЕЛ 2</div>
                 <div class="section-name">Задания 6–11</div>
-                <div class="section-description">
-                    Чтение
-                </div>
             </div>
 
             <div class="section" onclick="openSection('12')">
                 <div class="section-number">РАЗДЕЛ 3</div>
                 <div class="section-name">Задание 12</div>
-                <div class="section-description">
-                    Грамматика и лексика
-                </div>
             </div>
 
             <div class="section" onclick="openSection('13-19')">
                 <div class="section-number">РАЗДЕЛ 4</div>
                 <div class="section-name">Задания 13–19</div>
-                <div class="section-description">
-                    Грамматика и словообразование
-                </div>
             </div>
 
             <div class="section" onclick="openSection('20-28')">
                 <div class="section-number">РАЗДЕЛ 5</div>
                 <div class="section-name">Задания 20–28</div>
-                <div class="section-description">
-                    Лексика и грамматика
-                </div>
             </div>
 
             <div class="section" onclick="openSection('29-34')">
                 <div class="section-number">РАЗДЕЛ 6</div>
                 <div class="section-name">Задания 29–34</div>
-                <div class="section-description">
-                    Письмо
-                </div>
             </div>
 
         </div>
 
         <div class="bottom">
+
             <button class="bottom-button" onclick="showStats()">
                 📊 Статистика
             </button>
@@ -262,6 +246,7 @@
             <button class="bottom-button" onclick="showErrors()">
                 ❌ Мои ошибки
             </button>
+
         </div>
 
     </div>
@@ -357,10 +342,11 @@
                 today.getTime() / (1000 * 60 * 60 * 24)
             );
 
-        const index = dayNumber % motivations.length;
+        const index =
+            dayNumber % motivations.length;
 
-        document.getElementById("motivation-text").textContent =
-            motivations[index];
+        document.getElementById("motivation-text")
+            .textContent = motivations[index];
     }
 
 
@@ -404,29 +390,62 @@
         const list =
             document.getElementById("tasks-list");
 
-
         list.innerHTML = "";
 
 
-        // Пока показываем тестовые задания
-        for (let i = 1; i <= 5; i++) {
+        // Показываем все 95 заданий
+        if (section === "1-5") {
 
-            const card =
-                document.createElement("div");
+            let currentVariant = 0;
 
-            card.className = "task-card";
+            TASKS.forEach(task => {
 
-            card.innerHTML = `
-                <div class="task-number">
-                    Задание ${i}
-                </div>
+                if (task.variant !== currentVariant) {
 
-                <div class="task-code">
-                    TEST-${i}
+                    currentVariant = task.variant;
+
+                    const variantTitle =
+                        document.createElement("div");
+
+                    variantTitle.className =
+                        "variant-title";
+
+                    variantTitle.textContent =
+                        `Вариант ${task.variant}`;
+
+                    list.appendChild(variantTitle);
+                }
+
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "task-card";
+
+
+                card.innerHTML = `
+                    <div class="task-number">
+                        Задание ${task.number}
+                    </div>
+
+                    <div class="task-code">
+                        ${task.code}
+                    </div>
+                `;
+
+
+                list.appendChild(card);
+
+            });
+
+        } else {
+
+            list.innerHTML = `
+                <div class="empty">
+                    Задания пока не добавлены.
                 </div>
             `;
 
-            list.appendChild(card);
         }
 
     }
