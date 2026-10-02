@@ -183,7 +183,7 @@
 
 <div class="app">
 
-    <!-- ГЛАВНАЯ СТРАНИЦА -->
+    <!-- ГЛАВНАЯ -->
     <div id="home-page">
 
         <div class="header">
@@ -192,7 +192,9 @@
         </div>
 
         <div class="motivation">
-            <div class="motivation-title">МОТИВАЦИЯ НА СЕГОДНЯ</div>
+            <div class="motivation-title">
+                МОТИВАЦИЯ НА СЕГОДНЯ
+            </div>
 
             <div class="motivation-text" id="motivation-text">
                 Маленький шаг сегодня — большой результат на экзамене 💜
@@ -252,7 +254,7 @@
     </div>
 
 
-    <!-- СТРАНИЦА РАЗДЕЛА -->
+    <!-- РАЗДЕЛ -->
     <div id="section-page" class="hidden">
 
         <button class="back-button" onclick="goHome()">
@@ -269,7 +271,7 @@
     </div>
 
 
-    <!-- СТРАНИЦА СТАТИСТИКИ -->
+    <!-- СТАТИСТИКА -->
     <div id="stats-page" class="hidden">
 
         <button class="back-button" onclick="goHome()">
@@ -288,7 +290,7 @@
     </div>
 
 
-    <!-- СТРАНИЦА ОШИБОК -->
+    <!-- ОШИБКИ -->
     <div id="errors-page" class="hidden">
 
         <button class="back-button" onclick="goHome()">
@@ -311,7 +313,6 @@
 
 <script>
 
-    // Подключаем Telegram Mini App
     const tg = window.Telegram.WebApp;
 
     if (tg) {
@@ -320,7 +321,6 @@
     }
 
 
-    // Мотивационные фразы
     const motivations = [
         "Маленький шаг сегодня — большой результат на экзамене 💜",
         "Не нужно сделать всё сразу. Сделай одно задание сегодня ✨",
@@ -332,7 +332,6 @@
     ];
 
 
-    // Выбираем мотивацию в зависимости от дня
     function setMotivation() {
 
         const today = new Date();
@@ -350,7 +349,6 @@
     }
 
 
-    // Открытие раздела
     function openSection(section) {
 
         document.getElementById("home-page")
@@ -393,7 +391,6 @@
         list.innerHTML = "";
 
 
-        // Показываем все 95 заданий
         if (section === "1-5") {
 
             let currentVariant = 0;
@@ -411,7 +408,7 @@
                         "variant-title";
 
                     variantTitle.textContent =
-                        `Вариант ${task.variant}`;
+                        "Вариант " + task.variant;
 
                     list.appendChild(variantTitle);
                 }
@@ -451,7 +448,6 @@
     }
 
 
-    // Вернуться на главную
     function goHome() {
 
         document.getElementById("section-page")
@@ -469,7 +465,6 @@
     }
 
 
-    // Статистика
     function showStats() {
 
         document.getElementById("home-page")
@@ -487,7 +482,6 @@
     }
 
 
-    // Ошибки
     function showErrors() {
 
         document.getElementById("home-page")
@@ -505,7 +499,6 @@
     }
 
 
-    // Запускаем мотивацию
     setMotivation();
 
 </script>
