@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ОГЭ Английский — Трекер</title>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f3ff;
+            color: #29243a;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 24px;
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(100, 80, 150, 0.08);
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #817a91;
+            font-size: 14px;
+        }
+
+        .motivation {
+            background: linear-gradient(135deg, #e9ddff, #f4ecff);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .motivation-title {
+            font-size: 13px;
+            color: #8064ad;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .motivation-text {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 24px 0 12px;
+        }
+
+        .sections {
+            display: grid;
+            gap: 12px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 4px 20px rgba(100, 80, 150, 0.06);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .section:active {
+            transform: scale(0.98);
+        }
+
+        .section-number {
+            color: #8666b5;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .section-name {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .section-description {
+            margin-top: 6px;
+            color: #8a8495;
+            font-size: 13px;
+        }
+
+        .bottom {
+            margin-top: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .bottom-button {
+            border: none;
+            background: white;
+            border-radius: 18px;
+            padding: 16px 10px;
+            font-size: 14px;
+            color: #40364e;
+            box-shadow: 0 4px 20px rgba(100, 80, 150, 0.06);
+            cursor: pointer;
+        }
+
+        .bottom-button:active {
+            transform: scale(0.98);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .back-button {
+            border: none;
+            background: transparent;
+            color: #7656a3;
+            font-size: 15px;
+            padding: 0;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(100, 80, 150, 0.06);
+        }
+
+        .task-number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .task-code {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: #f0e8ff;
+            border-radius: 8px;
+            color: #74539e;
+            font-size: 13px;
+            font-family: monospace;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            color: #817a91;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ГЛАВНАЯ СТРАНИЦА -->
+    <div id="home-page">
+
+        <div class="header">
+            <h1>ОГЭ Английский 🇬🇧</h1>
+            <p>Трекер подготовки</p>
+        </div>
+
+        <div class="motivation">
+            <div class="motivation-title">МОТИВАЦИЯ НА СЕГОДНЯ</div>
+            <div class="motivation-text" id="motivation-text">
+                Маленький шаг сегодня — большой результат на экзамене 💜
+            </div>
+        </div>
+
+        <div class="section-title">
+            Разделы
+        </div>
+
+        <div class="sections">
+
+            <div class="section" onclick="openSection('1-5')">
+                <div class="section-number">РАЗДЕЛ 1</div>
+                <div class="section-name">Задания 1–5</div>
+                <div class="section-description">
+                    Аудирование
+                </div>
+            </div>
+
+            <div class="section" onclick="openSection('6-11')">
+                <div class="section-number">РАЗДЕЛ 2</div>
+                <div class="section-name">Задания 6–11</div>
+                <div class="section-description">
+                    Чтение
+                </div>
+            </div>
+
+            <div class="section" onclick="openSection('12')">
+                <div class="section-number">РАЗДЕЛ 3</div>
+                <div class="section-name">Задание 12</div>
+                <div class="section-description">
+                    Грамматика и лексика
+                </div>
+            </div>
+
+            <div class="section" onclick="openSection('13-19')">
+                <div class="section-number">РАЗДЕЛ 4</div>
+                <div class="section-name">Задания 13–19</div>
+                <div class="section-description">
+                    Грамматика и словообразование
+                </div>
+            </div>
+
+            <div class="section" onclick="openSection('20-28')">
+                <div class="section-number">РАЗДЕЛ 5</div>
+                <div class="section-name">Задания 20–28</div>
+                <div class="section-description">
+                    Лексика и грамматика
+                </div>
+            </div>
+
+            <div class="section" onclick="openSection('29-34')">
+                <div class="section-number">РАЗДЕЛ 6</div>
+                <div class="section-name">Задания 29–34</div>
+                <div class="section-description">
+                    Письмо
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom">
+            <button class="bottom-button" onclick="showStats()">
+                📊 Статистика
+            </button>
+
+            <button class="bottom-button" onclick="showErrors()">
+                ❌ Мои ошибки
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- СТРАНИЦА РАЗДЕЛА -->
+    <div id="section-page" class="hidden">
+
+        <button class="back-button" onclick="goHome()">
+            ← Назад
+        </button>
+
+        <div class="header">
+            <h1 id="section-title"></h1>
+            <p>Задания этого раздела</p>
+        </div>
+
+        <div id="tasks-list"></div>
+
+    </div>
+
+
+    <!-- СТРАНИЦА СТАТИСТИКИ -->
+    <div id="stats-page" class="hidden">
+
+        <button class="back-button" onclick="goHome()">
+            ← Назад
+        </button>
+
+        <div class="header">
+            <h1>📊 Статистика</h1>
+            <p>Твоя подготовка</p>
+        </div>
+
+        <div class="empty">
+            Статистика появится после выполнения заданий.
+        </div>
+
+    </div>
+
+
+    <!-- СТРАНИЦА ОШИБОК -->
+    <div id="errors-page" class="hidden">
+
+        <button class="back-button" onclick="goHome()">
+            ← Назад
+        </button>
+
+        <div class="header">
+            <h1>❌ Мои ошибки</h1>
+            <p>Здесь будут отображаться задания с ошибками.</p>
+        </div>
+
+        <div class="empty">
+            Пока ошибок нет.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // Подключаем Telegram Mini App
+    const tg = window.Telegram.WebApp;
+
+    if (tg) {
+        tg.ready();
+        tg.expand();
+    }
+
+
+    // Мотивационные фразы
+    const motivations = [
+        "Маленький шаг сегодня — большой результат на экзамене 💜",
+        "Не нужно сделать всё сразу. Сделай одно задание сегодня ✨",
+        "Каждая ошибка показывает, что именно нужно повторить 💜",
+        "Регулярность важнее идеального результата.",
+        "Ты уже готовишься — значит, становишься сильнее с каждым днём.",
+        "Ещё одно задание — ещё один шаг к цели 🌷",
+        "Ошибки — это часть подготовки, а не провал."
+    ];
+
+
+    // Выбираем мотивацию в зависимости от дня
+    function setMotivation() {
+
+        const today = new Date();
+
+        const dayNumber =
+            Math.floor(
+                today.getTime() / (1000 * 60 * 60 * 24)
+            );
+
+        const index = dayNumber % motivations.length;
+
+        document.getElementById("motivation-text").textContent =
+            motivations[index];
+    }
+
+
+    // Открытие раздела
+    function openSection(section) {
+
+        document.getElementById("home-page")
+            .classList.add("hidden");
+
+        document.getElementById("stats-page")
+            .classList.add("hidden");
+
+        document.getElementById("errors-page")
+            .classList.add("hidden");
+
+        document.getElementById("section-page")
+            .classList.remove("hidden");
+
+
+        const titles = {
+
+            "1-5": "Задания 1–5",
+
+            "6-11": "Задания 6–11",
+
+            "12": "Задание 12",
+
+            "13-19": "Задания 13–19",
+
+            "20-28": "Задания 20–28",
+
+            "29-34": "Задания 29–34"
+
+        };
+
+
+        document.getElementById("section-title")
+            .textContent = titles[section];
+
+
+        const list =
+            document.getElementById("tasks-list");
+
+
+        list.innerHTML = "";
+
+
+        // Пока показываем тестовые задания
+        for (let i = 1; i <= 5; i++) {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "task-card";
+
+            card.innerHTML = `
+                <div class="task-number">
+                    Задание ${i}
+                </div>
+
+                <div class="task-code">
+                    TEST-${i}
+                </div>
+            `;
+
+            list.appendChild(card);
+        }
+
+    }
+
+
+    // Вернуться на главную
+    function goHome() {
+
+        document.getElementById("section-page")
+            .classList.add("hidden");
+
+        document.getElementById("stats-page")
+            .classList.add("hidden");
+
+        document.getElementById("errors-page")
+            .classList.add("hidden");
+
+        document.getElementById("home-page")
+            .classList.remove("hidden");
+
+    }
+
+
+    // Статистика
+    function showStats() {
+
+        document.getElementById("home-page")
+            .classList.add("hidden");
+
+        document.getElementById("errors-page")
+            .classList.add("hidden");
+
+        document.getElementById("section-page")
+            .classList.add("hidden");
+
+        document.getElementById("stats-page")
+            .classList.remove("hidden");
+
+    }
+
+
+    // Ошибки
+    function showErrors() {
+
+        document.getElementById("home-page")
+            .classList.add("hidden");
+
+        document.getElementById("stats-page")
+            .classList.add("hidden");
+
+        document.getElementById("section-page")
+            .classList.add("hidden");
+
+        document.getElementById("errors-page")
+            .classList.remove("hidden");
+
+    }
+
+
+    // Запускаем мотивацию
+    setMotivation();
+
+</script>
+
+</body>
+</html>
