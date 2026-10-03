@@ -1,2090 +1,1351 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
-
-  <title>ОГЭ Английский — Трекер</title>
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Telegram Mini App -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Задания -->
-  <script src="./data/tasks.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    :root {
-      --purple: #9b7bea;
-      --purple-dark: #8063d5;
-      --purple-light: #f1eaff;
-      --purple-soft: #f8f4ff;
-
-      --pink: #e8a6d4;
-      --pink-light: #fff0fa;
-
-      --green: #55c58b;
-      --green-light: #eafaf2;
-
-      --red: #e97878;
-      --red-light: #fff0f0;
-
-      --yellow: #f0bd5c;
-      --yellow-light: #fff8e7;
-
-      --background: #faf8ff;
-      --white: #ffffff;
-
-      --text: #302b3f;
-      --muted: #8b8498;
-
-      --border: #eee9f7;
-
-      --shadow:
-        0 10px 30px rgba(117, 91, 174, 0.12);
-
-      --radius: 22px;
-    }
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100%;
-    }
-
-    body {
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
-      color: var(--text);
-
-      background:
-        radial-gradient(
-          circle at 0 0,
-          #eee6ff 0,
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 100% 0,
-          #f9e7f4 0,
-          transparent 27%
-        ),
-        var(--background);
-    }
-
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-      border: 0;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .screen {
-      min-height: 100vh;
-    }
-
-    /* =====================================================
-       AUTH
-    ===================================================== */
-
-    #authScreen {
-      min-height: 100vh;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 24px;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 430px;
-
-      background: rgba(255,255,255,.94);
-
-      border: 1px solid rgba(255,255,255,.8);
-
-      border-radius: 30px;
-
-      padding: 30px 24px;
-
-      box-shadow:
-        0 20px 60px rgba(117,91,174,.18);
-    }
-
-    .auth-logo {
-      width: 72px;
-      height: 72px;
-
-      border-radius: 24px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      margin: 0 auto 16px;
-
-      font-size: 35px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #d8c5ff,
-          #f4c7e6
-        );
-    }
-
-    .auth-title {
-      text-align: center;
-
-      font-size: 26px;
-      font-weight: 800;
-
-      margin-bottom: 7px;
-    }
-
-    .auth-subtitle {
-      text-align: center;
-
-      color: var(--muted);
-
-      font-size: 14px;
-
-      margin-bottom: 25px;
-    }
-
-    .auth-tabs {
-      display: flex;
-      gap: 7px;
-
-      padding: 5px;
-
-      background: var(--purple-soft);
-
-      border-radius: 15px;
-
-      margin-bottom: 20px;
-    }
-
-    .auth-tab {
-      flex: 1;
-
-      padding: 11px;
-
-      border-radius: 11px;
-
-      background: transparent;
-
-      color: var(--muted);
-
-      font-weight: 700;
-    }
-
-    .auth-tab.active {
-      background: white;
-
-      color: var(--purple-dark);
-
-      box-shadow: 0 3px 12px rgba(117,91,174,.1);
-    }
-
-    .field {
-      margin-bottom: 13px;
-    }
-
-    .field label {
-      display: block;
-
-      margin-bottom: 6px;
-
-      font-size: 13px;
-
-      font-weight: 700;
-
-      color: #625a70;
-    }
-
-    .field input,
-    .field textarea {
-      width: 100%;
-
-      border: 1px solid var(--border);
-
-      border-radius: 14px;
-
-      padding: 13px 14px;
-
-      outline: none;
-
-      background: #fff;
-
-      color: var(--text);
-    }
-
-    .field input:focus,
-    .field textarea:focus {
-      border-color: #c6b3f5;
-
-      box-shadow:
-        0 0 0 4px rgba(155,123,234,.1);
-    }
-
-    .primary-btn {
-      width: 100%;
-
-      padding: 14px;
-
-      border-radius: 15px;
-
-      color: white;
-
-      font-weight: 800;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--purple),
-          #b48ce8
-        );
-
-      box-shadow:
-        0 8px 20px rgba(155,123,234,.25);
-    }
-
-    .secondary-btn {
-      width: 100%;
-
-      padding: 13px;
-
-      border-radius: 15px;
-
-      color: var(--purple-dark);
-
-      background: var(--purple-light);
-
-      font-weight: 700;
-    }
-
-    .link-btn {
-      background: transparent;
-
-      color: var(--purple-dark);
-
-      font-size: 13px;
-
-      font-weight: 700;
-
-      padding: 8px 0;
-    }
-
-    .auth-message {
-      margin-top: 14px;
-
-      padding: 11px 13px;
-
-      border-radius: 12px;
-
-      font-size: 13px;
-
-      line-height: 1.45;
-    }
-
-    .auth-message.error {
-      background: var(--red-light);
-      color: #a64f4f;
-    }
-
-    .auth-message.success {
-      background: var(--green-light);
-      color: #3b8d67;
-    }
-
-    /* =====================================================
-       APP
-    ===================================================== */
-
-    #appScreen {
-      min-height: 100vh;
-
-      padding-bottom: 90px;
-    }
-
-    .topbar {
-      position: sticky;
-
-      top: 0;
-
-      z-index: 20;
-
-      padding:
-        15px
-        16px
-        13px;
-
-      backdrop-filter: blur(18px);
-
-      background: rgba(250,248,255,.82);
-
-      border-bottom:
-        1px solid rgba(238,233,247,.8);
-    }
-
-    .topbar-inner {
-      max-width: 760px;
-
-      margin: 0 auto;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-    }
-
-    .brand-icon {
-      width: 42px;
-      height: 42px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 14px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #d9c9ff,
-          #f4c7e7
-        );
-
-      font-size: 21px;
-    }
-
-    .brand-title {
-      font-weight: 850;
-
-      font-size: 16px;
-    }
-
-    .brand-subtitle {
-      color: var(--muted);
-
-      font-size: 11px;
-
-      margin-top: 2px;
-    }
-
-    .profile-button {
-      width: 42px;
-      height: 42px;
-
-      border-radius: 50%;
-
-      background: var(--purple-light);
-
-      color: var(--purple-dark);
-
-      font-weight: 800;
-    }
-
-    .container {
-      max-width: 760px;
-
-      margin: 0 auto;
-
-      padding:
-        18px
-        16px
-        0;
-    }
-
-    /* =====================================================
-       MOTIVATION
-    ===================================================== */
-
-    .motivation {
-      position: relative;
-
-      overflow: hidden;
-
-      border-radius: 25px;
-
-      padding: 22px;
-
-      color: #40384e;
-
-      background:
-        linear-gradient(
-          135deg,
-          #eee6ff 0%,
-          #f8e9f6 100%
-        );
-
-      box-shadow: var(--shadow);
-
-      margin-bottom: 17px;
-    }
-
-    .motivation::after {
-      content: "✦";
-
-      position: absolute;
-
-      right: 22px;
-      top: 12px;
-
-      font-size: 46px;
-
-      opacity: .18;
-    }
-
-    .motivation-title {
-      font-size: 20px;
-
-      font-weight: 850;
-
-      margin-bottom: 7px;
-    }
-
-    .motivation-text {
-      color: #71677d;
-
-      font-size: 14px;
-
-      line-height: 1.5;
-
-      max-width: 85%;
-    }
-
-    /* =====================================================
-       QUICK CARDS
-    ===================================================== */
-
-    .quick-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, 1fr);
-
-      gap: 12px;
-
-      margin-bottom: 18px;
-    }
-
-    .quick-card {
-      background: white;
-
-      border: 1px solid var(--border);
-
-      border-radius: 20px;
-
-      padding: 17px;
-
-      box-shadow:
-        0 7px 24px rgba(117,91,174,.07);
-
-      text-align: left;
-    }
-
-    .quick-icon {
-      font-size: 23px;
-
-      margin-bottom: 9px;
-    }
-
-    .quick-title {
-      font-weight: 800;
-
-      font-size: 14px;
-    }
-
-    .quick-value {
-      color: var(--muted);
-
-      font-size: 12px;
-
-      margin-top: 4px;
-    }
-
-    /* =====================================================
-       SECTION
-    ===================================================== */
-
-    .section-title {
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      margin:
-        24px 2px
-        11px;
-    }
-
-    .section-title h2 {
-      margin: 0;
-
-      font-size: 19px;
-
-      font-weight: 850;
-    }
-
-    .section-title span {
-      color: var(--muted);
-
-      font-size: 12px;
-    }
-
-    /* =====================================================
-       TASK CARDS
-    ===================================================== */
-
-    .task-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, 1fr);
-
-      gap: 10px;
-    }
-
-    .task-card {
-      position: relative;
-
-      min-height: 108px;
-
-      padding: 16px;
-
-      border-radius: 20px;
-
-      background: white;
-
-      border: 1px solid var(--border);
-
-      box-shadow:
-        0 7px 22px rgba(117,91,174,.07);
-
-      text-align: left;
-
-      transition:
-        transform .15s ease,
-        box-shadow .15s ease;
-    }
-
-    .task-card:active {
-      transform: scale(.98);
-    }
-
-    .task-number {
-      color: var(--purple-dark);
-
-      font-size: 12px;
-
-      font-weight: 800;
-    }
-
-    .task-name {
-      margin-top: 8px;
-
-      font-size: 16px;
-
-      font-weight: 850;
-    }
-
-    .task-status {
-      margin-top: 9px;
-
-      font-size: 11px;
-
-      font-weight: 700;
-    }
-
-    .status-correct {
-      color: #3e9c70;
-    }
-
-    .status-wrong {
-      color: #c75d5d;
-    }
-
-    .status-none {
-      color: var(--muted);
-    }
-
-    .task-dot {
-      position: absolute;
-
-      top: 13px;
-      right: 13px;
-
-      width: 9px;
-      height: 9px;
-
-      border-radius: 50%;
-    }
-
-    .task-dot.correct {
-      background: var(--green);
-    }
-
-    .task-dot.wrong {
-      background: var(--red);
-    }
-
-    /* =====================================================
-       PAGES
-    ===================================================== */
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    /* =====================================================
-       STATISTICS
-    ===================================================== */
-
-    .stat-big {
-      background: white;
-
-      border: 1px solid var(--border);
-
-      border-radius: 25px;
-
-      padding: 23px;
-
-      text-align: center;
-
-      box-shadow: var(--shadow);
-
-      margin-bottom: 12px;
-    }
-
-    .stat-percent {
-      font-size: 45px;
-
-      font-weight: 900;
-
-      color: var(--purple-dark);
-    }
-
-    .stat-label {
-      color: var(--muted);
-
-      font-size: 13px;
-    }
-
-    .stats-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, 1fr);
-
-      gap: 10px;
-    }
-
-    .stat-card {
-      background: white;
-
-      border-radius: 19px;
-
-      padding: 18px;
-
-      border: 1px solid var(--border);
-    }
-
-    .stat-card-icon {
-      font-size: 22px;
-
-      margin-bottom: 8px;
-    }
-
-    .stat-card-number {
-      font-size: 25px;
-
-      font-weight: 900;
-    }
-
-    .stat-card-label {
-      margin-top: 3px;
-
-      font-size: 12px;
-
-      color: var(--muted);
-    }
-
-    /* =====================================================
-       ERRORS
-    ===================================================== */
-
-    .error-item {
-      background: white;
-
-      border: 1px solid #f0dddd;
-
-      border-radius: 18px;
-
-      padding: 15px;
-
-      margin-bottom: 10px;
-
-      box-shadow:
-        0 5px 18px rgba(190,100,100,.06);
-    }
-
-    .error-header {
-      display: flex;
-
-      justify-content: space-between;
-
-      gap: 10px;
-    }
-
-    .error-task {
-      font-weight: 850;
-    }
-
-    .error-date {
-      color: var(--muted);
-
-      font-size: 11px;
-    }
-
-    .error-reason {
-      margin-top: 9px;
-
-      padding: 10px;
-
-      background: var(--red-light);
-
-      border-radius: 12px;
-
-      color: #895555;
-
-      font-size: 13px;
-
-      line-height: 1.45;
-    }
-
-    /* =====================================================
-       PROFILE
-    ===================================================== */
-
-    .profile-card {
-      background: white;
-
-      border: 1px solid var(--border);
-
-      border-radius: 25px;
-
-      padding: 22px;
-
-      box-shadow: var(--shadow);
-    }
-
-    .profile-avatar {
-      width: 72px;
-      height: 72px;
-
-      margin: 0 auto 13px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 50%;
-
-      background:
-        linear-gradient(
-          135deg,
-          #d9c9ff,
-          #f3c9e7
-        );
-
-      color: #6c58a0;
-
-      font-size: 27px;
-
-      font-weight: 900;
-    }
-
-    .profile-name {
-      text-align: center;
-
-      font-size: 20px;
-
-      font-weight: 900;
-    }
-
-    .profile-email {
-      text-align: center;
-
-      color: var(--muted);
-
-      font-size: 13px;
-
-      margin-top: 4px;
-
-      margin-bottom: 25px;
-    }
-
-    /* =====================================================
-       BOTTOM NAV
-    ===================================================== */
-
-    .bottom-nav {
-      position: fixed;
-
-      z-index: 30;
-
-      left: 50%;
-
-      bottom: 13px;
-
-      transform: translateX(-50%);
-
-      width:
-        min(
-          calc(100% - 24px),
-          650px
-        );
-
-      padding: 7px;
-
-      display: grid;
-
-      grid-template-columns:
-        repeat(4, 1fr);
-
-      gap: 4px;
-
-      background:
-        rgba(255,255,255,.92);
-
-      backdrop-filter: blur(20px);
-
-      border:
-        1px solid rgba(238,233,247,.95);
-
-      border-radius: 22px;
-
-      box-shadow:
-        0 10px 35px rgba(70,50,110,.18);
-    }
-
-    .nav-button {
-      padding: 9px 4px;
-
-      border-radius: 16px;
-
-      background: transparent;
-
-      color: var(--muted);
-
-      font-size: 10px;
-
-      font-weight: 750;
-    }
-
-    .nav-button .nav-icon {
-      display: block;
-
-      font-size: 20px;
-
-      margin-bottom: 2px;
-    }
-
-    .nav-button.active {
-      color: var(--purple-dark);
-
-      background: var(--purple-light);
-    }
-
-    /* =====================================================
-       MODAL
-    ===================================================== */
-
-    .modal-overlay {
-      position: fixed;
-
-      z-index: 100;
-
-      inset: 0;
-
-      display: flex;
-
-      align-items: flex-end;
-
-      justify-content: center;
-
-      background: rgba(35,28,50,.38);
-
-      backdrop-filter: blur(5px);
-
-      padding: 12px;
-    }
-
-    .modal {
-      width: 100%;
-
-      max-width: 700px;
-
-      max-height: 92vh;
-
-      overflow-y: auto;
-
-      background: white;
-
-      border-radius: 27px;
-
-      padding: 22px;
-
-      box-shadow:
-        0 25px 80px rgba(50,35,80,.28);
-    }
-
-    .modal-head {
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: flex-start;
-
-      gap: 12px;
-
-      margin-bottom: 16px;
-    }
-
-    .modal-title {
-      font-size: 21px;
-
-      font-weight: 900;
-    }
-
-    .close-btn {
-      width: 35px;
-      height: 35px;
-
-      border-radius: 50%;
-
-      background: var(--purple-light);
-
-      color: var(--purple-dark);
-
-      font-size: 18px;
-    }
-
-    .task-content {
-      padding: 17px;
-
-      background: var(--purple-soft);
-
-      border-radius: 18px;
-
-      font-size: 14px;
-
-      line-height: 1.6;
-
-      white-space: pre-wrap;
-
-      overflow-wrap: anywhere;
-
-      margin-bottom: 14px;
-    }
-
-    .attempt-buttons {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, 1fr);
-
-      gap: 10px;
-
-      margin-top: 14px;
-    }
-
-    .correct-btn {
-      padding: 14px;
-
-      border-radius: 15px;
-
-      background: var(--green-light);
-
-      color: #36845f;
-
-      font-weight: 850;
-    }
-
-    .wrong-btn {
-      padding: 14px;
-
-      border-radius: 15px;
-
-      background: var(--red-light);
-
-      color: #b35353;
-
-      font-weight: 850;
-    }
-
-    .reason-box {
-      margin-top: 12px;
-    }
-
-    .history-title {
-      margin-top: 23px;
-
-      margin-bottom: 10px;
-
-      font-weight: 850;
-    }
-
-    .history-item {
-      display: flex;
-
-      align-items: flex-start;
-
-      gap: 10px;
-
-      padding: 11px 0;
-
-      border-bottom: 1px solid var(--border);
-    }
-
-    .history-result {
-      min-width: 24px;
-
-      font-size: 17px;
-    }
-
-    .history-main {
-      flex: 1;
-    }
-
-    .history-result-text {
-      font-weight: 750;
-
-      font-size: 13px;
-    }
-
-    .history-time {
-      margin-top: 2px;
-
-      color: var(--muted);
-
-      font-size: 11px;
-    }
-
-    .history-reason {
-      margin-top: 5px;
-
-      font-size: 12px;
-
-      color: #8b5a5a;
-    }
-
-    /* =====================================================
-       EMPTY
-    ===================================================== */
-
-    .empty {
-      background: white;
-
-      border: 1px dashed #ddd5ed;
-
-      border-radius: 20px;
-
-      padding: 25px;
-
-      text-align: center;
-
-      color: var(--muted);
-
-      font-size: 13px;
-    }
-
-    /* =====================================================
-       TOAST
-    ===================================================== */
-
-    #toast {
-      position: fixed;
-
-      z-index: 200;
-
-      left: 50%;
-
-      bottom: 90px;
-
-      transform:
-        translateX(-50%)
-        translateY(20px);
-
-      opacity: 0;
-
-      pointer-events: none;
-
-      padding: 12px 16px;
-
-      border-radius: 15px;
-
-      background: #3c344b;
-
-      color: white;
-
-      font-size: 13px;
-
-      transition: .25s;
-
-      max-width: calc(100% - 30px);
-
-      text-align: center;
-    }
-
-    #toast.show {
-      opacity: 1;
-
-      transform:
-        translateX(-50%)
-        translateY(0);
-    }
-
-    /* =====================================================
-       RESPONSIVE
-    ===================================================== */
-
-    @media (max-width: 430px) {
-      .task-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .quick-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .container {
-        padding-left: 13px;
-        padding-right: 13px;
-      }
-    }
-
-    /* =====================================================
-       PRINT
-    ===================================================== */
-
-    @media print {
-      body {
-        background: white !important;
-      }
-
-      .topbar,
-      .bottom-nav,
-      .modal-overlay,
-      .no-print {
-        display: none !important;
-      }
-
-      #appScreen {
-        display: block !important;
-        padding: 0;
-      }
-
-      .container {
-        max-width: none;
-        padding: 20px;
-      }
-
-      .page {
-        display: block !important;
-      }
-
-      .print-only {
-        display: block !important;
-      }
-    }
-
-    .print-only {
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>Путь к ОГЭ — Английский</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="./data/tasks.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent
+}
+
+:root{
+  --purple:#9b7bea;
+  --purple2:#8063d5;
+  --bg:#faf8ff;
+  --text:#302b3f;
+  --muted:#8b8498;
+  --green:#55c58b;
+  --red:#e97878;
+  --shadow:0 8px 28px rgba(117,91,174,.12)
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 0 0,#eee6ff 0,transparent 28%),
+    radial-gradient(circle at 100% 0,#f9e7f4 0,transparent 25%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh
+}
+
+button,input,textarea{
+  font:inherit
+}
+
+button{
+  cursor:pointer
+}
+
+.hidden{
+  display:none!important
+}
+
+/* =========================
+   AUTH
+========================= */
+
+#authScreen{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px
+}
+
+.auth-box{
+  width:100%;
+  max-width:440px;
+  background:rgba(255,255,255,.97);
+  border-radius:30px;
+  padding:32px 27px;
+  box-shadow:var(--shadow)
+}
+
+.auth-logo{
+  width:70px;
+  height:70px;
+  margin:0 auto 18px;
+  border-radius:23px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:31px;
+  color:#fff;
+  background:linear-gradient(135deg,#b8a1ff,#e8a7d8)
+}
+
+.auth-title{
+  text-align:center;
+  font-size:28px;
+  font-weight:800
+}
+
+.auth-subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin:7px 0 24px;
+  font-size:14px
+}
+
+.auth-tabs{
+  display:flex;
+  background:#f1edff;
+  padding:4px;
+  border-radius:14px;
+  margin-bottom:20px
+}
+
+.auth-tab{
+  flex:1;
+  border:0;
+  background:transparent;
+  padding:11px;
+  border-radius:11px;
+  color:var(--muted);
+  font-weight:700
+}
+
+.auth-tab.active{
+  background:#fff;
+  color:var(--purple2);
+  box-shadow:0 3px 10px rgba(80,50,140,.08)
+}
+
+.field{
+  margin-bottom:14px
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:7px
+}
+
+.field input,
+.field textarea{
+  width:100%;
+  border:2px solid #eee9f7;
+  background:#fcfbff;
+  border-radius:13px;
+  padding:13px 14px;
+  outline:none;
+  color:var(--text)
+}
+
+.field input:focus,
+.field textarea:focus{
+  border-color:#b19af4;
+  background:#fff
+}
+
+.primary-btn{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:14px;
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+  color:#fff;
+  font-weight:800;
+  box-shadow:0 8px 20px rgba(128,99,213,.22)
+}
+
+.primary-btn:disabled{
+  opacity:.65
+}
+
+.text-btn{
+  border:0;
+  background:transparent;
+  color:var(--purple2);
+  font-weight:700;
+  padding:11px 0
+}
+
+.auth-error,
+.auth-success{
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:14px;
+  font-size:13px;
+  line-height:1.4
+}
+
+.auth-error{
+  background:#fff0f0;
+  color:#b44d4d
+}
+
+.auth-success{
+  background:#ebfff4;
+  color:#39825d
+}
+
+/* =========================
+   APP
+========================= */
+
+#app{
+  min-height:100vh
+}
+
+.top{
+  padding:18px
+}
+
+.top-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px
+}
+
+.brand{
+  font-size:23px;
+  font-weight:850
+}
+
+.brand-small{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:3px
+}
+
+.profile-mini{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:0;
+  background:#fff;
+  border-radius:15px;
+  padding:7px 10px;
+  box-shadow:0 4px 14px rgba(100,80,140,.07)
+}
+
+.avatar,
+.big-avatar{
+  background:linear-gradient(135deg,#b39af8,#e3a5d3);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800
+}
+
+.avatar{
+  width:35px;
+  height:35px;
+  border-radius:50%
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+  margin:5px 18px 0;
+  padding:25px;
+  border-radius:25px;
+  color:#fff;
+  background:linear-gradient(135deg,#a88bed,#c59de7,#e0a9d2);
+  box-shadow:0 15px 32px rgba(139,108,207,.18)
+}
+
+.hero-title{
+  font-size:26px;
+  font-weight:850
+}
+
+.hero-text{
+  margin-top:5px;
+  opacity:.9;
+  font-size:14px
+}
+
+.progress-number{
+  font-size:31px;
+  font-weight:850;
+  margin-top:21px
+}
+
+.progress-caption{
+  font-size:13px;
+  opacity:.85
+}
+
+.progress-bar{
+  height:9px;
+  background:rgba(255,255,255,.3);
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:12px
+}
+
+.progress-fill{
+  height:100%;
+  width:0;
+  background:#fff;
+  border-radius:20px;
+  transition:width .3s
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+  padding:10px 18px 40px
+}
+
+.section-title{
+  font-size:19px;
+  font-weight:850;
+  margin:22px 0 12px
+}
+
+.search{
+  width:100%;
+  border:2px solid #eee9f7;
+  border-radius:14px;
+  padding:13px 15px;
+  background:#fff;
+  outline:none
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+
+.menu-card{
+  border:0;
+  background:#fff;
+  border-radius:19px;
+  padding:19px;
+  text-align:left;
+  min-height:112px;
+  box-shadow:var(--shadow)
+}
+
+.menu-icon{
+  font-size:27px;
+  margin-bottom:12px
+}
+
+.menu-title{
+  font-weight:800;
+  font-size:15px
+}
+
+.menu-desc{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px
+}
+
+.screen{
+  display:none
+}
+
+.screen.active{
+  display:block
+}
+
+.back-btn{
+  border:0;
+  background:#eee8ff;
+  color:var(--purple2);
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:800
+}
+
+/* =========================
+   TASKS
+========================= */
+
+.task-block,
+.stat-card,
+.profile-card{
+  background:#fff;
+  border-radius:19px;
+  padding:17px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow)
+}
+
+.task-block-title{
+  font-weight:850;
+  margin-bottom:12px
+}
+
+.variant-list{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px
+}
+
+.variant-btn{
+  border:1px solid #e7e0f5;
+  background:#faf8ff;
+  color:var(--purple2);
+  border-radius:13px;
+  padding:13px;
+  font-weight:800
+}
+
+.task-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px
+}
+
+.task-number{
+  width:45px;
+  height:40px;
+  border:1px solid #e4def1;
+  background:#faf8ff;
+  border-radius:11px;
+  font-weight:800
+}
+
+.task-number.done{
+  background:var(--green);
+  color:#fff;
+  border-color:var(--green)
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stat-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px
+}
+
+.stat-value{
+  font-size:28px;
+  font-weight:850;
+  color:var(--purple2)
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-card{
+  text-align:center;
+  padding:24px
+}
+
+.big-avatar{
+  width:80px;
+  height:80px;
+  border-radius:27px;
+  margin:0 auto 13px;
+  font-size:31px
+}
+
+.profile-name{
+  font-size:21px;
+  font-weight:850
+}
+
+.profile-email{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:4px
+}
+
+.logout-btn,
+.secondary-btn{
+  margin-top:12px;
+  width:100%;
+  border:0;
+  border-radius:13px;
+  padding:13px;
+  font-weight:800
+}
+
+.logout-btn{
+  background:#fff0f0;
+  color:#b55050
+}
+
+.secondary-btn{
+  background:#f1edff;
+  color:var(--purple2)
+}
+
+.profile-edit{
+  display:none;
+  text-align:left;
+  margin-top:18px
+}
+
+.profile-edit.active{
+  display:block
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:rgba(47,39,61,.42);
+  display:flex;
+  align-items:flex-end
+}
+
+.modal-box{
+  width:100%;
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:25px 25px 0 0;
+  padding:22px 18px 30px
+}
+
+.modal-close{
+  float:right;
+  width:37px;
+  height:37px;
+  border:0;
+  border-radius:50%;
+  background:#f0ebff;
+  color:var(--purple2)
+}
+
+.task-code{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:8px
+}
+
+.task-question{
+  font-size:18px;
+  font-weight:750;
+  line-height:1.45;
+  margin-bottom:18px
+}
+
+.answer-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.correct-btn,
+.wrong-btn{
+  border:0;
+  border-radius:13px;
+  padding:14px;
+  font-weight:800
+}
+
+.correct-btn{
+  background:#e8faef;
+  color:#32835d
+}
+
+.wrong-btn{
+  background:#fff0f0;
+  color:#b65050
+}
+
+.history-item{
+  border-top:1px solid #eeeaf5;
+  padding:12px 0;
+  font-size:13px
+}
+
+.report-error{
+  border-top:1px solid #eeeaf5;
+  padding:12px 0
+}
+
+.muted{
+  color:var(--muted);
+  font-size:12px
+}
+
+/* =========================
+   ADAPTIVE
+========================= */
+
+@media(max-width:380px){
+  .menu-grid,
+  .answer-buttons{
+    grid-template-columns:1fr
+  }
+}
+
+/* =========================
+   PRINT
+========================= */
+
+@media print{
+  .top,
+  .hero,
+  .back-btn,
+  #printBtn{
+    display:none!important
+  }
+
+  .screen{
+    display:none!important
+  }
+
+  #reportScreen{
+    display:block!important
+  }
+
+  .profile-card{
+    box-shadow:none
+  }
+}
+</style>
 </head>
 
 <body>
 
-<!-- =======================================================
-     AUTH SCREEN
-======================================================= -->
+<!-- =========================================================
+     AUTH
+========================================================= -->
 
-<section id="authScreen" class="screen">
+<div id="authScreen">
 
-  <div class="auth-card">
-
-    <div class="auth-logo">
-      📚
-    </div>
-
-    <div class="auth-title">
-      Путь к ОГЭ
-    </div>
-
-    <div class="auth-subtitle">
-      Твой личный трекер подготовки по английскому
-    </div>
+  <div class="auth-box">
 
     <div class="auth-tabs">
-
-      <button
-        id="loginTab"
-        class="auth-tab active"
-        type="button"
-      >
-        Войти
-      </button>
-
-      <button
-        id="registerTab"
-        class="auth-tab"
-        type="button"
-      >
-        Регистрация
-      </button>
-
+      <button class="auth-tab active" id="loginTab">Войти</button>
+      <button class="auth-tab" id="registerTab">Регистрация</button>
     </div>
 
     <!-- LOGIN -->
 
-    <form id="loginForm">
+    <div id="loginForm">
+
+      <div class="auth-logo">📚</div>
+
+      <div class="auth-title">
+        ОГЭ Английский
+      </div>
+
+      <div class="auth-subtitle">
+        Трекер подготовки к экзамену
+      </div>
+
+      <div id="loginMessage"></div>
 
       <div class="field">
-
-        <label>
-          Email
-        </label>
-
+        <label>Email</label>
         <input
           id="loginEmail"
           type="email"
           autocomplete="email"
-          placeholder="example@mail.ru"
-          required
+          placeholder="Введите email"
         >
-
       </div>
 
       <div class="field">
-
-        <label>
-          Пароль
-        </label>
-
+        <label>Пароль</label>
         <input
           id="loginPassword"
           type="password"
           autocomplete="current-password"
           placeholder="Введите пароль"
-          required
         >
-
       </div>
 
-      <button
-        class="primary-btn"
-        type="submit"
-      >
+      <button class="primary-btn" id="loginBtn">
         Войти
       </button>
 
-      <button
-        id="forgotPasswordButton"
-        class="link-btn"
-        type="button"
-      >
-        Забыли пароль?
-      </button>
+      <div style="text-align:center">
+        <button class="text-btn" id="forgotBtn">
+          Забыли пароль?
+        </button>
+      </div>
 
-    </form>
+    </div>
 
 
     <!-- REGISTER -->
 
-    <form
-      id="registerForm"
-      class="hidden"
-    >
+    <div id="registerForm" class="hidden">
+
+      <div class="auth-logo">✨</div>
+
+      <div class="auth-title">
+        Создать аккаунт
+      </div>
+
+      <div class="auth-subtitle">
+        Регистрация в трекере
+      </div>
+
+      <div id="registerMessage"></div>
 
       <div class="field">
-
-        <label>
-          Никнейм
-        </label>
+        <label>Никнейм</label>
 
         <input
-          id="registerNickname"
-          type="text"
+          id="registerUsername"
           maxlength="30"
-          placeholder="Как тебя называть?"
-          required
+          placeholder="Например, Даша"
         >
-
       </div>
 
       <div class="field">
-
-        <label>
-          Email
-        </label>
+        <label>Email</label>
 
         <input
           id="registerEmail"
           type="email"
           autocomplete="email"
-          placeholder="example@mail.ru"
-          required
+          placeholder="Введите email"
         >
-
       </div>
 
       <div class="field">
-
-        <label>
-          Пароль
-        </label>
+        <label>Пароль</label>
 
         <input
           id="registerPassword"
           type="password"
           autocomplete="new-password"
           placeholder="Минимум 6 символов"
-          minlength="6"
-          required
         >
-
       </div>
 
       <div class="field">
-
-        <label>
-          Повторите пароль
-        </label>
+        <label>Повторите пароль</label>
 
         <input
-          id="registerPasswordRepeat"
+          id="registerPassword2"
           type="password"
           autocomplete="new-password"
           placeholder="Повторите пароль"
-          minlength="6"
-          required
         >
-
       </div>
 
-      <button
-        class="primary-btn"
-        type="submit"
-      >
+      <button class="primary-btn" id="registerBtn">
         Создать аккаунт
-      </button>
-
-    </form>
-
-
-    <!-- RESET -->
-
-    <form
-      id="resetForm"
-      class="hidden"
-    >
-
-      <div class="field">
-
-        <label>
-          Email
-        </label>
-
-        <input
-          id="resetEmail"
-          type="email"
-          placeholder="Введите email"
-          required
-        >
-
-      </div>
-
-      <button
-        class="primary-btn"
-        type="submit"
-      >
-        Отправить ссылку
-      </button>
-
-      <button
-        id="backToLoginButton"
-        class="link-btn"
-        type="button"
-      >
-        Вернуться ко входу
-      </button>
-
-    </form>
-
-
-    <!-- NEW PASSWORD -->
-
-    <form
-      id="newPasswordForm"
-      class="hidden"
-    >
-
-      <div class="field">
-
-        <label>
-          Новый пароль
-        </label>
-
-        <input
-          id="newPassword"
-          type="password"
-          minlength="6"
-          required
-        >
-
-      </div>
-
-      <div class="field">
-
-        <label>
-          Повторите пароль
-        </label>
-
-        <input
-          id="newPasswordRepeat"
-          type="password"
-          minlength="6"
-          required
-        >
-
-      </div>
-
-      <button
-        class="primary-btn"
-        type="submit"
-      >
-        Сохранить новый пароль
-      </button>
-
-    </form>
-
-
-    <div
-      id="authMessage"
-      class="hidden"
-    ></div>
-
-  </div>
-
-</section>
-
-
-<!-- =======================================================
-     MAIN APP
-======================================================= -->
-
-<section
-  id="appScreen"
-  class="screen hidden"
->
-
-  <header class="topbar">
-
-    <div class="topbar-inner">
-
-      <div class="brand">
-
-        <div class="brand-icon">
-          ✨
-        </div>
-
-        <div>
-
-          <div class="brand-title">
-            Путь к ОГЭ
-          </div>
-
-          <div class="brand-subtitle">
-            Английский язык
-          </div>
-
-        </div>
-
-      </div>
-
-      <button
-        id="profileTopButton"
-        class="profile-button"
-        type="button"
-      >
-        Д
       </button>
 
     </div>
 
-  </header>
 
+    <!-- FORGOT PASSWORD -->
 
-  <main class="container">
+    <div id="forgotForm" class="hidden">
 
-    <!-- =================================================
-         HOME
-    ================================================= -->
+      <div class="auth-logo">🔑</div>
 
-    <section
-      id="homePage"
-      class="page active"
-    >
-
-      <div class="motivation">
-
-        <div class="motivation-title">
-          Ты справишься 💜
-        </div>
-
-        <div class="motivation-text">
-          Даже одно решённое задание сегодня —
-          это шаг к уверенности на экзамене.
-          Продолжай в своём темпе.
-        </div>
-
+      <div class="auth-title">
+        Восстановление
       </div>
 
+      <div class="auth-subtitle">
+        Введи email своего аккаунта
+      </div>
 
-      <div class="quick-grid">
+      <div id="forgotMessage"></div>
 
-        <button
-          class="quick-card"
-          type="button"
-          onclick="showPage('stats')"
+      <div class="field">
+        <label>Email</label>
+
+        <input
+          id="forgotEmail"
+          type="email"
+          placeholder="Введите email"
         >
+      </div>
 
-          <div class="quick-icon">
+      <button class="primary-btn" id="sendResetBtn">
+        Отправить письмо
+      </button>
+
+      <div style="text-align:center">
+        <button class="text-btn" id="backToLoginBtn">
+          ← Вернуться ко входу
+        </button>
+      </div>
+
+    </div>
+
+
+    <!-- RESET PASSWORD -->
+
+    <div id="resetForm" class="hidden">
+
+      <div class="auth-logo">🔐</div>
+
+      <div class="auth-title">
+        Новый пароль
+      </div>
+
+      <div class="auth-subtitle">
+        Придумай новый пароль
+      </div>
+
+      <div id="resetMessage"></div>
+
+      <div class="field">
+        <label>Новый пароль</label>
+
+        <input
+          id="newPassword"
+          type="password"
+        >
+      </div>
+
+      <div class="field">
+        <label>Повторите пароль</label>
+
+        <input
+          id="newPassword2"
+          type="password"
+        >
+      </div>
+
+      <button class="primary-btn" id="updatePasswordBtn">
+        Сохранить пароль
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     APP
+========================================================= -->
+
+<div id="app" class="hidden">
+
+  <div class="top">
+
+    <div class="top-row">
+
+      <div>
+        <div class="brand">
+          Путь к ОГЭ
+        </div>
+
+        <div class="brand-small">
+          Английский язык
+        </div>
+      </div>
+
+      <button class="profile-mini" id="profileBtn">
+
+        <div class="avatar" id="miniAvatar">
+          П
+        </div>
+
+        <span id="miniName">
+          Профиль
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       HOME
+  ====================================================== -->
+
+  <section id="homeScreen" class="screen active">
+
+    <div class="hero">
+
+      <div class="hero-title">
+        Твоя подготовка 💜
+      </div>
+
+      <div class="hero-text">
+        Маленькие шаги каждый день — и ты справишься!
+      </div>
+
+      <div class="progress-number" id="progressNumber">
+        0 / 95
+      </div>
+
+      <div class="progress-caption">
+        выполнено заданий
+      </div>
+
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          id="progressFill"
+        ></div>
+      </div>
+
+    </div>
+
+
+    <div class="content">
+
+      <div class="section-title">
+        Найти задание
+      </div>
+
+      <input
+        id="searchInput"
+        class="search"
+        placeholder="Например: 1.3"
+      >
+
+      <div class="section-title">
+        Разделы
+      </div>
+
+      <div class="menu-grid">
+
+        <button class="menu-card" id="tasksMenu">
+
+          <div class="menu-icon">
+            📚
+          </div>
+
+          <div class="menu-title">
+            Задания
+          </div>
+
+          <div class="menu-desc">
+            Все варианты и номера
+          </div>
+
+        </button>
+
+
+        <button class="menu-card" id="statsMenu">
+
+          <div class="menu-icon">
             📊
           </div>
 
-          <div class="quick-title">
+          <div class="menu-title">
             Статистика
           </div>
 
-          <div
-            id="quickStats"
-            class="quick-value"
-          >
-            Загружаем...
+          <div class="menu-desc">
+            Твой результат
           </div>
 
         </button>
 
 
-        <button
-          class="quick-card"
-          type="button"
-          onclick="showPage('errors')"
-        >
+        <button class="menu-card" id="errorsMenu">
 
-          <div class="quick-icon">
+          <div class="menu-icon">
             ❌
           </div>
 
-          <div class="quick-title">
-            Мои ошибки
+          <div class="menu-title">
+            Ошибки
           </div>
 
-          <div
-            id="quickErrors"
-            class="quick-value"
-          >
-            Загружаем...
+          <div class="menu-desc">
+            Что нужно повторить
+          </div>
+
+        </button>
+
+
+        <button class="menu-card" id="reportMenu">
+
+          <div class="menu-icon">
+            📄
+          </div>
+
+          <div class="menu-title">
+            Отчёт
+          </div>
+
+          <div class="menu-desc">
+            Твой прогресс
           </div>
 
         </button>
 
       </div>
 
+    </div>
 
-      <div class="section-title">
-
-        <h2>
-          Задания
-        </h2>
-
-        <span>
-          Нажми, чтобы отметить результат
-        </span>
-
-      </div>
+  </section>
 
 
-      <div id="taskSections"></div>
+  <!-- =====================================================
+       TASKS
+  ====================================================== -->
 
-    </section>
+  <section id="tasksScreen" class="screen content">
+
+    <button class="back-btn" id="tasksBack">
+      ← Назад
+    </button>
+
+    <div class="section-title">
+      Задания
+    </div>
+
+    <div id="tasksContainer"></div>
+
+  </section>
 
 
-    <!-- =================================================
-         STATS
-    ================================================= -->
+  <!-- =====================================================
+       VARIANT
+  ====================================================== -->
 
-    <section
-      id="statsPage"
-      class="page"
+  <section id="variantScreen" class="screen content">
+
+    <button class="back-btn" id="variantBack">
+      ← Назад
+    </button>
+
+    <div
+      class="section-title"
+      id="variantTitle"
     >
+      Вариант
+    </div>
 
-      <div class="section-title">
+    <div id="variantTasks"></div>
 
-        <h2>
-          📊 Статистика
-        </h2>
+  </section>
 
-      </div>
 
-      <div class="stat-big">
+  <!-- =====================================================
+       STATISTICS
+  ====================================================== -->
+
+  <section id="statsScreen" class="screen content">
+
+    <button class="back-btn" id="statsBack">
+      ← Назад
+    </button>
+
+    <div class="section-title">
+      Статистика
+    </div>
+
+    <div class="stat-grid">
+
+      <div class="stat-card">
 
         <div
-          id="accuracyPercent"
-          class="stat-percent"
+          class="stat-value"
+          id="statTotal"
+        >
+          0
+        </div>
+
+        <div class="stat-label">
+          Всего попыток
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div
+          class="stat-value"
+          id="statCorrect"
+        >
+          0
+        </div>
+
+        <div class="stat-label">
+          Правильных
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div
+          class="stat-value"
+          id="statWrong"
+        >
+          0
+        </div>
+
+        <div class="stat-label">
+          Ошибок
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div
+          class="stat-value"
+          id="statPercent"
         >
           0%
         </div>
 
         <div class="stat-label">
-          правильных ответов
+          Правильных ответов
         </div>
 
       </div>
 
+    </div>
 
-      <div class="stats-grid">
-
-        <div class="stat-card">
-
-          <div class="stat-card-icon">
-            ✅
-          </div>
-
-          <div
-            id="correctCount"
-            class="stat-card-number"
-          >
-            0
-          </div>
-
-          <div class="stat-card-label">
-            Верных ответов
-          </div>
-
-        </div>
+  </section>
 
 
-        <div class="stat-card">
+  <!-- =====================================================
+       ERRORS
+  ====================================================== -->
 
-          <div class="stat-card-icon">
-            📝
-          </div>
+  <section id="errorsScreen" class="screen content">
 
-          <div
-            id="attemptCount"
-            class="stat-card-number"
-          >
-            0
-          </div>
+    <button class="back-btn" id="errorsBack">
+      ← Назад
+    </button>
 
-          <div class="stat-card-label">
-            Всего попыток
-          </div>
+    <div class="section-title">
+      Ошибки
+    </div>
 
-        </div>
+    <div id="errorsContainer"></div>
 
-
-        <div class="stat-card">
-
-          <div class="stat-card-icon">
-            ❌
-          </div>
-
-          <div
-            id="wrongCount"
-            class="stat-card-number"
-          >
-            0
-          </div>
-
-          <div class="stat-card-label">
-            Ошибочных попыток
-          </div>
-
-        </div>
+  </section>
 
 
-        <div class="stat-card">
+  <!-- =====================================================
+       REPORT
+  ====================================================== -->
 
-          <div class="stat-card-icon">
-            📚
-          </div>
+  <section id="reportScreen" class="screen content">
 
-          <div
-            id="solvedCount"
-            class="stat-card-number"
-          >
-            0
-          </div>
+    <button class="back-btn" id="reportBack">
+      ← Назад
+    </button>
 
-          <div class="stat-card-label">
-            Заданий с попытками
-          </div>
+    <div class="section-title">
+      Отчёт
+    </div>
 
-        </div>
+    <div class="profile-card">
 
+      <h3>
+        Моя подготовка
+      </h3>
+
+      <div id="reportText"></div>
+
+      <div id="reportHistory"></div>
+
+      <button
+        class="primary-btn"
+        id="printBtn"
+      >
+        🖨 Печать / PDF
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       PROFILE
+  ====================================================== -->
+
+  <section id="profileScreen" class="screen content">
+
+    <button class="back-btn" id="profileBack">
+      ← Назад
+    </button>
+
+    <div class="section-title">
+      Личный кабинет
+    </div>
+
+    <div class="profile-card">
+
+      <div
+        class="big-avatar"
+        id="bigAvatar"
+      >
+        П
       </div>
+
+      <div
+        class="profile-name"
+        id="profileName"
+      >
+        Пользователь
+      </div>
+
+      <div
+        class="profile-email"
+        id="profileEmail"
+      >
+        —
+      </div>
+
+      <button
+        class="secondary-btn"
+        id="editProfileBtn"
+      >
+        Изменить никнейм
+      </button>
 
 
       <div
-        class="section-title"
-        style="margin-top:25px;"
+        class="profile-edit"
+        id="profileEdit"
       >
-
-        <h2>
-          Отчёт
-        </h2>
-
-      </div>
-
-      <div class="profile-card">
-
-        <p
-          style="
-            color:var(--muted);
-            font-size:13px;
-            line-height:1.5;
-            margin-top:0;
-          "
-        >
-          Сформируй отчёт по своей подготовке:
-          статистика, выполненные задания и история ошибок.
-        </p>
-
-        <button
-          id="generatePdfButton"
-          class="primary-btn"
-          type="button"
-        >
-          📄 Сформировать PDF-отчёт
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- =================================================
-         ERRORS
-    ================================================= -->
-
-    <section
-      id="errorsPage"
-      class="page"
-    >
-
-      <div class="section-title">
-
-        <h2>
-          ❌ Мои ошибки
-        </h2>
-
-        <span id="errorsCountLabel">
-          0
-        </span>
-
-      </div>
-
-      <div id="errorsList"></div>
-
-    </section>
-
-
-    <!-- =================================================
-         PROFILE
-    ================================================= -->
-
-    <section
-      id="profilePage"
-      class="page"
-    >
-
-      <div class="section-title">
-
-        <h2>
-          👤 Личный кабинет
-        </h2>
-
-      </div>
-
-
-      <div class="profile-card">
-
-        <div
-          id="profileAvatar"
-          class="profile-avatar"
-        >
-          Д
-        </div>
-
-        <div
-          id="profileName"
-          class="profile-name"
-        >
-          Пользователь
-        </div>
-
-        <div
-          id="profileEmail"
-          class="profile-email"
-        >
-          email
-        </div>
-
 
         <div class="field">
 
           <label>
-            Никнейм
+            Новый никнейм
           </label>
 
           <input
-            id="profileNicknameInput"
-            type="text"
+            id="newUsername"
             maxlength="30"
           >
 
         </div>
 
         <button
-          id="saveNicknameButton"
           class="primary-btn"
-          type="button"
+          id="saveUsernameBtn"
         >
-          Сохранить никнейм
-        </button>
-
-        <div style="height:10px;"></div>
-
-        <button
-          id="logoutButton"
-          class="secondary-btn"
-          type="button"
-        >
-          Выйти из аккаунта
+          Сохранить
         </button>
 
       </div>
 
-    </section>
 
-  </main>
+      <button
+        class="logout-btn"
+        id="logoutBtn"
+      >
+        Выйти из аккаунта
+      </button>
 
+    </div>
 
-  <!-- =====================================================
-       NAVIGATION
-  ===================================================== -->
+  </section>
 
-  <nav class="bottom-nav">
-
-    <button
-      class="nav-button active"
-      data-page="home"
-      type="button"
-    >
-
-      <span class="nav-icon">
-        🏠
-      </span>
-
-      Задания
-
-    </button>
+</div>
 
 
-    <button
-      class="nav-button"
-      data-page="stats"
-      type="button"
-    >
-
-      <span class="nav-icon">
-        📊
-      </span>
-
-      Статистика
-
-    </button>
-
-
-    <button
-      class="nav-button"
-      data-page="errors"
-      type="button"
-    >
-
-      <span class="nav-icon">
-        ❌
-      </span>
-
-      Ошибки
-
-    </button>
-
-
-    <button
-      class="nav-button"
-      data-page="profile"
-      type="button"
-    >
-
-      <span class="nav-icon">
-        👤
-      </span>
-
-      Профиль
-
-    </button>
-
-  </nav>
-
-</section>
-
-
-<!-- =======================================================
+<!-- =========================================================
      TASK MODAL
-======================================================= -->
+========================================================= -->
 
 <div
   id="taskModal"
-  class="modal-overlay hidden"
+  class="modal hidden"
 >
 
-  <div class="modal">
+  <div class="modal-box">
 
-    <div class="modal-head">
-
-      <div>
-
-        <div
-          id="modalTaskTitle"
-          class="modal-title"
-        >
-          Задание
-        </div>
-
-      </div>
-
-      <button
-        id="closeTaskModal"
-        class="close-btn"
-        type="button"
-      >
-        ×
-      </button>
-
-    </div>
-
+    <button
+      class="modal-close"
+      id="modalClose"
+    >
+      ✕
+    </button>
 
     <div
-      id="modalTaskContent"
-      class="task-content"
-    >
-      Условие задания
-    </div>
+      class="task-code"
+      id="modalCode"
+    ></div>
+
+    <div
+      class="task-question"
+      id="modalQuestion"
+    ></div>
 
 
-    <div class="attempt-buttons">
+    <div class="answer-buttons">
 
       <button
-        id="correctAttemptButton"
         class="correct-btn"
-        type="button"
+        id="correctBtn"
       >
-        ✅ Верно
+        ✓ Правильно
       </button>
 
       <button
-        id="wrongAttemptButton"
         class="wrong-btn"
-        type="button"
+        id="wrongBtn"
       >
-        ❌ Неверно
+        ✕ Ошибка
       </button>
 
     </div>
 
 
     <div
-      id="reasonBox"
-      class="reason-box hidden"
+      id="wrongReasonBox"
+      class="hidden"
     >
 
-      <div class="field">
+      <div
+        class="field"
+        style="margin-top:18px"
+      >
 
         <label>
-          Почему была ошибка?
+          Почему ошиблась?
         </label>
 
         <textarea
           id="wrongReason"
-          rows="3"
-          placeholder="Например: не понял условие, перепутал правило..."
+          rows="4"
+          placeholder="Напиши причину ошибки"
         ></textarea>
 
       </div>
 
       <button
-        id="saveWrongButton"
-        class="wrong-btn"
-        type="button"
-        style="width:100%;"
+        class="primary-btn"
+        id="saveWrongBtn"
       >
         Сохранить ошибку
       </button>
@@ -2092,8 +1353,11 @@
     </div>
 
 
-    <div class="history-title">
-      📜 История попыток
+    <div
+      class="section-title"
+      style="font-size:15px"
+    >
+      История
     </div>
 
     <div id="taskHistory"></div>
@@ -2103,2512 +1367,2106 @@
 </div>
 
 
-<div id="toast"></div>
-
-
 <script>
-/* =========================================================
-   SUPABASE CONFIG
-========================================================= */
 
-const SUPABASE_URL =
-  "https://akaslsblnvxwtzlhveh.supabase.co";
+document.addEventListener("DOMContentLoaded", () => {
 
-const SUPABASE_KEY =
-  "sb_publishable_0ZKH4SeD5Dg81SaxX7gz-g_1fp-pnch";
+  /* ========================================================
+     SUPABASE — НОВЫЙ ПРОЕКТ
+  ======================================================== */
 
-const supabaseClient =
-  window.supabase.createClient(
+  const SUPABASE_URL =
+    "https://rbffkodkjrmvltnlqzkn.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_eWs_hrCxb67vREWJPn6C5A_Ex3gxZ3A";
+
+  const REDIRECT =
+    "https://darianovet.github.io/oge-english-tracker/";
+
+
+  const sb = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY,
     {
-      auth: {
-  persistSession: true,
-  autoRefreshToken: true,
-  detectSessionInUrl: true
-}
+      auth:{
+        persistSession:true,
+        autoRefreshToken:true,
+        detectSessionInUrl:true
+      }
     }
   );
 
 
-/* =========================================================
-   CONSTANTS
-========================================================= */
+  /* ========================================================
+     HELPERS
+  ======================================================== */
 
-const REDIRECT_URL =
-  "https://darianovet.github.io/oge-english-tracker/";
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let currentUser = null;
-
-let allAttempts = [];
-
-let currentTask = null;
+  const $ = id =>
+    document.getElementById(id);
 
 
-/* =========================================================
-   TASKS
-========================================================= */
-
-const ALL_TASKS =
-  Array.isArray(window.TASKS)
-    ? window.TASKS
-    : (
-        typeof TASKS !== "undefined" &&
-        Array.isArray(TASKS)
-          ? TASKS
-          : []
-      );
+  const show = id =>
+    $(id)?.classList.remove("hidden");
 
 
-/* =========================================================
-   HELPERS
-========================================================= */
+  const hide = id =>
+    $(id)?.classList.add("hidden");
 
-function escapeHtml(value) {
 
-  if (value === null || value === undefined) {
-    return "";
+  const esc = value =>
+    String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+
+
+  let user = null;
+  let task = null;
+  let variant = null;
+  let attempts = [];
+  let busy = false;
+
+
+  /* ========================================================
+     TASKS.JS
+  ======================================================== */
+
+  const all = () =>
+    Array.isArray(window.TASKS)
+      ? window.TASKS
+      : (
+          typeof TASKS !== "undefined" &&
+          Array.isArray(TASKS)
+            ? TASKS
+            : []
+        );
+
+
+  const id = t =>
+    String(
+      t.id ??
+      t.taskId ??
+      t.code ??
+      ""
+    );
+
+
+  const num = t =>
+    String(
+      t.number ??
+      t.task ??
+      t.taskNumber ??
+      ""
+    );
+
+
+  const v = t =>
+    String(
+      t.variant ??
+      t.variantNumber ??
+      t.variant_number ??
+      ""
+    );
+
+
+  const code = t =>
+    String(
+      t.code ??
+      id(t)
+    );
+
+
+  const txt = t =>
+    String(
+      t.text ??
+      t.question ??
+      t.title ??
+      t.description ??
+      t.content ??
+      "Задание"
+    );
+
+
+  /* ========================================================
+     USERNAME
+  ======================================================== */
+
+  const uname = () =>
+    user?.user_metadata?.username ||
+    user?.user_metadata?.name ||
+    user?.email?.split("@")[0] ||
+    "Пользователь";
+
+
+  /* ========================================================
+     MESSAGES
+  ======================================================== */
+
+  function message(el,text,type="error"){
+
+    if(!$(el)) return;
+
+    $(el).innerHTML =
+      `<div class="${
+        type === "success"
+          ? "auth-success"
+          : "auth-error"
+      }">${esc(text)}</div>`;
   }
 
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
 
+  /* ========================================================
+     AUTH SCREENS
+  ======================================================== */
 
-function getTaskId(task) {
+  function auth(form){
 
-  return String(
-    task.id ??
-    task.taskId ??
-    `${task.variant ?? "0"}-${task.number ?? task.task ?? "0"}`
-  );
-}
+    [
+      "loginForm",
+      "registerForm",
+      "forgotForm",
+      "resetForm"
+    ].forEach(hide);
 
+    show(form);
 
-function getVariant(task) {
+    hide("app");
+    show("authScreen");
+  }
 
-  return (
-    task.variant ??
-    task.variantNumber ??
-    task.var ??
-    ""
-  );
-}
 
+  function tabs(login){
 
-function getTaskNumber(task) {
+    $("loginTab")
+      .classList
+      .toggle("active",login);
 
-  return (
-    task.number ??
-    task.taskNumber ??
-    task.task ??
-    task.num ??
-    ""
-  );
-}
+    $("registerTab")
+      .classList
+      .toggle("active",!login);
+  }
 
 
-function getTaskTitle(task) {
+  $("loginTab").onclick = () => {
 
-  return (
-    task.title ??
-    task.name ??
-    `Задание ${getTaskNumber(task)}`
-  );
-}
+    tabs(true);
+    auth("loginForm");
 
+  };
 
-function getTaskContent(task) {
 
-  return (
-    task.text ??
-    task.question ??
-    task.content ??
-    task.description ??
-    task.condition ??
-    task.title ??
-    "Условие задания находится в базе заданий."
-  );
-}
+  $("registerTab").onclick = () => {
 
+    tabs(false);
+    auth("registerForm");
 
-function formatDate(dateString) {
+  };
 
-  const date =
-    new Date(dateString);
 
-  return date.toLocaleString(
-    "ru-RU",
-    {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    }
-  );
-}
+  $("forgotBtn").onclick = () =>
+    auth("forgotForm");
 
 
-function showToast(message) {
+  $("backToLoginBtn").onclick = () => {
 
-  const toast =
-    document.getElementById("toast");
+    tabs(true);
+    auth("loginForm");
 
-  toast.textContent = message;
+  };
 
-  toast.classList.add("show");
 
-  setTimeout(
-    () => toast.classList.remove("show"),
-    2600
-  );
-}
+  /* ========================================================
+     PROFILE IN DATABASE
+  ======================================================== */
 
+  async function ensureProfile(){
 
-/* =========================================================
-   AUTH UI
-========================================================= */
+    if(!user) return;
 
-function showAuthMessage(
-  message,
-  type = "error"
-) {
 
-  const box =
-    document.getElementById("authMessage");
+    try{
 
-  box.textContent = message;
+      const result =
+        await sb
+          .from("profiles")
+          .select("id,nickname")
+          .eq("id",user.id)
+          .maybeSingle();
 
-  box.className =
-    `auth-message ${type}`;
-}
 
+      if(result.error){
 
-function clearAuthMessage() {
-
-  const box =
-    document.getElementById("authMessage");
-
-  box.className =
-    "hidden";
-
-  box.textContent =
-    "";
-}
-
-
-function showLoginForm() {
-
-  document
-    .getElementById("loginForm")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("registerForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("resetForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("newPasswordForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("loginTab")
-    .classList.add("active");
-
-  document
-    .getElementById("registerTab")
-    .classList.remove("active");
-
-  clearAuthMessage();
-}
-
-
-function showRegisterForm() {
-
-  document
-    .getElementById("loginForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("registerForm")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("resetForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("newPasswordForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("loginTab")
-    .classList.remove("active");
-
-  document
-    .getElementById("registerTab")
-    .classList.add("active");
-
-  clearAuthMessage();
-}
-
-
-function showResetForm() {
-
-  document
-    .getElementById("loginForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("registerForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("resetForm")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("newPasswordForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("loginTab")
-    .classList.remove("active");
-
-  document
-    .getElementById("registerTab")
-    .classList.remove("active");
-
-  clearAuthMessage();
-}
-
-
-function showNewPasswordForm() {
-
-  document
-    .getElementById("loginForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("registerForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("resetForm")
-    .classList.add("hidden");
-
-  document
-    .getElementById("newPasswordForm")
-    .classList.remove("hidden");
-
-  clearAuthMessage();
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-document
-  .getElementById("loginForm")
-  .addEventListener(
-    "submit",
-    async event => {
-
-      event.preventDefault();
-
-      clearAuthMessage();
-
-      const email =
-        document
-          .getElementById("loginEmail")
-          .value
-          .trim();
-
-      const password =
-        document
-          .getElementById("loginPassword")
-          .value;
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient.auth
-          .signInWithPassword({
-            email,
-            password
-          });
-
-      if (error) {
-
-        showAuthMessage(
-          getAuthError(error),
-          "error"
-        );
-
-        return;
-      }
-
-      currentUser =
-        data.user;
-
-      await openApp(
-        currentUser
-      );
-    }
-  );
-
-
-/* =========================================================
-   REGISTER
-========================================================= */
-
-document
-  .getElementById("registerForm")
-  .addEventListener(
-    "submit",
-    async event => {
-
-      event.preventDefault();
-
-      clearAuthMessage();
-
-      const nickname =
-        document
-          .getElementById("registerNickname")
-          .value
-          .trim();
-
-      const email =
-        document
-          .getElementById("registerEmail")
-          .value
-          .trim();
-
-      const password =
-        document
-          .getElementById("registerPassword")
-          .value;
-
-      const repeatPassword =
-        document
-          .getElementById("registerPasswordRepeat")
-          .value;
-
-
-      if (password !== repeatPassword) {
-
-        showAuthMessage(
-          "Пароли не совпадают.",
-          "error"
+        console.warn(
+          "Profile select:",
+          result.error.message
         );
 
         return;
       }
 
 
-      if (password.length < 6) {
+      if(!result.data){
 
-        showAuthMessage(
-          "Пароль должен содержать минимум 6 символов.",
-          "error"
-        );
-
-        return;
-      }
+        const nickname =
+          user.user_metadata?.username ||
+          user.email?.split("@")[0] ||
+          "Пользователь";
 
 
-      const {
-        data,
-        error
-      } =
-        await supabaseClient.auth
-          .signUp({
-            email,
-            password,
+        const insert =
+          await sb
+            .from("profiles")
+            .insert({
+              id:user.id,
+              nickname:nickname
+            });
 
-            options: {
-              data: {
-                username: nickname
-              },
 
-              emailRedirectTo:
-                REDIRECT_URL
+        if(insert.error){
+
+          console.warn(
+            "Profile insert:",
+            insert.error.message
+          );
+
+        }
+
+      }else{
+
+        if(
+          result.data.nickname &&
+          !user.user_metadata?.username
+        ){
+
+          await sb.auth.updateUser({
+            data:{
+              username:result.data.nickname
             }
           });
 
+          user = (
+            await sb.auth.getUser()
+          ).data.user;
 
-      if (error) {
+        }
 
-        showAuthMessage(
-          getAuthError(error),
-          "error"
-        );
-
-        return;
       }
 
+    }catch(error){
 
-      if (data.session) {
-
-        currentUser =
-          data.user;
-
-        await openApp(
-          currentUser
-        );
-
-        return;
-      }
-
-
-      showAuthMessage(
-        "Аккаунт создан! Проверь почту и подтверди email, затем войди в приложение.",
-        "success"
+      console.warn(
+        "Profile error:",
+        error
       );
+
     }
-  );
+
+  }
 
 
-/* =========================================================
-   FORGOT PASSWORD
-========================================================= */
+  /* ========================================================
+     ENTER APP
+  ======================================================== */
 
-document
-  .getElementById("forgotPasswordButton")
-  .addEventListener(
-    "click",
-    () => {
+  async function enter(session){
 
-      showResetForm();
+    if(!session?.user) return;
 
-      document
-        .getElementById("resetEmail")
-        .focus();
+    if(busy) return;
+
+    busy = true;
+
+    user = session.user;
+
+    hide("authScreen");
+    show("app");
+
+
+    await ensureProfile();
+
+    await loadCloud();
+
+    profile();
+
+    renderTasks();
+
+    update();
+
+    home();
+
+    busy = false;
+  }
+
+
+  /* ========================================================
+     LOGIN
+  ======================================================== */
+
+  async function login(){
+
+    const email =
+      $("loginEmail").value.trim();
+
+    const password =
+      $("loginPassword").value;
+
+
+    if(!email || !password){
+
+      return message(
+        "loginMessage",
+        "Введите email и пароль."
+      );
+
     }
-  );
 
 
-document
-  .getElementById("backToLoginButton")
-  .addEventListener(
-    "click",
-    showLoginForm
-  );
+    const b = $("loginBtn");
+
+    b.disabled = true;
+    b.textContent = "Входим...";
 
 
-document
-  .getElementById("resetForm")
-  .addEventListener(
-    "submit",
-    async event => {
+    try{
 
-      event.preventDefault();
+      const r =
+        await sb.auth.signInWithPassword({
+          email,
+          password
+        });
+
+
+      if(r.error)
+        throw r.error;
+
+
+      if(!r.data.session)
+        throw new Error(
+          "Сессия не создана."
+        );
+
+
+      await enter(
+        r.data.session
+      );
+
+
+    }catch(e){
+
+      console.error(e);
+
+      let m =
+        e.message ||
+        "Не удалось войти.";
+
+
+      if(
+        e.code ===
+        "invalid_credentials"
+      ){
+
+        m =
+          "Неверный email или пароль.";
+
+      }
+
+
+      if(
+        e.code ===
+        "email_not_confirmed"
+      ){
+
+        m =
+          "Сначала подтверди email через письмо.";
+
+      }
+
+
+      message(
+        "loginMessage",
+        m
+      );
+
+
+    }finally{
+
+      b.disabled = false;
+      b.textContent = "Войти";
+
+    }
+
+  }
+
+
+  $("loginBtn").onclick =
+    login;
+
+
+  $("loginPassword")
+    .addEventListener(
+      "keydown",
+      e => {
+
+        if(e.key === "Enter")
+          login();
+
+      }
+    );
+
+
+  /* ========================================================
+     REGISTER
+  ======================================================== */
+
+  $("registerBtn").onclick =
+    async () => {
+
+      const n =
+        $("registerUsername")
+          .value
+          .trim();
 
       const email =
-        document
-          .getElementById("resetEmail")
+        $("registerEmail")
+          .value
+          .trim();
+
+      const p =
+        $("registerPassword")
+          .value;
+
+      const p2 =
+        $("registerPassword2")
+          .value;
+
+
+      if(!n){
+
+        return message(
+          "registerMessage",
+          "Введите никнейм."
+        );
+
+      }
+
+
+      if(!email){
+
+        return message(
+          "registerMessage",
+          "Введите email."
+        );
+
+      }
+
+
+      if(p.length < 6){
+
+        return message(
+          "registerMessage",
+          "Пароль должен содержать минимум 6 символов."
+        );
+
+      }
+
+
+      if(p !== p2){
+
+        return message(
+          "registerMessage",
+          "Пароли не совпадают."
+        );
+
+      }
+
+
+      const b =
+        $("registerBtn");
+
+      b.disabled = true;
+      b.textContent =
+        "Создаём аккаунт...";
+
+
+      try{
+
+        const r =
+          await sb.auth.signUp({
+
+            email,
+            password:p,
+
+            options:{
+              data:{
+                username:n
+              },
+
+              emailRedirectTo:
+                REDIRECT
+            }
+
+          });
+
+
+        if(r.error)
+          throw r.error;
+
+
+        if(r.data.session){
+
+          user = r.data.user;
+
+          await ensureProfile();
+
+          await enter(
+            r.data.session
+          );
+
+        }else{
+
+          message(
+            "registerMessage",
+            "Аккаунт создан! Проверь почту и перейди по ссылке подтверждения.",
+            "success"
+          );
+
+        }
+
+
+      }catch(e){
+
+        console.error(e);
+
+        message(
+          "registerMessage",
+          e.message ||
+          "Не удалось создать аккаунт."
+        );
+
+
+      }finally{
+
+        b.disabled = false;
+
+        b.textContent =
+          "Создать аккаунт";
+
+      }
+
+    };
+
+
+  /* ========================================================
+     FORGOT PASSWORD
+  ======================================================== */
+
+  $("sendResetBtn").onclick =
+    async () => {
+
+      const email =
+        $("forgotEmail")
           .value
           .trim();
 
 
-      const {
-        error
-      } =
-        await supabaseClient.auth
-          .resetPasswordForEmail(
+      if(!email){
+
+        return message(
+          "forgotMessage",
+          "Введите email."
+        );
+
+      }
+
+
+      try{
+
+        const r =
+          await sb.auth.resetPasswordForEmail(
             email,
             {
-              redirectTo:
-                REDIRECT_URL
+              redirectTo:REDIRECT
             }
           );
 
 
-      if (error) {
+        if(r.error){
 
-        showAuthMessage(
-          getAuthError(error),
-          "error"
+          message(
+            "forgotMessage",
+            r.error.message
+          );
+
+        }else{
+
+          message(
+            "forgotMessage",
+            "Письмо для восстановления отправлено на почту.",
+            "success"
+          );
+
+        }
+
+      }catch(e){
+
+        message(
+          "forgotMessage",
+          e.message ||
+          "Не удалось отправить письмо."
         );
 
-        return;
+      }
+
+    };
+
+
+  /* ========================================================
+     NEW PASSWORD
+  ======================================================== */
+
+  $("updatePasswordBtn").onclick =
+    async () => {
+
+      const a =
+        $("newPassword").value;
+
+      const b =
+        $("newPassword2").value;
+
+
+      if(a.length < 6){
+
+        return message(
+          "resetMessage",
+          "Пароль должен содержать минимум 6 символов."
+        );
+
       }
 
 
-      showAuthMessage(
-        "Если аккаунт с таким email существует, на почту отправлена ссылка для восстановления пароля.",
-        "success"
-      );
-    }
-  );
+      if(a !== b){
 
-
-/* =========================================================
-   NEW PASSWORD
-========================================================= */
-
-document
-  .getElementById("newPasswordForm")
-  .addEventListener(
-    "submit",
-    async event => {
-
-      event.preventDefault();
-
-      const password =
-        document
-          .getElementById("newPassword")
-          .value;
-
-      const repeat =
-        document
-          .getElementById("newPasswordRepeat")
-          .value;
-
-
-      if (password !== repeat) {
-
-        showAuthMessage(
-          "Пароли не совпадают.",
-          "error"
+        return message(
+          "resetMessage",
+          "Пароли не совпадают."
         );
 
-        return;
       }
 
 
-      const {
-        error
-      } =
-        await supabaseClient.auth
-          .updateUser({
-            password
-          });
+      const r =
+        await sb.auth.updateUser({
+          password:a
+        });
 
 
-      if (error) {
+      if(r.error){
 
-        showAuthMessage(
-          getAuthError(error),
-          "error"
+        return message(
+          "resetMessage",
+          r.error.message
         );
 
-        return;
       }
 
 
-      showAuthMessage(
-        "Пароль изменён. Теперь можно войти.",
+      message(
+        "resetMessage",
+        "Пароль изменён.",
         "success"
       );
 
 
       setTimeout(
-        showLoginForm,
-        1200
-      );
-    }
-  );
+        () => {
 
+          tabs(true);
+          auth("loginForm");
 
-/* =========================================================
-   AUTH ERRORS
-========================================================= */
-
-function getAuthError(error) {
-
-  const message =
-    String(error?.message || "")
-      .toLowerCase();
-
-
-  if (
-    message.includes("invalid login credentials")
-  ) {
-    return "Неверный email или пароль.";
-  }
-
-
-  if (
-    message.includes("email not confirmed")
-  ) {
-    return "Сначала подтверди email по ссылке из письма.";
-  }
-
-
-  if (
-    message.includes("password")
-  ) {
-    return error.message;
-  }
-
-
-  if (
-    message.includes("rate limit")
-  ) {
-    return "Слишком много попыток. Попробуй немного позже.";
-  }
-
-
-  return error?.message ||
-    "Произошла ошибка.";
-}
-
-
-/* =========================================================
-   AUTH STATE
-========================================================= */
-
-supabaseClient.auth
-  .onAuthStateChange(
-    async (event, session) => {
-
-      if (
-        event === "PASSWORD_RECOVERY"
-      ) {
-
-        showNewPasswordForm();
-
-        return;
-      }
-
-
-      if (
-        session?.user
-      ) {
-
-        currentUser =
-          session.user;
-
-        await openApp(
-          currentUser
-        );
-
-        return;
-      }
-
-
-      currentUser = null;
-
-      document
-        .getElementById("appScreen")
-        .classList.add("hidden");
-
-      document
-        .getElementById("authScreen")
-        .classList.remove("hidden");
-    }
-  );
-
-
-/* =========================================================
-   INITIAL SESSION
-========================================================= */
-
-async function initializeAuth() {
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth
-      .getSession();
-
-
-  if (error) {
-
-    console.error(error);
-
-    return;
-  }
-
-
-  if (
-    data.session?.user
-  ) {
-
-    currentUser =
-      data.session.user;
-
-    await openApp(
-      currentUser
-    );
-
-  } else {
-
-    document
-      .getElementById("authScreen")
-      .classList.remove("hidden");
-
-    document
-      .getElementById("appScreen")
-      .classList.add("hidden");
-  }
-}
-
-
-/* =========================================================
-   OPEN APP
-========================================================= */
-
-let appOpening = false;
-
-async function openApp(user) {
-
-  if (!user) {
-    return;
-  }
-
-  if (appOpening) {
-    return;
-  }
-
-  appOpening = true;
-
-  try {
-
-    currentUser =
-      user;
-
-    document
-      .getElementById("authScreen")
-      .classList.add("hidden");
-
-    document
-      .getElementById("appScreen")
-      .classList.remove("hidden");
-
-
-    renderProfile();
-
-    renderTasks();
-
-    await loadAttempts();
-
-    updateAllStatistics();
-
-  } catch (error) {
-
-    console.error(
-      "Ошибка открытия приложения:",
-      error
-    );
-
-  } finally {
-
-    appOpening = false;
-  }
-}
-
-
-/* =========================================================
-   LOAD ATTEMPTS
-========================================================= */
-
-async function loadAttempts() {
-
-  if (!currentUser) {
-    return;
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("attempt_history")
-      .select(
-        "id,user_id,task_id,result,reason,created_at"
-      )
-      .eq(
-        "user_id",
-        currentUser.id
-      )
-      .order(
-        "created_at",
-        {
-          ascending: true
-        }
+        },
+        1000
       );
 
+    };
 
-  if (error) {
 
-    console.error(
-      "Не удалось загрузить историю:",
-      error
-    );
+  /* ========================================================
+     PROFILE UI
+  ======================================================== */
 
-    showToast(
-      "Не удалось загрузить историю попыток."
-    );
+  function profile(){
 
-    allAttempts = [];
+    const n = uname();
 
-    return;
+    const i =
+      n.trim()[0]?.toUpperCase()
+      || "П";
+
+
+    $("miniName").textContent =
+      n;
+
+    $("profileName").textContent =
+      n;
+
+    $("profileEmail").textContent =
+      user?.email || "";
+
+    $("miniAvatar").textContent =
+      i;
+
+    $("bigAvatar").textContent =
+      i;
+
   }
 
 
-  allAttempts =
-    Array.isArray(data)
-      ? data
-      : [];
-}
-
-
-/* =========================================================
-   SAVE ATTEMPT
-========================================================= */
-
-async function saveAttempt(
-  taskId,
-  result,
-  reason = null
-) {
-
-  if (!currentUser) {
-    return false;
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("attempt_history")
-      .insert({
-        user_id:
-          currentUser.id,
-
-        task_id:
-          String(taskId),
-
-        result,
-
-        reason:
-          reason
-            ? reason.trim()
-            : null
-      });
-
-
-  if (error) {
-
-    console.error(
-      "Ошибка сохранения попытки:",
-      error
-    );
-
-    showToast(
-      "Не удалось сохранить результат."
-    );
-
-    return false;
-  }
-
-
-  await loadAttempts();
-
-  updateAllStatistics();
-
-  return true;
-}
-
-
-/* =========================================================
-   CURRENT TASK STATUS
-========================================================= */
-
-function getTaskAttempts(taskId) {
-
-  return allAttempts.filter(
-    attempt =>
-      String(attempt.task_id) ===
-      String(taskId)
-  );
-}
-
-
-function getLatestAttempt(taskId) {
-
-  const attempts =
-    getTaskAttempts(taskId);
-
-  if (!attempts.length) {
-    return null;
-  }
-
-  return attempts[
-    attempts.length - 1
-  ];
-}
-
-
-/* =========================================================
-   RENDER TASKS
-========================================================= */
-
-function getTaskGroupTitle(task) {
-
-  const number =
-    Number(
-      getTaskNumber(task)
-    );
-
-
-  if (number >= 1 && number <= 5) {
-    return "Задания 1–5";
-  }
-
-  if (number >= 6 && number <= 11) {
-    return "Задания 6–11";
-  }
-
-  if (number === 12) {
-    return "Задание 12";
-  }
-
-  if (number >= 13 && number <= 19) {
-    return "Задания 13–19";
-  }
-
-  if (number >= 20 && number <= 28) {
-    return "Задания 20–28";
-  }
-
-  if (number >= 29 && number <= 34) {
-    return "Задания 29–34";
-  }
-
-  return "Другие задания";
-}
-
-
-function renderTasks() {
-
-  const container =
-    document.getElementById(
-      "taskSections"
-    );
-
-
-  if (!ALL_TASKS.length) {
-
-    container.innerHTML = `
-      <div class="empty">
-        База заданий пока не загрузилась.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  const groups = {};
-
-
-  ALL_TASKS.forEach(task => {
-
-    const group =
-      getTaskGroupTitle(task);
-
-    if (!groups[group]) {
-      groups[group] = [];
-    }
-
-    groups[group].push(task);
-  });
-
-
-  container.innerHTML =
-    Object.entries(groups)
-      .map(
-        ([groupTitle, tasks]) => {
-
-          return `
-            <div>
-
-              <div class="section-title">
-
-                <h2>
-                  ${escapeHtml(groupTitle)}
-                </h2>
-
-                <span>
-                  ${tasks.length} заданий
-                </span>
-
-              </div>
-
-              <div class="task-grid">
-
-                ${tasks
-                  .map(renderTaskCard)
-                  .join("")}
-
-              </div>
-
-            </div>
-          `;
-        }
-      )
-      .join("");
-}
-
-
-function renderTaskCard(task) {
-
-  const taskId =
-    getTaskId(task);
-
-  const latest =
-    getLatestAttempt(taskId);
-
-
-  let statusText =
-    "Ещё не решено";
-
-  let statusClass =
-    "status-none";
-
-  let dot = "";
-
-
-  if (latest?.result === "correct") {
-
-    statusText =
-      "Последняя попытка: верно";
-
-    statusClass =
-      "status-correct";
-
-    dot =
-      `<div class="task-dot correct"></div>`;
-
-  } else if (
-    latest?.result === "wrong"
-  ) {
-
-    statusText =
-      "Последняя попытка: ошибка";
-
-    statusClass =
-      "status-wrong";
-
-    dot =
-      `<div class="task-dot wrong"></div>`;
-  }
-
-
-  return `
-    <button
-      class="task-card"
-      type="button"
-      onclick="openTask('${escapeHtml(taskId)}')"
-    >
-
-      ${dot}
-
-      <div class="task-number">
-        Вариант ${escapeHtml(
-          getVariant(task)
-        )}
-      </div>
-
-      <div class="task-name">
-        №${escapeHtml(
-          getTaskNumber(task)
-        )}
-      </div>
-
-      <div class="task-status ${statusClass}">
-        ${escapeHtml(statusText)}
-      </div>
-
-    </button>
-  `;
-}
-
-
-/* =========================================================
-   FIND TASK
-========================================================= */
-
-function findTask(taskId) {
-
-  return ALL_TASKS.find(
-    task =>
-      String(getTaskId(task)) ===
-      String(taskId)
-  );
-}
-
-
-/* =========================================================
-   OPEN TASK
-========================================================= */
-
-async function openTask(taskId) {
-
-  const task =
-    findTask(taskId);
-
-  if (!task) {
-
-    showToast(
-      "Задание не найдено."
-    );
-
-    return;
-  }
-
-
-  currentTask =
-    task;
-
-
-  document
-    .getElementById("modalTaskTitle")
-    .textContent =
-      `Вариант ${getVariant(task)} · Задание ${getTaskNumber(task)}`;
-
-
-  document
-    .getElementById("modalTaskContent")
-    .textContent =
-      getTaskContent(task);
-
-
-  document
-    .getElementById("reasonBox")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("wrongReason")
-    .value = "";
-
-
-  renderTaskHistory(
-    taskId
-  );
-
-
-  document
-    .getElementById("taskModal")
-    .classList.remove("hidden");
-}
-
-
-/* =========================================================
-   CLOSE MODAL
-========================================================= */
-
-document
-  .getElementById("closeTaskModal")
-  .addEventListener(
-    "click",
-    closeTaskModal
-  );
-
-
-document
-  .getElementById("taskModal")
-  .addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target.id ===
-        "taskModal"
-      ) {
-
-        closeTaskModal();
-      }
-    }
-  );
-
-
-function closeTaskModal() {
-
-  document
-    .getElementById("taskModal")
-    .classList.add("hidden");
-
-  currentTask = null;
-}
-
-
-/* =========================================================
-   CORRECT
-========================================================= */
-
-document
-  .getElementById("correctAttemptButton")
-  .addEventListener(
-    "click",
-    async () => {
-
-      if (!currentTask) {
-        return;
-      }
-
-
-      const saved =
-        await saveAttempt(
-          getTaskId(currentTask),
-          "correct",
-          null
-        );
-
-
-      if (!saved) {
-        return;
-      }
-
-
-      renderTaskHistory(
-        getTaskId(currentTask)
-      );
-
-      renderTasks();
-
-      showToast(
-        "Ответ сохранён как верный 💜"
-      );
-    }
-  );
-
-
-/* =========================================================
-   WRONG
-========================================================= */
-
-document
-  .getElementById("wrongAttemptButton")
-  .addEventListener(
-    "click",
+  $("editProfileBtn").onclick =
     () => {
 
-      document
-        .getElementById("reasonBox")
-        .classList.remove("hidden");
+      $("profileEdit")
+        .classList
+        .toggle("active");
 
-      document
-        .getElementById("wrongReason")
-        .focus();
-    }
-  );
+      $("newUsername").value =
+        uname();
+
+    };
 
 
-/* =========================================================
-   SAVE WRONG
-========================================================= */
-
-document
-  .getElementById("saveWrongButton")
-  .addEventListener(
-    "click",
+  $("saveUsernameBtn").onclick =
     async () => {
 
-      if (!currentTask) {
-        return;
-      }
-
-
-      const reason =
-        document
-          .getElementById("wrongReason")
+      const n =
+        $("newUsername")
           .value
           .trim();
 
 
-      if (!reason) {
+      if(!n){
 
-        showToast(
-          "Напиши причину ошибки."
+        alert(
+          "Введите никнейм."
         );
 
         return;
       }
 
 
-      const saved =
+      try{
+
+        const r =
+          await sb.auth.updateUser({
+
+            data:{
+              username:n
+            }
+
+          });
+
+
+        if(r.error)
+          throw r.error;
+
+
+        user = r.data.user;
+
+        await sb
+          .from("profiles")
+          .upsert({
+            id:user.id,
+            nickname:n
+          });
+
+
+        profile();
+
+        $("profileEdit")
+          .classList
+          .remove("active");
+
+
+      }catch(e){
+
+        alert(
+          e.message ||
+          "Не удалось изменить никнейм."
+        );
+
+      }
+
+    };
+
+
+  /* ========================================================
+     CLOUD DATA
+  ======================================================== */
+
+  async function loadCloud(){
+
+    if(!user) return;
+
+
+    try{
+
+      const r =
+        await sb
+          .from("attempt_history")
+          .select(
+            "id,task_id,result,reason,created_at"
+          )
+          .eq(
+            "user_id",
+            user.id
+          )
+          .order(
+            "created_at",
+            {
+              ascending:true
+            }
+          );
+
+
+      if(r.error){
+
+        console.error(
+          "attempt_history:",
+          r.error.message
+        );
+
+        attempts = [];
+
+        return;
+      }
+
+
+      attempts =
+        (r.data || [])
+          .map(x => ({
+
+            dbId:x.id,
+
+            taskId:
+              String(x.task_id),
+
+            result:
+              x.result,
+
+            reason:
+              x.reason || "",
+
+            date:
+              x.created_at
+
+          }));
+
+
+    }catch(e){
+
+      console.error(
+        "Cloud loading error:",
+        e
+      );
+
+      attempts = [];
+
+    }
+
+  }
+
+
+  /* ========================================================
+     LATEST RESULT
+  ======================================================== */
+
+  function latest(tid){
+
+    const h =
+      attempts
+        .filter(
+          a =>
+            String(a.taskId) ===
+            String(tid)
+        )
+        .sort(
+          (a,b) =>
+            new Date(a.date) -
+            new Date(b.date)
+        );
+
+
+    return h.at(-1);
+
+  }
+
+
+  function done(tid){
+
+    return (
+      latest(tid)?.result ===
+      "correct"
+    );
+
+  }
+
+
+  /* ========================================================
+     STATISTICS UPDATE
+  ======================================================== */
+
+  function update(){
+
+    const a = all();
+
+    const total =
+      a.length || 95;
+
+
+    const completed =
+      a.filter(
+        t => done(id(t))
+      ).length;
+
+
+    const correct =
+      attempts.filter(
+        a => a.result === "correct"
+      ).length;
+
+
+    const wrong =
+      attempts.filter(
+        a => a.result === "wrong"
+      ).length;
+
+
+    const percent =
+      attempts.length
+        ? Math.round(
+            correct /
+            attempts.length *
+            100
+          )
+        : 0;
+
+
+    $("progressNumber")
+      .textContent =
+      `${completed} / ${total}`;
+
+
+    $("progressFill")
+      .style.width =
+      `${total
+        ? completed / total * 100
+        : 0}%`;
+
+
+    $("statTotal")
+      .textContent =
+      attempts.length;
+
+
+    $("statCorrect")
+      .textContent =
+      correct;
+
+
+    $("statWrong")
+      .textContent =
+      wrong;
+
+
+    $("statPercent")
+      .textContent =
+      `${percent}%`;
+
+  }
+
+
+  /* ========================================================
+     SAVE ATTEMPT
+  ======================================================== */
+
+  async function saveAttempt(
+    t,
+    result,
+    reason
+  ){
+
+    if(!user) return;
+
+
+    const row = {
+
+      taskId:id(t),
+
+      result:result,
+
+      reason:
+        reason || "",
+
+      date:
+        new Date().toISOString()
+
+    };
+
+
+    /*
+      Сначала сохраняем в Supabase.
+      После успешного сохранения обновляем
+      локальное состояние интерфейса.
+    */
+
+    try{
+
+      const insert =
+        await sb
+          .from("attempt_history")
+          .insert({
+
+            user_id:user.id,
+
+            task_id:row.taskId,
+
+            result:row.result,
+
+            reason:row.reason,
+
+            created_at:row.date
+
+          })
+          .select(
+            "id,task_id,result,reason,created_at"
+          )
+          .single();
+
+
+      if(insert.error)
+        throw insert.error;
+
+
+      attempts.push({
+
+        dbId:
+          insert.data.id,
+
+        taskId:
+          String(
+            insert.data.task_id
+          ),
+
+        result:
+          insert.data.result,
+
+        reason:
+          insert.data.reason || "",
+
+        date:
+          insert.data.created_at
+
+      });
+
+
+      /*
+        В progress хранится
+        ПОСЛЕДНИЙ результат по заданию.
+      */
+
+      const progress =
+        await sb
+          .from("progress")
+          .upsert(
+
+            {
+              user_id:user.id,
+
+              task_id:row.taskId,
+
+              status:row.result,
+
+              updated_at:row.date
+            },
+
+            {
+              onConflict:
+                "user_id,task_id"
+            }
+
+          );
+
+
+      if(progress.error){
+
+        console.warn(
+          "Progress:",
+          progress.error.message
+        );
+
+      }
+
+
+      update();
+
+      history();
+
+      errors();
+
+      renderTasks();
+
+
+    }catch(e){
+
+      console.error(e);
+
+      alert(
+        "Не удалось сохранить результат в базу данных.\n\n" +
+        (e.message || "")
+      );
+
+    }
+
+  }
+
+
+  /* ========================================================
+     SCREEN NAVIGATION
+  ======================================================== */
+
+  function screens(){
+
+    [
+      "homeScreen",
+      "tasksScreen",
+      "variantScreen",
+      "statsScreen",
+      "errorsScreen",
+      "reportScreen",
+      "profileScreen"
+    ].forEach(hide);
+
+  }
+
+
+  function home(){
+
+    screens();
+
+    show("homeScreen");
+
+    update();
+
+  }
+
+
+  $("profileBtn").onclick =
+    () => {
+
+      screens();
+
+      show("profileScreen");
+
+      profile();
+
+    };
+
+
+  $("profileBack").onclick =
+    home;
+
+
+  $("tasksMenu").onclick =
+    () => {
+
+      screens();
+
+      show("tasksScreen");
+
+      renderTasks();
+
+    };
+
+
+  $("tasksBack").onclick =
+    home;
+
+
+  $("statsMenu").onclick =
+    () => {
+
+      screens();
+
+      show("statsScreen");
+
+      update();
+
+    };
+
+
+  $("statsBack").onclick =
+    home;
+
+
+  $("errorsMenu").onclick =
+    () => {
+
+      screens();
+
+      show("errorsScreen");
+
+      errors();
+
+    };
+
+
+  $("errorsBack").onclick =
+    home;
+
+
+  $("reportMenu").onclick =
+    () => {
+
+      screens();
+
+      show("reportScreen");
+
+      report();
+
+    };
+
+
+  $("reportBack").onclick =
+    home;
+
+
+  $("variantBack").onclick =
+    () => {
+
+      screens();
+
+      show("tasksScreen");
+
+      renderTasks();
+
+    };
+
+
+  /* ========================================================
+     TASK LIST
+  ======================================================== */
+
+  function renderTasks(){
+
+    const c =
+      $("tasksContainer");
+
+    c.innerHTML = "";
+
+
+    const groups = [
+
+      ["Задания 1–5",1,5],
+
+      ["Задания 6–11",6,11],
+
+      ["Задание 12",12,12],
+
+      ["Задания 13–19",13,19],
+
+      ["Задания 20–28",20,28],
+
+      ["Задания 29–34",29,34]
+
+    ];
+
+
+    groups.forEach(g => {
+
+      const ts =
+        all().filter(
+          t =>
+            +num(t) >= g[1] &&
+            +num(t) <= g[2]
+        );
+
+
+      if(!ts.length)
+        return;
+
+
+      const b =
+        document.createElement("div");
+
+      b.className =
+        "task-block";
+
+
+      b.innerHTML =
+        `<div class="task-block-title">
+          ${g[0]}
+        </div>`;
+
+
+      const l =
+        document.createElement("div");
+
+      l.className =
+        "variant-list";
+
+
+      [
+        ...new Set(
+          ts.map(v)
+        )
+      ]
+      .filter(Boolean)
+      .sort(
+        (a,b) =>
+          +a - +b
+      )
+      .forEach(x => {
+
+        const q =
+          document.createElement(
+            "button"
+          );
+
+
+        q.className =
+          "variant-btn";
+
+
+        q.textContent =
+          `Вариант ${x}`;
+
+
+        q.onclick =
+          () =>
+            openVariant(
+              x,
+              g[1],
+              g[2]
+            );
+
+
+        l.appendChild(q);
+
+      });
+
+
+      b.appendChild(l);
+
+      c.appendChild(b);
+
+    });
+
+  }
+
+
+  /* ========================================================
+     VARIANT
+  ======================================================== */
+
+  function openVariant(
+    x,
+    min,
+    max
+  ){
+
+    variant =
+      String(x);
+
+
+    screens();
+
+    show("variantScreen");
+
+
+    $("variantTitle")
+      .textContent =
+      `Вариант ${x}`;
+
+
+    const c =
+      $("variantTasks");
+
+    c.innerHTML = "";
+
+
+    const ts =
+      all()
+        .filter(
+          t =>
+            v(t) === String(x) &&
+            +num(t) >= min &&
+            +num(t) <= max
+        )
+        .sort(
+          (a,b) =>
+            +num(a) -
+            +num(b)
+        );
+
+
+    const b =
+      document.createElement(
+        "div"
+      );
+
+    b.className =
+      "task-block";
+
+
+    const l =
+      document.createElement(
+        "div"
+      );
+
+    l.className =
+      "task-buttons";
+
+
+    ts.forEach(t => {
+
+      const q =
+        document.createElement(
+          "button"
+        );
+
+
+      q.className =
+        "task-number" +
+        (
+          done(id(t))
+            ? " done"
+            : ""
+        );
+
+
+      q.textContent =
+        num(t);
+
+
+      q.onclick =
+        () =>
+          openTask(t);
+
+
+      l.appendChild(q);
+
+    });
+
+
+    b.appendChild(l);
+
+    c.appendChild(b);
+
+  }
+
+
+  /* ========================================================
+     OPEN TASK
+  ======================================================== */
+
+  function openTask(t){
+
+    task = t;
+
+
+    $("modalCode")
+      .textContent =
+      `Вариант ${v(t)} · Задание ${num(t)} · Код ${code(t)}`;
+
+
+    $("modalQuestion")
+      .textContent =
+      txt(t);
+
+
+    $("wrongReason")
+      .value = "";
+
+
+    hide("wrongReasonBox");
+
+
+    history();
+
+
+    show("taskModal");
+
+  }
+
+
+  $("modalClose").onclick =
+    () =>
+      hide("taskModal");
+
+
+  $("correctBtn").onclick =
+    async () => {
+
+      if(task){
+
         await saveAttempt(
-          getTaskId(currentTask),
+          task,
+          "correct",
+          ""
+        );
+
+      }
+
+    };
+
+
+  $("wrongBtn").onclick =
+    () =>
+      show("wrongReasonBox");
+
+
+  $("saveWrongBtn").onclick =
+    async () => {
+
+      if(task){
+
+        const reason =
+          $("wrongReason")
+            .value
+            .trim() ||
+          "Причина не указана";
+
+
+        await saveAttempt(
+          task,
           "wrong",
           reason
         );
 
 
-      if (!saved) {
-        return;
+        hide("wrongReasonBox");
+
       }
 
+    };
 
-      renderTaskHistory(
-        getTaskId(currentTask)
+
+  /* ========================================================
+     HISTORY
+  ======================================================== */
+
+  function date(d){
+
+    return new Date(d)
+      .toLocaleString(
+        "ru-RU",
+        {
+          dateStyle:"short",
+          timeStyle:"short"
+        }
       );
 
-      renderTasks();
-
-      document
-        .getElementById("reasonBox")
-        .classList.add("hidden");
-
-      document
-        .getElementById("wrongReason")
-        .value = "";
-
-
-      showToast(
-        "Ошибка сохранена в историю."
-      );
-    }
-  );
-
-
-/* =========================================================
-   HISTORY
-========================================================= */
-
-function renderTaskHistory(taskId) {
-
-  const container =
-    document.getElementById(
-      "taskHistory"
-    );
-
-
-  const attempts =
-    getTaskAttempts(taskId);
-
-
-  if (!attempts.length) {
-
-    container.innerHTML = `
-      <div class="empty">
-        Пока нет попыток по этому заданию.
-      </div>
-    `;
-
-    return;
   }
 
 
-  container.innerHTML =
+  function history(){
+
+    const c =
+      $("taskHistory");
+
+
+    if(!c || !task)
+      return;
+
+
+    c.innerHTML = "";
+
+
+    const h =
+      attempts
+        .filter(
+          a =>
+            String(a.taskId) ===
+            id(task)
+        )
+        .sort(
+          (a,b) =>
+            new Date(b.date) -
+            new Date(a.date)
+        );
+
+
+    if(!h.length){
+
+      c.innerHTML =
+        '<div class="muted">' +
+        'Попыток пока нет.' +
+        '</div>';
+
+      return;
+
+    }
+
+
+    h.forEach(a => {
+
+      const d =
+        document.createElement(
+          "div"
+        );
+
+
+      d.className =
+        "history-item";
+
+
+      d.innerHTML = `
+
+        <b>
+          ${
+            a.result === "correct"
+              ? "✓ Правильно"
+              : "✕ Ошибка"
+          }
+        </b>
+
+        <div class="muted">
+          ${date(a.date)}
+        </div>
+
+        ${
+          a.reason
+            ? `<div>${esc(a.reason)}</div>`
+            : ""
+        }
+
+      `;
+
+
+      c.appendChild(d);
+
+    });
+
+  }
+
+
+  /* ========================================================
+     ERRORS
+  ======================================================== */
+
+  function errors(){
+
+    const c =
+      $("errorsContainer");
+
+    c.innerHTML = "";
+
+
+    const h =
+      attempts
+        .filter(
+          a =>
+            a.result === "wrong"
+        )
+        .slice()
+        .reverse();
+
+
+    if(!h.length){
+
+      c.innerHTML =
+        '<div class="task-block">' +
+        'Ошибок пока нет 🎉' +
+        '</div>';
+
+      return;
+
+    }
+
+
+    h.forEach(a => {
+
+      const t =
+        all().find(
+          x =>
+            id(x) ===
+            a.taskId
+        );
+
+
+      const d =
+        document.createElement(
+          "div"
+        );
+
+
+      d.className =
+        "task-block";
+
+
+      d.innerHTML = `
+
+        <b>
+          ${
+            t
+              ? `Вариант ${v(t)} · Задание ${num(t)} · Код ${code(t)}`
+              : `Задание ${esc(a.taskId)}`
+          }
+        </b>
+
+        <div style="margin-top:7px">
+          ${esc(a.reason)}
+        </div>
+
+        <div class="muted">
+          ${date(a.date)}
+        </div>
+
+      `;
+
+
+      if(t){
+
+        d.onclick =
+          () =>
+            openTask(t);
+
+      }
+
+
+      c.appendChild(d);
+
+    });
+
+  }
+
+
+  /* ========================================================
+     REPORT
+  ======================================================== */
+
+  function report(){
+
+    const correct =
+      attempts.filter(
+        a =>
+          a.result === "correct"
+      ).length;
+
+
+    const wrong =
+      attempts.filter(
+        a =>
+          a.result === "wrong"
+      ).length;
+
+
+    const percent =
+      attempts.length
+        ? Math.round(
+            correct /
+            attempts.length *
+            100
+          )
+        : 0;
+
+
+    const completed =
+      all().filter(
+        t =>
+          done(id(t))
+      ).length;
+
+
+    $("reportText")
+      .innerHTML = `
+
+        <b>
+          ${esc(uname())}
+        </b>
+
+        <div class="muted">
+          ${esc(user?.email || "")}
+        </div>
+
+        <br>
+
+        Выполнено заданий:
+        ${completed} / ${all().length || 95}
+
+        <br>
+
+        Всего попыток:
+        ${attempts.length}
+
+        <br>
+
+        Правильных:
+        ${correct}
+
+        <br>
+
+        Ошибок:
+        ${wrong}
+
+        <br>
+
+        Процент правильных:
+        ${percent}%
+
+      `;
+
+
+    const c =
+      $("reportHistory");
+
+
+    c.innerHTML = "";
+
+
     attempts
       .slice()
       .reverse()
-      .map(
-        attempt => {
+      .forEach(a => {
 
-          const correct =
-            attempt.result ===
-            "correct";
+        const t =
+          all().find(
+            x =>
+              id(x) ===
+              a.taskId
+          );
 
 
-          return `
-            <div class="history-item">
+        const d =
+          document.createElement(
+            "div"
+          );
 
-              <div class="history-result">
-                ${correct ? "✅" : "❌"}
-              </div>
 
-              <div class="history-main">
+        d.className =
+          "report-error";
 
-                <div class="history-result-text">
-                  ${
-                    correct
-                      ? "Верно"
-                      : "Неверно"
-                  }
-                </div>
 
-                <div class="history-time">
-                  ${formatDate(
-                    attempt.created_at
-                  )}
-                </div>
+        d.innerHTML = `
 
-                ${
-                  !correct &&
-                  attempt.reason
-                    ? `
-                      <div class="history-reason">
-                        Причина: ${escapeHtml(
-                          attempt.reason
-                        )}
-                      </div>
-                    `
-                    : ""
-                }
-
-              </div>
-
-            </div>
-          `;
-        }
-      )
-      .join("");
-}
-
-
-/* =========================================================
-   STATISTICS
-========================================================= */
-
-function calculateStatistics() {
-
-  const total =
-    allAttempts.length;
-
-
-  const correct =
-    allAttempts.filter(
-      attempt =>
-        attempt.result ===
-        "correct"
-    ).length;
-
-
-  const wrong =
-    allAttempts.filter(
-      attempt =>
-        attempt.result ===
-        "wrong"
-    ).length;
-
-
-  const solved =
-    new Set(
-      allAttempts.map(
-        attempt =>
-          attempt.task_id
-      )
-    ).size;
-
-
-  const accuracy =
-    total
-      ? Math.round(
-          correct / total * 100
-        )
-      : 0;
-
-
-  return {
-    total,
-    correct,
-    wrong,
-    solved,
-    accuracy
-  };
-}
-
-
-function updateAllStatistics() {
-
-  const stats =
-    calculateStatistics();
-
-
-  document
-    .getElementById(
-      "accuracyPercent"
-    )
-    .textContent =
-      `${stats.accuracy}%`;
-
-
-  document
-    .getElementById(
-      "correctCount"
-    )
-    .textContent =
-      stats.correct;
-
-
-  document
-    .getElementById(
-      "attemptCount"
-    )
-    .textContent =
-      stats.total;
-
-
-  document
-    .getElementById(
-      "wrongCount"
-    )
-    .textContent =
-      stats.wrong;
-
-
-  document
-    .getElementById(
-      "solvedCount"
-    )
-    .textContent =
-      stats.solved;
-
-
-  document
-    .getElementById(
-      "quickStats"
-    )
-    .textContent =
-      `${stats.accuracy}% правильных`;
-
-
-  document
-    .getElementById(
-      "quickErrors"
-    )
-    .textContent =
-      `${stats.wrong} ошибок`;
-
-
-  renderErrors();
-}
-
-
-/* =========================================================
-   ERRORS
-========================================================= */
-
-function renderErrors() {
-
-  const container =
-    document.getElementById(
-      "errorsList"
-    );
-
-
-  const wrongAttempts =
-    allAttempts
-      .filter(
-        attempt =>
-          attempt.result ===
-          "wrong"
-      )
-      .slice()
-      .reverse();
-
-
-  document
-    .getElementById(
-      "errorsCountLabel"
-    )
-    .textContent =
-      `${wrongAttempts.length}`;
-
-
-  if (!wrongAttempts.length) {
-
-    container.innerHTML = `
-      <div class="empty">
-        Ошибок пока нет 🎉
-        <br>
-        Так держать!
-      </div>
-    `;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    wrongAttempts
-      .map(
-        attempt => {
-
-          const task =
-            findTask(
-              attempt.task_id
-            );
-
-
-          const variant =
-            task
-              ? getVariant(task)
-              : "?";
-
-
-          const number =
-            task
-              ? getTaskNumber(task)
-              : attempt.task_id;
-
-
-          return `
-            <div class="error-item">
-
-              <div class="error-header">
-
-                <div class="error-task">
-                  Вариант ${escapeHtml(variant)}
-                  · №${escapeHtml(number)}
-                </div>
-
-                <div class="error-date">
-                  ${formatDate(
-                    attempt.created_at
-                  )}
-                </div>
-
-              </div>
-
-              <div class="error-reason">
-                ${
-                  escapeHtml(
-                    attempt.reason ||
-                    "Причина не указана"
-                  )
-                }
-              </div>
-
-            </div>
-          `;
-        }
-      )
-      .join("");
-}
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-function getNickname() {
-
-  return (
-    currentUser
-      ?.user_metadata
-      ?.username ||
-    "Пользователь"
-  );
-}
-
-
-function renderProfile() {
-
-  if (!currentUser) {
-    return;
-  }
-
-
-  const nickname =
-    getNickname();
-
-
-  document
-    .getElementById(
-      "profileName"
-    )
-    .textContent =
-      nickname;
-
-
-  document
-    .getElementById(
-      "profileEmail"
-    )
-    .textContent =
-      currentUser.email || "";
-
-
-  document
-    .getElementById(
-      "profileNicknameInput"
-    )
-    .value =
-      nickname;
-
-
-  const firstLetter =
-    nickname
-      .trim()
-      .charAt(0)
-      .toUpperCase() ||
-      "П";
-
-
-  document
-    .getElementById(
-      "profileAvatar"
-    )
-    .textContent =
-      firstLetter;
-
-
-  document
-    .getElementById(
-      "profileTopButton"
-    )
-    .textContent =
-      firstLetter;
-}
-
-
-/* =========================================================
-   SAVE NICKNAME
-========================================================= */
-
-document
-  .getElementById(
-    "saveNicknameButton"
-  )
-  .addEventListener(
-    "click",
-    async () => {
-
-      if (!currentUser) {
-        return;
-      }
-
-
-      const nickname =
-        document
-          .getElementById(
-            "profileNicknameInput"
-          )
-          .value
-          .trim();
-
-
-      if (!nickname) {
-
-        showToast(
-          "Никнейм не может быть пустым."
-        );
-
-        return;
-      }
-
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient.auth
-          .updateUser({
-            data: {
-              username:
-                nickname
+          <b>
+            ${
+              t
+                ? `Вариант ${v(t)} · Задание ${num(t)} · Код ${code(t)}`
+                : esc(a.taskId)
             }
-          });
-
-
-      if (error) {
-
-        showToast(
-          error.message
-        );
-
-        return;
-      }
-
-
-      currentUser =
-        data.user;
-
-
-      renderProfile();
-
-      showToast(
-        "Никнейм сохранён 💜"
-      );
-    }
-  );
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-document
-  .getElementById(
-    "logoutButton"
-  )
-  .addEventListener(
-    "click",
-    async () => {
-
-      const {
-        error
-      } =
-        await supabaseClient.auth
-          .signOut();
-
-
-      if (error) {
-
-        showToast(
-          "Не удалось выйти."
-        );
-
-        return;
-      }
-
-
-      allAttempts = [];
-
-      currentUser = null;
-
-      showToast(
-        "Ты вышла из аккаунта."
-      );
-    }
-  );
-
-
-/* =========================================================
-   TOP PROFILE BUTTON
-========================================================= */
-
-document
-  .getElementById(
-    "profileTopButton"
-  )
-  .addEventListener(
-    "click",
-    () => {
-
-      showPage(
-        "profile"
-      );
-    }
-  );
-
-
-/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
-
-document
-  .querySelectorAll(
-    ".nav-button"
-  )
-  .forEach(button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        showPage(
-          button.dataset.page
-        );
-      }
-    );
-  });
-
-
-function showPage(pageName) {
-
-  document
-    .querySelectorAll(".page")
-    .forEach(page => {
-
-      page.classList.remove(
-        "active"
-      );
-    });
-
-
-  const page =
-    document.getElementById(
-      `${pageName}Page`
-    );
-
-
-  if (page) {
-
-    page.classList.add(
-      "active"
-    );
-  }
-
-
-  document
-    .querySelectorAll(".nav-button")
-    .forEach(button => {
-
-      button.classList.toggle(
-        "active",
-        button.dataset.page ===
-          pageName
-      );
-    });
-
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-
-  if (
-    pageName === "stats"
-  ) {
-
-    updateAllStatistics();
-  }
-
-
-  if (
-    pageName === "errors"
-  ) {
-
-    renderErrors();
-  }
-
-
-  if (
-    pageName === "profile"
-  ) {
-
-    renderProfile();
-  }
-}
-
-
-/* =========================================================
-   PDF REPORT
-========================================================= */
-
-document
-  .getElementById(
-    "generatePdfButton"
-  )
-  .addEventListener(
-    "click",
-    generatePdfReport
-  );
-
-
-function generatePdfReport() {
-
-  if (!currentUser) {
-    return;
-  }
-
-
-  const stats =
-    calculateStatistics();
-
-
-  const nickname =
-    getNickname();
-
-
-  const wrongAttempts =
-    allAttempts.filter(
-      attempt =>
-        attempt.result ===
-        "wrong"
-    );
-
-
-  const correctAttempts =
-    allAttempts.filter(
-      attempt =>
-        attempt.result ===
-        "correct"
-    );
-
-
-  const errorsHtml =
-    wrongAttempts.length
-      ? wrongAttempts
-          .map(
-            attempt => {
-
-              const task =
-                findTask(
-                  attempt.task_id
-                );
-
-
-              return `
-                <tr>
-
-                  <td>
-                    Вариант ${
-                      escapeHtml(
-                        task
-                          ? getVariant(task)
-                          : "?"
-                      )
-                    }
-                  </td>
-
-                  <td>
-                    №${
-                      escapeHtml(
-                        task
-                          ? getTaskNumber(task)
-                          : attempt.task_id
-                      )
-                    }
-                  </td>
-
-                  <td>
-                    ${formatDate(
-                      attempt.created_at
-                    )}
-                  </td>
-
-                  <td>
-                    ${escapeHtml(
-                      attempt.reason ||
-                      "—"
-                    )}
-                  </td>
-
-                </tr>
-              `;
+          </b>
+
+          <div>
+            ${
+              a.result === "correct"
+                ? "✓ Правильно"
+                : "✕ Ошибка"
             }
-          )
-          .join("")
-      : `
-          <tr>
-            <td colspan="4">
-              Ошибок нет 🎉
-            </td>
-          </tr>
+          </div>
+
+          ${
+            a.reason
+              ? `<div>${esc(a.reason)}</div>`
+              : ""
+          }
+
+          <div class="muted">
+            ${date(a.date)}
+          </div>
+
         `;
 
 
-  const attemptsHtml =
-    allAttempts.length
-      ? allAttempts
-          .slice()
-          .reverse()
-          .map(
-            attempt => {
+        c.appendChild(d);
 
-              const task =
-                findTask(
-                  attempt.task_id
-                );
+      });
 
-
-              return `
-                <tr>
-
-                  <td>
-                    Вариант ${
-                      escapeHtml(
-                        task
-                          ? getVariant(task)
-                          : "?"
-                      )
-                    }
-                  </td>
-
-                  <td>
-                    №${
-                      escapeHtml(
-                        task
-                          ? getTaskNumber(task)
-                          : attempt.task_id
-                      )
-                    }
-                  </td>
-
-                  <td>
-                    ${
-                      attempt.result ===
-                      "correct"
-                        ? "Верно"
-                        : "Неверно"
-                    }
-                  </td>
-
-                  <td>
-                    ${formatDate(
-                      attempt.created_at
-                    )}
-                  </td>
-
-                  <td>
-                    ${escapeHtml(
-                      attempt.reason ||
-                      "—"
-                    )}
-                  </td>
-
-                </tr>
-              `;
-            }
-          )
-          .join("")
-      : `
-          <tr>
-            <td colspan="5">
-              Попыток пока нет.
-            </td>
-          </tr>
-        `;
-
-
-  const report =
-    `
-      <!DOCTYPE html>
-
-      <html lang="ru">
-
-      <head>
-
-        <meta charset="UTF-8">
-
-        <title>
-          Отчёт — Путь к ОГЭ
-        </title>
-
-        <style>
-
-          body {
-            font-family:
-              Arial,
-              sans-serif;
-
-            color: #302b3f;
-
-            padding: 35px;
-
-            line-height: 1.5;
-          }
-
-          h1 {
-            color: #8063d5;
-          }
-
-          h2 {
-            margin-top: 35px;
-
-            color: #8063d5;
-          }
-
-          .header {
-            padding: 25px;
-
-            border-radius: 20px;
-
-            background:
-              linear-gradient(
-                135deg,
-                #eee6ff,
-                #f8e9f6
-              );
-          }
-
-          .stats {
-            display: grid;
-
-            grid-template-columns:
-              repeat(4, 1fr);
-
-            gap: 10px;
-
-            margin-top: 20px;
-          }
-
-          .stat {
-            padding: 15px;
-
-            background: #f8f4ff;
-
-            border-radius: 15px;
-
-            text-align: center;
-          }
-
-          .number {
-            font-size: 25px;
-
-            font-weight: bold;
-
-            color: #8063d5;
-          }
-
-          table {
-            width: 100%;
-
-            border-collapse: collapse;
-
-            margin-top: 15px;
-
-            font-size: 12px;
-          }
-
-          th,
-          td {
-            border: 1px solid #e5dfef;
-
-            padding: 8px;
-
-            text-align: left;
-
-            vertical-align: top;
-          }
-
-          th {
-            background: #f1eaff;
-          }
-
-          @media print {
-            body {
-              padding: 15px;
-            }
-          }
-
-        </style>
-
-      </head>
-
-      <body>
-
-        <div class="header">
-
-          <h1>
-            📚 Путь к ОГЭ
-          </h1>
-
-          <div>
-            Отчёт по подготовке
-          </div>
-
-          <strong>
-            ${escapeHtml(nickname)}
-          </strong>
-
-          <div>
-            ${escapeHtml(
-              currentUser.email || ""
-            )}
-          </div>
-
-        </div>
-
-
-        <h2>
-          📊 Общая статистика
-        </h2>
-
-
-        <div class="stats">
-
-          <div class="stat">
-
-            <div class="number">
-              ${stats.accuracy}%
-            </div>
-
-            Правильных
-          </div>
-
-
-          <div class="stat">
-
-            <div class="number">
-              ${stats.correct}
-            </div>
-
-            Верных ответов
-          </div>
-
-
-          <div class="stat">
-
-            <div class="number">
-              ${stats.total}
-            </div>
-
-            Всего попыток
-          </div>
-
-
-          <div class="stat">
-
-            <div class="number">
-              ${stats.wrong}
-            </div>
-
-            Ошибок
-          </div>
-
-        </div>
-
-
-        <h2>
-          ❌ Ошибки
-        </h2>
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>
-                Вариант
-              </th>
-
-              <th>
-                Задание
-              </th>
-
-              <th>
-                Дата
-              </th>
-
-              <th>
-                Причина
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-            ${errorsHtml}
-          </tbody>
-
-        </table>
-
-
-        <h2>
-          📜 Полная история попыток
-        </h2>
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>
-                Вариант
-              </th>
-
-              <th>
-                Задание
-              </th>
-
-              <th>
-                Результат
-              </th>
-
-              <th>
-                Дата
-              </th>
-
-              <th>
-                Причина
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-            ${attemptsHtml}
-          </tbody>
-
-        </table>
-
-
-        <p style="margin-top:35px;color:#8b8498;">
-          Отчёт сформирован:
-          ${formatDate(
-            new Date().toISOString()
-          )}
-        </p>
-
-
-        <script>
-          window.onload = function() {
-            setTimeout(
-              function() {
-                window.print();
-              },
-              500
-            );
-          };
-        <\/script>
-
-      </body>
-
-      </html>
-    `;
-
-
-  const reportWindow =
-    window.open(
-      "",
-      "_blank"
-    );
-
-
-  if (!reportWindow) {
-
-    showToast(
-      "Разреши всплывающие окна для формирования PDF."
-    );
-
-    return;
   }
 
 
-  reportWindow.document.open();
+  $("printBtn").onclick =
+    () =>
+      window.print();
 
-  reportWindow.document.write(
-    report
+
+  /* ========================================================
+     SEARCH
+  ======================================================== */
+
+  $("searchInput")
+    .onkeydown =
+    e => {
+
+      if(e.key !== "Enter")
+        return;
+
+
+      const q =
+        e.target.value
+          .trim()
+          .toLowerCase();
+
+
+      const t =
+        all().find(
+          t =>
+
+            `${v(t)}.${num(t)}`
+              .toLowerCase() === q
+
+            ||
+
+            id(t)
+              .toLowerCase() === q
+
+            ||
+
+            code(t)
+              .toLowerCase() === q
+        );
+
+
+      if(t){
+
+        openTask(t);
+
+      }else{
+
+        alert(
+          "Задание не найдено."
+        );
+
+      }
+
+    };
+
+
+  /* ========================================================
+     LOGOUT
+  ======================================================== */
+
+  $("logoutBtn").onclick =
+    async () => {
+
+      await sb.auth.signOut();
+
+      user = null;
+
+      attempts = [];
+
+      task = null;
+
+      hide("app");
+
+      hide("taskModal");
+
+      tabs(true);
+
+      auth("loginForm");
+
+    };
+
+
+  /* ========================================================
+     AUTH STATE
+  ======================================================== */
+
+  sb.auth.onAuthStateChange(
+    (event,session) => {
+
+      if(
+        event ===
+        "PASSWORD_RECOVERY"
+      ){
+
+        auth("resetForm");
+
+        return;
+
+      }
+
+
+      if(
+        event ===
+        "SIGNED_OUT"
+      ){
+
+        user = null;
+
+        attempts = [];
+
+        hide("app");
+
+        auth("loginForm");
+
+        return;
+
+      }
+
+
+      if(
+        session?.user &&
+        !user
+      ){
+
+        enter(session);
+
+      }
+
+    }
   );
 
-  reportWindow.document.close();
-}
+
+  /* ========================================================
+     INITIAL SESSION CHECK
+  ======================================================== */
+
+  (async () => {
+
+    try{
+
+      const r =
+        await sb.auth.getSession();
 
 
-/* =========================================================
-   TELEGRAM
-========================================================= */
+      if(
+        r.data?.session?.user
+      ){
 
-if (
-  window.Telegram &&
-  window.Telegram.WebApp
-) {
+        await enter(
+          r.data.session
+        );
 
-  window.Telegram.WebApp.ready();
+      }else{
 
-  window.Telegram.WebApp.expand();
-}
+        auth(
+          "loginForm"
+        );
+
+      }
+
+    }catch(e){
+
+      console.error(e);
+
+      auth(
+        "loginForm"
+      );
 
 
-/* =========================================================
-   START
-========================================================= */
+      message(
+        "loginMessage",
+        "Не удалось проверить сессию. Обнови страницу и попробуй войти ещё раз."
+      );
 
-initializeAuth();
+    }
+
+  })();
+
+});
 
 </script>
 
