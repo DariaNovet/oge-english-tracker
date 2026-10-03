@@ -2,8 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Путь к ОГЭ — Английский</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -11,126 +10,114 @@
 <script src="./data/tasks.js"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
 :root{
   --purple:#9b7bea;
   --purple2:#8063d5;
-  --light:#f3edff;
+  --purple3:#eee7ff;
   --bg:#faf8ff;
   --text:#302b3f;
   --muted:#8b8498;
   --white:#fff;
   --green:#55c58b;
   --red:#e97878;
+  --yellow:#f3c969;
   --shadow:0 8px 28px rgba(117,91,174,.12);
 }
 
 body{
   margin:0;
+  min-height:100vh;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  color:var(--text);
   background:
     radial-gradient(circle at 0 0,#eee6ff 0,transparent 28%),
     radial-gradient(circle at 100% 0,#f9e7f4 0,transparent 25%),
     var(--bg);
-  color:var(--text);
-  min-height:100vh;
 }
 
-button,input,textarea{
-  font:inherit;
-}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
 
-button{
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.hidden{
-  display:none!important;
-}
-
-/* ================= AUTH ================= */
+/* AUTH */
 
 #authScreen{
   min-height:100vh;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   padding:20px;
 }
 
 .auth-box{
   width:100%;
   max-width:440px;
-  background:rgba(255,255,255,.97);
+  background:white;
   border-radius:30px;
-  padding:32px 27px;
+  padding:30px 26px;
   box-shadow:var(--shadow);
 }
 
-.auth-logo{
-  width:70px;
-  height:70px;
-  margin:0 auto 18px;
-  border-radius:23px;
+.logo{
+  width:72px;
+  height:72px;
+  margin:0 auto 16px;
+  border-radius:24px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:31px;
-  font-weight:800;
   color:white;
+  font-size:32px;
+  font-weight:900;
   background:linear-gradient(135deg,#b8a1ff,#e8a7d8);
 }
 
 .auth-title{
   text-align:center;
   font-size:28px;
-  font-weight:800;
+  font-weight:900;
 }
 
 .auth-subtitle{
   text-align:center;
   color:var(--muted);
-  margin:7px 0 24px;
   font-size:14px;
+  margin:7px 0 23px;
 }
 
-.auth-tabs{
+.tabs{
   display:flex;
-  background:#f1edff;
+  gap:4px;
   padding:4px;
+  background:#f1edff;
   border-radius:14px;
   margin-bottom:20px;
 }
 
-.auth-tab{
+.tab{
   flex:1;
   border:0;
-  background:transparent;
   padding:11px;
   border-radius:11px;
+  background:transparent;
   color:var(--muted);
-  font-weight:700;
+  font-weight:800;
 }
 
-.auth-tab.active{
+.tab.active{
   background:white;
   color:var(--purple2);
   box-shadow:0 3px 10px rgba(80,50,140,.08);
 }
 
-.field{
-  margin-bottom:14px;
-}
+.field{margin-bottom:14px}
 
 .field label{
   display:block;
   font-size:13px;
-  font-weight:700;
+  font-weight:800;
   margin-bottom:7px;
 }
 
@@ -138,10 +125,10 @@ button{
 .field textarea{
   width:100%;
   border:2px solid #eee9f7;
-  background:#fcfbff;
   border-radius:13px;
   padding:13px 14px;
   outline:none;
+  background:#fcfbff;
   color:var(--text);
 }
 
@@ -151,27 +138,32 @@ button{
   background:white;
 }
 
-.primary-btn{
+.primary{
   width:100%;
   border:0;
   border-radius:14px;
   padding:14px;
-  background:linear-gradient(135deg,var(--purple),var(--purple2));
   color:white;
-  font-weight:800;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
   box-shadow:0 8px 20px rgba(128,99,213,.22);
 }
 
-.text-btn{
+.link{
   border:0;
   background:transparent;
   color:var(--purple2);
-  font-weight:700;
-  padding:11px 0;
+  font-weight:800;
 }
 
-.auth-error,
-.auth-success{
+.auth-bottom{
+  text-align:center;
+  margin-top:15px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.message{
   padding:12px;
   border-radius:12px;
   margin-bottom:14px;
@@ -179,35 +171,19 @@ button{
   line-height:1.4;
 }
 
-.auth-error{
+.error{
   background:#fff0f0;
   color:#b44d4d;
 }
 
-.auth-success{
+.success{
   background:#ebfff4;
   color:#39825d;
 }
 
-.auth-bottom{
-  text-align:center;
-  color:var(--muted);
-  font-size:14px;
-  margin-top:15px;
-}
+/* APP */
 
-.auth-bottom button{
-  border:0;
-  background:transparent;
-  color:var(--purple2);
-  font-weight:800;
-}
-
-/* ================= APP ================= */
-
-#app{
-  min-height:100vh;
-}
+#app{min-height:100vh}
 
 .top{
   padding:18px;
@@ -222,7 +198,7 @@ button{
 
 .brand{
   font-size:23px;
-  font-weight:850;
+  font-weight:900;
 }
 
 .brand-small{
@@ -232,13 +208,13 @@ button{
 }
 
 .profile-mini{
-  display:flex;
-  align-items:center;
-  gap:8px;
   border:0;
   background:white;
   border-radius:15px;
   padding:7px 10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
   box-shadow:0 4px 14px rgba(100,80,140,.07);
 }
 
@@ -246,12 +222,12 @@ button{
   width:35px;
   height:35px;
   border-radius:50%;
-  background:linear-gradient(135deg,#b39af8,#e3a5d3);
-  color:white;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-weight:800;
+  background:linear-gradient(135deg,#b39af8,#e3a5d3);
+  color:white;
+  font-weight:900;
 }
 
 .hero{
@@ -265,7 +241,7 @@ button{
 
 .hero-title{
   font-size:26px;
-  font-weight:850;
+  font-weight:900;
 }
 
 .hero-text{
@@ -276,7 +252,7 @@ button{
 
 .progress-number{
   font-size:31px;
-  font-weight:850;
+  font-weight:900;
   margin-top:21px;
 }
 
@@ -298,7 +274,7 @@ button{
   width:0;
   background:white;
   border-radius:20px;
-  transition:width .3s;
+  transition:.3s;
 }
 
 .content{
@@ -307,7 +283,7 @@ button{
 
 .section-title{
   font-size:19px;
-  font-weight:850;
+  font-weight:900;
   margin:22px 0 12px;
 }
 
@@ -326,7 +302,7 @@ button{
   gap:12px;
 }
 
-.menu-card{
+.card{
   border:0;
   background:white;
   border-radius:19px;
@@ -334,49 +310,54 @@ button{
   text-align:left;
   min-height:112px;
   box-shadow:var(--shadow);
-  transition:transform .15s;
+  transition:.15s;
 }
 
-.menu-card:active{
-  transform:scale(.97);
-}
+.card:active{transform:scale(.97)}
 
-.menu-icon{
+.card-icon{
   font-size:27px;
-  margin-bottom:12px;
+  margin-bottom:11px;
 }
 
-.menu-title{
-  font-weight:800;
+.card-title{
+  font-weight:900;
   font-size:15px;
 }
 
-.menu-desc{
+.card-desc{
   color:var(--muted);
   font-size:12px;
   margin-top:5px;
 }
 
-/* ================= SCREENS ================= */
+/* SCREENS */
 
-.screen{
-  display:none;
+.screen{display:none}
+.screen.active{display:block}
+
+.screen-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
 }
 
-.screen.active{
-  display:block;
-}
-
-.back-btn{
+.back{
   border:0;
   background:#eee8ff;
   color:var(--purple2);
   padding:10px 14px;
   border-radius:12px;
-  font-weight:800;
+  font-weight:900;
 }
 
-/* ================= TASKS ================= */
+.screen-title{
+  font-size:22px;
+  font-weight:900;
+}
+
+/* TASKS */
 
 .task-block{
   background:white;
@@ -387,7 +368,7 @@ button{
 }
 
 .task-block-title{
-  font-weight:850;
+  font-weight:900;
   margin-bottom:12px;
 }
 
@@ -403,7 +384,7 @@ button{
   color:var(--purple2);
   border-radius:13px;
   padding:13px;
-  font-weight:800;
+  font-weight:900;
 }
 
 .task-buttons{
@@ -413,12 +394,13 @@ button{
 }
 
 .task-number{
-  width:45px;
-  height:40px;
+  width:46px;
+  height:41px;
   border:1px solid #e4def1;
   background:#faf8ff;
   border-radius:11px;
-  font-weight:800;
+  font-weight:900;
+  color:var(--text);
 }
 
 .task-number.done{
@@ -427,7 +409,35 @@ button{
   border-color:var(--green);
 }
 
-/* ================= STATS ================= */
+.task-number.wrong{
+  background:#fff0f0;
+  color:#b65050;
+  border-color:#f2c7c7;
+}
+
+/* SEARCH */
+
+.search-result{
+  margin-top:12px;
+  background:white;
+  border-radius:17px;
+  padding:16px;
+  box-shadow:var(--shadow);
+}
+
+.search-code{
+  color:var(--purple2);
+  font-weight:900;
+  font-size:18px;
+}
+
+.search-info{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+/* STATS */
 
 .stat-grid{
   display:grid;
@@ -435,7 +445,7 @@ button{
   gap:11px;
 }
 
-.stat-card{
+.stat{
   background:white;
   border-radius:18px;
   padding:18px;
@@ -444,7 +454,7 @@ button{
 
 .stat-value{
   font-size:28px;
-  font-weight:850;
+  font-weight:900;
   color:var(--purple2);
 }
 
@@ -454,7 +464,28 @@ button{
   margin-top:4px;
 }
 
-/* ================= PROFILE ================= */
+.analysis{
+  margin-top:15px;
+  background:white;
+  border-radius:19px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.analysis h3{
+  margin:0 0 12px;
+}
+
+.analysis-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #eeeaf5;
+}
+
+.analysis-row:last-child{border-bottom:0}
+
+/* PROFILE */
 
 .profile-card{
   background:white;
@@ -475,12 +506,12 @@ button{
   background:linear-gradient(135deg,#b49cf8,#e5a7d6);
   color:white;
   font-size:31px;
-  font-weight:850;
+  font-weight:900;
 }
 
 .profile-name{
   font-size:21px;
-  font-weight:850;
+  font-weight:900;
 }
 
 .profile-email{
@@ -489,7 +520,7 @@ button{
   margin-top:4px;
 }
 
-.logout-btn{
+.logout{
   margin-top:22px;
   width:100%;
   border:0;
@@ -497,10 +528,27 @@ button{
   padding:13px;
   background:#fff0f0;
   color:#b55050;
-  font-weight:800;
+  font-weight:900;
 }
 
-/* ================= MODAL ================= */
+/* REPORT */
+
+.report-card{
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  line-height:1.6;
+}
+
+.report-item{
+  padding:13px 0;
+  border-bottom:1px solid #eeeaf5;
+}
+
+.report-item:last-child{border-bottom:0}
+
+/* MODAL */
 
 .modal{
   position:fixed;
@@ -520,7 +568,7 @@ button{
   padding:22px 18px 30px;
 }
 
-.modal-close{
+.close{
   float:right;
   width:37px;
   height:37px;
@@ -528,6 +576,7 @@ button{
   border-radius:50%;
   background:#f0ebff;
   color:var(--purple2);
+  font-weight:900;
 }
 
 .task-code{
@@ -536,10 +585,15 @@ button{
   margin-bottom:8px;
 }
 
-.task-question{
-  font-size:18px;
-  font-weight:750;
-  line-height:1.45;
+.task-main-title{
+  font-size:21px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.task-description{
+  color:var(--muted);
+  line-height:1.5;
   margin-bottom:18px;
 }
 
@@ -549,22 +603,25 @@ button{
   gap:10px;
 }
 
-.correct-btn,
-.wrong-btn{
+.correct,.wrong{
   border:0;
   border-radius:13px;
   padding:14px;
-  font-weight:800;
+  font-weight:900;
 }
 
-.correct-btn{
+.correct{
   background:#e8faef;
   color:#32835d;
 }
 
-.wrong-btn{
+.wrong{
   background:#fff0f0;
   color:#b65050;
+}
+
+.history{
+  margin-top:20px;
 }
 
 .history-item{
@@ -573,272 +630,182 @@ button{
   font-size:13px;
 }
 
-/* ================= MOBILE ================= */
+.reason{
+  margin-top:14px;
+}
+
+.reason textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.save-reason{
+  margin-top:9px;
+  width:100%;
+}
+
+/* MOBILE */
 
 @media(max-width:380px){
-  .menu-grid,
-  .answer-buttons{
-    grid-template-columns:1fr;
-  }
+  .menu-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= AUTH ================= -->
+<!-- AUTH -->
 
 <div id="authScreen">
-
   <div class="auth-box">
 
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="loginTab">
-        Войти
-      </button>
+    <div class="logo">ОГЭ</div>
 
-      <button class="auth-tab" id="registerTab">
-        Регистрация
-      </button>
+    <div class="auth-title">ОГЭ Английский</div>
+    <div class="auth-subtitle">Трекер подготовки к экзамену</div>
+
+    <div class="tabs">
+      <button id="loginTab" class="tab active">Войти</button>
+      <button id="registerTab" class="tab">Регистрация</button>
     </div>
+
+    <div id="authMessage"></div>
 
     <!-- LOGIN -->
 
-    <div id="loginForm">
-
-      <div class="auth-logo">📚</div>
-
-      <div class="auth-title">
-        ОГЭ Английский
-      </div>
-
-      <div class="auth-subtitle">
-        Трекер подготовки к экзамену
-      </div>
-
-      <div id="loginMessage"></div>
+    <form id="loginForm">
 
       <div class="field">
         <label>Email</label>
-        <input
-          id="loginEmail"
-          type="email"
-          autocomplete="email"
-          placeholder="Введите email"
-        >
+        <input id="loginEmail" type="email" autocomplete="email" required>
       </div>
 
       <div class="field">
         <label>Пароль</label>
-        <input
-          id="loginPassword"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Введите пароль"
-        >
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
       </div>
 
-      <button class="primary-btn" id="loginBtn">
-        Войти
-      </button>
+      <button class="primary" type="submit">Войти</button>
 
-      <div style="text-align:center">
-        <button class="text-btn" id="forgotBtn">
+      <div style="text-align:center;margin-top:10px">
+        <button class="link" type="button" id="forgotBtn">
           Забыли пароль?
         </button>
       </div>
 
-    </div>
+    </form>
 
     <!-- REGISTER -->
 
-    <div id="registerForm" class="hidden">
-
-      <div class="auth-logo">✨</div>
-
-      <div class="auth-title">
-        Создать аккаунт
-      </div>
-
-      <div class="auth-subtitle">
-        Регистрация в трекере
-      </div>
-
-      <div id="registerMessage"></div>
+    <form id="registerForm" class="hidden">
 
       <div class="field">
         <label>Никнейм</label>
-        <input
-          id="registerUsername"
-          type="text"
-          maxlength="30"
-          placeholder="Например, Даша"
-        >
+        <input id="registerName" type="text" required>
       </div>
 
       <div class="field">
         <label>Email</label>
-        <input
-          id="registerEmail"
-          type="email"
-          placeholder="Введите email"
-        >
+        <input id="registerEmail" type="email" autocomplete="email" required>
       </div>
 
       <div class="field">
         <label>Пароль</label>
-        <input
-          id="registerPassword"
-          type="password"
-          placeholder="Минимум 6 символов"
-        >
+        <input id="registerPassword" type="password" autocomplete="new-password" required>
       </div>
 
       <div class="field">
         <label>Повторите пароль</label>
-        <input
-          id="registerPassword2"
-          type="password"
-          placeholder="Повторите пароль"
-        >
+        <input id="registerPassword2" type="password" autocomplete="new-password" required>
       </div>
 
-      <button class="primary-btn" id="registerBtn">
-        Создать аккаунт
-      </button>
+      <button class="primary" type="submit">Создать аккаунт</button>
 
-    </div>
+    </form>
 
-    <!-- FORGOT -->
+    <!-- RECOVERY -->
 
-    <div id="forgotForm" class="hidden">
-
-      <div class="auth-logo">🔑</div>
-
-      <div class="auth-title">
-        Восстановление
-      </div>
-
-      <div class="auth-subtitle">
-        Введи email своего аккаунта
-      </div>
-
-      <div id="forgotMessage"></div>
+    <form id="recoveryForm" class="hidden">
 
       <div class="field">
         <label>Email</label>
-        <input
-          id="forgotEmail"
-          type="email"
-          placeholder="Введите email"
-        >
+        <input id="recoveryEmail" type="email" required>
       </div>
 
-      <button class="primary-btn" id="sendResetBtn">
+      <button class="primary" type="submit">
         Отправить письмо
       </button>
 
-      <div style="text-align:center">
-        <button class="text-btn" id="backToLoginBtn">
-          ← Вернуться ко входу
+      <div style="text-align:center;margin-top:10px">
+        <button class="link" type="button" id="backLoginBtn">
+          Вернуться ко входу
         </button>
       </div>
 
-    </div>
+    </form>
 
-    <!-- RESET -->
+    <!-- UPDATE PASSWORD -->
 
-    <div id="resetForm" class="hidden">
-
-      <div class="auth-logo">🔐</div>
-
-      <div class="auth-title">
-        Новый пароль
-      </div>
-
-      <div class="auth-subtitle">
-        Придумай новый пароль
-      </div>
-
-      <div id="resetMessage"></div>
+    <form id="newPasswordForm" class="hidden">
 
       <div class="field">
         <label>Новый пароль</label>
-        <input id="newPassword" type="password">
+        <input id="newPassword" type="password" required>
       </div>
 
       <div class="field">
-        <label>Повторите пароль</label>
-        <input id="newPassword2" type="password">
+        <label>Повторите новый пароль</label>
+        <input id="newPassword2" type="password" required>
       </div>
 
-      <button class="primary-btn" id="updatePasswordBtn">
+      <button class="primary" type="submit">
         Сохранить пароль
       </button>
 
-    </div>
+    </form>
 
   </div>
-
 </div>
 
 
-<!-- ================= APP ================= -->
+<!-- APP -->
 
 <div id="app" class="hidden">
 
   <div class="top">
-
     <div class="top-row">
 
       <div>
-        <div class="brand">
-          Путь к ОГЭ
-        </div>
-
-        <div class="brand-small">
-          Английский язык
-        </div>
+        <div class="brand">ОГЭ Английский</div>
+        <div class="brand-small">Трекер подготовки</div>
       </div>
 
-      <button class="profile-mini" id="profileBtn">
-
-        <div class="avatar" id="miniAvatar">
-          П
-        </div>
-
-        <span id="miniName">
-          Профиль
-        </span>
-
+      <button class="profile-mini" id="profileMini">
+        <span class="avatar" id="miniAvatar">?</span>
+        <span id="miniName">Профиль</span>
       </button>
 
     </div>
-
   </div>
 
 
   <!-- HOME -->
 
-  <section id="homeScreen" class="screen active">
+  <div id="homeScreen" class="screen active">
 
     <div class="hero">
 
-      <div class="hero-title">
-        Твоя подготовка 💜
-      </div>
+      <div class="hero-title">Твоя подготовка</div>
 
       <div class="hero-text">
-        Маленькие шаги каждый день — и ты справишься!
+        Отслеживай задания и постепенно закрывай весь ОГЭ.
       </div>
 
-      <div class="progress-number" id="progressNumber">
-        0 / 95
+      <div class="progress-number">
+        <span id="doneCount">0</span> / 95
       </div>
 
-      <div class="progress-caption">
-        выполнено заданий
-      </div>
+      <div class="progress-caption">заданий выполнено</div>
 
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill"></div>
@@ -849,309 +816,293 @@ button{
 
     <div class="content">
 
-      <div class="section-title">
-        Найти задание
-      </div>
+      <div class="section-title">Поиск задания</div>
 
       <input
         id="searchInput"
         class="search"
-        placeholder="Например: 1.3"
+        placeholder="Введите код задания, например 42BF66"
       >
 
+      <div id="searchResults"></div>
 
-      <div class="section-title">
-        Разделы
-      </div>
 
+      <div class="section-title">Разделы</div>
 
       <div class="menu-grid">
 
-        <button class="menu-card" id="tasksMenu">
-
-          <div class="menu-icon">
-            📚
-          </div>
-
-          <div class="menu-title">
-            Задания
-          </div>
-
-          <div class="menu-desc">
-            Все варианты и номера
-          </div>
-
+        <button class="card" id="tasksBtn">
+          <div class="card-icon">📚</div>
+          <div class="card-title">Задания</div>
+          <div class="card-desc">95 заданий и 19 вариантов</div>
         </button>
 
-
-        <button class="menu-card" id="statsMenu">
-
-          <div class="menu-icon">
-            📊
-          </div>
-
-          <div class="menu-title">
-            Статистика
-          </div>
-
-          <div class="menu-desc">
-            Твой результат
-          </div>
-
+        <button class="card" id="statsBtn">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Статистика</div>
+          <div class="card-desc">Твой прогресс</div>
         </button>
 
-
-        <button class="menu-card" id="errorsMenu">
-
-          <div class="menu-icon">
-            ❌
-          </div>
-
-          <div class="menu-title">
-            Ошибки
-          </div>
-
-          <div class="menu-desc">
-            Что нужно повторить
-          </div>
-
+        <button class="card" id="errorsBtn">
+          <div class="card-icon">❌</div>
+          <div class="card-title">Ошибки</div>
+          <div class="card-desc">Анализ ошибок</div>
         </button>
 
+        <button class="card" id="reportBtn">
+          <div class="card-icon">📄</div>
+          <div class="card-title">Отчёт</div>
+          <div class="card-desc">Полный результат</div>
+        </button>
 
-        <button class="menu-card" id="reportMenu">
-
-          <div class="menu-icon">
-            📄
-          </div>
-
-          <div class="menu-title">
-            Отчёт
-          </div>
-
-          <div class="menu-desc">
-            Твой прогресс
-          </div>
-
+        <button class="card" id="profileBtn">
+          <div class="card-icon">👤</div>
+          <div class="card-title">Профиль</div>
+          <div class="card-desc">Аккаунт и настройки</div>
         </button>
 
       </div>
 
     </div>
 
-  </section>
+  </div>
 
 
   <!-- TASKS -->
 
-  <section id="tasksScreen" class="screen content">
+  <div id="tasksScreen" class="screen">
 
-    <button class="back-btn" id="tasksBack">
-      ← Назад
-    </button>
+    <div class="content">
 
-    <div class="section-title">
-      Задания
+      <div class="screen-head">
+        <button class="back" onclick="showScreen('homeScreen')">←</button>
+        <div class="screen-title">Задания</div>
+      </div>
+
+      <div id="tasksContainer"></div>
+
     </div>
 
-    <div id="tasksContainer"></div>
-
-  </section>
+  </div>
 
 
   <!-- VARIANT -->
 
-  <section id="variantScreen" class="screen content">
+  <div id="variantScreen" class="screen">
 
-    <button class="back-btn" id="variantBack">
-      ← Назад
-    </button>
+    <div class="content">
 
-    <div class="section-title" id="variantTitle">
-      Вариант
+      <div class="screen-head">
+        <button class="back" onclick="showScreen('tasksScreen')">←</button>
+        <div class="screen-title" id="variantTitle">Вариант</div>
+      </div>
+
+      <div id="variantTasks"></div>
+
     </div>
 
-    <div id="variantTasks"></div>
-
-  </section>
+  </div>
 
 
   <!-- STATS -->
 
-  <section id="statsScreen" class="screen content">
+  <div id="statsScreen" class="screen">
 
-    <button class="back-btn" id="statsBack">
-      ← Назад
-    </button>
+    <div class="content">
 
-    <div class="section-title">
-      Статистика
+      <div class="screen-head">
+        <button class="back" onclick="showScreen('homeScreen')">←</button>
+        <div class="screen-title">Статистика</div>
+      </div>
+
+      <div class="stat-grid">
+
+        <div class="stat">
+          <div class="stat-value" id="statDone">0</div>
+          <div class="stat-label">Выполнено</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-value" id="statLeft">95</div>
+          <div class="stat-label">Осталось</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-value" id="statWrong">0</div>
+          <div class="stat-label">Ошибок</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-value" id="statPercent">0%</div>
+          <div class="stat-label">Прогресс</div>
+        </div>
+
+      </div>
+
+      <div class="analysis">
+
+        <h3>Анализ подготовки</h3>
+
+        <div class="analysis-row">
+          <span>Выполнено заданий</span>
+          <b id="analysisDone">0</b>
+        </div>
+
+        <div class="analysis-row">
+          <span>Ошибок</span>
+          <b id="analysisWrong">0</b>
+        </div>
+
+        <div class="analysis-row">
+          <span>Без ошибок</span>
+          <b id="analysisCorrect">0</b>
+        </div>
+
+        <div class="analysis-row">
+          <span>Процент выполнения</span>
+          <b id="analysisPercent">0%</b>
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="stat-grid">
-
-      <div class="stat-card">
-        <div class="stat-value" id="statTotal">0</div>
-        <div class="stat-label">Всего попыток</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-value" id="statCorrect">0</div>
-        <div class="stat-label">Правильных</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-value" id="statWrong">0</div>
-        <div class="stat-label">Ошибок</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-value" id="statPercent">0%</div>
-        <div class="stat-label">Правильных ответов</div>
-      </div>
-
-    </div>
-
-  </section>
+  </div>
 
 
   <!-- ERRORS -->
 
-  <section id="errorsScreen" class="screen content">
+  <div id="errorsScreen" class="screen">
 
-    <button class="back-btn" id="errorsBack">
-      ← Назад
-    </button>
+    <div class="content">
 
-    <div class="section-title">
-      Ошибки
+      <div class="screen-head">
+        <button class="back" onclick="showScreen('homeScreen')">←</button>
+        <div class="screen-title">Ошибки</div>
+      </div>
+
+      <div id="errorsContainer"></div>
+
     </div>
 
-    <div id="errorsContainer"></div>
-
-  </section>
+  </div>
 
 
   <!-- REPORT -->
 
-  <section id="reportScreen" class="screen content">
+  <div id="reportScreen" class="screen">
 
-    <button class="back-btn" id="reportBack">
-      ← Назад
-    </button>
+    <div class="content">
 
-    <div class="section-title">
-      Отчёт
-    </div>
+      <div class="screen-head">
+        <button class="back" onclick="showScreen('homeScreen')">←</button>
+        <div class="screen-title">Отчёт</div>
+      </div>
 
-    <div class="profile-card">
+      <div class="report-card" id="reportContent"></div>
 
-      <h3>
-        Моя подготовка
-      </h3>
-
-      <p id="reportText"></p>
-
-      <button class="primary-btn" id="printBtn">
+      <button
+        class="primary"
+        style="margin-top:14px"
+        onclick="window.print()"
+      >
         🖨 Печать / PDF
       </button>
 
     </div>
 
-  </section>
+  </div>
 
 
   <!-- PROFILE -->
 
-  <section id="profileScreen" class="screen content">
+  <div id="profileScreen" class="screen">
 
-    <button class="back-btn" id="profileBack">
-      ← Назад
-    </button>
+    <div class="content">
 
-    <div class="section-title">
-      Профиль
+      <div class="screen-head">
+        <button class="back" onclick="showScreen('homeScreen')">←</button>
+        <div class="screen-title">Профиль</div>
+      </div>
+
+      <div class="profile-card">
+
+        <div class="big-avatar" id="bigAvatar">?</div>
+
+        <div class="profile-name" id="profileName">
+          Пользователь
+        </div>
+
+        <div class="profile-email" id="profileEmail">
+          email
+        </div>
+
+        <div style="margin-top:20px;color:var(--muted);font-size:13px">
+          Твой прогресс сохраняется отдельно для этого аккаунта.
+        </div>
+
+        <button class="logout" id="logoutBtn">
+          Выйти из аккаунта
+        </button>
+
+      </div>
+
     </div>
 
-    <div class="profile-card">
-
-      <div class="big-avatar" id="bigAvatar">
-        П
-      </div>
-
-      <div class="profile-name" id="profileName">
-        Пользователь
-      </div>
-
-      <div class="profile-email" id="profileEmail">
-        —
-      </div>
-
-      <button class="logout-btn" id="logoutBtn">
-        Выйти из аккаунта
-      </button>
-
-    </div>
-
-  </section>
+  </div>
 
 </div>
 
 
-<!-- ================= MODAL ================= -->
+<!-- TASK MODAL -->
 
 <div id="taskModal" class="modal hidden">
 
   <div class="modal-box">
 
-    <button class="modal-close" id="modalClose">
-      ✕
-    </button>
+    <button class="close" id="closeModal">×</button>
 
     <div class="task-code" id="modalCode"></div>
 
-    <div class="task-question" id="modalQuestion"></div>
+    <div class="task-main-title" id="modalTitle"></div>
+
+    <div class="task-description" id="modalDescription"></div>
 
     <div class="answer-buttons">
 
-      <button class="correct-btn" id="correctBtn">
+      <button class="correct" id="correctBtn">
         ✓ Правильно
       </button>
 
-      <button class="wrong-btn" id="wrongBtn">
+      <button class="wrong" id="wrongBtn">
         ✕ Ошибка
       </button>
 
     </div>
 
+    <div id="reasonBlock" class="reason hidden">
 
-    <div id="wrongReasonBox" class="hidden">
-
-      <div class="field" style="margin-top:18px">
-
-        <label>
-          Почему ошиблась?
-        </label>
-
+      <div class="field">
+        <label>Почему ошиблась?</label>
         <textarea
-          id="wrongReason"
-          rows="4"
-          placeholder="Напиши причину ошибки"
+          id="reasonText"
+          placeholder="Например: не знала правило, невнимательно прочитала, перепутала слова..."
         ></textarea>
-
       </div>
 
-      <button class="primary-btn" id="saveWrongBtn">
+      <button class="primary save-reason" id="saveReason">
         Сохранить ошибку
       </button>
 
     </div>
 
+    <div class="history">
 
-    <div class="section-title" style="font-size:15px">
-      История
+      <h3>История попыток</h3>
+
+      <div id="historyList"></div>
+
     </div>
-
-    <div id="taskHistory"></div>
 
   </div>
 
@@ -1159,1744 +1110,1241 @@ button{
 
 
 <script>
+/* =========================================================
+   SUPABASE
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", function(){
+const SUPABASE_URL =
+  "https://akaslsblnvxwtzlhvehb.supabase.co";
 
-  /* =====================================================
-     SUPABASE
-  ===================================================== */
+const SUPABASE_KEY =
+  "sb_publishable_0ZKH4SeD5Dg81SaxX7gz-g_1fp-pnch";
 
-  const SUPABASE_URL =
-    "https://akaslsblnvxwtzlhvehb.supabase.co";
-
-  const SUPABASE_KEY =
-    "sb_publishable_0ZKH4SeD5Dg81SaxX7gz-g_1fp-pnch";
-
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY,
-      {
-        auth:{
-          persistSession:true,
-          autoRefreshToken:true,
-          detectSessionInUrl:true
-        }
-      }
-    );
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
-  /* =====================================================
-     TELEGRAM
-  ===================================================== */
+/* =========================================================
+   DATA
+========================================================= */
 
-  const tg =
-    window.Telegram?.WebApp;
+const ALL_TASKS =
+  Array.isArray(window.TASKS)
+    ? window.TASKS
+    : [];
 
-  if(tg){
-    tg.ready();
-    tg.expand();
+let currentUser = null;
+let currentTask = null;
+
+let attempts = {};
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function showMessage(text,type="error"){
+  $("authMessage").innerHTML =
+    '<div class="message '+type+'">'+
+    escapeHtml(text)+
+    '</div>';
+}
+
+function clearMessage(){
+  $("authMessage").innerHTML="";
+}
+
+function getTask(id){
+  return ALL_TASKS.find(t => t.id === id);
+}
+
+function getAttempt(id){
+  return attempts[id] || null;
+}
+
+function storageKey(){
+  return currentUser
+    ? "oge_english_tracker_attempts_"+currentUser.id
+    : null;
+}
+
+
+/* =========================================================
+   AUTH SCREENS
+========================================================= */
+
+function authMode(mode){
+
+  $("loginForm").classList.toggle(
+    "hidden",
+    mode !== "login"
+  );
+
+  $("registerForm").classList.toggle(
+    "hidden",
+    mode !== "register"
+  );
+
+  $("recoveryForm").classList.toggle(
+    "hidden",
+    mode !== "recovery"
+  );
+
+  $("newPasswordForm").classList.toggle(
+    "hidden",
+    mode !== "password"
+  );
+
+  $("loginTab").classList.toggle(
+    "active",
+    mode === "login"
+  );
+
+  $("registerTab").classList.toggle(
+    "active",
+    mode === "register"
+  );
+
+  clearMessage();
+}
+
+
+/* =========================================================
+   REGISTRATION
+========================================================= */
+
+$("registerTab").onclick = () => {
+  authMode("register");
+};
+
+$("loginTab").onclick = () => {
+  authMode("login");
+};
+
+$("registerForm").onsubmit = async e => {
+
+  e.preventDefault();
+
+  const name =
+    $("registerName").value.trim();
+
+  const email =
+    $("registerEmail").value.trim();
+
+  const password =
+    $("registerPassword").value;
+
+  const password2 =
+    $("registerPassword2").value;
+
+  if(!name){
+    showMessage("Введите никнейм.");
+    return;
   }
 
-
-  /* =====================================================
-     STATE
-  ===================================================== */
-
-  let currentUser = null;
-  let currentTask = null;
-  let currentVariant = null;
-  let attempts = [];
-
-
-  /* =====================================================
-     HELPERS
-  ===================================================== */
-
-  function $(id){
-    return document.getElementById(id);
+  if(password.length < 6){
+    showMessage("Пароль должен содержать минимум 6 символов.");
+    return;
   }
 
-
-  function show(id){
-    const el =
-      typeof id === "string"
-        ? $(id)
-        : id;
-
-    if(el){
-      el.classList.remove("hidden");
-    }
+  if(password !== password2){
+    showMessage("Пароли не совпадают.");
+    return;
   }
 
+  showMessage("Создаём аккаунт...","success");
 
-  function hide(id){
-    const el =
-      typeof id === "string"
-        ? $(id)
-        : id;
+  const {data,error} =
+    await supabaseClient.auth.signUp({
+      email,
+      password,
+      options:{
+        data:{
+          username:name
+        },
+        emailRedirectTo:
+          "https://darianovet.github.io/oge-english-tracker/"
+      }
+    });
 
-    if(el){
-      el.classList.add("hidden");
-    }
+  if(error){
+    showMessage(error.message);
+    return;
   }
 
-
-  function escapeHtml(value){
-    return String(value ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-
-  function message(id,text,type="error"){
-
-    const el = $(id);
-
-    if(!el) return;
-
-    el.innerHTML =
-      `<div class="${type==="success" ? "auth-success":"auth-error"}">
-        ${escapeHtml(text)}
-      </div>`;
-
-  }
-
-
-  /* =====================================================
-     AUTH SCREENS
-  ===================================================== */
-
-  function authScreen(screen){
-
-    [
-      "loginForm",
-      "registerForm",
-      "forgotForm",
-      "resetForm"
-    ].forEach(hide);
-
-    show(screen);
-
-    hide("app");
-    show("authScreen");
-
-  }
-
-
-  $("loginTab").onclick = function(){
-
-    $("loginTab").classList.add("active");
-    $("registerTab").classList.remove("active");
-
-    authScreen("loginForm");
-
-  };
-
-
-  $("registerTab").onclick = function(){
-
-    $("registerTab").classList.add("active");
-    $("loginTab").classList.remove("active");
-
-    authScreen("registerForm");
-
-  };
-
-
-  $("forgotBtn").onclick =
-    () => authScreen("forgotForm");
-
-
-  $("backToLoginBtn").onclick =
-    () => authScreen("loginForm");
-
-
-  /* =====================================================
-     LOGIN
-  ===================================================== */
-
-  $("loginBtn").onclick = async function(){
-
-    const email =
-      $("loginEmail").value.trim();
-
-    const password =
-      $("loginPassword").value;
-
-    if(!email || !password){
-
-      message(
-        "loginMessage",
-        "Введите email и пароль."
-      );
-
-      return;
-
-    }
-
-    $("loginBtn").disabled = true;
-    $("loginBtn").textContent = "Входим...";
-
-    try{
-
-      const result =
-        await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-
-      if(result.error){
-        throw result.error;
-      }
-
-      currentUser =
-        result.data.user;
-
-      await openApp();
-
-    }catch(error){
-
-      console.error(error);
-
-      let text =
-        error.message ||
-        "Не удалось войти.";
-
-      if(
-        error.code === "email_not_confirmed"
-      ){
-        text =
-          "Сначала подтверди email через письмо.";
-      }
-
-      if(
-        error.code === "invalid_credentials"
-      ){
-        text =
-          "Неверный email или пароль.";
-      }
-
-      message(
-        "loginMessage",
-        text
-      );
-
-    }finally{
-
-      $("loginBtn").disabled = false;
-      $("loginBtn").textContent = "Войти";
-
-    }
-
-  };
-
-
-  /* =====================================================
-     REGISTER
-  ===================================================== */
-
-  $("registerBtn").onclick = async function(){
-
-    const username =
-      $("registerUsername").value.trim();
-
-    const email =
-      $("registerEmail").value.trim();
-
-    const password =
-      $("registerPassword").value;
-
-    const password2 =
-      $("registerPassword2").value;
-
-    if(!username){
-
-      message(
-        "registerMessage",
-        "Введите никнейм."
-      );
-
-      return;
-
-    }
-
-    if(!email){
-
-      message(
-        "registerMessage",
-        "Введите email."
-      );
-
-      return;
-
-    }
-
-    if(password.length < 6){
-
-      message(
-        "registerMessage",
-        "Пароль должен содержать минимум 6 символов."
-      );
-
-      return;
-
-    }
-
-    if(password !== password2){
-
-      message(
-        "registerMessage",
-        "Пароли не совпадают."
-      );
-
-      return;
-
-    }
-
-    $("registerBtn").disabled = true;
-    $("registerBtn").textContent =
-      "Создаём аккаунт...";
-
-    try{
-
-      const result =
-        await supabaseClient.auth.signUp({
-
-          email,
-          password,
-
-          options:{
-            data:{
-              username
-            },
-
-            emailRedirectTo:
-              "https://darianovet.github.io/oge-english-tracker/"
-          }
-
-        });
-
-      if(result.error){
-        throw result.error;
-      }
-
-      if(result.data.session){
-
-        currentUser =
-          result.data.user;
-
-        await createProfile();
-        await openApp();
-
-      }else{
-
-        message(
-          "registerMessage",
-          "Аккаунт создан! Проверь почту и перейди по ссылке подтверждения.",
-          "success"
-        );
-
-      }
-
-    }catch(error){
-
-      console.error(error);
-
-      message(
-        "registerMessage",
-        error.message ||
-        "Не удалось создать аккаунт."
-      );
-
-    }finally{
-
-      $("registerBtn").disabled = false;
-      $("registerBtn").textContent =
-        "Создать аккаунт";
-
-    }
-
-  };
-
-
-  /* =====================================================
-     FORGOT PASSWORD
-  ===================================================== */
-
-  $("sendResetBtn").onclick = async function(){
-
-    const email =
-      $("forgotEmail").value.trim();
-
-    if(!email){
-
-      message(
-        "forgotMessage",
-        "Введите email."
-      );
-
-      return;
-
-    }
-
-    try{
-
-      const result =
-        await supabaseClient.auth.resetPasswordForEmail(
-          email,
-          {
-            redirectTo:
-              "https://darianovet.github.io/oge-english-tracker/"
-          }
-        );
-
-      if(result.error){
-        throw result.error;
-      }
-
-      message(
-        "forgotMessage",
-        "Письмо для восстановления отправлено на почту.",
-        "success"
-      );
-
-    }catch(error){
-
-      message(
-        "forgotMessage",
-        error.message ||
-        "Не удалось отправить письмо."
-      );
-
-    }
-
-  };
-
-
-  /* =====================================================
-     RESET PASSWORD
-  ===================================================== */
-
-  $("updatePasswordBtn").onclick = async function(){
-
-    const p1 =
-      $("newPassword").value;
-
-    const p2 =
-      $("newPassword2").value;
-
-    if(p1.length < 6){
-
-      message(
-        "resetMessage",
-        "Пароль должен содержать минимум 6 символов."
-      );
-
-      return;
-
-    }
-
-    if(p1 !== p2){
-
-      message(
-        "resetMessage",
-        "Пароли не совпадают."
-      );
-
-      return;
-
-    }
-
-    const result =
-      await supabaseClient.auth.updateUser({
-        password:p1
+  if(data.user){
+
+    await supabaseClient
+      .from("profiles")
+      .upsert({
+        id:data.user.id,
+        email:email
       });
 
-    if(result.error){
+  }
 
-      message(
-        "resetMessage",
-        result.error.message
+  showMessage(
+    "Аккаунт создан. Проверьте почту и подтвердите email.",
+    "success"
+  );
+
+  setTimeout(()=>{
+    authMode("login");
+    $("loginEmail").value=email;
+  },1200);
+};
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+$("loginForm").onsubmit = async e => {
+
+  e.preventDefault();
+
+  const email =
+    $("loginEmail").value.trim();
+
+  const password =
+    $("loginPassword").value;
+
+  showMessage("Выполняем вход...","success");
+
+  const {data,error} =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  currentUser=data.user;
+
+  await startApp();
+};
+
+
+/* =========================================================
+   PASSWORD RECOVERY
+========================================================= */
+
+$("forgotBtn").onclick = () => {
+
+  $("recoveryEmail").value =
+    $("loginEmail").value;
+
+  authMode("recovery");
+};
+
+$("backLoginBtn").onclick = () => {
+  authMode("login");
+};
+
+$("recoveryForm").onsubmit = async e => {
+
+  e.preventDefault();
+
+  const email =
+    $("recoveryEmail").value.trim();
+
+  const {error} =
+    await supabaseClient.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo:
+          "https://darianovet.github.io/oge-english-tracker/"
+      }
+    );
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  showMessage(
+    "Письмо для восстановления пароля отправлено.",
+    "success"
+  );
+};
+
+
+/* =========================================================
+   NEW PASSWORD
+========================================================= */
+
+$("newPasswordForm").onsubmit = async e => {
+
+  e.preventDefault();
+
+  const p1=$("newPassword").value;
+  const p2=$("newPassword2").value;
+
+  if(p1.length < 6){
+    showMessage("Пароль должен содержать минимум 6 символов.");
+    return;
+  }
+
+  if(p1!==p2){
+    showMessage("Пароли не совпадают.");
+    return;
+  }
+
+  const {error} =
+    await supabaseClient.auth.updateUser({
+      password:p1
+    });
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  showMessage(
+    "Пароль успешно изменён.",
+    "success"
+  );
+
+  setTimeout(
+    ()=>authMode("login"),
+    1200
+  );
+};
+
+
+/* =========================================================
+   LOCAL PROGRESS
+========================================================= */
+
+function loadLocal(){
+
+  const key=storageKey();
+
+  if(!key){
+    attempts={};
+    return;
+  }
+
+  try{
+    attempts=
+      JSON.parse(
+        localStorage.getItem(key) || "{}"
       );
-
-      return;
-
-    }
-
-    message(
-      "resetMessage",
-      "Пароль изменён.",
-      "success"
-    );
-
-    setTimeout(
-      () => authScreen("loginForm"),
-      1200
-    );
-
-  };
-
-
-  /* =====================================================
-     PROFILE
-  ===================================================== */
-
-  function username(){
-
-    return (
-      currentUser?.user_metadata?.username ||
-      currentUser?.user_metadata?.name ||
-      currentUser?.email?.split("@")[0] ||
-      "Пользователь"
-    );
-
+  }catch{
+    attempts={};
   }
+}
+
+function saveLocal(){
+
+  const key=storageKey();
+
+  if(!key)return;
+
+  localStorage.setItem(
+    key,
+    JSON.stringify(attempts)
+  );
+}
 
 
-  function updateProfile(){
+/* =========================================================
+   SUPABASE PROGRESS
+========================================================= */
 
-    const name =
-      username();
+async function loadProgress(){
 
-    $("miniName").textContent =
-      name;
+  if(!currentUser)return;
 
-    $("profileName").textContent =
-      name;
+  try{
 
-    $("profileEmail").textContent =
-      currentUser?.email || "";
-
-    const initial =
-      name.trim().charAt(0).toUpperCase() || "П";
-
-    $("miniAvatar").textContent =
-      initial;
-
-    $("bigAvatar").textContent =
-      initial;
-
-  }
-
-
-  async function createProfile(){
-
-    if(!currentUser) return;
-
-    const result =
+    const {data,error} =
       await supabaseClient
-        .from("profiles")
-        .upsert({
-          id:currentUser.id,
-          email:currentUser.email
-        });
+        .from("progress")
+        .select("*")
+        .eq("user_id",currentUser.id);
 
-    if(result.error){
-      console.warn(
-        "Profile:",
-        result.error
-      );
-    }
+    if(error || !data)return;
 
-  }
+    data.forEach(row=>{
 
+      const old =
+        attempts[row.task_id] || {};
 
-  /* =====================================================
-     LOCAL PROGRESS
-  ===================================================== */
-
-  function storageKey(){
-
-    return currentUser
-      ? `oge_english_tracker_attempts_${currentUser.id}`
-      : null;
-
-  }
-
-
-  function loadLocal(){
-
-    const key =
-      storageKey();
-
-    if(!key){
-
-      attempts = [];
-      return;
-
-    }
-
-    try{
-
-      attempts =
-        JSON.parse(
-          localStorage.getItem(key)
-        ) || [];
-
-      if(!Array.isArray(attempts)){
-        attempts = [];
-      }
-
-    }catch{
-
-      attempts = [];
-
-    }
-
-  }
-
-
-  function saveLocal(){
-
-    const key =
-      storageKey();
-
-    if(!key) return;
-
-    localStorage.setItem(
-      key,
-      JSON.stringify(attempts)
-    );
-
-  }
-
-
-  /* =====================================================
-     TASK DATA
-  ===================================================== */
-
-  function getTasks(){
-
-    if(Array.isArray(window.tasks))
-      return window.tasks;
-
-    if(Array.isArray(window.TASKS))
-      return window.TASKS;
-
-    if(Array.isArray(window.taskData))
-      return window.taskData;
-
-    if(Array.isArray(window.TASKS_DATA))
-      return window.TASKS_DATA;
-
-    return [];
-
-  }
-
-
-  function taskId(task){
-
-    return String(
-      task.id ??
-      task.taskId ??
-      task.code ??
-      ""
-    );
-
-  }
-
-
-  function taskNumber(task){
-
-    return (
-      task.number ??
-      task.task ??
-      task.taskNumber ??
-      task.task_number ??
-      ""
-    );
-
-  }
-
-
-  function taskVariant(task){
-
-    return (
-      task.variant ??
-      task.variantNumber ??
-      task.variant_number ??
-      ""
-    );
-
-  }
-
-
-  function taskText(task){
-
-    return (
-      task.text ??
-      task.question ??
-      task.title ??
-      task.description ??
-      task.content ??
-      "Задание"
-    );
-
-  }
-
-
-  /* =====================================================
-     PROGRESS
-  ===================================================== */
-
-  function isDone(id){
-
-    return attempts.some(
-      a =>
-        String(a.taskId) === String(id) &&
-        a.result === "correct"
-    );
-
-  }
-
-
-  function updateProgress(){
-
-    const all =
-      getTasks();
-
-    const total =
-      all.length || 95;
-
-    const done =
-      all.filter(
-        task => isDone(taskId(task))
-      ).length;
-
-    $("progressNumber").textContent =
-      `${done} / ${total}`;
-
-    $("progressFill").style.width =
-      `${Math.min(100,done / total * 100)}%`;
-
-    updateStats();
-
-  }
-
-
-  /* =====================================================
-     SUPABASE PROGRESS
-  ===================================================== */
-
-  async function loadSupabaseProgress(){
-
-    if(!currentUser) return;
-
-    try{
-
-      const result =
-        await supabaseClient
-          .from("progress")
-          .select("task_id,completed")
-          .eq(
-            "user_id",
-            currentUser.id
-          );
-
-      if(result.error){
-        console.warn(
-          "Progress:",
-          result.error
-        );
-        return;
-      }
-
-      (result.data || []).forEach(row => {
-
-        if(row.completed){
-
-          const exists =
-            attempts.some(
-              a =>
-                String(a.taskId) ===
-                String(row.task_id) &&
-                a.result === "correct"
-            );
-
-          if(!exists){
-
-            attempts.push({
-
-              taskId:String(row.task_id),
-
-              result:"correct",
-
-              reason:"",
-
-              date:new Date().toISOString()
-
-            });
-
-          }
-
-        }
-
-      });
-
-      saveLocal();
-      updateProgress();
-
-    }catch(error){
-
-      console.warn(error);
-
-    }
-
-  }
-
-
-  async function saveSupabase(task,completed){
-
-    if(!currentUser) return;
-
-    try{
-
-      const result =
-        await supabaseClient
-          .from("progress")
-          .insert({
-            user_id:currentUser.id,
-            task_id:String(task),
-            completed
-          });
-
-      if(result.error){
-
-        console.warn(
-          "Progress save:",
-          result.error
-        );
-
-      }
-
-    }catch(error){
-
-      console.warn(error);
-
-    }
-
-  }
-
-
-  /* =====================================================
-     OPEN APP
-  ===================================================== */
-
-  async function openApp(){
-
-    hide("authScreen");
-    show("app");
-
-    loadLocal();
-
-    updateProfile();
-    updateProgress();
-
-    /*
-      ВАЖНО:
-      не ждём Supabase.
-      Интерфейс открывается сразу.
-    */
-
-    loadSupabaseProgress();
-
-    goHome();
-
-  }
-
-
-  /* =====================================================
-     NAVIGATION
-  ===================================================== */
-
-  function hideScreens(){
-
-    [
-      "homeScreen",
-      "tasksScreen",
-      "variantScreen",
-      "statsScreen",
-      "errorsScreen",
-      "reportScreen",
-      "profileScreen"
-    ].forEach(hide);
-
-  }
-
-
-  function goHome(){
-
-    hideScreens();
-
-    show("homeScreen");
-
-    updateProgress();
-
-  }
-
-
-  $("profileBtn").onclick =
-    function(){
-
-      hideScreens();
-
-      show("profileScreen");
-
-      updateProfile();
-
-    };
-
-
-  $("profileBack").onclick =
-    goHome;
-
-
-  $("tasksMenu").onclick =
-    function(){
-
-      hideScreens();
-
-      show("tasksScreen");
-
-      renderTasks();
-
-    };
-
-
-  $("tasksBack").onclick =
-    goHome;
-
-
-  $("statsMenu").onclick =
-    function(){
-
-      hideScreens();
-
-      show("statsScreen");
-
-      updateStats();
-
-    };
-
-
-  $("statsBack").onclick =
-    goHome;
-
-
-  $("errorsMenu").onclick =
-    function(){
-
-      hideScreens();
-
-      show("errorsScreen");
-
-      renderErrors();
-
-    };
-
-
-  $("errorsBack").onclick =
-    goHome;
-
-
-  $("reportMenu").onclick =
-    function(){
-
-      hideScreens();
-
-      show("reportScreen");
-
-      renderReport();
-
-    };
-
-
-  $("reportBack").onclick =
-    goHome;
-
-
-  $("variantBack").onclick =
-    function(){
-
-      hideScreens();
-
-      show("tasksScreen");
-
-      renderTasks();
-
-    };
-
-
-  /* =====================================================
-     TASKS
-  ===================================================== */
-
-  function renderTasks(){
-
-    const container =
-      $("tasksContainer");
-
-    container.innerHTML = "";
-
-    const all =
-      getTasks();
-
-    if(!all.length){
-
-      container.innerHTML =
-        `<div class="task-block">
-          Задания не загрузились.
-        </div>`;
-
-      return;
-
-    }
-
-
-    const groups = [
-
-      {
-        title:"Задания 1–5",
-        min:1,
-        max:5
-      },
-
-      {
-        title:"Задания 6–11",
-        min:6,
-        max:11
-      },
-
-      {
-        title:"Задание 12",
-        min:12,
-        max:12
-      },
-
-      {
-        title:"Задания 13–19",
-        min:13,
-        max:19
-      },
-
-      {
-        title:"Задания 20–28",
-        min:20,
-        max:28
-      },
-
-      {
-        title:"Задания 29–34",
-        min:29,
-        max:34
-      }
-
-    ];
-
-
-    groups.forEach(group => {
-
-      const groupTasks =
-        all.filter(task => {
-
-          const n =
-            Number(taskNumber(task));
-
-          return (
-            n >= group.min &&
-            n <= group.max
-          );
-
-        });
-
-
-      if(!groupTasks.length)
-        return;
-
-
-      const block =
-        document.createElement("div");
-
-      block.className =
-        "task-block";
-
-
-      const title =
-        document.createElement("div");
-
-      title.className =
-        "task-block-title";
-
-      title.textContent =
-        group.title;
-
-      block.appendChild(title);
-
-
-      const variants =
-        [...new Set(
-          groupTasks.map(
-            task =>
-              String(taskVariant(task))
-          )
-        )]
-        .filter(Boolean)
-        .sort(
-          (a,b) =>
-            Number(a)-Number(b)
-        );
-
-
-      const list =
-        document.createElement("div");
-
-      list.className =
-        "variant-list";
-
-
-      variants.forEach(variant => {
-
-        const button =
-          document.createElement("button");
-
-        button.className =
-          "variant-btn";
-
-        button.textContent =
-          `Вариант ${variant}`;
-
-        button.onclick =
-          function(){
-
-            openVariant(
-              variant,
-              group.min,
-              group.max
-            );
-
-          };
-
-        list.appendChild(button);
-
-      });
-
-
-      block.appendChild(list);
-
-      container.appendChild(block);
+      attempts[row.task_id]={
+        ...old,
+        completed:!!row.completed
+      };
 
     });
 
+    saveLocal();
+    updateAll();
+
+  }catch(err){
+    console.log(err);
+  }
+}
+
+
+async function syncProgress(taskId){
+
+  if(!currentUser)return;
+
+  const a =
+    attempts[taskId];
+
+  if(!a)return;
+
+  try{
+
+    await supabaseClient
+      .from("progress")
+      .upsert(
+        {
+          user_id:currentUser.id,
+          task_id:taskId,
+          completed:!!a.completed,
+          updated_at:new Date().toISOString()
+        },
+        {
+          onConflict:"user_id,task_id"
+        }
+      );
+
+  }catch(err){
+    console.log(err);
+  }
+}
+
+
+/* =========================================================
+   START APP
+========================================================= */
+
+async function startApp(){
+
+  $("authScreen").classList.add("hidden");
+  $("app").classList.remove("hidden");
+
+  loadLocal();
+
+  updateUserUI();
+  renderTasks();
+  updateAll();
+
+  loadProgress();
+}
+
+
+/* =========================================================
+   USER UI
+========================================================= */
+
+function username(){
+
+  return (
+    currentUser?.user_metadata?.username ||
+    currentUser?.user_metadata?.name ||
+    currentUser?.email?.split("@")[0] ||
+    "Пользователь"
+  );
+}
+
+function initials(){
+
+  const n=username().trim();
+
+  return n
+    ? n[0].toUpperCase()
+    : "?";
+}
+
+function updateUserUI(){
+
+  const name=username();
+  const email=currentUser?.email || "";
+
+  $("miniName").textContent=name;
+  $("miniAvatar").textContent=initials();
+
+  $("bigAvatar").textContent=initials();
+  $("profileName").textContent=name;
+  $("profileEmail").textContent=email;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showScreen(id){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(el=>{
+      el.classList.remove("active");
+    });
+
+  $(id).classList.add("active");
+
+  updateAll();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+$("tasksBtn").onclick =
+  ()=>showScreen("tasksScreen");
+
+$("statsBtn").onclick =
+  ()=>showScreen("statsScreen");
+
+$("errorsBtn").onclick =
+  ()=>showScreen("errorsScreen");
+
+$("reportBtn").onclick =
+  ()=>showScreen("reportScreen");
+
+$("profileBtn").onclick =
+  ()=>showScreen("profileScreen");
+
+$("profileMini").onclick =
+  ()=>showScreen("profileScreen");
+
+
+/* =========================================================
+   TASKS
+========================================================= */
+
+function renderTasks(){
+
+  const container=
+    $("tasksContainer");
+
+  container.innerHTML="";
+
+  if(!ALL_TASKS.length){
+
+    container.innerHTML=
+      '<div class="task-block">'+
+      '<b>Задания не загрузились.</b>'+
+      '</div>';
+
+    return;
   }
 
+  const variants =
+    [...new Set(
+      ALL_TASKS.map(t=>Number(t.variant))
+    )].sort((a,b)=>a-b);
 
-  /* =====================================================
-     VARIANT
-  ===================================================== */
+  variants.forEach(variant=>{
 
-  function openVariant(
-    variant,
-    min,
-    max
-  ){
-
-    currentVariant =
-      variant;
-
-    hideScreens();
-
-    show("variantScreen");
-
-    $("variantTitle").textContent =
-      `Вариант ${variant}`;
-
-
-    const container =
-      $("variantTasks");
-
-    container.innerHTML = "";
-
-
-    const selected =
-      getTasks()
-        .filter(task => {
-
-          const n =
-            Number(taskNumber(task));
-
-          return (
-            String(taskVariant(task)) ===
-            String(variant) &&
-            n >= min &&
-            n <= max
-          );
-
-        })
-        .sort(
-          (a,b) =>
-            Number(taskNumber(a)) -
-            Number(taskNumber(b))
-        );
-
-
-    if(!selected.length){
-
-      container.innerHTML =
-        `<div class="task-block">
-          Заданий нет.
-        </div>`;
-
-      return;
-
-    }
-
+    const tasks =
+      ALL_TASKS.filter(
+        t=>Number(t.variant)===variant
+      );
 
     const block =
       document.createElement("div");
 
-    block.className =
-      "task-block";
+    block.className="task-block";
 
+    block.innerHTML=
+      '<div class="task-block-title">'+
+      'Вариант '+variant+
+      '</div>'+
+      '<div class="variant-list">'+
+      '<button class="variant-btn">'+
+      'Открыть вариант '+variant+
+      '</button>'+
+      '</div>';
 
-    const buttons =
-      document.createElement("div");
-
-    buttons.className =
-      "task-buttons";
-
-
-    selected.forEach(task => {
-
-      const button =
-        document.createElement("button");
-
-      button.className =
-        "task-number" +
-        (isDone(taskId(task))
-          ? " done"
-          : "");
-
-      button.textContent =
-        taskNumber(task);
-
-      button.onclick =
-        () => openTask(task);
-
-      buttons.appendChild(button);
-
-    });
-
-
-    block.appendChild(buttons);
+    block
+      .querySelector("button")
+      .onclick=()=>{
+        openVariant(variant);
+      };
 
     container.appendChild(block);
 
-  }
+  });
+}
 
 
-  /* =====================================================
-     TASK MODAL
-  ===================================================== */
+/* =========================================================
+   VARIANT
+========================================================= */
 
-  function openTask(task){
+function openVariant(variant){
 
-    currentTask =
-      task;
+  const tasks =
+    ALL_TASKS.filter(
+      t=>Number(t.variant)===Number(variant)
+    );
 
-    $("modalCode").textContent =
-      `Вариант ${taskVariant(task)} · Задание ${taskNumber(task)}`;
+  $("variantTitle").textContent=
+    "Вариант "+variant;
 
-    $("modalQuestion").textContent =
-      taskText(task);
+  const box=
+    $("variantTasks");
 
-    $("wrongReason").value = "";
+  box.innerHTML="";
 
-    hide("wrongReasonBox");
+  tasks.forEach(task=>{
 
-    renderHistory();
+    const a =
+      getAttempt(task.id);
 
-    show("taskModal");
+    const btn =
+      document.createElement("button");
 
-  }
+    btn.className=
+      "task-number"+
+      (a?.completed ? " done":"")+
+      (a?.wrong ? " wrong":"");
 
+    btn.textContent=
+      task.number;
 
-  $("modalClose").onclick =
-    () => hide("taskModal");
+    btn.title=
+      "Код: "+task.code;
 
-
-  $("correctBtn").onclick =
-    async function(){
-
-      if(!currentTask) return;
-
-      attempts.push({
-
-        taskId:
-          taskId(currentTask),
-
-        result:
-          "correct",
-
-        reason:"",
-
-        date:
-          new Date().toISOString()
-
-      });
-
-      saveLocal();
-
-      updateProgress();
-
-      await saveSupabase(
-        taskId(currentTask),
-        true
-      );
-
-      renderHistory();
-
-      if(currentVariant){
-
-        const number =
-          Number(taskNumber(currentTask));
-
-        openVariant(
-          currentVariant,
-          number,
-          number
-        );
-
-      }
-
-      show("taskModal");
-
+    btn.onclick=()=>{
+      openTask(task);
     };
 
+    box.appendChild(btn);
 
-  $("wrongBtn").onclick =
-    () => show("wrongReasonBox");
+  });
 
-
-  $("saveWrongBtn").onclick =
-    async function(){
-
-      if(!currentTask) return;
-
-      const reason =
-        $("wrongReason")
-          .value
-          .trim();
+  showScreen("variantScreen");
+}
 
 
-      attempts.push({
+/* =========================================================
+   TASK MODAL
+========================================================= */
 
-        taskId:
-          taskId(currentTask),
+function openTask(task){
 
-        result:
-          "wrong",
+  currentTask=task;
 
-        reason:
-          reason ||
-          "Причина не указана",
+  const a=
+    getAttempt(task.id);
 
-        date:
-          new Date().toISOString()
+  $("modalCode").textContent=
+    "Код задания: "+task.code;
 
-      });
+  $("modalTitle").textContent=
+    "Задание №"+task.number+
+    " · Вариант "+task.variant;
 
-      saveLocal();
+  $("modalDescription").innerHTML=
+    "Код: <b>"+escapeHtml(task.code)+
+    "</b><br><br>"+
+    "Здесь отмечается результат выполнения этого задания. "+
+    "После ошибки можно добавить причину, чтобы она попала "+
+    "в анализ ошибок.";
 
-      updateProgress();
+  $("reasonBlock")
+    .classList.add("hidden");
 
-      await saveSupabase(
-        taskId(currentTask),
-        false
-      );
+  $("reasonText").value="";
 
-      renderHistory();
+  renderHistory();
 
-      hide("wrongReasonBox");
-
-    };
-
-
-  function renderHistory(){
-
-    const container =
-      $("taskHistory");
-
-    container.innerHTML = "";
-
-    if(!currentTask)
-      return;
+  $("taskModal")
+    .classList.remove("hidden");
+}
 
 
-    const history =
-      attempts
-        .filter(
-          a =>
-            String(a.taskId) ===
-            String(taskId(currentTask))
+$("closeModal").onclick=()=>{
+  $("taskModal").classList.add("hidden");
+};
+
+$("taskModal").onclick=e=>{
+
+  if(e.target === $("taskModal")){
+    $("taskModal").classList.add("hidden");
+  }
+
+};
+
+
+/* =========================================================
+   CORRECT / WRONG
+========================================================= */
+
+$("correctBtn").onclick=async()=>{
+
+  if(!currentTask)return;
+
+  const old =
+    attempts[currentTask.id] || {};
+
+  attempts[currentTask.id]={
+    ...old,
+    completed:true,
+    wrong:false,
+    lastResult:"correct",
+    lastDate:new Date().toISOString()
+  };
+
+  saveLocal();
+
+  await syncProgress(currentTask.id);
+
+  $("reasonBlock")
+    .classList.add("hidden");
+
+  renderHistory();
+  updateAll();
+
+  if(
+    $("variantScreen").classList.contains("active")
+  ){
+    openVariant(currentTask.variant);
+  }
+};
+
+
+$("wrongBtn").onclick=()=>{
+
+  $("reasonBlock")
+    .classList.remove("hidden");
+
+  $("reasonText").focus();
+
+};
+
+
+$("saveReason").onclick=async()=>{
+
+  if(!currentTask)return;
+
+  const reason =
+    $("reasonText").value.trim();
+
+  const old =
+    attempts[currentTask.id] || {};
+
+  attempts[currentTask.id]={
+    ...old,
+    completed:true,
+    wrong:true,
+    reason,
+    lastResult:"wrong",
+    lastDate:new Date().toISOString()
+  };
+
+  saveLocal();
+
+  await syncProgress(currentTask.id);
+
+  $("reasonBlock")
+    .classList.add("hidden");
+
+  $("reasonText").value="";
+
+  renderHistory();
+  updateAll();
+
+  if(
+    $("variantScreen").classList.contains("active")
+  ){
+    openVariant(currentTask.variant);
+  }
+};
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function renderHistory(){
+
+  const box=
+    $("historyList");
+
+  box.innerHTML="";
+
+  if(!currentTask){
+    return;
+  }
+
+  const a=
+    getAttempt(currentTask.id);
+
+  if(!a){
+
+    box.innerHTML=
+      '<div style="color:var(--muted)">'+
+      'Попыток пока нет.'+
+      '</div>';
+
+    return;
+  }
+
+  const date =
+    a.lastDate
+      ? new Date(a.lastDate).toLocaleString("ru-RU")
+      : "";
+
+  box.innerHTML=
+    '<div class="history-item">'+
+    '<b>'+
+    (a.wrong ? "❌ Ошибка":"✅ Правильно")+
+    '</b>'+
+    '<br>'+
+    '<span style="color:var(--muted)">'+
+    escapeHtml(date)+
+    '</span>'+
+    (a.reason
+      ? '<br><br>Причина: '+
+        escapeHtml(a.reason)
+      : "")+
+    '</div>';
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+function completedTasks(){
+
+  return ALL_TASKS.filter(
+    t=>attempts[t.id]?.completed
+  ).length;
+}
+
+function wrongTasks(){
+
+  return ALL_TASKS.filter(
+    t=>attempts[t.id]?.wrong
+  ).length;
+}
+
+function correctTasks(){
+
+  return ALL_TASKS.filter(
+    t=>attempts[t.id]?.completed &&
+       !attempts[t.id]?.wrong
+  ).length;
+}
+
+function updateProgress(){
+
+  const done=
+    completedTasks();
+
+  const percent=
+    ALL_TASKS.length
+      ? Math.round(
+          done/ALL_TASKS.length*100
         )
-        .sort(
-          (a,b) =>
-            new Date(b.date) -
-            new Date(a.date)
-        );
+      : 0;
+
+  $("doneCount").textContent=done;
+
+  $("progressFill").style.width=
+    percent+"%";
+}
 
 
-    if(!history.length){
+/* =========================================================
+   STATS
+========================================================= */
 
-      container.innerHTML =
-        `<div style="color:#8b8498;font-size:13px">
-          Попыток пока нет.
-        </div>`;
+function updateStats(){
 
-      return;
+  const done=
+    completedTasks();
 
-    }
+  const wrong=
+    wrongTasks();
+
+  const correct=
+    correctTasks();
+
+  const left=
+    Math.max(
+      ALL_TASKS.length-done,
+      0
+    );
+
+  const percent=
+    ALL_TASKS.length
+      ? Math.round(
+          done/ALL_TASKS.length*100
+        )
+      : 0;
+
+  $("statDone").textContent=done;
+  $("statLeft").textContent=left;
+  $("statWrong").textContent=wrong;
+  $("statPercent").textContent=
+    percent+"%";
+
+  $("analysisDone").textContent=done;
+  $("analysisWrong").textContent=wrong;
+  $("analysisCorrect").textContent=correct;
+  $("analysisPercent").textContent=
+    percent+"%";
+}
 
 
-    history.forEach(attempt => {
+/* =========================================================
+   ERRORS
+========================================================= */
 
-      const div =
-        document.createElement("div");
+function renderErrors(){
 
-      div.className =
-        "history-item";
+  const box=
+    $("errorsContainer");
 
-      div.innerHTML =
-        `<b>
-          ${
-            attempt.result === "correct"
-              ? "✓ Правильно"
-              : "✕ Ошибка"
-          }
-        </b>
-        ${
-          attempt.reason
-            ? `<div style="margin-top:4px;color:#8b8498">
-                ${escapeHtml(attempt.reason)}
-              </div>`
-            : ""
-        }`;
+  const errors =
+    ALL_TASKS.filter(
+      t=>attempts[t.id]?.wrong
+    );
 
-      container.appendChild(div);
+  if(!errors.length){
 
-    });
+    box.innerHTML=
+      '<div class="analysis">'+
+      '<h3>Ошибок пока нет 🎉</h3>'+
+      '<div style="color:var(--muted)">'+
+      'Здесь будут появляться задания, в которых ты допустила ошибку.'+
+      '</div>'+
+      '</div>';
 
+    return;
   }
 
+  box.innerHTML="";
 
-  /* =====================================================
-     STATISTICS
-  ===================================================== */
+  errors.forEach(task=>{
 
-  function updateStats(){
+    const a=
+      attempts[task.id];
 
-    const total =
-      attempts.length;
+    const item=
+      document.createElement("div");
 
-    const correct =
-      attempts.filter(
-        a =>
-          a.result === "correct"
-      ).length;
+    item.className="search-result";
 
-    const wrong =
-      attempts.filter(
-        a =>
-          a.result === "wrong"
-      ).length;
+    item.innerHTML=
+      '<div class="search-code">'+
+      escapeHtml(task.code)+
+      '</div>'+
+      '<div class="search-info">'+
+      'Вариант '+task.variant+
+      ' · задание №'+task.number+
+      '</div>'+
+      '<div style="margin-top:10px">'+
+      '<b>Причина:</b> '+
+      (
+        a.reason
+          ? escapeHtml(a.reason)
+          : '<span style="color:var(--muted)">не указана</span>'
+      )+
+      '</div>'+
+      '<button class="variant-btn" style="margin-top:12px">'+
+      'Открыть задание'+
+      '</button>';
 
-    const percent =
-      total
-        ? Math.round(
-            correct / total * 100
-          )
-        : 0;
-
-
-    $("statTotal").textContent =
-      total;
-
-    $("statCorrect").textContent =
-      correct;
-
-    $("statWrong").textContent =
-      wrong;
-
-    $("statPercent").textContent =
-      `${percent}%`;
-
-  }
-
-
-  /* =====================================================
-     ERRORS
-  ===================================================== */
-
-  function renderErrors(){
-
-    const container =
-      $("errorsContainer");
-
-    container.innerHTML = "";
-
-
-    const errors =
-      attempts.filter(
-        a =>
-          a.result === "wrong"
-      );
-
-
-    if(!errors.length){
-
-      container.innerHTML =
-        `<div class="task-block">
-          Ошибок пока нет 🎉
-        </div>`;
-
-      return;
-
-    }
-
-
-    const all =
-      getTasks();
-
-
-    errors
-      .slice()
-      .reverse()
-      .forEach(error => {
-
-        const task =
-          all.find(
-            t =>
-              String(taskId(t)) ===
-              String(error.taskId)
-          );
-
-
-        const div =
-          document.createElement("div");
-
-        div.className =
-          "task-block";
-
-        div.innerHTML =
-          `<b>
-            ${
-              task
-                ? `Вариант ${taskVariant(task)} · Задание ${taskNumber(task)}`
-                : `Задание ${escapeHtml(error.taskId)}`
-            }
-          </b>
-
-          <div style="margin-top:7px;color:#8b8498">
-            ${escapeHtml(error.reason)}
-          </div>`;
-
-        container.appendChild(div);
-
-      });
-
-  }
-
-
-  /* =====================================================
-     REPORT
-  ===================================================== */
-
-  function renderReport(){
-
-    const total =
-      attempts.length;
-
-    const correct =
-      attempts.filter(
-        a =>
-          a.result === "correct"
-      ).length;
-
-    const wrong =
-      attempts.filter(
-        a =>
-          a.result === "wrong"
-      ).length;
-
-
-    $("reportText").innerHTML =
-      `<b>${escapeHtml(username())}</b><br><br>
-       Всего попыток: ${total}<br>
-       Правильных: ${correct}<br>
-       Ошибок: ${wrong}<br><br>
-       ${
-         total
-           ? `Процент правильных: ${Math.round(correct / total * 100)}%`
-           : "Попыток пока нет"
-       }`;
-
-  }
-
-
-  /* =====================================================
-     PRINT
-  ===================================================== */
-
-  $("printBtn").onclick =
-    () => window.print();
-
-
-  /* =====================================================
-     SEARCH
-  ===================================================== */
-
-  $("searchInput").onkeydown =
-    function(event){
-
-      if(event.key !== "Enter")
-        return;
-
-      const value =
-        event.target.value
-          .trim()
-          .toLowerCase();
-
-      if(!value)
-        return;
-
-
-      const task =
-        getTasks().find(t => {
-
-          const code =
-            `${taskVariant(t)}.${taskNumber(t)}`
-              .toLowerCase();
-
-          return (
-            code === value ||
-            taskId(t).toLowerCase() === value
-          );
-
-        });
-
-
-      if(task){
-
+    item
+      .querySelector("button")
+      .onclick=()=>{
         openTask(task);
+      };
 
-      }else{
+    box.appendChild(item);
 
-        alert(
-          "Задание не найдено."
-        );
+  });
 
-      }
-
-    };
+}
 
 
-  /* =====================================================
-     LOGOUT
-  ===================================================== */
+/* =========================================================
+   REPORT
+========================================================= */
 
-  $("logoutBtn").onclick =
-    async function(){
+function renderReport(){
 
-      await supabaseClient.auth.signOut();
+  const done=
+    completedTasks();
 
-      currentUser = null;
-      attempts = [];
+  const wrong=
+    wrongTasks();
 
-      hide("app");
+  const correct=
+    correctTasks();
 
-      show("authScreen");
+  const left=
+    ALL_TASKS.length-done;
 
-      authScreen("loginForm");
+  const percent=
+    ALL_TASKS.length
+      ? Math.round(
+          done/ALL_TASKS.length*100
+        )
+      : 0;
 
-    };
+  $("reportContent").innerHTML=
+    '<div class="report-item">'+
+    '<b>Ученик</b><br>'+
+    escapeHtml(username())+
+    '</div>'+
+
+    '<div class="report-item">'+
+    '<b>Всего заданий</b><br>'+
+    ALL_TASKS.length+
+    '</div>'+
+
+    '<div class="report-item">'+
+    '<b>Выполнено</b><br>'+
+    done+
+    '</div>'+
+
+    '<div class="report-item">'+
+    '<b>Осталось</b><br>'+
+    left+
+    '</div>'+
+
+    '<div class="report-item">'+
+    '<b>Правильных</b><br>'+
+    correct+
+    '</div>'+
+
+    '<div class="report-item">'+
+    '<b>Ошибок</b><br>'+
+    wrong+
+    '</div>'+
+
+    '<div class="report-item">'+
+    '<b>Общий прогресс</b><br>'+
+    percent+
+    '%'+
+    '</div>';
+}
 
 
-  /* =====================================================
-     AUTH STATE
-  ===================================================== */
+/* =========================================================
+   SEARCH BY CODE
+========================================================= */
 
-  supabaseClient.auth.onAuthStateChange(
-    function(event,session){
+$("searchInput").oninput=e=>{
+
+  const query=
+    e.target.value
+      .trim()
+      .toUpperCase();
+
+  const box=
+    $("searchResults");
+
+  box.innerHTML="";
+
+  if(!query)return;
+
+  const found=
+    ALL_TASKS.filter(task=>
+      String(task.code)
+        .toUpperCase()
+        .includes(query)
+    );
+
+  if(!found.length){
+
+    box.innerHTML=
+      '<div class="search-result">'+
+      '<div style="color:var(--muted)">'+
+      'Задание с таким кодом не найдено.'+
+      '</div>'+
+      '</div>';
+
+    return;
+  }
+
+  found.forEach(task=>{
+
+    const a=
+      getAttempt(task.id);
+
+    const item=
+      document.createElement("div");
+
+    item.className="search-result";
+
+    item.innerHTML=
+      '<div class="search-code">'+
+      escapeHtml(task.code)+
+      '</div>'+
+      '<div class="search-info">'+
+      'Вариант '+task.variant+
+      ' · задание №'+task.number+
+      '</div>'+
+      '<div style="margin-top:9px">'+
+      (
+        a?.completed
+          ? (
+            a.wrong
+              ? "❌ Выполнено с ошибкой"
+              : "✅ Выполнено правильно"
+            )
+          : "⚪ Не выполнено"
+      )+
+      '</div>'+
+      '<button class="variant-btn" style="margin-top:12px">'+
+      'Открыть'+
+      '</button>';
+
+    item
+      .querySelector("button")
+      .onclick=()=>{
+        openTask(task);
+      };
+
+    box.appendChild(item);
+
+  });
+
+};
+
+
+/* =========================================================
+   UPDATE EVERYTHING
+========================================================= */
+
+function updateAll(){
+
+  updateProgress();
+  updateStats();
+  renderErrors();
+  renderReport();
+
+  if(
+    currentTask &&
+    !$("taskModal").classList.contains("hidden")
+  ){
+    renderHistory();
+  }
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+$("logoutBtn").onclick=async()=>{
+
+  await supabaseClient.auth.signOut();
+
+  currentUser=null;
+  attempts={};
+
+  $("app").classList.add("hidden");
+  $("authScreen").classList.remove("hidden");
+
+  authMode("login");
+
+  $("loginPassword").value="";
+};
+
+
+/* =========================================================
+   SUPABASE SESSION
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  async(event,session)=>{
+
+    if(event==="PASSWORD_RECOVERY"){
+
+      $("authScreen")
+        .classList.remove("hidden");
+
+      $("app")
+        .classList.add("hidden");
+
+      authMode("password");
+
+      return;
+    }
+
+    if(session?.user){
+
+      currentUser=session.user;
 
       if(
-        event === "PASSWORD_RECOVERY"
+        $("app").classList.contains("hidden")
       ){
-
-        authScreen("resetForm");
-
-        return;
-
-      }
-
-      if(
-        session?.user &&
-        !currentUser
-      ){
-
-        currentUser =
-          session.user;
-
-        openApp();
-
+        await startApp();
       }
 
     }
-  );
+
+  }
+);
 
 
-  /* =====================================================
-     INITIAL SESSION
-  ===================================================== */
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
 
-  (async function(){
+(async()=>{
 
-    try{
+  try{
 
-      const result =
-        await supabaseClient.auth.getSession();
+    const {data} =
+      await supabaseClient.auth.getSession();
 
-      if(result.data?.session?.user){
+    if(data.session?.user){
 
-        currentUser =
-          result.data.session.user;
+      currentUser=
+        data.session.user;
 
-        await openApp();
+      await startApp();
 
-      }else{
+    }else{
 
-        authScreen("loginForm");
-
-      }
-
-    }catch(error){
-
-      console.warn(
-        "Session check:",
-        error
-      );
-
-      authScreen("loginForm");
+      authMode("login");
 
     }
 
-  })();
+  }catch(error){
 
-});
+    console.error(error);
 
+    authMode("login");
+
+  }
+
+})();
 </script>
 
 </body>
