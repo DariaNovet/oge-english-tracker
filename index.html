@@ -7,6 +7,8 @@
     <title>ОГЭ Английский</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script src="./data/tasks.js"></script>
 
     <style>
@@ -36,15 +38,152 @@
             cursor: pointer;
         }
 
+        /* =========================
+           AUTH
+        ========================= */
+
+        #authScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: min(430px, 100%);
+            background: white;
+            border-radius: 28px;
+            padding: 30px 24px;
+            border: 1px solid #e8ebf2;
+            box-shadow: 0 18px 50px rgba(20,30,60,0.09);
+        }
+
+        .auth-logo {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 18px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #6c63ff, #a06cff);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: 900;
+        }
+
+        .auth-title {
+            text-align: center;
+            font-size: 27px;
+            font-weight: 900;
+            margin-bottom: 7px;
+        }
+
+        .auth-subtitle {
+            text-align: center;
+            color: #7d8495;
+            font-size: 14px;
+            line-height: 1.45;
+            margin-bottom: 23px;
+        }
+
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            background: #f1f2f6;
+            padding: 5px;
+            border-radius: 15px;
+            margin-bottom: 18px;
+        }
+
+        .auth-tab {
+            border: none;
+            border-radius: 11px;
+            padding: 11px;
+            background: transparent;
+            color: #777f91;
+            font-weight: 800;
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: #6257e9;
+            box-shadow: 0 3px 10px rgba(20,30,60,0.06);
+        }
+
+        .auth-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: #596173;
+            margin-bottom: 6px;
+        }
+
+        .auth-input {
+            width: 100%;
+            border: 1px solid #e1e4eb;
+            background: white;
+            border-radius: 14px;
+            padding: 14px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        .auth-input:focus {
+            border-color: #8c80ff;
+            box-shadow: 0 0 0 4px rgba(108,99,255,0.1);
+        }
+
+        .auth-button {
+            width: 100%;
+            border: none;
+            border-radius: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #665bea, #8c7dff);
+            color: white;
+            font-weight: 900;
+            margin-top: 5px;
+        }
+
+        .auth-message {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 13px;
+            border-radius: 13px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .auth-message.show {
+            display: block;
+        }
+
+        .auth-message.error {
+            background: #fff0f0;
+            color: #c33d3d;
+        }
+
+        .auth-message.success {
+            background: #eaf9ef;
+            color: #23834b;
+        }
+
+        .auth-loading {
+            opacity: .6;
+            pointer-events: none;
+        }
+
+        /* =========================
+           APP
+        ========================= */
+
         .app {
             max-width: 900px;
             margin: 0 auto;
             padding: 16px 14px 50px;
         }
-
-        /* =========================
-           HERO
-        ========================= */
 
         .hero {
             position: relative;
@@ -136,9 +275,7 @@
             padding: 18px;
             margin-bottom: 16px;
             border: 1px solid #e8ebf2;
-            box-shadow:
-                0 7px 22px rgba(20,30,60,0.06);
-
+            box-shadow: 0 7px 22px rgba(20,30,60,0.06);
             display: flex;
             align-items: center;
             gap: 14px;
@@ -149,11 +286,7 @@
             height: 56px;
             min-width: 56px;
             border-radius: 18px;
-            background: linear-gradient(
-                135deg,
-                #6c63ff,
-                #a06cff
-            );
+            background: linear-gradient(135deg, #6c63ff, #a06cff);
             color: white;
             display: flex;
             align-items: center;
@@ -161,12 +294,6 @@
             overflow: hidden;
             font-size: 22px;
             font-weight: 800;
-        }
-
-        .profile-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .profile-info {
@@ -209,11 +336,7 @@
             align-items: center;
             padding: 18px 20px;
             border-radius: 22px;
-            background: linear-gradient(
-                135deg,
-                #fff7df,
-                #fff0c2
-            );
+            background: linear-gradient(135deg, #fff7df, #fff0c2);
             margin-bottom: 16px;
             border: 1px solid #f4df9e;
         }
@@ -260,14 +383,12 @@
             background: white;
             padding: 16px 18px;
             border-radius: 18px;
-            box-shadow:
-                0 7px 22px rgba(20,30,60,0.05);
+            box-shadow: 0 7px 22px rgba(20,30,60,0.05);
         }
 
         .search-box input:focus {
             border-color: #8c80ff;
-            box-shadow:
-                0 0 0 4px rgba(108,99,255,0.1);
+            box-shadow: 0 0 0 4px rgba(108,99,255,0.1);
         }
 
         #searchResults {
@@ -290,8 +411,7 @@
 
         .search-result:hover {
             transform: translateY(-2px);
-            box-shadow:
-                0 8px 20px rgba(20,30,60,0.08);
+            box-shadow: 0 8px 20px rgba(20,30,60,0.08);
         }
 
         .search-result-title {
@@ -345,8 +465,7 @@
             border-radius: 21px;
             padding: 19px;
             text-align: left;
-            box-shadow:
-                0 7px 22px rgba(20,30,60,0.05);
+            box-shadow: 0 7px 22px rgba(20,30,60,0.05);
             transition: .2s;
         }
 
@@ -395,8 +514,7 @@
             height: 42px;
             border-radius: 14px;
             background: white;
-            box-shadow:
-                0 5px 16px rgba(20,30,60,0.07);
+            box-shadow: 0 5px 16px rgba(20,30,60,0.07);
             font-size: 19px;
         }
 
@@ -421,8 +539,7 @@
             border-radius: 21px;
             padding: 22px;
             text-align: left;
-            box-shadow:
-                0 7px 22px rgba(20,30,60,0.05);
+            box-shadow: 0 7px 22px rgba(20,30,60,0.05);
             transition: .2s;
         }
 
@@ -453,8 +570,7 @@
             padding: 17px;
             margin-bottom: 11px;
             border: 1px solid #e8ebf2;
-            box-shadow:
-                0 6px 20px rgba(20,30,60,0.05);
+            box-shadow: 0 6px 20px rgba(20,30,60,0.05);
         }
 
         .variant-title {
@@ -554,8 +670,7 @@
             padding: 19px 10px;
             text-align: center;
             border: 1px solid #e8ebf2;
-            box-shadow:
-                0 6px 20px rgba(20,30,60,0.05);
+            box-shadow: 0 6px 20px rgba(20,30,60,0.05);
         }
 
         .stat-number {
@@ -586,18 +701,13 @@
         ========================= */
 
         .profile-large {
-            background: linear-gradient(
-                135deg,
-                #6c63ff,
-                #9a6cff
-            );
+            background: linear-gradient(135deg, #6c63ff, #9a6cff);
             color: white;
             border-radius: 26px;
             padding: 28px 20px;
             text-align: center;
             margin-bottom: 14px;
-            box-shadow:
-                0 15px 35px rgba(92,79,180,0.22);
+            box-shadow: 0 15px 35px rgba(92,79,180,0.22);
         }
 
         .profile-large-avatar {
@@ -612,12 +722,6 @@
             overflow: hidden;
             font-size: 31px;
             font-weight: 900;
-        }
-
-        .profile-large-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .profile-large-name {
@@ -666,6 +770,18 @@
             font-weight: 800;
             font-size: 13px;
             text-align: right;
+            word-break: break-word;
+        }
+
+        .logout-button {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 15px;
+            background: #fff0f0;
+            color: #d54242;
+            font-weight: 900;
+            margin-top: 5px;
         }
 
         /* =========================
@@ -722,8 +838,7 @@
             border-radius: 22px;
             padding: 22px;
             border: 1px solid #e8ebf2;
-            box-shadow:
-                0 7px 22px rgba(20,30,60,0.05);
+            box-shadow: 0 7px 22px rgba(20,30,60,0.05);
             margin-bottom: 13px;
         }
 
@@ -758,11 +873,7 @@
             border: none;
             border-radius: 17px;
             padding: 16px;
-            background: linear-gradient(
-                135deg,
-                #665bea,
-                #8c7dff
-            );
+            background: linear-gradient(135deg, #665bea, #8c7dff);
             color: white;
             font-weight: 800;
         }
@@ -793,8 +904,7 @@
             background: white;
             border-radius: 26px;
             padding: 23px;
-            box-shadow:
-                0 25px 70px rgba(0,0,0,.2);
+            box-shadow: 0 25px 70px rgba(0,0,0,.2);
         }
 
         .modal-header {
@@ -965,6 +1075,10 @@
             .modal {
                 padding: 19px;
             }
+
+            .auth-card {
+                padding: 25px 19px;
+            }
         }
 
         /* =========================
@@ -1016,7 +1130,118 @@
 
 <body>
 
-<div class="app">
+<!-- =========================
+     AUTH
+========================= -->
+
+<div id="authScreen">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            🇬🇧
+        </div>
+
+        <div class="auth-title">
+            ОГЭ Английский
+        </div>
+
+        <div class="auth-subtitle">
+            Войди в аккаунт, чтобы сохранять
+            свой прогресс и ошибки.
+        </div>
+
+        <div class="auth-tabs">
+
+            <button
+                id="loginTab"
+                class="auth-tab active"
+                onclick="showAuthMode('login')"
+            >
+                Войти
+            </button>
+
+            <button
+                id="registerTab"
+                class="auth-tab"
+                onclick="showAuthMode('register')"
+            >
+                Регистрация
+            </button>
+
+        </div>
+
+
+        <form
+            id="authForm"
+            onsubmit="handleAuth(event)"
+        >
+
+            <label
+                class="auth-label"
+                for="authEmail"
+            >
+                Email
+            </label>
+
+            <input
+                id="authEmail"
+                class="auth-input"
+                type="email"
+                placeholder="example@mail.com"
+                autocomplete="email"
+                required
+            >
+
+
+            <label
+                class="auth-label"
+                for="authPassword"
+            >
+                Пароль
+            </label>
+
+            <input
+                id="authPassword"
+                class="auth-input"
+                type="password"
+                placeholder="Минимум 6 символов"
+                autocomplete="current-password"
+                minlength="6"
+                required
+            >
+
+
+            <button
+                id="authSubmit"
+                class="auth-button"
+                type="submit"
+            >
+                Войти
+            </button>
+
+        </form>
+
+
+        <div
+            id="authMessage"
+            class="auth-message"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     APP
+========================= -->
+
+<div
+    id="app"
+    class="app"
+    style="display:none;"
+>
 
     <!-- =========================
          ГЛАВНАЯ
@@ -1043,10 +1268,12 @@
                 </div>
 
                 <div class="progress-track">
+
                     <div
                         id="progressFill"
                         class="progress-fill"
                     ></div>
+
                 </div>
 
             </div>
@@ -1078,7 +1305,7 @@
                     id="mainProfileUsername"
                     class="profile-username"
                 >
-                    Подключение к Telegram...
+                    —
                 </div>
 
             </div>
@@ -1258,7 +1485,31 @@
                 id="profileLargeUsername"
                 class="profile-large-username"
             >
-                Telegram
+                —
+            </div>
+
+        </div>
+
+
+        <div class="profile-data-card">
+
+            <div class="profile-data-title">
+                Мой аккаунт
+            </div>
+
+            <div class="profile-data-row">
+
+                <div class="profile-data-label">
+                    Email
+                </div>
+
+                <div
+                    id="profileEmail"
+                    class="profile-data-value"
+                >
+                    —
+                </div>
+
             </div>
 
         </div>
@@ -1333,73 +1584,12 @@
         </div>
 
 
-        <div class="profile-data-card">
-
-            <div class="profile-data-title">
-                Telegram
-            </div>
-
-            <div class="profile-data-row">
-
-                <div class="profile-data-label">
-                    Имя
-                </div>
-
-                <div
-                    id="profileFirstName"
-                    class="profile-data-value"
-                >
-                    —
-                </div>
-
-            </div>
-
-            <div class="profile-data-row">
-
-                <div class="profile-data-label">
-                    Фамилия
-                </div>
-
-                <div
-                    id="profileLastName"
-                    class="profile-data-value"
-                >
-                    —
-                </div>
-
-            </div>
-
-            <div class="profile-data-row">
-
-                <div class="profile-data-label">
-                    Username
-                </div>
-
-                <div
-                    id="profileUsername"
-                    class="profile-data-value"
-                >
-                    —
-                </div>
-
-            </div>
-
-            <div class="profile-data-row">
-
-                <div class="profile-data-label">
-                    Telegram ID
-                </div>
-
-                <div
-                    id="profileTelegramId"
-                    class="profile-data-value"
-                >
-                    —
-                </div>
-
-            </div>
-
-        </div>
+        <button
+            class="logout-button"
+            onclick="logout()"
+        >
+            Выйти из аккаунта
+        </button>
 
     </div>
 
@@ -1907,13 +2097,453 @@
 <script>
 
     /* =========================================
+       SUPABASE
+    ========================================= */
+
+    const SUPABASE_URL =
+        "https://akaslsblnvxwtzlhvehb.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_0ZKH4SeD5Dg81SaxX7gz-g_1fp-pnch";
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+    let currentUser = null;
+
+    let authMode = "login";
+
+
+    /* =========================================
+       AUTH SCREEN
+    ========================================= */
+
+    function showAuthMode(mode) {
+
+        authMode = mode;
+
+        const loginTab =
+            document.getElementById("loginTab");
+
+        const registerTab =
+            document.getElementById("registerTab");
+
+        const submit =
+            document.getElementById("authSubmit");
+
+        const password =
+            document.getElementById("authPassword");
+
+        if (mode === "login") {
+
+            loginTab.classList.add("active");
+            registerTab.classList.remove("active");
+
+            submit.textContent = "Войти";
+
+            password.autocomplete =
+                "current-password";
+
+        } else {
+
+            loginTab.classList.remove("active");
+            registerTab.classList.add("active");
+
+            submit.textContent =
+                "Создать аккаунт";
+
+            password.autocomplete =
+                "new-password";
+
+        }
+
+        hideAuthMessage();
+
+    }
+
+
+    function showAuthMessage(message, type) {
+
+        const box =
+            document.getElementById(
+                "authMessage"
+            );
+
+        box.textContent = message;
+
+        box.className =
+            `auth-message show ${type}`;
+
+    }
+
+
+    function hideAuthMessage() {
+
+        const box =
+            document.getElementById(
+                "authMessage"
+            );
+
+        box.textContent = "";
+
+        box.className =
+            "auth-message";
+
+    }
+
+
+    function setAuthLoading(loading) {
+
+        const card =
+            document.querySelector(
+                ".auth-card"
+            );
+
+        if (loading) {
+            card.classList.add(
+                "auth-loading"
+            );
+        } else {
+            card.classList.remove(
+                "auth-loading"
+            );
+        }
+
+    }
+
+
+    async function handleAuth(event) {
+
+        event.preventDefault();
+
+        hideAuthMessage();
+
+        const email =
+            document
+                .getElementById("authEmail")
+                .value
+                .trim()
+                .toLowerCase();
+
+        const password =
+            document
+                .getElementById("authPassword")
+                .value;
+
+        if (!email || !password) {
+            showAuthMessage(
+                "Заполни email и пароль.",
+                "error"
+            );
+            return;
+        }
+
+        setAuthLoading(true);
+
+        try {
+
+            if (authMode === "register") {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth.signUp({
+                        email,
+                        password
+                    });
+
+                if (error) {
+                    throw error;
+                }
+
+                if (
+                    data.user &&
+                    data.session
+                ) {
+
+                    await createProfile(
+                        data.user
+                    );
+
+                    await startApp(
+                        data.user
+                    );
+
+                    showAuthMessage(
+                        "Аккаунт создан.",
+                        "success"
+                    );
+
+                } else {
+
+                    showAuthMessage(
+                        "Аккаунт создан. Проверь почту и подтверди email, затем войди в аккаунт.",
+                        "success"
+                    );
+
+                    showAuthMode("login");
+
+                    document.getElementById(
+                        "authEmail"
+                    ).value = email;
+
+                }
+
+            } else {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth.signInWithPassword({
+                        email,
+                        password
+                    });
+
+                if (error) {
+                    throw error;
+                }
+
+                await startApp(
+                    data.user
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+            let message =
+                "Не удалось выполнить действие.";
+
+            if (
+                error &&
+                error.message
+            ) {
+                message = error.message;
+            }
+
+            if (
+                message.toLowerCase()
+                    .includes("invalid login")
+            ) {
+                message =
+                    "Неверный email или пароль.";
+            }
+
+            if (
+                message.toLowerCase()
+                    .includes("email not confirmed")
+            ) {
+                message =
+                    "Сначала подтверди email через письмо из Supabase.";
+            }
+
+            if (
+                message.toLowerCase()
+                    .includes("already registered")
+            ) {
+                message =
+                    "Этот email уже зарегистрирован. Войди в аккаунт.";
+            }
+
+            showAuthMessage(
+                message,
+                "error"
+            );
+
+        } finally {
+
+            setAuthLoading(false);
+
+        }
+
+    }
+
+
+    async function createProfile(user) {
+
+        if (!user) {
+            return;
+        }
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("profiles")
+                .upsert(
+                    {
+                        id: user.id,
+                        email: user.email || ""
+                    },
+                    {
+                        onConflict: "id"
+                    }
+                );
+
+        if (error) {
+            console.error(
+                "Ошибка создания профиля:",
+                error
+            );
+        }
+
+    }
+
+
+    async function logout() {
+
+        await supabaseClient.auth.signOut();
+
+        currentUser = null;
+
+        attempts = [];
+
+        document.getElementById(
+            "app"
+        ).style.display = "none";
+
+        document.getElementById(
+            "authScreen"
+        ).style.display = "flex";
+
+        document.getElementById(
+            "authPassword"
+        ).value = "";
+
+        showAuthMode("login");
+
+        showAuthMessage(
+            "Ты вышла из аккаунта.",
+            "success"
+        );
+
+    }
+
+
+    async function startApp(user) {
+
+        currentUser = user;
+
+        await createProfile(user);
+
+        await loadUserAttempts();
+
+        document.getElementById(
+            "authScreen"
+        ).style.display = "none";
+
+        document.getElementById(
+            "app"
+        ).style.display = "block";
+
+        renderUserProfile();
+
+        updateAll();
+
+    }
+
+
+    async function checkAuth() {
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.auth.getSession();
+
+            if (error) {
+                throw error;
+            }
+
+            if (
+                data.session &&
+                data.session.user
+            ) {
+
+                await startApp(
+                    data.session.user
+                );
+
+            } else {
+
+                document.getElementById(
+                    "authScreen"
+                ).style.display = "flex";
+
+                document.getElementById(
+                    "app"
+                ).style.display = "none";
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка проверки авторизации:",
+                error
+            );
+
+        }
+
+    }
+
+
+    supabaseClient.auth.onAuthStateChange(
+        async (event, session) => {
+
+            if (
+                event === "SIGNED_IN" &&
+                session &&
+                session.user
+            ) {
+
+                await startApp(
+                    session.user
+                );
+
+            }
+
+            if (
+                event === "SIGNED_OUT"
+            ) {
+
+                currentUser = null;
+
+                attempts = [];
+
+                document.getElementById(
+                    "app"
+                ).style.display = "none";
+
+                document.getElementById(
+                    "authScreen"
+                ).style.display = "flex";
+
+            }
+
+        }
+    );
+
+
+    /* =========================================
        TELEGRAM
     ========================================= */
 
-    const tg = window.Telegram &&
-               window.Telegram.WebApp
-        ? window.Telegram.WebApp
-        : null;
+    const tg =
+        window.Telegram &&
+        window.Telegram.WebApp
+            ? window.Telegram.WebApp
+            : null;
 
 
     if (tg) {
@@ -1921,10 +2551,6 @@
         tg.expand();
     }
 
-
-    /* =========================================
-       TELEGRAM USER
-    ========================================= */
 
     let telegramUser = null;
 
@@ -1946,183 +2572,79 @@
 
         }
 
-        renderTelegramProfile();
-
     }
 
 
-    function renderTelegramProfile() {
+    /* =========================================
+       PROFILE
+    ========================================= */
 
-        const mainName =
-            document.getElementById(
-                "mainProfileName"
-            );
+    function renderUserProfile() {
 
-        const mainUsername =
-            document.getElementById(
-                "mainProfileUsername"
-            );
-
-        const mainAvatar =
-            document.getElementById(
-                "mainProfileAvatar"
-            );
-
-
-        const largeName =
-            document.getElementById(
-                "profileLargeName"
-            );
-
-        const largeUsername =
-            document.getElementById(
-                "profileLargeUsername"
-            );
-
-        const largeAvatar =
-            document.getElementById(
-                "profileLargeAvatar"
-            );
-
-
-        if (!telegramUser) {
-
-            mainName.textContent =
-                "Мой профиль";
-
-            mainUsername.textContent =
-                "Открой приложение через Telegram";
-
-            mainAvatar.innerHTML =
-                "👤";
-
-            largeName.textContent =
-                "Пользователь";
-
-            largeUsername.textContent =
-                "Telegram";
-
-            largeAvatar.innerHTML =
-                "👤";
-
-            document.getElementById(
-                "profileFirstName"
-            ).textContent = "—";
-
-            document.getElementById(
-                "profileLastName"
-            ).textContent = "—";
-
-            document.getElementById(
-                "profileUsername"
-            ).textContent = "—";
-
-            document.getElementById(
-                "profileTelegramId"
-            ).textContent = "—";
-
+        if (!currentUser) {
             return;
-
         }
 
+        const email =
+            currentUser.email || "";
 
-        const firstName =
-            telegramUser.first_name || "";
-
-        const lastName =
-            telegramUser.last_name || "";
-
-        const fullName =
-            `${firstName} ${lastName}`
-                .trim() || "Пользователь";
-
-
-        const username =
-            telegramUser.username
-                ? `@${telegramUser.username}`
-                : "Username не указан";
-
-
-        mainName.textContent =
-            fullName;
-
-        mainUsername.textContent =
-            username;
-
-
-        largeName.textContent =
-            fullName;
-
-        largeUsername.textContent =
-            username;
-
-
-        if (telegramUser.photo_url) {
-
-            mainAvatar.innerHTML = `
-                <img
-                    src="${escapeHtml(
-                        telegramUser.photo_url
-                    )}"
-                    alt=""
-                >
-            `;
-
-            largeAvatar.innerHTML = `
-                <img
-                    src="${escapeHtml(
-                        telegramUser.photo_url
-                    )}"
-                    alt=""
-                >
-            `;
-
-        } else {
-
-            const firstLetter =
-                firstName
-                    ? firstName.charAt(0)
-                        .toUpperCase()
-                    : "👤";
-
-            mainAvatar.textContent =
-                firstLetter;
-
-            largeAvatar.textContent =
-                firstLetter;
-
-        }
+        const letter =
+            email
+                ? email.charAt(0).toUpperCase()
+                : "👤";
 
 
         document.getElementById(
-            "profileFirstName"
+            "mainProfileName"
         ).textContent =
-            firstName || "—";
+            email.split("@")[0] ||
+            "Пользователь";
 
 
         document.getElementById(
-            "profileLastName"
+            "mainProfileUsername"
         ).textContent =
-            lastName || "—";
+            email;
 
 
         document.getElementById(
-            "profileUsername"
+            "mainProfileAvatar"
         ).textContent =
-            username;
+            letter;
 
 
         document.getElementById(
-            "profileTelegramId"
+            "profileLargeName"
         ).textContent =
-            telegramUser.id || "—";
+            email.split("@")[0] ||
+            "Пользователь";
+
+
+        document.getElementById(
+            "profileLargeUsername"
+        ).textContent =
+            email;
+
+
+        document.getElementById(
+            "profileLargeAvatar"
+        ).textContent =
+            letter;
+
+
+        document.getElementById(
+            "profileEmail"
+        ).textContent =
+            email || "—";
 
     }
 
 
     function openProfile() {
 
-        openScreen("profileScreen");
+        openScreen(
+            "profileScreen"
+        );
 
         updateProfileStatistics();
 
@@ -2161,8 +2683,18 @@
        STORAGE
     ========================================= */
 
-    const STORAGE_KEY =
-        "oge_english_tracker_attempts";
+    function getStorageKey() {
+
+        if (!currentUser) {
+            return null;
+        }
+
+        return (
+            "oge_english_tracker_attempts_" +
+            currentUser.id
+        );
+
+    }
 
 
     let attempts = [];
@@ -2172,14 +2704,23 @@
     let currentBlock = "1-5";
 
 
-    function loadAttempts() {
+    function loadLocalAttempts() {
+
+        const key =
+            getStorageKey();
+
+        if (!key) {
+
+            attempts = [];
+
+            return;
+
+        }
 
         try {
 
             const saved =
-                localStorage.getItem(
-                    STORAGE_KEY
-                );
+                localStorage.getItem(key);
 
             attempts =
                 saved
@@ -2195,12 +2736,182 @@
     }
 
 
-    function saveData() {
+    function saveLocalAttempts() {
+
+        const key =
+            getStorageKey();
+
+        if (!key) {
+            return;
+        }
 
         localStorage.setItem(
-            STORAGE_KEY,
+            key,
             JSON.stringify(attempts)
         );
+
+    }
+
+
+    async function loadUserAttempts() {
+
+        if (!currentUser) {
+            return;
+        }
+
+        loadLocalAttempts();
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("progress")
+                    .select(
+                        "id, task_id, completed, created_at, updated_at"
+                    )
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    )
+                    .order(
+                        "created_at",
+                        {
+                            ascending: true
+                        }
+                    );
+
+            if (error) {
+                throw error;
+            }
+
+
+            if (data && data.length) {
+
+                const localDbIds =
+                    new Set(
+                        attempts
+                            .map(
+                                attempt =>
+                                    attempt.dbId
+                            )
+                            .filter(Boolean)
+                    );
+
+
+                data.forEach(row => {
+
+                    if (
+                        localDbIds.has(
+                            row.id
+                        )
+                    ) {
+                        return;
+                    }
+
+
+                    attempts.push({
+
+                        taskId:
+                            row.task_id,
+
+                        result:
+                            row.completed
+                                ? "correct"
+                                : "wrong",
+
+                        reason:
+                            "Причина ошибки не сохранена на сервере.",
+
+                        date:
+                            row.created_at,
+
+                        dbId:
+                            row.id
+
+                    });
+
+                });
+
+                saveLocalAttempts();
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка загрузки прогресса:",
+                error
+            );
+
+        }
+
+    }
+
+
+    async function saveAttemptToSupabase(
+        attempt
+    ) {
+
+        if (!currentUser) {
+            return;
+        }
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("progress")
+                    .insert({
+                        user_id:
+                            currentUser.id,
+
+                        task_id:
+                            attempt.taskId,
+
+                        completed:
+                            attempt.result ===
+                            "correct"
+
+                    })
+                    .select(
+                        "id"
+                    )
+                    .single();
+
+            if (error) {
+                throw error;
+            }
+
+            if (data && data.id) {
+
+                attempt.dbId =
+                    data.id;
+
+                saveLocalAttempts();
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка сохранения прогресса:",
+                error
+            );
+
+        }
+
+    }
+
+
+    function saveData() {
+
+        saveLocalAttempts();
 
         updateAll();
 
@@ -2231,7 +2942,9 @@
 
 
         if (screen) {
-            screen.classList.add("active");
+            screen.classList.add(
+                "active"
+            );
         }
 
 
@@ -2248,7 +2961,9 @@
 
     function openTasksScreen() {
 
-        openScreen("tasksScreen");
+        openScreen(
+            "tasksScreen"
+        );
 
     }
 
@@ -2299,9 +3014,12 @@
 
         document.getElementById(
             "blockTitle"
-        ).textContent = block;
+        ).textContent =
+            block;
 
-        openScreen("blockScreen");
+        openScreen(
+            "blockScreen"
+        );
 
         renderBlock();
 
@@ -2392,7 +3110,8 @@
                 availableTasks
                     .filter(
                         task =>
-                            task.variant === variant
+                            task.variant ===
+                            variant
                     )
                     .sort(
                         (a,b) =>
@@ -2495,7 +3214,9 @@
     function getTaskStatus(taskId) {
 
         const history =
-            getTaskAttempts(taskId);
+            getTaskAttempts(
+                taskId
+            );
 
 
         if (
@@ -2606,14 +3327,14 @@
        CORRECT
     ========================================= */
 
-    function saveCorrectAttempt() {
+    async function saveCorrectAttempt() {
 
         if (!currentTask) {
             return;
         }
 
 
-        attempts.push({
+        const attempt = {
 
             taskId:
                 currentTask.id,
@@ -2625,12 +3346,25 @@
                 "",
 
             date:
-                new Date().toISOString()
+                new Date().toISOString(),
 
-        });
+            dbId:
+                null
+
+        };
+
+
+        attempts.push(
+            attempt
+        );
 
 
         saveData();
+
+
+        await saveAttemptToSupabase(
+            attempt
+        );
 
 
         document.getElementById(
@@ -2667,7 +3401,7 @@
     }
 
 
-    function saveWrongAttempt() {
+    async function saveWrongAttempt() {
 
         if (!currentTask) {
             return;
@@ -2680,7 +3414,7 @@
             ).value.trim();
 
 
-        attempts.push({
+        const attempt = {
 
             taskId:
                 currentTask.id,
@@ -2693,12 +3427,25 @@
                 "Причина не указана",
 
             date:
-                new Date().toISOString()
+                new Date().toISOString(),
 
-        });
+            dbId:
+                null
+
+        };
+
+
+        attempts.push(
+            attempt
+        );
 
 
         saveData();
+
+
+        await saveAttemptToSupabase(
+            attempt
+        );
 
 
         document.getElementById(
@@ -3615,11 +4362,9 @@
        START
     ========================================= */
 
-    loadAttempts();
-
     loadTelegramUser();
 
-    updateAll();
+    checkAuth();
 
 </script>
 
