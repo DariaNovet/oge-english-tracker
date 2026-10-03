@@ -1,2311 +1,3605 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OGE English Tracker</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="./data/tasks.js"></script>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        :root {
-            --purple: #8b5cf6;
-            --purple-dark: #7045dc;
-            --purple-light: #eee7ff;
-            --purple-soft: #f7f3ff;
-            --text: #29233a;
-            --muted: #8b8499;
-            --white: #ffffff;
-            --green: #35b878;
-            --green-soft: #e8f8f0;
-            --red: #ed6a78;
-            --red-soft: #fff0f2;
-            --border: #ece8f3;
-            --shadow: 0 10px 35px rgba(87, 58, 132, 0.08);
-        }
-
-        body {
-            margin: 0;
-            background: #faf9fc;
-            color: var(--text);
-            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-
-        button,
-        input,
-        textarea {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-            border: 0;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* AUTH */
-
-        #authScreen {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-            background:
-                radial-gradient(circle at 15% 15%, #eee7ff 0, transparent 30%),
-                radial-gradient(circle at 85% 80%, #e9ddff 0, transparent 28%),
-                #faf9fc;
-        }
-
-        .auth-card {
-            width: 100%;
-            max-width: 430px;
-            background: white;
-            border-radius: 28px;
-            padding: 34px;
-            box-shadow: 0 20px 60px rgba(73, 45, 111, .12);
-        }
-
-        .logo {
-            width: 58px;
-            height: 58px;
-            border-radius: 18px;
-            background: linear-gradient(135deg, #a47bff, #7950e9);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 22px;
-            margin-bottom: 22px;
-        }
-
-        .auth-card h1 {
-            margin: 0 0 8px;
-            font-size: 28px;
-        }
-
-        .auth-subtitle {
-            color: var(--muted);
-            margin-bottom: 28px;
-            line-height: 1.5;
-        }
-
-        .field {
-            margin-bottom: 16px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 7px;
-        }
-
-        .field input,
-        .field textarea {
-            width: 100%;
-            border: 1px solid var(--border);
-            background: #fbfaff;
-            border-radius: 13px;
-            padding: 13px 14px;
-            outline: none;
-            color: var(--text);
-            transition: .2s;
-        }
-
-        .field input:focus,
-        .field textarea:focus {
-            border-color: #aa8bed;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, .08);
-        }
-
-        .primary-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 13px;
-            background: var(--purple);
-            color: white;
-            font-weight: 700;
-            transition: .2s;
-        }
-
-        .primary-btn:hover {
-            background: var(--purple-dark);
-            transform: translateY(-1px);
-        }
-
-        .secondary-btn {
-            width: 100%;
-            padding: 13px;
-            border-radius: 13px;
-            background: var(--purple-light);
-            color: var(--purple-dark);
-            font-weight: 700;
-        }
-
-        .auth-switch {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .auth-switch button,
-        .forgot-btn {
-            background: none;
-            color: var(--purple);
-            font-weight: 700;
-            padding: 0;
-        }
-
-        .forgot {
-            text-align: right;
-            margin: -5px 0 17px;
-        }
-
-        .message {
-            padding: 12px 14px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            font-size: 14px;
-            line-height: 1.4;
-            background: var(--purple-soft);
-            color: var(--purple-dark);
-        }
-
-        /* APP */
-
-        #app {
-            min-height: 100vh;
-        }
-
-        .topbar {
-            height: 72px;
-            background: white;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 28px;
-            position: sticky;
-            top: 0;
-            z-index: 20;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            font-weight: 800;
-            font-size: 18px;
-        }
-
-        .brand-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            background: var(--purple);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-        }
-
-        .user-mini {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: var(--purple-light);
-            color: var(--purple-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-        }
-
-        .layout {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .sidebar {
-            width: 230px;
-            min-height: calc(100vh - 72px);
-            padding: 25px 16px;
-            border-right: 1px solid var(--border);
-            background: white;
-        }
-
-        .nav-item {
-            width: 100%;
-            text-align: left;
-            background: transparent;
-            padding: 13px 14px;
-            border-radius: 12px;
-            color: var(--muted);
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .nav-item.active {
-            background: var(--purple-light);
-            color: var(--purple-dark);
-        }
-
-        .content {
-            flex: 1;
-            padding: 35px;
-            min-width: 0;
-        }
-
-        .page-title {
-            margin: 0;
-            font-size: 30px;
-        }
-
-        .page-subtitle {
-            margin: 7px 0 28px;
-            color: var(--muted);
-        }
-
-        /* TASKS */
-
-        .task-group {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 22px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .task-group-title {
-            font-size: 18px;
-            font-weight: 800;
-            margin-bottom: 17px;
-        }
-
-        .variant-block {
-            margin-bottom: 18px;
-        }
-
-        .variant-block:last-child {
-            margin-bottom: 0;
-        }
-
-        .variant-title {
-            font-size: 14px;
-            color: var(--muted);
-            font-weight: 700;
-            margin-bottom: 9px;
-        }
-
-        .task-grid {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 9px;
-        }
-
-        .task-card {
-            min-height: 72px;
-            border-radius: 14px;
-            background: #faf9fd;
-            border: 1px solid var(--border);
-            padding: 10px;
-            transition: .2s;
-            position: relative;
-            text-align: left;
-        }
-
-        .task-card:hover {
-            border-color: #c2a9f4;
-            transform: translateY(-2px);
-        }
-
-        .task-number {
-            font-size: 18px;
-            font-weight: 800;
-        }
-
-        .task-code {
-            font-size: 10px;
-            color: #aaa3b3;
-            margin-top: 4px;
-        }
-
-        .task-status {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .status-correct {
-            background: var(--green);
-        }
-
-        .status-wrong {
-            background: var(--red);
-        }
-
-        /* STATS */
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .stat-label {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 9px;
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-        .progress-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-        }
-
-        .progress-line {
-            height: 12px;
-            background: #eeeaf4;
-            border-radius: 99px;
-            overflow: hidden;
-            margin: 15px 0 8px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #9b72f5, #7045dc);
-            border-radius: inherit;
-            width: 0;
-            transition: .4s;
-        }
-
-        /* ERRORS */
-
-        .error-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .error-item {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 17px;
-            padding: 18px;
-        }
-
-        .error-head {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 9px;
-        }
-
-        .error-task {
-            font-weight: 800;
-        }
-
-        .error-date {
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .reason {
-            color: #665f71;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        /* PROFILE */
-
-        .profile-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 25px;
-            max-width: 600px;
-        }
-
-        .profile-avatar {
-            width: 76px;
-            height: 76px;
-            border-radius: 25px;
-            background: var(--purple-light);
-            color: var(--purple-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
-
-        .logout-btn {
-            width: 100%;
-            margin-top: 10px;
-            padding: 13px;
-            border-radius: 13px;
-            background: var(--red-soft);
-            color: #d65261;
-            font-weight: 700;
-        }
-
-        /* MODAL */
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(35, 25, 50, .48);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 100;
-        }
-
-        .modal-box {
-            width: 100%;
-            max-width: 560px;
-            max-height: 90vh;
-            overflow-y: auto;
-            background: white;
-            border-radius: 24px;
-            padding: 25px;
-        }
-
-        .modal-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            margin: 0;
-            font-size: 23px;
-        }
-
-        .close-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: #f3f0f7;
-            color: #777080;
-        }
-
-        .result-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .correct-btn,
-        .wrong-btn {
-            padding: 14px;
-            border-radius: 13px;
-            font-weight: 700;
-        }
-
-        .correct-btn {
-            background: var(--green-soft);
-            color: #26945d;
-        }
-
-        .wrong-btn {
-            background: var(--red-soft);
-            color: #d45262;
-        }
-
-        .history-title {
-            margin-top: 25px;
-            margin-bottom: 12px;
-            font-size: 16px;
-        }
-
-        .history-item {
-            padding: 12px;
-            background: #faf9fc;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-
-        .history-item.correct {
-            border-left: 3px solid var(--green);
-        }
-
-        .history-item.wrong {
-            border-left: 3px solid var(--red);
-        }
-
-        .history-result {
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-
-        .history-date {
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        /* PRINT */
-
-        .print-btn {
-            padding: 12px 16px;
-            border-radius: 12px;
-            background: var(--purple);
-            color: white;
-            font-weight: 700;
-            margin-bottom: 18px;
-        }
-
-        @media (max-width: 800px) {
-            .topbar {
-                padding: 0 15px;
-            }
-
-            .sidebar {
-                width: 70px;
-                padding: 15px 8px;
-            }
-
-            .nav-item {
-                font-size: 0;
-                text-align: center;
-                padding: 14px 5px;
-            }
-
-            .nav-item::first-letter {
-                font-size: 20px;
-            }
-
-            .content {
-                padding: 20px 14px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .task-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .brand span {
-                display: none;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .auth-card {
-                padding: 25px 20px;
-            }
-
-            .task-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .user-mini span {
-                display: none;
-            }
-        }
-
-        @media print {
-            body {
-                background: white;
-            }
-
-            .topbar,
-            .sidebar,
-            .print-btn {
-                display: none !important;
-            }
-
-            .content {
-                padding: 0;
-            }
-
-            .page {
-                display: block !important;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>OGE English Tracker</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --purple: #7c5cff;
+      --purple-dark: #6344e8;
+      --purple-light: #f1edff;
+      --bg: #f7f6fb;
+      --card: #ffffff;
+      --text: #252332;
+      --muted: #777386;
+      --border: #e8e5f0;
+
+      --green-bg: #d9f8e5;
+      --green-border: #7cdda1;
+      --green-text: #14733a;
+
+      --red-bg: #ffe0e5;
+      --red-border: #ff9aaa;
+      --red-text: #a52943;
+
+      --shadow: 0 8px 30px rgba(53, 39, 100, 0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================
+       AUTH
+    ========================= */
+
+    #authScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top left, #e9e2ff 0, transparent 35%),
+        radial-gradient(circle at bottom right, #eee8ff 0, transparent 35%),
+        var(--bg);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: white;
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #8e74ff, #6748e8);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .auth-card h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .auth-subtitle {
+      color: var(--muted);
+      margin: 0 0 25px;
+      line-height: 1.5;
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: #f4f2fa;
+      padding: 4px;
+      border-radius: 13px;
+      margin-bottom: 22px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      border-radius: 10px;
+      padding: 11px;
+      color: var(--muted);
+    }
+
+    .auth-tab.active {
+      background: white;
+      color: var(--purple);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #faf9fd;
+      border-radius: 13px;
+      padding: 13px 14px;
+      outline: none;
+      transition: .2s;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--purple);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(124,92,255,.1);
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 13px;
+      padding: 14px;
+      color: white;
+      background: linear-gradient(135deg, #8368ff, #6949e9);
+      font-weight: 700;
+      margin-top: 5px;
+    }
+
+    .primary-btn:hover {
+      filter: brightness(.97);
+    }
+
+    .secondary-btn {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 15px;
+    }
+
+    .danger-btn {
+      border: 0;
+      background: #fff0f2;
+      color: #b02b48;
+      border-radius: 12px;
+      padding: 11px 15px;
+      font-weight: 700;
+    }
+
+    .auth-link {
+      display: block;
+      border: 0;
+      background: transparent;
+      color: var(--purple);
+      margin: 15px auto 0;
+      font-size: 14px;
+    }
+
+    .message {
+      margin-top: 14px;
+      padding: 11px 13px;
+      border-radius: 12px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: #fff0f2;
+      color: #a52943;
+    }
+
+    .message.success {
+      background: #e9faef;
+      color: #14733a;
+    }
+
+    /* =========================
+       APP
+    ========================= */
+
+    #appScreen {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,.93);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 800;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--purple);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--purple-light);
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .layout {
+      max-width: 1180px;
+      margin: auto;
+      padding: 24px 20px 100px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 7px;
+      padding: 5px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 25px;
+      overflow-x: auto;
+    }
+
+    .nav button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 11px;
+      padding: 11px 17px;
+      white-space: nowrap;
+    }
+
+    .nav button.active {
+      background: var(--purple-light);
+      color: var(--purple-dark);
+      font-weight: 700;
+    }
+
+    .section-title {
+      margin-bottom: 18px;
+    }
+
+    .section-title h2 {
+      margin: 0 0 6px;
+      font-size: 27px;
+    }
+
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    /* =========================
+       TASKS
+    ========================= */
+
+    .task-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: white;
+      padding: 14px 16px 14px 43px;
+      outline: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,.02);
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(124,92,255,.08);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    .variant-block {
+      margin-bottom: 28px;
+    }
+
+    .variant-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+
+    .variant-title h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .variant-count {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .task-card {
+      position: relative;
+      min-height: 145px;
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: white;
+      cursor: pointer;
+      transition: transform .18s, box-shadow .18s, border-color .18s;
+      box-shadow: 0 3px 12px rgba(50,35,90,.04);
+    }
+
+    .task-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(50,35,90,.1);
+    }
+
+    /* ПОЛНОСТЬЮ окрашенная карточка */
+    .task-card.correct {
+      background: linear-gradient(145deg, #e5faec 0%, #c9f4d9 100%);
+      border-color: var(--green-border);
+    }
+
+    .task-card.wrong {
+      background: linear-gradient(145deg, #ffeaed 0%, #ffd2da 100%);
+      border-color: var(--red-border);
+    }
+
+    .task-number {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .task-code {
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      opacity: .75;
+    }
+
+    .task-status {
+      position: absolute;
+      bottom: 14px;
+      left: 15px;
+      right: 15px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .task-card.correct .task-status {
+      color: var(--green-text);
+    }
+
+    .task-card.wrong .task-status {
+      color: var(--red-text);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 45px 20px;
+      color: var(--muted);
+      background: white;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+    }
+
+    /* =========================
+       STATISTICS
+    ========================= */
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .chart-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 22px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+
+    .chart-header h3 {
+      margin: 0;
+    }
+
+    .legend {
+      display: flex;
+      gap: 15px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .chart-scroll {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    #progressChart {
+      display: block;
+      width: 100%;
+      min-width: 600px;
+      height: 300px;
+    }
+
+    /* =========================
+       ERRORS
+    ========================= */
+
+    .error-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .error-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-left: 5px solid #ff8b9d;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .error-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 7px;
+    }
+
+    .error-task {
+      font-weight: 800;
+    }
+
+    .error-date {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .error-reason {
+      color: #55505f;
+      line-height: 1.45;
+    }
+
+    .no-errors {
+      background: #e9faef;
+      color: var(--green-text);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    /* =========================
+       PROFILE
+    ========================= */
+
+    .profile-card {
+      max-width: 650px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 25px;
+    }
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .profile-avatar {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: var(--purple-light);
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .profile-email {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(30,24,45,.48);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 24px;
+      padding: 25px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.2);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .modal-head h3 {
+      margin: 0 0 5px;
+      font-size: 23px;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 11px;
+      background: #f3f1f7;
+      font-size: 20px;
+    }
+
+    .attempt-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .correct-btn,
+    .wrong-btn {
+      border: 0;
+      border-radius: 13px;
+      padding: 13px;
+      font-weight: 700;
+    }
+
+    .correct-btn {
+      background: var(--green-bg);
+      color: var(--green-text);
+    }
+
+    .wrong-btn {
+      background: var(--red-bg);
+      color: var(--red-text);
+    }
+
+    .history-title {
+      margin: 23px 0 10px;
+      font-size: 16px;
+    }
+
+    .history-item {
+      background: #f8f7fb;
+      border-radius: 13px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .history-item.correct {
+      border-left: 4px solid #65ce8c;
+    }
+
+    .history-item.wrong {
+      border-left: 4px solid #ff8396;
+    }
+
+    .history-main {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .history-date {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .history-reason {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #5c5767;
+    }
+
+    /* =========================
+       PRINT
+    ========================= */
+
+    #printReport {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .tasks-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .auth-card {
+        padding: 25px;
+      }
+
+      .layout {
+        padding: 18px 13px 80px;
+      }
+
+      .tasks-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .task-toolbar {
+        flex-direction: column;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .attempt-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      #authScreen,
+      #appScreen,
+      .modal-overlay {
+        display: none !important;
+      }
+
+      #printReport {
+        display: block !important;
+        padding: 30px;
+        color: black;
+      }
+
+      .print-title {
+        font-size: 26px;
+        font-weight: 800;
+        margin-bottom: 5px;
+      }
+
+      .print-date {
+        color: #555;
+        margin-bottom: 25px;
+      }
+
+      .print-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 25px;
+      }
+
+      .print-stat {
+        border: 1px solid #ddd;
+        padding: 15px;
+      }
+
+      .print-stat strong {
+        display: block;
+        font-size: 22px;
+        margin-top: 5px;
+      }
+
+      .print-section {
+        margin-top: 25px;
+      }
+
+      .print-error {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- AUTH -->
+<!-- =========================
+     AUTH SCREEN
+========================= -->
 
 <div id="authScreen">
 
-    <div class="auth-card">
+  <div class="auth-card">
 
-        <div class="logo">OGE</div>
+    <div class="logo">OGE</div>
 
-        <div id="loginForm">
+    <h1>OGE English Tracker</h1>
+    <p class="auth-subtitle">
+      Отслеживай задания, ошибки и свой прогресс подготовки.
+    </p>
 
-            <h1>С возвращением 👋</h1>
-            <div class="auth-subtitle">
-                Войди в аккаунт, чтобы продолжить подготовку к ОГЭ.
-            </div>
-
-            <div id="authMessage"></div>
-
-            <div class="field">
-                <label>Email</label>
-                <input id="loginEmail" type="email" placeholder="Введите email">
-            </div>
-
-            <div class="field">
-                <label>Пароль</label>
-                <input id="loginPassword" type="password" placeholder="Введите пароль">
-            </div>
-
-            <div class="forgot">
-                <button class="forgot-btn" onclick="showForgot()">Забыли пароль?</button>
-            </div>
-
-            <button class="primary-btn" onclick="login()">Войти</button>
-
-            <div class="auth-switch">
-                Нет аккаунта?
-                <button onclick="showRegister()">Зарегистрироваться</button>
-            </div>
-
-        </div>
-
-        <div id="registerForm" class="hidden">
-
-            <h1>Создание аккаунта</h1>
-            <div class="auth-subtitle">
-                Создай аккаунт и сохраняй свой прогресс.
-            </div>
-
-            <div id="registerMessage"></div>
-
-            <div class="field">
-                <label>Никнейм</label>
-                <input id="registerNickname" type="text" placeholder="Как тебя называть?">
-            </div>
-
-            <div class="field">
-                <label>Email</label>
-                <input id="registerEmail" type="email" placeholder="Введите email">
-            </div>
-
-            <div class="field">
-                <label>Пароль</label>
-                <input id="registerPassword" type="password" placeholder="Минимум 6 символов">
-            </div>
-
-            <div class="field">
-                <label>Повторите пароль</label>
-                <input id="registerPassword2" type="password" placeholder="Повторите пароль">
-            </div>
-
-            <button class="primary-btn" onclick="register()">Создать аккаунт</button>
-
-            <div class="auth-switch">
-                Уже есть аккаунт?
-                <button onclick="showLogin()">Войти</button>
-            </div>
-
-        </div>
-
-        <div id="forgotForm" class="hidden">
-
-            <h1>Восстановление пароля</h1>
-
-            <div class="auth-subtitle">
-                Введи email, и мы отправим ссылку для восстановления пароля.
-            </div>
-
-            <div id="forgotMessage"></div>
-
-            <div class="field">
-                <label>Email</label>
-                <input id="forgotEmail" type="email" placeholder="Введите email">
-            </div>
-
-            <button class="primary-btn" onclick="forgotPassword()">
-                Отправить ссылку
-            </button>
-
-            <div class="auth-switch">
-                <button onclick="showLogin()">Вернуться ко входу</button>
-            </div>
-
-        </div>
-
-        <div id="resetForm" class="hidden">
-
-            <h1>Новый пароль</h1>
-
-            <div class="auth-subtitle">
-                Придумай новый пароль для своего аккаунта.
-            </div>
-
-            <div id="resetMessage"></div>
-
-            <div class="field">
-                <label>Новый пароль</label>
-                <input id="newPassword" type="password">
-            </div>
-
-            <div class="field">
-                <label>Повторите пароль</label>
-                <input id="newPassword2" type="password">
-            </div>
-
-            <button class="primary-btn" onclick="updatePassword()">
-                Сохранить пароль
-            </button>
-
-        </div>
-
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="loginTab">Войти</button>
+      <button class="auth-tab" id="registerTab">Регистрация</button>
     </div>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label>Email</label>
+        <input id="loginEmail" type="email" required>
+      </div>
+
+      <div class="field">
+        <label>Пароль</label>
+        <input id="loginPassword" type="password" required>
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Войти
+      </button>
+
+      <button class="auth-link" type="button" id="forgotPassword">
+        Забыли пароль?
+      </button>
+
+    </form>
+
+    <form id="registerForm" class="hidden">
+
+      <div class="field">
+        <label>Никнейм</label>
+        <input id="registerNickname" type="text" required>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input id="registerEmail" type="email" required>
+      </div>
+
+      <div class="field">
+        <label>Пароль</label>
+        <input id="registerPassword" type="password" minlength="6" required>
+      </div>
+
+      <div class="field">
+        <label>Повторите пароль</label>
+        <input id="registerPassword2" type="password" minlength="6" required>
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Создать аккаунт
+      </button>
+
+    </form>
+
+    <div id="authMessage" class="message"></div>
+
+  </div>
 
 </div>
 
 
-<!-- APP -->
+<!-- =========================
+     APP
+========================= -->
 
-<div id="app" class="hidden">
+<div id="appScreen" class="hidden">
 
-    <header class="topbar">
+  <header class="topbar">
 
-        <div class="brand">
-            <div class="brand-icon">O</div>
-            <span>OGE English Tracker</span>
-        </div>
+    <div class="topbar-inner">
 
-        <div class="user-mini">
-            <span id="topNickname"></span>
-            <div class="avatar" id="topAvatar">?</div>
-        </div>
+      <div class="brand">
+        <div class="brand-icon">✓</div>
+        <span>OGE English Tracker</span>
+      </div>
 
-    </header>
-
-    <div class="layout">
-
-        <aside class="sidebar">
-
-            <button class="nav-item active" data-page="tasksPage" onclick="openPage('tasksPage', this)">
-                📚 Задания
-            </button>
-
-            <button class="nav-item" data-page="statsPage" onclick="openPage('statsPage', this)">
-                📊 Статистика
-            </button>
-
-            <button class="nav-item" data-page="errorsPage" onclick="openPage('errorsPage', this)">
-                ⚠️ Ошибки
-            </button>
-
-            <button class="nav-item" data-page="profilePage" onclick="openPage('profilePage', this)">
-                👤 Профиль
-            </button>
-
-        </aside>
-
-
-        <main class="content">
-
-            <!-- TASKS -->
-
-            <section id="tasksPage" class="page">
-
-                <h1 class="page-title">Задания</h1>
-
-                <p class="page-subtitle">
-                    Выбери вариант и задание, чтобы отметить результат.
-                </p>
-
-                <div id="tasksContainer"></div>
-
-            </section>
-
-
-            <!-- STATS -->
-
-            <section id="statsPage" class="page hidden">
-
-                <h1 class="page-title">Статистика</h1>
-
-                <p class="page-subtitle">
-                    Твой прогресс за всё время.
-                </p>
-
-                <button class="print-btn" onclick="printReport()">
-                    🖨 Сгенерировать PDF
-                </button>
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-                        <div class="stat-label">Точность</div>
-                        <div class="stat-value" id="accuracyStat">0%</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-label">Правильных</div>
-                        <div class="stat-value" id="correctStat">0</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-label">Ошибок</div>
-                        <div class="stat-value" id="wrongStat">0</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-label">Всего попыток</div>
-                        <div class="stat-value" id="totalStat">0</div>
-                    </div>
-
-                </div>
-
-                <div class="progress-card">
-
-                    <strong>Общий прогресс</strong>
-
-                    <div class="progress-line">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-
-                    <div id="progressText" style="color:var(--muted);font-size:13px;">
-                        0 из 95 заданий
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ERRORS -->
-
-            <section id="errorsPage" class="page hidden">
-
-                <h1 class="page-title">Ошибки</h1>
-
-                <p class="page-subtitle">
-                    Все задания, в которых ты ошибалась.
-                </p>
-
-                <div id="errorsContainer" class="error-list"></div>
-
-            </section>
-
-
-            <!-- PROFILE -->
-
-            <section id="profilePage" class="page hidden">
-
-                <h1 class="page-title">Профиль</h1>
-
-                <p class="page-subtitle">
-                    Управление аккаунтом.
-                </p>
-
-                <div class="profile-card">
-
-                    <div class="profile-avatar" id="profileAvatar">?</div>
-
-                    <div class="field">
-                        <label>Никнейм</label>
-                        <input id="profileNickname" type="text">
-                    </div>
-
-                    <div class="field">
-                        <label>Email</label>
-                        <input id="profileEmail" type="email" disabled>
-                    </div>
-
-                    <button class="primary-btn" onclick="saveProfile()">
-                        Сохранить изменения
-                    </button>
-
-                    <button class="logout-btn" onclick="logout()">
-                        Выйти из аккаунта
-                    </button>
-
-                </div>
-
-            </section>
-
-        </main>
+      <div class="user-mini">
+        <span id="topNickname"></span>
+        <div class="avatar" id="topAvatar">?</div>
+      </div>
 
     </div>
+
+  </header>
+
+
+  <main class="layout">
+
+    <nav class="nav">
+
+      <button class="nav-btn active" data-section="tasks">
+        Задания
+      </button>
+
+      <button class="nav-btn" data-section="statistics">
+        Статистика
+      </button>
+
+      <button class="nav-btn" data-section="errors">
+        Ошибки
+      </button>
+
+      <button class="nav-btn" data-section="profile">
+        Профиль
+      </button>
+
+    </nav>
+
+
+    <!-- =========================
+         TASKS SECTION
+    ========================= -->
+
+    <section id="section-tasks">
+
+      <div class="section-title">
+        <h2>Задания</h2>
+        <p>Выбирай задание и отмечай результат каждой попытки.</p>
+      </div>
+
+      <div class="task-toolbar">
+
+        <div class="search-wrap">
+
+          <span class="search-icon">⌕</span>
+
+          <input
+            id="taskSearch"
+            type="search"
+            placeholder="Поиск задания по коду, например 42BF66"
+            autocomplete="off"
+          >
+
+        </div>
+
+        <button
+          id="clearSearch"
+          class="secondary-btn"
+          type="button"
+        >
+          Сбросить
+        </button>
+
+      </div>
+
+      <div id="tasksContainer"></div>
+
+    </section>
+
+
+    <!-- =========================
+         STATISTICS
+    ========================= -->
+
+    <section id="section-statistics" class="hidden">
+
+      <div class="section-title">
+        <h2>Статистика</h2>
+        <p>Твой прогресс по всем выполненным попыткам.</p>
+      </div>
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">Всего попыток</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Верных</div>
+          <div class="stat-value" id="statCorrect">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Ошибок</div>
+          <div class="stat-value" id="statWrong">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Точность</div>
+          <div class="stat-value" id="statAccuracy">0%</div>
+        </div>
+
+      </div>
+
+
+      <div class="chart-card">
+
+        <div class="chart-header">
+
+          <h3>Динамика выполнения</h3>
+
+          <div class="legend">
+
+            <div class="legend-item">
+              <span
+                class="legend-dot"
+                style="background:#55bf7d"
+              ></span>
+              Верные
+            </div>
+
+            <div class="legend-item">
+              <span
+                class="legend-dot"
+                style="background:#ef7187"
+              ></span>
+              Ошибки
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="chart-scroll">
+          <svg
+            id="progressChart"
+            viewBox="0 0 900 300"
+            preserveAspectRatio="none"
+          ></svg>
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary-btn"
+        id="printReportBtn"
+        style="max-width:260px"
+      >
+        Сформировать PDF-отчёт
+      </button>
+
+    </section>
+
+
+    <!-- =========================
+         ERRORS
+    ========================= -->
+
+    <section id="section-errors" class="hidden">
+
+      <div class="section-title">
+        <h2>Ошибки</h2>
+        <p>Все неправильные попытки сохраняются отдельно.</p>
+      </div>
+
+      <div id="errorsContainer"></div>
+
+    </section>
+
+
+    <!-- =========================
+         PROFILE
+    ========================= -->
+
+    <section id="section-profile" class="hidden">
+
+      <div class="section-title">
+        <h2>Профиль</h2>
+        <p>Настройки аккаунта.</p>
+      </div>
+
+      <div class="profile-card">
+
+        <div class="profile-head">
+
+          <div class="profile-avatar" id="profileAvatar">
+            ?
+          </div>
+
+          <div>
+            <strong id="profileNickname"></strong>
+            <div
+              class="profile-email"
+              id="profileEmail"
+            ></div>
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label>Никнейм</label>
+
+          <input
+            id="profileNicknameInput"
+            type="text"
+          >
+
+        </div>
+
+        <button
+          class="primary-btn"
+          id="saveProfileBtn"
+        >
+          Сохранить никнейм
+        </button>
+
+        <button
+          class="secondary-btn"
+          id="changePasswordBtn"
+          style="width:100%;margin-top:12px"
+        >
+          Изменить пароль
+        </button>
+
+        <button
+          class="danger-btn"
+          id="logoutBtn"
+          style="width:100%;margin-top:12px"
+        >
+          Выйти из аккаунта
+        </button>
+
+        <div
+          id="profileMessage"
+          class="message"
+        ></div>
+
+      </div>
+
+    </section>
+
+  </main>
 
 </div>
 
 
-<!-- TASK MODAL -->
+<!-- =========================
+     TASK MODAL
+========================= -->
 
-<div id="taskModal" class="modal hidden">
+<div
+  id="taskModal"
+  class="modal-overlay hidden"
+>
 
-    <div class="modal-box">
+  <div class="modal">
 
-        <div class="modal-head">
+    <div class="modal-head">
 
-            <div>
-                <h2 class="modal-title" id="modalTitle">Задание</h2>
-                <div id="modalCode" style="color:var(--muted);font-size:13px;margin-top:5px;"></div>
-            </div>
+      <div>
+        <h3 id="modalTaskTitle">
+          Задание
+        </h3>
 
-            <button class="close-btn" onclick="closeTaskModal()">✕</button>
+        <div
+          id="modalTaskCode"
+          style="color:#777386"
+        ></div>
+      </div>
 
-        </div>
-
-        <div style="
-            background:#f8f5ff;
-            border-radius:15px;
-            padding:16px;
-            color:#655d70;
-            line-height:1.5;
-        ">
-            Отметь результат выполнения этого задания.
-        </div>
-
-        <div class="result-buttons">
-
-            <button class="correct-btn" onclick="markTask('correct')">
-                ✓ Правильно
-            </button>
-
-            <button class="wrong-btn" onclick="showWrongReason()">
-                ✕ Ошибка
-            </button>
-
-        </div>
-
-        <div id="wrongReasonBlock" class="hidden">
-
-            <div class="field">
-                <label>Почему произошла ошибка?</label>
-
-                <textarea
-                    id="wrongReason"
-                    rows="4"
-                    placeholder="Например: не знала слово, перепутала грамматику..."
-                ></textarea>
-            </div>
-
-            <button class="primary-btn" onclick="markTask('wrong')">
-                Сохранить ошибку
-            </button>
-
-        </div>
-
-        <h3 class="history-title">История попыток</h3>
-
-        <div id="taskHistory"></div>
+      <button
+        class="close-btn"
+        id="closeModal"
+      >
+        ×
+      </button>
 
     </div>
 
+
+    <div
+      style="
+        background:#f6f4fb;
+        border-radius:14px;
+        padding:14px;
+        color:#666171;
+        line-height:1.5;
+      "
+    >
+      После выполнения задания отметь результат своей попытки.
+    </div>
+
+
+    <div class="attempt-buttons">
+
+      <button
+        class="correct-btn"
+        id="markCorrectBtn"
+      >
+        ✓ Выполнено верно
+      </button>
+
+      <button
+        class="wrong-btn"
+        id="markWrongBtn"
+      >
+        ✕ Выполнено с ошибкой
+      </button>
+
+    </div>
+
+
+    <div
+      id="reasonBlock"
+      class="hidden"
+    >
+
+      <div class="field">
+
+        <label>
+          Причина ошибки
+        </label>
+
+        <textarea
+          id="wrongReason"
+          rows="4"
+          placeholder="Например: перепутала время, не знала слово..."
+        ></textarea>
+
+      </div>
+
+      <button
+        class="wrong-btn"
+        id="saveWrongBtn"
+        style="width:100%"
+      >
+        Сохранить ошибку
+      </button>
+
+    </div>
+
+
+    <h4 class="history-title">
+      История попыток
+    </h4>
+
+    <div id="taskHistory"></div>
+
+  </div>
+
 </div>
+
+
+<!-- =========================
+     PRINT REPORT
+========================= -->
+
+<div id="printReport">
+
+  <div class="print-title">
+    OGE English Tracker
+  </div>
+
+  <div class="print-date" id="printDate"></div>
+
+  <div>
+    Ученик:
+    <strong id="printNickname"></strong>
+  </div>
+
+  <div class="print-stats">
+
+    <div class="print-stat">
+      Всего попыток
+      <strong id="printTotal">0</strong>
+    </div>
+
+    <div class="print-stat">
+      Верно
+      <strong id="printCorrect">0</strong>
+    </div>
+
+    <div class="print-stat">
+      Ошибки
+      <strong id="printWrong">0</strong>
+    </div>
+
+    <div class="print-stat">
+      Точность
+      <strong id="printAccuracy">0%</strong>
+    </div>
+
+  </div>
+
+
+  <div class="print-section">
+
+    <h2>Ошибки</h2>
+
+    <div id="printErrors"></div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     TASKS DATA
+========================= -->
+
+<script src="./data/tasks.js"></script>
 
 
 <script>
 
-const SUPABASE_URL = "https://rbffkodkjrmvltnlqzkn.supabase.co";
+  /* ==========================================================
+     SUPABASE
+  ========================================================== */
 
-const SUPABASE_KEY =
+  const SUPABASE_URL =
+    "https://rbffkodkjrmvltnlqzkn.supabase.co";
+
+  const SUPABASE_KEY =
     "sb_publishable_eWs_hrCxb67vREWJPn6C5A_Ex3gxZ3A";
 
-const REDIRECT =
+  const REDIRECT =
     "https://darianovet.github.io/oge-english-tracker/";
 
-const sb = window.supabase.createClient(
+  const sb = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY,
     {
-        auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true
-        }
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
     }
-);
+  );
 
 
-let currentUser = null;
-let currentProfile = null;
-let attempts = [];
-let currentTask = null;
+  /* ==========================================================
+     TASKS
+  ========================================================== */
 
+  function getTasks() {
 
-/* =========================
-   TASKS
-========================= */
+    if (
+      typeof TASKS !== "undefined" &&
+      Array.isArray(TASKS)
+    ) {
+      return TASKS;
+    }
 
-function getTasks() {
-
-    if (typeof TASKS !== "undefined" && Array.isArray(TASKS)) {
-        return TASKS;
+    if (
+      Array.isArray(window.TASKS)
+    ) {
+      return window.TASKS;
     }
 
     return [];
-}
+  }
 
 
-function taskId(task) {
-    return String(task.id);
-}
+  function taskId(task) {
+    return String(
+      task.id ??
+      task.taskId ??
+      task.code ??
+      ""
+    );
+  }
 
 
-function taskNumber(task) {
-    return Number(task.number);
-}
+  function taskNumber(task) {
+    return (
+      task.number ??
+      task.task ??
+      task.taskNumber ??
+      task.task_number ??
+      ""
+    );
+  }
 
 
-function taskVariant(task) {
-    return Number(task.variant);
-}
+  function taskVariant(task) {
+    return (
+      task.variant ??
+      task.variantNumber ??
+      task.variant_number ??
+      ""
+    );
+  }
 
 
-function taskCode(task) {
-    return String(task.code || "");
-}
+  function taskCode(task) {
+    return String(
+      task.code ??
+      taskId(task)
+    );
+  }
 
 
-function renderTasks() {
+  /* ==========================================================
+     STATE
+  ========================================================== */
 
-    const container = document.getElementById("tasksContainer");
+  let currentUser = null;
+  let currentProfile = null;
 
-    const tasks = getTasks();
+  let progressRows = [];
+  let historyRows = [];
 
-    if (!tasks.length) {
+  let progressMap = {};
 
-        container.innerHTML = `
-            <div class="task-group">
-                <div style="color:#8b8499;">
-                    Задания пока не загружены.
-                </div>
-            </div>
-        `;
+  let selectedTask = null;
 
-        return;
+  let searchValue = "";
+
+
+  /* ==========================================================
+     ELEMENTS
+  ========================================================== */
+
+  const authScreen =
+    document.getElementById("authScreen");
+
+  const appScreen =
+    document.getElementById("appScreen");
+
+  const authMessage =
+    document.getElementById("authMessage");
+
+
+  /* ==========================================================
+     MESSAGE
+  ========================================================== */
+
+  function showMessage(
+    element,
+    text,
+    type = "success"
+  ) {
+
+    element.textContent = text;
+
+    element.className =
+      "message show " + type;
+
+  }
+
+
+  function hideMessage(element) {
+
+    element.className = "message";
+
+    element.textContent = "";
+
+  }
+
+
+  /* ==========================================================
+     AUTH TABS
+  ========================================================== */
+
+  const loginTab =
+    document.getElementById("loginTab");
+
+  const registerTab =
+    document.getElementById("registerTab");
+
+  const loginForm =
+    document.getElementById("loginForm");
+
+  const registerForm =
+    document.getElementById("registerForm");
+
+
+  loginTab.addEventListener(
+    "click",
+    () => {
+
+      loginTab.classList.add("active");
+      registerTab.classList.remove("active");
+
+      loginForm.classList.remove("hidden");
+      registerForm.classList.add("hidden");
+
+      hideMessage(authMessage);
+
     }
-
-    const groups = [
-        {
-            title: "Задания 1–5",
-            from: 1,
-            to: 5
-        },
-        {
-            title: "Задания 6–11",
-            from: 6,
-            to: 11
-        },
-        {
-            title: "Задание 12",
-            from: 12,
-            to: 12
-        },
-        {
-            title: "Задания 13–19",
-            from: 13,
-            to: 19
-        }
-    ];
-
-    let html = "";
-
-    groups.forEach(group => {
-
-        const variants = [...new Set(
-            tasks
-                .filter(t =>
-                    taskNumber(t) >= group.from &&
-                    taskNumber(t) <= group.to
-                )
-                .map(taskVariant)
-        )].sort((a, b) => a - b);
-
-        html += `
-            <div class="task-group">
-
-                <div class="task-group-title">
-                    ${group.title}
-                </div>
-        `;
-
-        variants.forEach(variant => {
-
-            const variantTasks = tasks
-                .filter(t =>
-                    taskVariant(t) === variant &&
-                    taskNumber(t) >= group.from &&
-                    taskNumber(t) <= group.to
-                )
-                .sort((a, b) =>
-                    taskNumber(a) - taskNumber(b)
-                );
-
-            html += `
-                <div class="variant-block">
-
-                    <div class="variant-title">
-                        Вариант ${variant}
-                    </div>
-
-                    <div class="task-grid">
-            `;
-
-            variantTasks.forEach(task => {
-
-                const id = taskId(task);
-
-                const history = attempts.filter(
-                    a => a.task_id === id
-                );
-
-                let status = "";
-
-                if (history.length) {
-
-                    const last =
-                        [...history]
-                            .sort((a, b) =>
-                                new Date(b.created_at) -
-                                new Date(a.created_at)
-                            )[0];
-
-                    status = last.result === "correct"
-                        ? "status-correct"
-                        : "status-wrong";
-                }
-
-                html += `
-                    <button
-                        class="task-card"
-                        onclick="openTask('${escapeAttr(id)}')"
-                    >
-
-                        <div class="task-number">
-                            №${taskNumber(task)}
-                        </div>
-
-                        <div class="task-code">
-                            ${taskCode(task)}
-                        </div>
-
-                        ${
-                            status
-                            ? `<div class="task-status ${status}"></div>`
-                            : ""
-                        }
-
-                    </button>
-                `;
-            });
-
-            html += `
-                    </div>
-                </div>
-            `;
-        });
-
-        html += `
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
-}
+  );
 
 
-function escapeAttr(value) {
+  registerTab.addEventListener(
+    "click",
+    () => {
 
-    return String(value)
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'");
-}
+      registerTab.classList.add("active");
+      loginTab.classList.remove("active");
 
+      registerForm.classList.remove("hidden");
+      loginForm.classList.add("hidden");
 
-/* =========================
-   AUTH SCREENS
-========================= */
+      hideMessage(authMessage);
 
-function hideAuthForms() {
-
-    document.getElementById("loginForm").classList.add("hidden");
-    document.getElementById("registerForm").classList.add("hidden");
-    document.getElementById("forgotForm").classList.add("hidden");
-    document.getElementById("resetForm").classList.add("hidden");
-}
+    }
+  );
 
 
-function showLogin() {
+  /* ==========================================================
+     REGISTER
+  ========================================================== */
 
-    hideAuthForms();
+  registerForm.addEventListener(
+    "submit",
+    async event => {
 
-    document
-        .getElementById("loginForm")
-        .classList.remove("hidden");
-}
+      event.preventDefault();
 
+      hideMessage(authMessage);
 
-function showRegister() {
+      const nickname =
+        document
+          .getElementById("registerNickname")
+          .value
+          .trim();
 
-    hideAuthForms();
+      const email =
+        document
+          .getElementById("registerEmail")
+          .value
+          .trim();
 
-    document
-        .getElementById("registerForm")
-        .classList.remove("hidden");
-}
+      const password =
+        document
+          .getElementById("registerPassword")
+          .value;
 
-
-function showForgot() {
-
-    hideAuthForms();
-
-    document
-        .getElementById("forgotForm")
-        .classList.remove("hidden");
-}
-
-
-function showReset() {
-
-    hideAuthForms();
-
-    document
-        .getElementById("resetForm")
-        .classList.remove("hidden");
-}
+      const password2 =
+        document
+          .getElementById("registerPassword2")
+          .value;
 
 
-function setMessage(id, text, error = false) {
+      if (password !== password2) {
 
-    const el = document.getElementById(id);
-
-    el.innerHTML = `
-        <div
-            class="message"
-            style="
-                ${
-                    error
-                    ? "background:#fff0f2;color:#d45262;"
-                    : ""
-                }
-            "
-        >
-            ${escapeHtml(text)}
-        </div>
-    `;
-}
-
-
-/* =========================
-   REGISTER
-========================= */
-
-async function register() {
-
-    const nickname =
-        document.getElementById("registerNickname")
-            .value.trim();
-
-    const email =
-        document.getElementById("registerEmail")
-            .value.trim();
-
-    const password =
-        document.getElementById("registerPassword")
-            .value;
-
-    const password2 =
-        document.getElementById("registerPassword2")
-            .value;
-
-    if (!nickname || !email || !password || !password2) {
-
-        setMessage(
-            "registerMessage",
-            "Заполни все поля.",
-            true
+        showMessage(
+          authMessage,
+          "Пароли не совпадают.",
+          "error"
         );
 
         return;
-    }
+      }
 
-    if (password.length < 6) {
 
-        setMessage(
-            "registerMessage",
-            "Пароль должен содержать минимум 6 символов.",
-            true
+      if (password.length < 6) {
+
+        showMessage(
+          authMessage,
+          "Пароль должен содержать минимум 6 символов.",
+          "error"
         );
 
         return;
-    }
+      }
 
-    if (password !== password2) {
 
-        setMessage(
-            "registerMessage",
-            "Пароли не совпадают.",
-            true
-        );
-
-        return;
-    }
-
-    const {
+      const {
         data,
         error
-    } = await sb.auth.signUp({
+      } = await sb.auth.signUp({
+
         email,
+
         password,
+
         options: {
-            data: {
-                username: nickname
-            },
-            emailRedirectTo: REDIRECT
+          data: {
+            username: nickname
+          },
+
+          emailRedirectTo: REDIRECT
         }
-    });
 
-    if (error) {
+      });
 
-        setMessage(
-            "registerMessage",
-            error.message,
-            true
+
+      if (error) {
+
+        showMessage(
+          authMessage,
+          error.message,
+          "error"
         );
 
         return;
-    }
+      }
 
-    if (data.user) {
+
+      if (data.user) {
 
         currentUser = data.user;
 
         await ensureProfile(nickname);
 
-        setMessage(
-            "registerMessage",
-            "Аккаунт создан."
+        showMessage(
+          authMessage,
+          "Аккаунт создан. Выполняем вход...",
+          "success"
         );
 
-        if (data.session) {
-
-            await startApp();
-
-        } else {
-
-            setMessage(
-                "registerMessage",
-                "Аккаунт создан. Проверь email для входа."
-            );
-        }
-    }
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-async function login() {
-
-    const email =
-        document.getElementById("loginEmail")
-            .value.trim();
-
-    const password =
-        document.getElementById("loginPassword")
-            .value;
-
-    if (!email || !password) {
-
-        setMessage(
-            "authMessage",
-            "Введите email и пароль.",
-            true
+        setTimeout(
+          () => openApp(),
+          500
         );
 
-        return;
-    }
+      }
 
-    const {
+    }
+  );
+
+
+  /* ==========================================================
+     LOGIN
+  ========================================================== */
+
+  loginForm.addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+      hideMessage(authMessage);
+
+      const email =
+        document
+          .getElementById("loginEmail")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("loginPassword")
+          .value;
+
+
+      const {
         data,
         error
-    } = await sb.auth.signInWithPassword({
+      } = await sb.auth.signInWithPassword({
+
         email,
         password
-    });
 
-    if (error) {
+      });
 
-        setMessage(
-            "authMessage",
-            error.message,
-            true
+
+      if (error) {
+
+        showMessage(
+          authMessage,
+          error.message,
+          "error"
         );
 
         return;
+      }
+
+
+      currentUser = data.user;
+
+      await ensureProfile();
+
+      openApp();
+
     }
-
-    currentUser = data.user;
-
-    await ensureProfile();
-
-    await startApp();
-}
+  );
 
 
-/* =========================
-   FORGOT PASSWORD
-========================= */
+  /* ==========================================================
+     FORGOT PASSWORD
+  ========================================================== */
 
-async function forgotPassword() {
+  document
+    .getElementById("forgotPassword")
+    .addEventListener(
+      "click",
+      async () => {
 
-    const email =
-        document.getElementById("forgotEmail")
-            .value.trim();
+        const email =
+          document
+            .getElementById("loginEmail")
+            .value
+            .trim();
 
-    if (!email) {
 
-        setMessage(
-            "forgotMessage",
-            "Введите email.",
-            true
-        );
+        if (!email) {
 
-        return;
-    }
+          showMessage(
+            authMessage,
+            "Сначала введи свой email.",
+            "error"
+          );
 
-    const {
-        error
-    } = await sb.auth.resetPasswordForEmail(
-        email,
-        {
-            redirectTo: REDIRECT
+          return;
         }
-    );
 
-    if (error) {
 
-        setMessage(
-            "forgotMessage",
+        const {
+          error
+        } = await sb.auth.resetPasswordForEmail(
+          email,
+          {
+            redirectTo: REDIRECT
+          }
+        );
+
+
+        if (error) {
+
+          showMessage(
+            authMessage,
             error.message,
-            true
+            "error"
+          );
+
+          return;
+        }
+
+
+        showMessage(
+          authMessage,
+          "Ссылка для восстановления пароля отправлена на email.",
+          "success"
         );
 
-        return;
-    }
-
-    setMessage(
-        "forgotMessage",
-        "Ссылка для восстановления отправлена на email."
+      }
     );
-}
 
 
-/* =========================
-   UPDATE PASSWORD
-========================= */
+  /* ==========================================================
+     PROFILE
+  ========================================================== */
 
-async function updatePassword() {
+  async function ensureProfile(
+    nickname = null
+  ) {
 
-    const password =
-        document.getElementById("newPassword")
-            .value;
-
-    const password2 =
-        document.getElementById("newPassword2")
-            .value;
-
-    if (password.length < 6) {
-
-        setMessage(
-            "resetMessage",
-            "Пароль должен содержать минимум 6 символов.",
-            true
-        );
-
-        return;
+    if (!currentUser) {
+      return;
     }
 
-    if (password !== password2) {
-
-        setMessage(
-            "resetMessage",
-            "Пароли не совпадают.",
-            true
-        );
-
-        return;
-    }
 
     const {
-        error
-    } = await sb.auth.updateUser({
-        password
-    });
-
-    if (error) {
-
-        setMessage(
-            "resetMessage",
-            error.message,
-            true
-        );
-
-        return;
-    }
-
-    setMessage(
-        "resetMessage",
-        "Пароль успешно изменён."
-    );
-
-    setTimeout(() => {
-        showLogin();
-    }, 1200);
-}
-
-
-/* =========================
-   PROFILE
-========================= */
-
-async function ensureProfile(nickname = "") {
-
-    if (!currentUser) return;
-
-    const {
-        data
+      data,
+      error
     } = await sb
-        .from("profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .maybeSingle();
+      .from("profiles")
+      .select("*")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+
+    if (error) {
+      return;
+    }
+
 
     if (data) {
 
-        currentProfile = data;
+      currentProfile = data;
 
-        return;
+      return;
     }
 
-    const name =
-        nickname ||
-        currentUser.user_metadata?.username ||
-        currentUser.email?.split("@")[0] ||
-        "Пользователь";
+
+    const newNickname =
+      nickname ||
+      currentUser.user_metadata?.username ||
+      currentUser.email?.split("@")[0] ||
+      "Пользователь";
+
 
     const {
-        data: profile
+      data: created
     } = await sb
-        .from("profiles")
-        .insert({
-            id: currentUser.id,
-            nickname: name
-        })
-        .select()
-        .single();
+      .from("profiles")
+      .insert({
 
-    currentProfile = profile;
-}
+        id: currentUser.id,
+
+        nickname: newNickname
+
+      })
+      .select()
+      .single();
 
 
-async function saveProfile() {
-
-    const nickname =
-        document.getElementById("profileNickname")
-            .value.trim();
-
-    if (!nickname) return;
-
-    const {
-        data,
-        error
-    } = await sb
-        .from("profiles")
-        .update({
-            nickname
-        })
-        .eq("id", currentUser.id)
-        .select()
-        .single();
-
-    if (error) {
-
-        alert(error.message);
-
-        return;
+    if (created) {
+      currentProfile = created;
     }
 
-    currentProfile = data;
-
-    updateProfileUI();
-}
+  }
 
 
-function updateProfileUI() {
+  async function loadProfile() {
 
-    const nickname =
-        currentProfile?.nickname ||
-        currentUser?.email?.split("@")[0] ||
-        "Пользователь";
-
-    document.getElementById("topNickname")
-        .textContent = nickname;
-
-    document.getElementById("topAvatar")
-        .textContent = nickname.charAt(0).toUpperCase();
-
-    document.getElementById("profileAvatar")
-        .textContent = nickname.charAt(0).toUpperCase();
-
-    document.getElementById("profileNickname")
-        .value = nickname;
-
-    document.getElementById("profileEmail")
-        .value = currentUser.email || "";
-}
+    if (!currentUser) {
+      return;
+    }
 
 
-/* =========================
-   START APP
-========================= */
+    const {
+      data
+    } = await sb
+      .from("profiles")
+      .select("*")
+      .eq("id", currentUser.id)
+      .maybeSingle();
 
-async function startApp() {
 
-    document
-        .getElementById("authScreen")
-        .classList.add("hidden");
+    if (data) {
+      currentProfile = data;
+    }
 
-    document
-        .getElementById("app")
-        .classList.remove("hidden");
+  }
 
-    updateProfileUI();
 
-    await loadAttempts();
+  /* ==========================================================
+     LOAD CLOUD DATA
+  ========================================================== */
+
+  async function loadCloudData() {
+
+    if (!currentUser) {
+      return;
+    }
+
+
+    const {
+      data: progress
+    } = await sb
+      .from("progress")
+      .select("*")
+      .eq("user_id", currentUser.id);
+
+
+    const {
+      data: history
+    } = await sb
+      .from("attempt_history")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .order("created_at", {
+        ascending: true
+      });
+
+
+    progressRows = progress || [];
+
+    historyRows = history || [];
+
+
+    progressMap = {};
+
+
+    progressRows.forEach(row => {
+
+      progressMap[row.task_id] =
+        row.status;
+
+    });
+
 
     renderTasks();
-
-    updateStats();
-
+    renderStatistics();
     renderErrors();
-}
+    renderProfile();
+
+  }
 
 
-/* =========================
-   LOAD ATTEMPTS
-========================= */
+  /* ==========================================================
+     SAVE ATTEMPT
+  ========================================================== */
 
-async function loadAttempts() {
+  async function saveAttempt(
+    task,
+    result,
+    reason = null
+  ) {
 
-    if (!currentUser) return;
+    if (!currentUser) {
+      return false;
+    }
+
+
+    const id = taskId(task);
+
 
     const {
-        data,
-        error
+      error: historyError
     } = await sb
-        .from("attempt_history")
-        .select("*")
-        .eq("user_id", currentUser.id)
-        .order("created_at", {
-            ascending: false
-        });
+      .from("attempt_history")
+      .insert({
 
-    if (error) {
+        user_id: currentUser.id,
 
-        console.error(error);
+        task_id: id,
 
-        attempts = [];
+        result: result,
 
-        return;
+        reason:
+          result === "wrong"
+            ? reason
+            : null
+
+      });
+
+
+    if (historyError) {
+
+      alert(historyError.message);
+
+      return false;
     }
 
-    attempts = data || [];
-}
+
+    const {
+      error: progressError
+    } = await sb
+      .from("progress")
+      .upsert(
+        {
+
+          user_id: currentUser.id,
+
+          task_id: id,
+
+          status: result,
+
+          updated_at: new Date().toISOString()
+
+        },
+        {
+          onConflict:
+            "user_id,task_id"
+        }
+      );
 
 
-/* =========================
-   TASK MODAL
-========================= */
+    if (progressError) {
 
-function openTask(id) {
+      alert(progressError.message);
 
-    const task =
-        getTasks().find(
-            t => taskId(t) === String(id)
-        );
-
-    if (!task) return;
-
-    currentTask = task;
-
-    document
-        .getElementById("taskModal")
-        .classList.remove("hidden");
-
-    document
-        .getElementById("modalTitle")
-        .textContent =
-            `Вариант ${taskVariant(task)} · Задание ${taskNumber(task)}`;
-
-    document
-        .getElementById("modalCode")
-        .textContent =
-            `Код: ${taskCode(task)}`;
-
-    document
-        .getElementById("wrongReasonBlock")
-        .classList.add("hidden");
-
-    document
-        .getElementById("wrongReason")
-        .value = "";
-
-    renderTaskHistory();
-}
+      return false;
+    }
 
 
-function closeTaskModal() {
+    await loadCloudData();
 
-    document
-        .getElementById("taskModal")
-        .classList.add("hidden");
+    return true;
 
-    currentTask = null;
-}
+  }
 
 
-function showWrongReason() {
+  /* ==========================================================
+     RENDER TASKS
+  ========================================================== */
 
-    document
-        .getElementById("wrongReasonBlock")
-        .classList.remove("hidden");
-
-    document
-        .getElementById("wrongReason")
-        .focus();
-}
-
-
-function renderTaskHistory() {
+  function renderTasks() {
 
     const container =
-        document.getElementById("taskHistory");
+      document.getElementById(
+        "tasksContainer"
+      );
 
-    if (!currentTask) return;
 
-    const id = taskId(currentTask);
+    const tasks = getTasks();
 
-    const history =
-        attempts
-            .filter(a => a.task_id === id)
-            .sort(
-                (a, b) =>
-                    new Date(b.created_at) -
-                    new Date(a.created_at)
-            );
 
-    if (!history.length) {
+    if (!tasks.length) {
 
-        container.innerHTML = `
-            <div style="color:var(--muted);font-size:13px;">
-                Попыток пока нет.
-            </div>
-        `;
+      container.innerHTML = `
+        <div class="empty-state">
+          Задания пока не загружены.
+        </div>
+      `;
 
-        return;
+      return;
     }
 
-    container.innerHTML =
-        history.map(item => {
 
-            const date =
-                new Date(item.created_at)
-                    .toLocaleString("ru-RU");
+    const filtered =
+      tasks.filter(task => {
 
-            const isCorrect =
-                item.result === "correct";
+        if (!searchValue) {
+          return true;
+        }
 
-            return `
-                <div class="history-item ${isCorrect ? "correct" : "wrong"}">
+        return taskCode(task)
+          .toUpperCase()
+          .includes(
+            searchValue.toUpperCase()
+          );
 
-                    <div class="history-result">
-                        ${
-                            isCorrect
-                            ? "✓ Правильно"
-                            : "✕ Ошибка"
-                        }
-                    </div>
-
-                    ${
-                        !isCorrect && item.reason
-                        ? `
-                            <div style="margin-bottom:5px;">
-                                ${escapeHtml(item.reason)}
-                            </div>
-                        `
-                        : ""
-                    }
-
-                    <div class="history-date">
-                        ${date}
-                    </div>
-
-                </div>
-            `;
-
-        }).join("");
-}
+      });
 
 
-/* =========================
-   SAVE ATTEMPT
-========================= */
+    if (!filtered.length) {
 
-async function markTask(result) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <strong>Задания не найдены</strong>
+          <br>
+          <span>
+            Проверь код задания.
+          </span>
+        </div>
+      `;
 
-    if (!currentTask || !currentUser) return;
+      return;
+    }
 
-    let reason = null;
 
-    if (result === "wrong") {
+    const variants = [...new Set(
+      filtered.map(task => taskVariant(task))
+    )];
 
-        reason =
-            document.getElementById("wrongReason")
-                .value.trim();
+
+    variants.sort(
+      (a, b) => Number(a) - Number(b)
+    );
+
+
+    let html = "";
+
+
+    variants.forEach(variant => {
+
+      const variantTasks =
+        filtered.filter(
+          task =>
+            String(taskVariant(task)) ===
+            String(variant)
+        );
+
+
+      html += `
+        <div class="variant-block">
+
+          <div class="variant-title">
+
+            <h3>
+              Вариант ${variant}
+            </h3>
+
+            <span class="variant-count">
+              ${variantTasks.length} заданий
+            </span>
+
+          </div>
+
+          <div class="tasks-grid">
+      `;
+
+
+      variantTasks.forEach(task => {
+
+        const id =
+          taskId(task);
+
+        const status =
+          progressMap[id] || "";
+
+
+        const statusText =
+          status === "correct"
+            ? "✓ Последняя попытка — верно"
+            : status === "wrong"
+              ? "✕ Последняя попытка — ошибка"
+              : "○ Ещё не выполнено";
+
+
+        const statusClass =
+          status === "correct"
+            ? "correct"
+            : status === "wrong"
+              ? "wrong"
+              : "";
+
+
+        html += `
+          <div
+            class="task-card ${statusClass}"
+            data-task-id="${escapeHtml(id)}"
+          >
+
+            <div class="task-number">
+              Задание ${escapeHtml(
+                String(taskNumber(task))
+              )}
+            </div>
+
+            <div class="task-code">
+              ${escapeHtml(taskCode(task))}
+            </div>
+
+            <div class="task-status">
+              ${statusText}
+            </div>
+
+          </div>
+        `;
+
+      });
+
+
+      html += `
+          </div>
+        </div>
+      `;
+
+    });
+
+
+    container.innerHTML = html;
+
+
+    container
+      .querySelectorAll(".task-card")
+      .forEach(card => {
+
+        card.addEventListener(
+          "click",
+          () => {
+
+            const task =
+              tasks.find(
+                item =>
+                  taskId(item) ===
+                  card.dataset.taskId
+              );
+
+
+            if (task) {
+              openTaskModal(task);
+            }
+
+          }
+        );
+
+      });
+
+  }
+
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  /* ==========================================================
+     SEARCH
+  ========================================================== */
+
+  document
+    .getElementById("taskSearch")
+    .addEventListener(
+      "input",
+      event => {
+
+        searchValue =
+          event.target.value
+            .trim()
+            .toUpperCase();
+
+        renderTasks();
+
+      }
+    );
+
+
+  document
+    .getElementById("clearSearch")
+    .addEventListener(
+      "click",
+      () => {
+
+        searchValue = "";
+
+        document
+          .getElementById("taskSearch")
+          .value = "";
+
+        renderTasks();
+
+        document
+          .getElementById("taskSearch")
+          .focus();
+
+      }
+    );
+
+
+  /* ==========================================================
+     TASK MODAL
+  ========================================================== */
+
+  const taskModal =
+    document.getElementById("taskModal");
+
+
+  function openTaskModal(task) {
+
+    selectedTask = task;
+
+
+    document
+      .getElementById("modalTaskTitle")
+      .textContent =
+        `Задание ${taskNumber(task)}`;
+
+
+    document
+      .getElementById("modalTaskCode")
+      .textContent =
+        `Код: ${taskCode(task)}`;
+
+
+    document
+      .getElementById("reasonBlock")
+      .classList.add("hidden");
+
+
+    document
+      .getElementById("wrongReason")
+      .value = "";
+
+
+    renderTaskHistory();
+
+
+    taskModal.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  function closeTaskModal() {
+
+    selectedTask = null;
+
+    taskModal.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  document
+    .getElementById("closeModal")
+    .addEventListener(
+      "click",
+      closeTaskModal
+    );
+
+
+  taskModal.addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target === taskModal
+      ) {
+        closeTaskModal();
+      }
+
+    }
+  );
+
+
+  /* ==========================================================
+     CORRECT
+  ========================================================== */
+
+  document
+    .getElementById("markCorrectBtn")
+    .addEventListener(
+      "click",
+      async () => {
+
+        if (!selectedTask) {
+          return;
+        }
+
+
+        const success =
+          await saveAttempt(
+            selectedTask,
+            "correct"
+          );
+
+
+        if (success) {
+          renderTaskHistory();
+        }
+
+      }
+    );
+
+
+  /* ==========================================================
+     WRONG
+  ========================================================== */
+
+  document
+    .getElementById("markWrongBtn")
+    .addEventListener(
+      "click",
+      () => {
+
+        document
+          .getElementById("reasonBlock")
+          .classList.remove("hidden");
+
+
+        document
+          .getElementById("wrongReason")
+          .focus();
+
+      }
+    );
+
+
+  document
+    .getElementById("saveWrongBtn")
+    .addEventListener(
+      "click",
+      async () => {
+
+        if (!selectedTask) {
+          return;
+        }
+
+
+        const reason =
+          document
+            .getElementById("wrongReason")
+            .value
+            .trim();
+
 
         if (!reason) {
 
-            alert("Напиши причину ошибки.");
+          alert(
+            "Напиши причину ошибки."
+          );
 
-            return;
+          return;
         }
-    }
 
-    const id = taskId(currentTask);
 
-    const {
-        data,
-        error
-    } = await sb
-        .from("attempt_history")
-        .insert({
-            user_id: currentUser.id,
-            task_id: id,
-            result,
+        const success =
+          await saveAttempt(
+            selectedTask,
+            "wrong",
             reason
-        })
-        .select()
-        .single();
-
-    if (error) {
-
-        alert(error.message);
-
-        return;
-    }
-
-    attempts.unshift(data);
-
-    await sb
-        .from("progress")
-        .upsert(
-            {
-                user_id: currentUser.id,
-                task_id: id,
-                status: result,
-                updated_at: new Date().toISOString()
-            },
-            {
-                onConflict: "user_id,task_id"
-            }
-        );
-
-    renderTaskHistory();
-
-    renderTasks();
-
-    updateStats();
-
-    renderErrors();
-
-    document
-        .getElementById("wrongReasonBlock")
-        .classList.add("hidden");
-
-    document
-        .getElementById("wrongReason")
-        .value = "";
-}
+          );
 
 
-/* =========================
-   STATISTICS
-========================= */
+        if (success) {
 
-function updateStats() {
+          document
+            .getElementById("reasonBlock")
+            .classList.add("hidden");
 
-    const total = attempts.length;
+          document
+            .getElementById("wrongReason")
+            .value = "";
 
-    const correct =
-        attempts.filter(
-            a => a.result === "correct"
-        ).length;
+          renderTaskHistory();
 
-    const wrong =
-        attempts.filter(
-            a => a.result === "wrong"
-        ).length;
+        }
 
-    const accuracy =
-        total
-        ? Math.round((correct / total) * 100)
-        : 0;
-
-    const uniqueTasks =
-        new Set(
-            attempts.map(a => a.task_id)
-        ).size;
-
-    const totalTasks =
-        getTasks().length;
-
-    document.getElementById("accuracyStat")
-        .textContent = `${accuracy}%`;
-
-    document.getElementById("correctStat")
-        .textContent = correct;
-
-    document.getElementById("wrongStat")
-        .textContent = wrong;
-
-    document.getElementById("totalStat")
-        .textContent = total;
-
-    const progress =
-        totalTasks
-        ? Math.round((uniqueTasks / totalTasks) * 100)
-        : 0;
-
-    document.getElementById("progressFill")
-        .style.width = `${progress}%`;
-
-    document.getElementById("progressText")
-        .textContent =
-            `${uniqueTasks} из ${totalTasks} заданий`;
-}
+      }
+    );
 
 
-/* =========================
-   ERRORS
-========================= */
+  /* ==========================================================
+     TASK HISTORY
+  ========================================================== */
 
-function renderErrors() {
+  function renderTaskHistory() {
 
     const container =
-        document.getElementById("errorsContainer");
+      document.getElementById(
+        "taskHistory"
+      );
+
+
+    if (!selectedTask) {
+      return;
+    }
+
+
+    const id =
+      taskId(selectedTask);
+
+
+    const attempts =
+      historyRows
+        .filter(
+          row =>
+            row.task_id === id
+        )
+        .slice()
+        .reverse();
+
+
+    if (!attempts.length) {
+
+      container.innerHTML = `
+        <div class="empty-state">
+          Попыток пока нет.
+        </div>
+      `;
+
+      return;
+    }
+
+
+    container.innerHTML =
+      attempts.map(
+        attempt => {
+
+          const correct =
+            attempt.result === "correct";
+
+
+          const date =
+            formatDate(
+              attempt.created_at
+            );
+
+
+          return `
+            <div
+              class="history-item ${
+                correct
+                  ? "correct"
+                  : "wrong"
+              }"
+            >
+
+              <div class="history-main">
+
+                <span>
+                  ${
+                    correct
+                      ? "✓ Верно"
+                      : "✕ Ошибка"
+                  }
+                </span>
+
+                <span class="history-date">
+                  ${date}
+                </span>
+
+              </div>
+
+              ${
+                !correct && attempt.reason
+                  ? `
+                    <div class="history-reason">
+                      Причина:
+                      ${escapeHtml(
+                        attempt.reason
+                      )}
+                    </div>
+                  `
+                  : ""
+              }
+
+            </div>
+          `;
+
+        }
+      )
+      .join("");
+
+  }
+
+
+  function formatDate(dateString) {
+
+    if (!dateString) {
+      return "";
+    }
+
+
+    return new Date(
+      dateString
+    ).toLocaleString(
+      "ru-RU",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
+
+  }
+
+
+  /* ==========================================================
+     STATISTICS
+  ========================================================== */
+
+  function getStatistics() {
+
+    const total =
+      historyRows.length;
+
+
+    const correct =
+      historyRows.filter(
+        row =>
+          row.result === "correct"
+      ).length;
+
+
+    const wrong =
+      historyRows.filter(
+        row =>
+          row.result === "wrong"
+      ).length;
+
+
+    const accuracy =
+      total
+        ? Math.round(
+            correct / total * 100
+          )
+        : 0;
+
+
+    return {
+      total,
+      correct,
+      wrong,
+      accuracy
+    };
+
+  }
+
+
+  function renderStatistics() {
+
+    const stats =
+      getStatistics();
+
+
+    document
+      .getElementById("statTotal")
+      .textContent =
+        stats.total;
+
+
+    document
+      .getElementById("statCorrect")
+      .textContent =
+        stats.correct;
+
+
+    document
+      .getElementById("statWrong")
+      .textContent =
+        stats.wrong;
+
+
+    document
+      .getElementById("statAccuracy")
+      .textContent =
+        stats.accuracy + "%";
+
+
+    renderProgressChart();
+
+  }
+
+
+  /* ==========================================================
+     LINE CHART
+  ========================================================== */
+
+  function renderProgressChart() {
+
+    const svg =
+      document.getElementById(
+        "progressChart"
+      );
+
+
+    const attempts =
+      historyRows
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(a.created_at) -
+            new Date(b.created_at)
+        );
+
+
+    if (!attempts.length) {
+
+      svg.innerHTML = `
+        <text
+          x="450"
+          y="150"
+          text-anchor="middle"
+          fill="#888"
+          font-size="16"
+        >
+          Выполни первое задание,
+          чтобы увидеть график
+        </text>
+      `;
+
+      return;
+    }
+
+
+    const width = 900;
+    const height = 300;
+
+    const left = 55;
+    const right = 25;
+    const top = 25;
+    const bottom = 45;
+
+
+    const chartWidth =
+      width - left - right;
+
+    const chartHeight =
+      height - top - bottom;
+
+
+    let correctCount = 0;
+    let wrongCount = 0;
+
+
+    const correctPoints = [];
+    const wrongPoints = [];
+
+
+    attempts.forEach(
+      (attempt, index) => {
+
+        if (
+          attempt.result ===
+          "correct"
+        ) {
+          correctCount++;
+        } else {
+          wrongCount++;
+        }
+
+
+        const x =
+          attempts.length === 1
+            ? left + chartWidth / 2
+            : left +
+              index /
+                (attempts.length - 1) *
+                chartWidth;
+
+
+        const maxY =
+          Math.max(
+            correctCount,
+            wrongCount,
+            1
+          );
+
+
+        const yCorrect =
+          top +
+          chartHeight -
+          correctCount /
+            Math.max(
+              Math.max(
+                correctCount,
+                wrongCount
+              ),
+              1
+            ) *
+            chartHeight;
+
+
+        const yWrong =
+          top +
+          chartHeight -
+          wrongCount /
+            Math.max(
+              Math.max(
+                correctCount,
+                wrongCount
+              ),
+              1
+            ) *
+            chartHeight;
+
+
+        correctPoints.push(
+          `${x},${yCorrect}`
+        );
+
+
+        wrongPoints.push(
+          `${x},${yWrong}`
+        );
+
+      }
+    );
+
+
+    const maxValue =
+      Math.max(
+        correctCount,
+        wrongCount,
+        1
+      );
+
+
+    let grid = "";
+
+
+    for (
+      let i = 0;
+      i <= 4;
+      i++
+    ) {
+
+      const y =
+        top +
+        chartHeight -
+        i / 4 *
+        chartHeight;
+
+
+      const value =
+        Math.round(
+          maxValue * i / 4
+        );
+
+
+      grid += `
+        <line
+          x1="${left}"
+          y1="${y}"
+          x2="${width - right}"
+          y2="${y}"
+          stroke="#eceaf1"
+          stroke-width="1"
+        />
+
+        <text
+          x="${left - 10}"
+          y="${y + 4}"
+          text-anchor="end"
+          fill="#8b8795"
+          font-size="11"
+        >
+          ${value}
+        </text>
+      `;
+
+    }
+
+
+    const xAxis = `
+      <line
+        x1="${left}"
+        y1="${top + chartHeight}"
+        x2="${width - right}"
+        y2="${top + chartHeight}"
+        stroke="#dcd9e5"
+      />
+    `;
+
+
+    const correctLine = `
+      <polyline
+        points="${correctPoints.join(" ")}"
+        fill="none"
+        stroke="#55bf7d"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    `;
+
+
+    const wrongLine = `
+      <polyline
+        points="${wrongPoints.join(" ")}"
+        fill="none"
+        stroke="#ef7187"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    `;
+
+
+    let points = "";
+
+
+    correctPoints.forEach(
+      point => {
+
+        const [x, y] =
+          point.split(",");
+
+
+        points += `
+          <circle
+            cx="${x}"
+            cy="${y}"
+            r="4"
+            fill="#55bf7d"
+          />
+        `;
+
+      }
+    );
+
+
+    wrongPoints.forEach(
+      point => {
+
+        const [x, y] =
+          point.split(",");
+
+
+        points += `
+          <circle
+            cx="${x}"
+            cy="${y}"
+            r="4"
+            fill="#ef7187"
+          />
+        `;
+
+      }
+    );
+
+
+    svg.innerHTML =
+      grid +
+      xAxis +
+      correctLine +
+      wrongLine +
+      points;
+
+  }
+
+
+  /* ==========================================================
+     ERRORS
+  ========================================================== */
+
+  function renderErrors() {
+
+    const container =
+      document.getElementById(
+        "errorsContainer"
+      );
+
 
     const errors =
-        attempts.filter(
-            a => a.result === "wrong"
-        );
+      historyRows
+        .filter(
+          row =>
+            row.result === "wrong"
+        )
+        .slice()
+        .reverse();
+
 
     if (!errors.length) {
 
-        container.innerHTML = `
-            <div class="error-item">
-                <div style="color:var(--muted);">
-                    Ошибок пока нет 🎉
-                </div>
-            </div>
-        `;
+      container.innerHTML = `
+        <div class="no-errors">
+          ✓ Ошибок пока нет. Отличная работа!
+        </div>
+      `;
 
-        return;
+      return;
     }
 
-    container.innerHTML =
-        errors.map(error => {
 
-            const task =
+    container.innerHTML = `
+      <div class="error-list">
+
+        ${
+          errors.map(
+            error => {
+
+              const task =
                 getTasks().find(
-                    t => taskId(t) === error.task_id
+                  item =>
+                    taskId(item) ===
+                    error.task_id
                 );
 
-            const date =
-                new Date(error.created_at)
-                    .toLocaleString("ru-RU");
 
-            return `
+              const number =
+                task
+                  ? taskNumber(task)
+                  : error.task_id;
+
+
+              const code =
+                task
+                  ? taskCode(task)
+                  : error.task_id;
+
+
+              return `
                 <div class="error-item">
 
-                    <div class="error-head">
+                  <div class="error-top">
 
-                        <div class="error-task">
-                            ${
-                                task
-                                ? `Вариант ${taskVariant(task)} · Задание ${taskNumber(task)}`
-                                : error.task_id
-                            }
-                        </div>
-
-                        <div class="error-date">
-                            ${date}
-                        </div>
-
+                    <div class="error-task">
+                      Задание ${escapeHtml(
+                        String(number)
+                      )}
+                      ·
+                      ${escapeHtml(code)}
                     </div>
 
-                    <div class="reason">
-                        ${
-                            error.reason
-                            ? escapeHtml(error.reason)
-                            : "Причина не указана"
-                        }
+                    <div class="error-date">
+                      ${formatDate(
+                        error.created_at
+                      )}
                     </div>
+
+                  </div>
+
+                  <div class="error-reason">
+                    ${
+                      escapeHtml(
+                        error.reason ||
+                        "Причина не указана."
+                      )
+                    }
+                  </div>
 
                 </div>
-            `;
+              `;
 
-        }).join("");
-}
+            }
+          ).join("")
+        }
+
+      </div>
+    `;
+
+  }
 
 
-/* =========================
-   NAVIGATION
-========================= */
+  /* ==========================================================
+     PROFILE UI
+  ========================================================== */
 
-function openPage(pageId, button) {
+  function renderProfile() {
 
-    document
-        .querySelectorAll(".page")
-        .forEach(page => {
-            page.classList.add("hidden");
-        });
-
-    document
-        .getElementById(pageId)
-        .classList.remove("hidden");
-
-    document
-        .querySelectorAll(".nav-item")
-        .forEach(item => {
-            item.classList.remove("active");
-        });
-
-    if (button) {
-        button.classList.add("active");
+    if (!currentUser) {
+      return;
     }
 
-    if (pageId === "statsPage") {
-        updateStats();
-    }
 
-    if (pageId === "errorsPage") {
-        renderErrors();
-    }
-}
+    const nickname =
+      currentProfile?.nickname ||
+      currentUser.user_metadata?.username ||
+      currentUser.email?.split("@")[0] ||
+      "Пользователь";
 
-
-/* =========================
-   LOGOUT
-========================= */
-
-async function logout() {
-
-    await sb.auth.signOut();
-
-    currentUser = null;
-    currentProfile = null;
-    attempts = [];
 
     document
-        .getElementById("app")
-        .classList.add("hidden");
+      .getElementById("topNickname")
+      .textContent =
+        nickname;
+
 
     document
-        .getElementById("authScreen")
-        .classList.remove("hidden");
+      .getElementById("topAvatar")
+      .textContent =
+        nickname
+          .charAt(0)
+          .toUpperCase();
 
-    showLogin();
-}
+
+    document
+      .getElementById("profileNickname")
+      .textContent =
+        nickname;
 
 
-/* =========================
-   PRINT
-========================= */
+    document
+      .getElementById("profileNicknameInput")
+      .value =
+        nickname;
 
-function printReport() {
 
-    openPage(
-        "statsPage",
-        document.querySelector('[data-page="statsPage"]')
+    document
+      .getElementById("profileEmail")
+      .textContent =
+        currentUser.email || "";
+
+
+    document
+      .getElementById("profileAvatar")
+      .textContent =
+        nickname
+          .charAt(0)
+          .toUpperCase();
+
+  }
+
+
+  /* ==========================================================
+     SAVE PROFILE
+  ========================================================== */
+
+  document
+    .getElementById("saveProfileBtn")
+    .addEventListener(
+      "click",
+      async () => {
+
+        if (!currentUser) {
+          return;
+        }
+
+
+        const nickname =
+          document
+            .getElementById(
+              "profileNicknameInput"
+            )
+            .value
+            .trim();
+
+
+        if (!nickname) {
+
+          showMessage(
+            document.getElementById(
+              "profileMessage"
+            ),
+            "Никнейм не может быть пустым.",
+            "error"
+          );
+
+          return;
+        }
+
+
+        const {
+          data,
+          error
+        } = await sb
+          .from("profiles")
+          .update({
+            nickname
+          })
+          .eq("id", currentUser.id)
+          .select()
+          .single();
+
+
+        if (error) {
+
+          showMessage(
+            document.getElementById(
+              "profileMessage"
+            ),
+            error.message,
+            "error"
+          );
+
+          return;
+        }
+
+
+        currentProfile = data;
+
+        renderProfile();
+
+
+        showMessage(
+          document.getElementById(
+            "profileMessage"
+          ),
+          "Никнейм сохранён.",
+          "success"
+        );
+
+      }
     );
 
-    setTimeout(() => {
-        window.print();
-    }, 300);
-}
+
+  /* ==========================================================
+     CHANGE PASSWORD
+  ========================================================== */
+
+  document
+    .getElementById("changePasswordBtn")
+    .addEventListener(
+      "click",
+      async () => {
+
+        const password =
+          prompt(
+            "Введите новый пароль (минимум 6 символов):"
+          );
 
 
-/* =========================
-   HELPERS
-========================= */
-
-function escapeHtml(value) {
-
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================
-   AUTH STATE
-========================= */
-
-sb.auth.onAuthStateChange(
-    async (event, session) => {
-
-        if (
-            event === "PASSWORD_RECOVERY"
-        ) {
-
-            showReset();
-
-            document
-                .getElementById("authScreen")
-                .classList.remove("hidden");
-
-            document
-                .getElementById("app")
-                .classList.add("hidden");
-
-            return;
+        if (!password) {
+          return;
         }
 
-        if (session?.user) {
 
-            currentUser = session.user;
+        if (password.length < 6) {
 
-            await ensureProfile();
+          alert(
+            "Пароль должен содержать минимум 6 символов."
+          );
 
-            await startApp();
-
-        } else {
-
-            currentUser = null;
-
-            document
-                .getElementById("app")
-                .classList.add("hidden");
-
-            document
-                .getElementById("authScreen")
-                .classList.remove("hidden");
+          return;
         }
+
+
+        const {
+          error
+        } = await sb.auth.updateUser({
+          password
+        });
+
+
+        if (error) {
+
+          alert(
+            error.message
+          );
+
+          return;
+        }
+
+
+        alert(
+          "Пароль успешно изменён."
+        );
+
+      }
+    );
+
+
+  /* ==========================================================
+     NAVIGATION
+  ========================================================== */
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const section =
+            button.dataset.section;
+
+
+          document
+            .querySelectorAll(".nav-btn")
+            .forEach(
+              item =>
+                item.classList.remove(
+                  "active"
+                )
+            );
+
+
+          button.classList.add(
+            "active"
+          );
+
+
+          document
+            .querySelectorAll(
+              "[id^='section-']"
+            )
+            .forEach(
+              item =>
+                item.classList.add(
+                  "hidden"
+                )
+            );
+
+
+          document
+            .getElementById(
+              "section-" + section
+            )
+            .classList.remove(
+              "hidden"
+            );
+
+
+          if (
+            section ===
+            "statistics"
+          ) {
+            renderStatistics();
+          }
+
+
+          if (
+            section ===
+            "errors"
+          ) {
+            renderErrors();
+          }
+
+
+          if (
+            section ===
+            "profile"
+          ) {
+            renderProfile();
+          }
+
+        }
+      );
+
+    });
+
+
+  /* ==========================================================
+     LOGOUT
+  ========================================================== */
+
+  document
+    .getElementById("logoutBtn")
+    .addEventListener(
+      "click",
+      async () => {
+
+        await sb.auth.signOut();
+
+        currentUser = null;
+        currentProfile = null;
+        progressRows = [];
+        historyRows = [];
+        progressMap = {};
+
+        appScreen.classList.add(
+          "hidden"
+        );
+
+        authScreen.classList.remove(
+          "hidden"
+        );
+
+        loginForm.reset();
+        registerForm.reset();
+
+        loginTab.click();
+
+      }
+    );
+
+
+  /* ==========================================================
+     OPEN APP
+  ========================================================== */
+
+  async function openApp() {
+
+    if (!currentUser) {
+      return;
     }
-);
 
 
-/* =========================
-   INITIALIZATION
-========================= */
+    await ensureProfile();
 
-(async function init() {
+    await loadProfile();
 
-    renderTasks();
+    await loadCloudData();
+
+
+    authScreen.classList.add(
+      "hidden"
+    );
+
+    appScreen.classList.remove(
+      "hidden"
+    );
+
+
+    renderProfile();
+
+  }
+
+
+  /* ==========================================================
+     PRINT / PDF REPORT
+  ========================================================== */
+
+  document
+    .getElementById("printReportBtn")
+    .addEventListener(
+      "click",
+      () => {
+
+        createPrintReport();
+
+        setTimeout(
+          () => window.print(),
+          100
+        );
+
+      }
+    );
+
+
+  function createPrintReport() {
+
+    const stats =
+      getStatistics();
+
+
+    document
+      .getElementById("printNickname")
+      .textContent =
+        currentProfile?.nickname ||
+        currentUser?.email ||
+        "";
+
+
+    document
+      .getElementById("printDate")
+      .textContent =
+        "Отчёт сформирован: " +
+        new Date().toLocaleString(
+          "ru-RU"
+        );
+
+
+    document
+      .getElementById("printTotal")
+      .textContent =
+        stats.total;
+
+
+    document
+      .getElementById("printCorrect")
+      .textContent =
+        stats.correct;
+
+
+    document
+      .getElementById("printWrong")
+      .textContent =
+        stats.wrong;
+
+
+    document
+      .getElementById("printAccuracy")
+      .textContent =
+        stats.accuracy + "%";
+
+
+    const errors =
+      historyRows
+        .filter(
+          row =>
+            row.result === "wrong"
+        )
+        .slice()
+        .reverse();
+
+
+    const container =
+      document.getElementById(
+        "printErrors"
+      );
+
+
+    if (!errors.length) {
+
+      container.innerHTML =
+        "<p>Ошибок нет.</p>";
+
+      return;
+    }
+
+
+    container.innerHTML =
+      errors.map(
+        error => {
+
+          const task =
+            getTasks().find(
+              item =>
+                taskId(item) ===
+                error.task_id
+            );
+
+
+          const number =
+            task
+              ? taskNumber(task)
+              : error.task_id;
+
+
+          const code =
+            task
+              ? taskCode(task)
+              : error.task_id;
+
+
+          return `
+            <div class="print-error">
+
+              <strong>
+                Задание ${escapeHtml(
+                  String(number)
+                )}
+                ·
+                ${escapeHtml(code)}
+              </strong>
+
+              <div>
+                Причина:
+                ${escapeHtml(
+                  error.reason ||
+                  "Не указана"
+                )}
+              </div>
+
+              <small>
+                ${formatDate(
+                  error.created_at
+                )}
+              </small>
+
+            </div>
+          `;
+
+        }
+      ).join("");
+
+  }
+
+
+  /* ==========================================================
+     SUPABASE SESSION
+  ========================================================== */
+
+  async function init() {
 
     const {
-        data
+      data
     } = await sb.auth.getSession();
 
-    if (data.session?.user) {
 
-        currentUser = data.session.user;
+    if (
+      data &&
+      data.session &&
+      data.session.user
+    ) {
 
-        await ensureProfile();
+      currentUser =
+        data.session.user;
 
-        await startApp();
+      await openApp();
 
     } else {
 
-        document
-            .getElementById("authScreen")
-            .classList.remove("hidden");
+      authScreen.classList.remove(
+        "hidden"
+      );
 
-        document
-            .getElementById("app")
-            .classList.add("hidden");
+      appScreen.classList.add(
+        "hidden"
+      );
+
     }
 
-})();
+  }
 
 
-/* CLOSE MODAL BY BACKDROP */
+  sb.auth.onAuthStateChange(
+    async (
+      event,
+      session
+    ) => {
 
-document
-    .getElementById("taskModal")
-    .addEventListener("click", function(e) {
+      if (
+        session &&
+        session.user
+      ) {
 
-        if (e.target === this) {
-            closeTaskModal();
-        }
+        currentUser =
+          session.user;
 
-    });
+      } else {
+
+        currentUser = null;
+
+      }
+
+    }
+  );
+
+
+  /* ==========================================================
+     START
+  ========================================================== */
+
+  init();
 
 </script>
 
