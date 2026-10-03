@@ -1,7 +1,6 @@
 function generatePdfReport() {
     const tasks = getTasks();
 
-    // Берём историю попыток из текущего состояния приложения
     const history = Array.isArray(attemptHistory)
         ? attemptHistory
         : [];
@@ -9,29 +8,35 @@ function generatePdfReport() {
     const profile = currentProfile || {};
     const nickname = profile.nickname || "Пользователь";
 
-    const escapeHtml = (value) => {
+    function escapeHtml(value) {
         return String(value ?? "")
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-    };
+    }
 
-    const getTaskId = (task) => {
-        return String(task.id ?? task.task_id ?? "");
-    };
+    function getTaskId(task) {
+        return String(
+            task.id ??
+            task.task_id ??
+            ""
+        );
+    }
 
-    const getTaskCode = (task) => {
+    function getTaskCode(task) {
         return String(task.code ?? "");
-    };
+    }
 
-    const getTaskNumber = (task) => {
+    function getTaskNumber(task) {
         return String(task.number ?? "");
-    };
+    }
 
-    const formatDate = (dateValue) => {
-        if (!dateValue) return "Дата неизвестна";
+    function formatDate(dateValue) {
+        if (!dateValue) {
+            return "Дата неизвестна";
+        }
 
         const date = new Date(dateValue);
 
@@ -46,19 +51,24 @@ function generatePdfReport() {
             hour: "2-digit",
             minute: "2-digit"
         });
-    };
+    }
 
-    // Группируем все попытки по task_id
+    // -----------------------------------------
+    // Группируем все попытки по заданию
+    // -----------------------------------------
+
     const attemptsByTask = {};
 
-    history.forEach((attempt) => {
+    history.forEach(function (attempt) {
         const taskId = String(
             attempt.task_id ??
             attempt.taskId ??
             ""
         );
 
-        if (!taskId) return;
+        if (!taskId) {
+            return;
+        }
 
         if (!attemptsByTask[taskId]) {
             attemptsByTask[taskId] = [];
@@ -67,57 +77,91 @@ function generatePdfReport() {
         attemptsByTask[taskId].push(attempt);
     });
 
-    // Сортировка попыток: от самой ранней к самой поздней
-    Object.keys(attemptsByTask).forEach((taskId) => {
-        attemptsByTask[taskId].sort((a, b) => {
-            return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+    // Сначала старые попытки, потом новые
+    Object.keys(attemptsByTask).forEach(function (taskId) {
+        attemptsByTask[taskId].sort(function (a, b) {
+            return (
+                new Date(a.created_at || 0).getTime() -
+                new Date(b.created_at || 0).getTime()
+            );
         });
     });
 
+    // -----------------------------------------
     // Общая статистика
+    // -----------------------------------------
+
     const totalTasks = tasks.length;
 
     const completedTaskIds = new Set(
-        history.map((attempt) =>
-            String(attempt.task_id ?? attempt.taskId ?? "")
-        ).filter(Boolean)
+        history
+            .map(function (attempt) {
+                return String(
+                    attempt.task_id ??
+                    attempt.taskId ??
+                    ""
+                );
+            })
+            .filter(Boolean)
     );
 
     const completedCount = completedTaskIds.size;
 
-    const correctAttempts = history.filter(
-        (attempt) =>
-            String(attempt.result || "").toLowerCase() === "correct"
-    ).length;
-
-    const wrongAttempts = history.filter(
-        (attempt) =>
-            String(attempt.result || "").toLowerCase() === "wrong"
-    ).length;
-
     const totalAttempts = history.length;
 
+    const correctAttempts = history.filter(function (attempt) {
+        return (
+            String(attempt.result || "").toLowerCase() ===
+            "correct"
+        );
+    }).length;
+
+    const wrongAttempts = history.filter(function (attempt) {
+        return (
+            String(attempt.result || "").toLowerCase() ===
+            "wrong"
+        );
+    }).length;
+
     const accuracy = totalAttempts > 0
-        ? Math.round((correctAttempts / totalAttempts) * 100)
+        ? Math.round(
+            (correctAttempts / totalAttempts) * 100
+        )
         : 0;
+
+    const progressPercent = totalTasks > 0
+        ? Math.round(
+            (completedCount / totalTasks) * 100
+        )
+        : 0;
+
+    // -----------------------------------------
+    // Формируем список заданий
+    // -----------------------------------------
 
     let taskRows = "";
 
-    tasks.forEach((task) => {
+    tasks.forEach(function (task) {
         const taskId = getTaskId(task);
         const attempts = attemptsByTask[taskId] || [];
 
-        // Если задание ещё ни разу не решалось
+        // Задание ещё не решалось
         if (attempts.length === 0) {
             taskRows += `
                 <div class="pdf-task">
+
                     <div class="pdf-task-header">
                         <div>
                             <div class="pdf-task-title">
-                                Задание ${escapeHtml(getTaskNumber(task))}
+                                Задание ${escapeHtml(
+                                    getTaskNumber(task)
+                                )}
                             </div>
+
                             <div class="pdf-task-code">
-                                ${escapeHtml(getTaskCode(task))}
+                                ${escapeHtml(
+                                    getTaskCode(task)
+                                )}
                             </div>
                         </div>
                     </div>
@@ -130,18 +174,19 @@ function generatePdfReport() {
                     <div class="pdf-no-attempts">
                         Задание ещё не выполнялось.
                     </div>
+
                 </div>
             `;
 
             return;
         }
 
-        // Перерешано = было больше одной попытки
+        // Если попыток больше одной — задание перерешивали
         const isReSolved = attempts.length > 1;
 
         let attemptHtml = "";
 
-        attempts.forEach((attempt, index) => {
+        attempts.forEach(function (attempt, index) {
             const result = String(
                 attempt.result || ""
             ).toLowerCase();
@@ -162,7 +207,9 @@ function generatePdfReport() {
 
             attemptHtml += `
                 <div class="pdf-attempt ${resultClass}">
+
                     <div class="pdf-attempt-top">
+
                         <strong>
                             Попытка ${index + 1}
                         </strong>
@@ -171,374 +218,493 @@ function generatePdfReport() {
                             ${isCorrect ? "✓" : "✕"}
                             ${resultText}
                         </span>
+
                     </div>
 
                     <div class="pdf-attempt-date">
-                        ${escapeHtml(formatDate(attempt.created_at))}
+                        ${escapeHtml(
+                            formatDate(attempt.created_at)
+                        )}
                     </div>
 
                     ${
                         !isCorrect
                             ? `
                                 <div class="pdf-reason">
-                                    <strong>Причина ошибки:</strong>
+                                    <strong>
+                                        Причина ошибки:
+                                    </strong>
+
                                     ${escapeHtml(
-                                        reason || "Причина не указана"
+                                        reason ||
+                                        "Причина не указана"
                                     )}
                                 </div>
                             `
                             : ""
                     }
+
                 </div>
             `;
         });
 
+        const lastAttempt =
+            attempts[attempts.length - 1];
+
+        const lastResult =
+            String(lastAttempt.result || "")
+                .toLowerCase();
+
         taskRows += `
             <div class="pdf-task">
+
                 <div class="pdf-task-header">
+
                     <div>
                         <div class="pdf-task-title">
-                            Задание ${escapeHtml(getTaskNumber(task))}
+                            Задание ${escapeHtml(
+                                getTaskNumber(task)
+                            )}
                         </div>
 
                         <div class="pdf-task-code">
-                            ${escapeHtml(getTaskCode(task))}
+                            ${escapeHtml(
+                                getTaskCode(task)
+                            )}
                         </div>
                     </div>
 
                     <div class="pdf-last-result ${
-                        String(
-                            attempts[attempts.length - 1].result || ""
-                        ).toLowerCase() === "correct"
+                        lastResult === "correct"
                             ? "correct"
                             : "wrong"
                     }">
                         ${
-                            String(
-                                attempts[attempts.length - 1].result || ""
-                            ).toLowerCase() === "correct"
+                            lastResult === "correct"
                                 ? "Последняя попытка: верно"
                                 : "Последняя попытка: неверно"
                         }
                     </div>
+
                 </div>
 
                 <div class="pdf-task-meta">
+
                     <span>
                         Попыток: ${attempts.length}
                     </span>
 
                     <span>
-                        Перерешано: ${isReSolved ? "да" : "нет"}
+                        Перерешано:
+                        ${isReSolved ? "да" : "нет"}
                     </span>
+
                 </div>
 
                 <div class="pdf-attempts">
                     ${attemptHtml}
                 </div>
+
             </div>
         `;
     });
 
-    const reportDate = new Date().toLocaleString("ru-RU", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-    });
+    // -----------------------------------------
+    // Дата формирования отчёта
+    // -----------------------------------------
 
-    const progressPercent = totalTasks > 0
-        ? Math.round((completedCount / totalTasks) * 100)
-        : 0;
+    const reportDate = new Date().toLocaleString(
+        "ru-RU",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
 
-    const pdfWindow = window.open("", "_blank");
+    // -----------------------------------------
+    // Открываем окно PDF
+    // -----------------------------------------
+
+    const pdfWindow = window.open(
+        "",
+        "_blank"
+    );
 
     if (!pdfWindow) {
         alert(
-            "Не удалось открыть PDF-отчёт. Разрешите всплывающие окна для сайта."
+            "Не удалось открыть отчёт. " +
+            "Разрешите всплывающие окна для сайта."
         );
+
         return;
     }
 
     pdfWindow.document.write(`
 <!DOCTYPE html>
+
 <html lang="ru">
+
 <head>
+
 <meta charset="UTF-8">
 
-<title>Статистика — OGE English Tracker</title>
+<title>
+    Статистика — OGE English Tracker
+</title>
 
 <style>
 
-    * {
-        box-sizing: border-box;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    body {
-        margin: 0;
-        padding: 35px;
-        font-family: Arial, Helvetica, sans-serif;
-        color: #29233d;
-        background: #ffffff;
-        line-height: 1.5;
-    }
+body {
+    margin: 0;
+    padding: 35px;
 
-    .report {
-        max-width: 900px;
-        margin: 0 auto;
-    }
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
-    .report-header {
-        padding-bottom: 22px;
-        margin-bottom: 25px;
-        border-bottom: 2px solid #e8e0ff;
-    }
+    color: #29233d;
+    background: #ffffff;
 
-    .report-title {
-        font-size: 30px;
-        font-weight: 800;
-        color: #6244c5;
-        margin-bottom: 6px;
-    }
+    line-height: 1.5;
+}
 
-    .report-user {
-        font-size: 17px;
-        color: #625b75;
-    }
+.report {
+    max-width: 900px;
+    margin: 0 auto;
+}
 
-    .report-date {
-        font-size: 13px;
-        color: #8b849d;
-        margin-top: 5px;
-    }
+.report-header {
+    padding-bottom: 22px;
+    margin-bottom: 25px;
 
-    .summary {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        margin-bottom: 30px;
-    }
+    border-bottom:
+        2px solid #e8e0ff;
+}
 
-    .summary-card {
-        border: 1px solid #e5ddfa;
-        border-radius: 14px;
-        padding: 16px;
-        background: #faf8ff;
-    }
+.report-title {
+    font-size: 30px;
+    font-weight: 800;
 
-    .summary-label {
-        font-size: 12px;
-        color: #817990;
-        margin-bottom: 5px;
-    }
+    color: #6244c5;
 
-    .summary-value {
-        font-size: 25px;
-        font-weight: 800;
-        color: #6244c5;
-    }
+    margin-bottom: 6px;
+}
 
-    .progress-box {
-        margin-bottom: 30px;
-        padding: 18px;
-        border: 1px solid #e5ddfa;
-        border-radius: 14px;
-        background: #faf8ff;
-    }
+.report-user {
+    font-size: 17px;
+    color: #625b75;
+}
 
-    .progress-title {
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
+.report-date {
+    font-size: 13px;
+    color: #8b849d;
 
-    .progress-bar {
-        height: 15px;
-        background: #ebe7f3;
-        border-radius: 999px;
-        overflow: hidden;
-    }
+    margin-top: 5px;
+}
 
-    .progress-fill {
-        height: 100%;
-        width: ${progressPercent}%;
-        background: linear-gradient(
+.summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    border:
+        1px solid #e5ddfa;
+
+    border-radius: 14px;
+
+    padding: 16px;
+
+    background: #faf8ff;
+}
+
+.summary-label {
+    font-size: 12px;
+    color: #817990;
+
+    margin-bottom: 5px;
+}
+
+.summary-value {
+    font-size: 25px;
+    font-weight: 800;
+
+    color: #6244c5;
+}
+
+.progress-box {
+    margin-bottom: 30px;
+
+    padding: 18px;
+
+    border:
+        1px solid #e5ddfa;
+
+    border-radius: 14px;
+
+    background: #faf8ff;
+}
+
+.progress-title {
+    font-weight: 700;
+
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 15px;
+
+    background: #ebe7f3;
+
+    border-radius: 999px;
+
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+
+    width: ${progressPercent}%;
+
+    background:
+        linear-gradient(
             90deg,
             #b99cff,
             #7c5cff
         );
-        border-radius: 999px;
-    }
 
-    .progress-text {
-        margin-top: 7px;
-        font-size: 13px;
-        color: #6e687d;
-    }
+    border-radius: 999px;
+}
 
-    .section-title {
-        font-size: 22px;
-        font-weight: 800;
-        margin: 25px 0 15px;
-        color: #382d55;
+.progress-text {
+    margin-top: 7px;
+
+    font-size: 13px;
+
+    color: #6e687d;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 800;
+
+    margin:
+        25px 0 15px;
+
+    color: #382d55;
+}
+
+.pdf-task {
+    border:
+        1px solid #ded7ed;
+
+    border-radius: 15px;
+
+    padding: 18px;
+
+    margin-bottom: 16px;
+
+    page-break-inside: avoid;
+}
+
+.pdf-task-header {
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-start;
+
+    gap: 15px;
+
+    margin-bottom: 12px;
+}
+
+.pdf-task-title {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.pdf-task-code {
+    display: inline-block;
+
+    margin-top: 4px;
+
+    font-family: monospace;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #7055b8;
+
+    letter-spacing: 1px;
+}
+
+.pdf-task-meta {
+    display: flex;
+
+    gap: 20px;
+
+    padding: 9px 12px;
+
+    margin-bottom: 12px;
+
+    border-radius: 9px;
+
+    background: #f6f3fc;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.pdf-last-result {
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pdf-last-result.correct {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pdf-last-result.wrong {
+    background: #ffe4e6;
+    color: #9f1239;
+}
+
+.pdf-attempt {
+    padding: 11px 13px;
+
+    margin-top: 8px;
+
+    border-left:
+        4px solid #aaa;
+
+    border-radius: 7px;
+
+    background: #fafafa;
+}
+
+.pdf-attempt.correct {
+    border-left-color: #22c55e;
+    background: #f0fdf4;
+}
+
+.pdf-attempt.wrong {
+    border-left-color: #f43f5e;
+    background: #fff1f2;
+}
+
+.pdf-attempt-top {
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap: 10px;
+}
+
+.pdf-result {
+    font-weight: 800;
+}
+
+.pdf-result.correct {
+    color: #15803d;
+}
+
+.pdf-result.wrong {
+    color: #be123c;
+}
+
+.pdf-attempt-date {
+    font-size: 12px;
+
+    color: #777;
+
+    margin-top: 3px;
+}
+
+.pdf-reason {
+    margin-top: 7px;
+
+    font-size: 13px;
+}
+
+.pdf-no-attempts {
+    padding: 10px;
+
+    color: #8b849d;
+
+    font-size: 13px;
+
+    background: #fafafa;
+
+    border-radius: 8px;
+}
+
+@media print {
+
+    body {
+        padding: 15px;
     }
 
     .pdf-task {
-        border: 1px solid #ded7ed;
-        border-radius: 15px;
-        padding: 18px;
-        margin-bottom: 16px;
         page-break-inside: avoid;
     }
 
-    .pdf-task-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 15px;
-        margin-bottom: 12px;
-    }
-
-    .pdf-task-title {
-        font-size: 18px;
-        font-weight: 800;
-    }
-
-    .pdf-task-code {
-        display: inline-block;
-        margin-top: 4px;
-        font-family: monospace;
-        font-size: 14px;
-        font-weight: 700;
-        color: #7055b8;
-        letter-spacing: 1px;
-    }
-
-    .pdf-task-meta {
-        display: flex;
-        gap: 20px;
-        padding: 9px 12px;
-        margin-bottom: 12px;
-        border-radius: 9px;
-        background: #f6f3fc;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
+    .summary-card,
+    .progress-box,
+    .pdf-attempt,
     .pdf-last-result {
-        padding: 6px 10px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 700;
+        -webkit-print-color-adjust:
+            exact;
+
+        print-color-adjust:
+            exact;
+    }
+}
+
+@media (max-width: 650px) {
+
+    body {
+        padding: 15px;
     }
 
-    .pdf-last-result.correct {
-        background: #dcfce7;
-        color: #166534;
+    .summary {
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 
-    .pdf-last-result.wrong {
-        background: #ffe4e6;
-        color: #9f1239;
+    .pdf-task-header {
+        flex-direction:
+            column;
     }
-
-    .pdf-attempt {
-        padding: 11px 13px;
-        margin-top: 8px;
-        border-left: 4px solid #aaa;
-        border-radius: 7px;
-        background: #fafafa;
-    }
-
-    .pdf-attempt.correct {
-        border-left-color: #22c55e;
-        background: #f0fdf4;
-    }
-
-    .pdf-attempt.wrong {
-        border-left-color: #f43f5e;
-        background: #fff1f2;
-    }
-
-    .pdf-attempt-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .pdf-result {
-        font-weight: 800;
-    }
-
-    .pdf-result.correct {
-        color: #15803d;
-    }
-
-    .pdf-result.wrong {
-        color: #be123c;
-    }
-
-    .pdf-attempt-date {
-        font-size: 12px;
-        color: #777;
-        margin-top: 3px;
-    }
-
-    .pdf-reason {
-        margin-top: 7px;
-        font-size: 13px;
-    }
-
-    .pdf-no-attempts {
-        padding: 10px;
-        color: #8b849d;
-        font-size: 13px;
-        background: #fafafa;
-        border-radius: 8px;
-    }
-
-    @media print {
-
-        body {
-            padding: 15px;
-        }
-
-        .pdf-task {
-            page-break-inside: avoid;
-        }
-
-        .summary-card,
-        .progress-box {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-        }
-
-        .pdf-attempt,
-        .pdf-last-result {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-        }
-
-    }
-
-    @media (max-width: 650px) {
-
-        body {
-            padding: 15px;
-        }
-
-        .summary {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .pdf-task-header {
-            flex-direction: column;
-        }
-
-    }
+}
 
 </style>
+
 </head>
 
 <body>
@@ -552,18 +718,22 @@ function generatePdfReport() {
         </div>
 
         <div class="report-user">
-            Статистика: ${escapeHtml(nickname)}
+            Статистика:
+            ${escapeHtml(nickname)}
         </div>
 
         <div class="report-date">
-            Отчёт сформирован: ${escapeHtml(reportDate)}
+            Отчёт сформирован:
+            ${escapeHtml(reportDate)}
         </div>
 
     </div>
 
+
     <div class="summary">
 
         <div class="summary-card">
+
             <div class="summary-label">
                 Выполнено заданий
             </div>
@@ -571,9 +741,12 @@ function generatePdfReport() {
             <div class="summary-value">
                 ${completedCount}/${totalTasks}
             </div>
+
         </div>
 
+
         <div class="summary-card">
+
             <div class="summary-label">
                 Всего попыток
             </div>
@@ -581,9 +754,12 @@ function generatePdfReport() {
             <div class="summary-value">
                 ${totalAttempts}
             </div>
+
         </div>
 
+
         <div class="summary-card">
+
             <div class="summary-label">
                 Верных попыток
             </div>
@@ -591,9 +767,12 @@ function generatePdfReport() {
             <div class="summary-value">
                 ${correctAttempts}
             </div>
+
         </div>
 
+
         <div class="summary-card">
+
             <div class="summary-label">
                 Точность
             </div>
@@ -601,9 +780,11 @@ function generatePdfReport() {
             <div class="summary-value">
                 ${accuracy}%
             </div>
+
         </div>
 
     </div>
+
 
     <div class="progress-box">
 
@@ -612,15 +793,24 @@ function generatePdfReport() {
         </div>
 
         <div class="progress-bar">
+
             <div class="progress-fill"></div>
+
         </div>
 
         <div class="progress-text">
-            Выполнено ${completedCount} из ${totalTasks}
-            заданий — ${progressPercent}%
+
+            Выполнено
+            ${completedCount}
+            из
+            ${totalTasks}
+            заданий —
+            ${progressPercent}%
+
         </div>
 
     </div>
+
 
     <div class="section-title">
         История выполнения заданий
@@ -630,15 +820,23 @@ function generatePdfReport() {
 
 </div>
 
+
 <script>
-    window.onload = function() {
-        setTimeout(function() {
-            window.print();
-        }, 400);
-    };
+
+window.onload = function () {
+
+    setTimeout(function () {
+
+        window.print();
+
+    }, 400);
+
+};
+
 <\/script>
 
 </body>
+
 </html>
     `);
 
