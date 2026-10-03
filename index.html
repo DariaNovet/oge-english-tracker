@@ -3,11 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>ОГЭ Английский — Трекер</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+:root {
+  --bg: #f5effb;
+  --card: #ffffff;
+  --purple: #8b5cf6;
+  --purple-dark: #7044d4;
+  --purple-light: #eee5ff;
+  --text: #29233a;
+  --muted: #8a8497;
+  --green: #4caf70;
+  --green-bg: #e8f7ed;
+  --red: #e05b67;
+  --red-bg: #fdebed;
+  --border: #e8e0f2;
+  --shadow: 0 8px 30px rgba(89, 57, 125, .09);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -15,13 +32,13 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #eee7ff, #d9c8ff);
-  color: #29233d;
+  background: var(--bg);
+  color: var(--text);
 }
 
 button,
 input,
-select {
+textarea {
   font: inherit;
 }
 
@@ -38,8 +55,8 @@ button {
 .auth-screen {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 20px;
 }
 
@@ -48,26 +65,46 @@ button {
   max-width: 430px;
   background: white;
   border-radius: 28px;
-  padding: 35px;
-  box-shadow: 0 20px 60px rgba(80, 50, 130, 0.2);
+  padding: 32px 25px;
+  box-shadow: 0 15px 50px rgba(80, 50, 120, .15);
 }
 
 .logo {
   text-align: center;
-  font-size: 30px;
+  color: var(--purple-dark);
+  font-size: 29px;
   font-weight: 800;
-  color: #7c4dff;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
-.auth-subtitle {
+.logo-subtitle {
   text-align: center;
-  color: #777;
-  margin-bottom: 30px;
+  color: var(--muted);
+  margin-bottom: 25px;
 }
 
-.auth-card h2 {
-  margin-bottom: 20px;
+.auth-tabs {
+  display: flex;
+  gap: 5px;
+  padding: 4px;
+  background: var(--purple-light);
+  border-radius: 13px;
+  margin-bottom: 22px;
+}
+
+.auth-tab {
+  flex: 1;
+  border: 0;
+  padding: 11px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.auth-tab.active {
+  background: white;
+  color: var(--purple-dark);
 }
 
 .field {
@@ -77,48 +114,47 @@ button {
 .field label {
   display: block;
   margin-bottom: 7px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 14px;
 }
 
 .field input {
   width: 100%;
-  padding: 13px 15px;
-  border: 2px solid #e4ddf5;
-  border-radius: 13px;
+  padding: 13px 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
   outline: none;
 }
 
 .field input:focus {
-  border-color: #8b5cf6;
+  border-color: var(--purple);
 }
 
 .primary-btn {
   width: 100%;
   border: 0;
-  border-radius: 14px;
   padding: 14px;
-  background: linear-gradient(135deg, #8b5cf6, #6d3df5);
+  border-radius: 13px;
   color: white;
-  font-weight: 700;
-  margin-top: 5px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a47cf7, #7950e8);
 }
 
 .secondary-btn {
   width: 100%;
   border: 0;
   background: transparent;
-  color: #7045e8;
+  color: var(--purple-dark);
   padding: 12px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .auth-message {
   margin-top: 15px;
   padding: 12px;
   border-radius: 12px;
-  background: #f5f0ff;
+  background: var(--purple-light);
   font-size: 14px;
-  display: none;
 }
 
 /* APP */
@@ -127,246 +163,363 @@ button {
   min-height: 100vh;
 }
 
-.header {
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(10px);
-  padding: 15px 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 3px 20px rgba(70,40,120,.08);
+.topbar {
   position: sticky;
   top: 0;
-  z-index: 10;
-}
-
-.header-title {
-  font-size: 22px;
-  font-weight: 800;
-  color: #7144e8;
-}
-
-.header-user {
+  z-index: 20;
+  height: 65px;
+  padding: 0 18px;
+  background: rgba(255,255,255,.94);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 3px 20px rgba(70,40,100,.07);
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
 }
 
-.logout-btn {
+.logo-small {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--purple-dark);
+}
+
+.profile-button {
+  width: 42px;
+  height: 42px;
   border: 0;
-  background: #eee7ff;
-  color: #7045e8;
-  padding: 9px 15px;
-  border-radius: 10px;
-  font-weight: 600;
+  border-radius: 50%;
+  background: var(--purple-light);
+  color: var(--purple-dark);
+  font-size: 19px;
 }
 
 .layout {
   display: flex;
   max-width: 1400px;
-  margin: 0 auto;
-  min-height: calc(100vh - 70px);
+  margin: auto;
 }
 
 .sidebar {
-  width: 240px;
-  padding: 25px 15px;
+  width: 230px;
+  padding: 22px 12px;
+  flex-shrink: 0;
 }
 
-.nav-btn {
+.nav-button {
   width: 100%;
   border: 0;
   background: transparent;
+  color: #665d75;
+  padding: 13px 15px;
+  border-radius: 12px;
   text-align: left;
-  padding: 14px 16px;
-  border-radius: 13px;
-  margin-bottom: 7px;
-  color: #5e5575;
-  font-weight: 600;
+  font-weight: 700;
+  margin-bottom: 5px;
 }
 
-.nav-btn:hover,
-.nav-btn.active {
-  background: #ffffff;
-  color: #7144e8;
-  box-shadow: 0 5px 20px rgba(90,50,150,.08);
+.nav-button:hover,
+.nav-button.active {
+  background: white;
+  color: var(--purple-dark);
+  box-shadow: var(--shadow);
 }
 
 .content {
   flex: 1;
-  padding: 30px;
   min-width: 0;
+  padding: 25px;
 }
+
+/* HOME */
 
 .page-title {
   font-size: 30px;
-  margin: 0 0 8px;
+  margin: 0 0 7px;
 }
 
 .page-subtitle {
-  color: #777;
-  margin-top: 0;
+  color: var(--muted);
+  margin: 0 0 22px;
 }
+
+.quote {
+  background: linear-gradient(135deg, #dfcdf0, #eee2f8);
+  border-radius: 22px;
+  padding: 22px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+
+.quote-label {
+  color: var(--purple-dark);
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.quote-text {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+/* SEARCH */
+
+.search {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.search input {
+  width: 100%;
+  padding: 15px 18px;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  box-shadow: var(--shadow);
+}
+
+/* SECTION CARDS */
+
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.section-card {
+  border: 0;
+  background: white;
+  border-radius: 19px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: var(--shadow);
+  color: var(--text);
+}
+
+.section-card:hover {
+  transform: translateY(-2px);
+}
+
+.section-number {
+  display: inline-flex;
+  width: 37px;
+  height: 37px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: var(--purple-light);
+  color: var(--purple-dark);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  display: block;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.section-description {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* TASKS */
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-card {
+  background: white;
+  border-radius: 18px;
+  padding: 17px;
+  box-shadow: var(--shadow);
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-title {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.task-status {
+  font-size: 12px;
+  padding: 6px 9px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.status-none {
+  background: #f0edf3;
+  color: var(--muted);
+}
+
+.status-correct {
+  background: var(--green-bg);
+  color: #318a50;
+}
+
+.status-wrong {
+  background: var(--red-bg);
+  color: #c24652;
+}
+
+.open-task {
+  margin-top: 12px;
+  width: 100%;
+  border: 0;
+  padding: 11px;
+  border-radius: 11px;
+  background: var(--purple-light);
+  color: var(--purple-dark);
+  font-weight: 800;
+}
+
+/* TASK PAGE */
 
 .card {
   background: white;
   border-radius: 20px;
   padding: 22px;
-  margin-bottom: 20px;
-  box-shadow: 0 7px 30px rgba(70,40,120,.08);
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
+.task-content {
+  line-height: 1.6;
+  margin-top: 15px;
 }
 
-.stat-card {
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 7px 30px rgba(70,40,120,.08);
-}
-
-.stat-number {
-  font-size: 32px;
-  font-weight: 800;
-  color: #7144e8;
-}
-
-.stat-label {
-  color: #777;
-  margin-top: 5px;
-}
-
-.task-list {
-  display: grid;
-  gap: 12px;
-}
-
-.task-item {
-  background: white;
-  border-radius: 17px;
-  padding: 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  box-shadow: 0 5px 20px rgba(70,40,120,.06);
-}
-
-.task-info h3 {
-  margin: 0 0 5px;
-}
-
-.task-info p {
-  margin: 0;
-  color: #777;
-}
-
-.status {
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.status.correct {
-  background: #dcfce7;
-  color: #16803a;
-}
-
-.status.wrong {
-  background: #fee2e2;
-  color: #b42318;
-}
-
-.status.unanswered {
-  background: #eee;
-  color: #777;
-}
-
-.open-task {
-  border: 0;
-  background: #eee7ff;
-  color: #7144e8;
-  border-radius: 10px;
-  padding: 10px 15px;
-  font-weight: 700;
+.options {
+  margin-top: 20px;
 }
 
 .option {
-  display: block;
   width: 100%;
   text-align: left;
-  padding: 13px;
-  margin: 8px 0;
-  border: 2px solid #e8e1f5;
+  border: 2px solid var(--border);
   background: white;
+  padding: 13px;
   border-radius: 12px;
+  margin-bottom: 8px;
 }
 
-.option:hover {
-  border-color: #8b5cf6;
-  background: #faf8ff;
+.option.selected {
+  border-color: var(--purple);
+  background: #faf7ff;
 }
 
 .action-row {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .action-btn {
   border: 0;
   border-radius: 12px;
-  padding: 12px 17px;
-  font-weight: 700;
+  padding: 12px 16px;
+  font-weight: 800;
 }
 
 .correct-btn {
-  background: #dcfce7;
-  color: #16803a;
+  background: var(--green-bg);
+  color: #318a50;
 }
 
 .wrong-btn {
-  background: #fee2e2;
-  color: #b42318;
+  background: var(--red-bg);
+  color: #c24652;
 }
 
 .back-btn {
-  background: #eee7ff;
-  color: #7144e8;
+  background: var(--purple-light);
+  color: var(--purple-dark);
 }
 
-.reason-box {
+.reason {
   margin-top: 15px;
 }
 
-.reason-box textarea {
+.reason textarea {
   width: 100%;
   min-height: 100px;
-  border: 2px solid #e5ddf4;
-  border-radius: 12px;
-  padding: 12px;
   resize: vertical;
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  outline: none;
 }
 
-.report-item {
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
+/* STATS */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
 }
 
-.report-item:last-child {
-  border-bottom: 0;
+.stat {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: var(--shadow);
 }
 
-.empty {
-  text-align: center;
-  padding: 40px;
-  color: #888;
+.stat-number {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--purple-dark);
+}
+
+.stat-label {
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.progress {
+  height: 10px;
+  background: #eeeaf1;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg,#a47cf7,#7950e8);
+}
+
+.progress-green {
+  background: var(--green);
+}
+
+.progress-red {
+  background: var(--red);
+}
+
+/* PROFILE */
+
+.profile-card {
+  background: white;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: var(--shadow);
 }
 
 .profile-row {
@@ -378,7 +531,31 @@ button {
   border-bottom: 0;
 }
 
+.profile-label {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.profile-value {
+  font-weight: 700;
+}
+
+/* EMPTY */
+
+.empty {
+  background: white;
+  border-radius: 18px;
+  padding: 35px;
+  text-align: center;
+  color: var(--muted);
+  box-shadow: var(--shadow);
+}
+
+/* MOBILE */
+
 @media (max-width: 800px) {
+
   .layout {
     display: block;
   }
@@ -387,224 +564,468 @@ button {
     width: 100%;
     display: flex;
     overflow-x: auto;
+    padding: 9px;
     gap: 5px;
-    padding: 10px;
+    position: sticky;
+    top: 65px;
+    z-index: 10;
+    background: rgba(245,239,251,.94);
   }
 
-  .nav-btn {
-    white-space: nowrap;
+  .nav-button {
     width: auto;
+    min-width: max-content;
+    margin: 0;
+    white-space: nowrap;
   }
 
   .content {
-    padding: 15px;
+    padding: 17px 13px 90px;
   }
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .header-user {
-    display: none;
-  }
 }
 
 @media (max-width: 500px) {
-  .stats-grid {
+
+  .section-grid {
     grid-template-columns: 1fr;
   }
 
-  .auth-card {
-    padding: 25px;
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
   }
+
+  .page-title {
+    font-size: 26px;
+  }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- AUTH -->
+<!-- ================================
+     AUTHORIZATION
+================================ -->
 
 <div id="authScreen" class="auth-screen">
+
   <div class="auth-card">
 
-    <div class="logo">ОГЭ Английский</div>
-    <div class="auth-subtitle">Твой личный трекер подготовки</div>
+    <div class="logo">
+      ОГЭ Английский
+    </div>
+
+    <div class="logo-subtitle">
+      Трекер подготовки
+    </div>
+
+    <div class="auth-tabs">
+
+      <button
+        id="loginTab"
+        class="auth-tab active"
+        onclick="showLogin()">
+        Вход
+      </button>
+
+      <button
+        id="registerTab"
+        class="auth-tab"
+        onclick="showRegister()">
+        Регистрация
+      </button>
+
+    </div>
+
+
+    <!-- LOGIN -->
 
     <div id="loginForm">
 
-      <h2>Вход</h2>
-
       <div class="field">
+
         <label>Email</label>
-        <input id="loginEmail" type="email" placeholder="Введите email">
+
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="Введите email">
+
       </div>
+
 
       <div class="field">
+
         <label>Пароль</label>
-        <input id="loginPassword" type="password" placeholder="Введите пароль">
+
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Введите пароль">
+
       </div>
 
-      <button class="primary-btn" onclick="login()">
+
+      <button
+        class="primary-btn"
+        onclick="login()">
         Войти
       </button>
 
-      <button class="secondary-btn" onclick="showRegister()">
-        Создать аккаунт
-      </button>
 
-      <button class="secondary-btn" onclick="showForgot()">
+      <button
+        class="secondary-btn"
+        onclick="showForgot()">
         Забыли пароль?
       </button>
 
     </div>
 
+
+    <!-- REGISTER -->
+
     <div id="registerForm" class="hidden">
 
-      <h2>Регистрация</h2>
+      <div class="field">
+
+        <label>Никнейм</label>
+
+        <input
+          id="registerNickname"
+          type="text"
+          placeholder="Как тебя называть?">
+
+      </div>
+
 
       <div class="field">
+
         <label>Email</label>
-        <input id="registerEmail" type="email" placeholder="Введите email">
+
+        <input
+          id="registerEmail"
+          type="email"
+          placeholder="Введите email">
+
       </div>
 
+
       <div class="field">
+
         <label>Пароль</label>
-        <input id="registerPassword" type="password" placeholder="Минимум 6 символов">
+
+        <input
+          id="registerPassword"
+          type="password"
+          placeholder="Минимум 6 символов">
+
       </div>
+
 
       <div class="field">
+
         <label>Повторите пароль</label>
-        <input id="registerPassword2" type="password" placeholder="Повторите пароль">
+
+        <input
+          id="registerPassword2"
+          type="password"
+          placeholder="Повторите пароль">
+
       </div>
 
-      <button class="primary-btn" onclick="register()">
-        Зарегистрироваться
-      </button>
 
-      <button class="secondary-btn" onclick="showLogin()">
-        Уже есть аккаунт
+      <button
+        class="primary-btn"
+        onclick="register()">
+        Зарегистрироваться
       </button>
 
     </div>
 
+
+    <!-- FORGOT -->
+
     <div id="forgotForm" class="hidden">
 
-      <h2>Восстановление пароля</h2>
+      <h3>
+        Восстановление пароля
+      </h3>
 
       <div class="field">
+
         <label>Email</label>
-        <input id="forgotEmail" type="email" placeholder="Введите email">
+
+        <input
+          id="forgotEmail"
+          type="email"
+          placeholder="Введите email">
+
       </div>
 
-      <button class="primary-btn" onclick="forgotPassword()">
-        Отправить письмо
+
+      <button
+        class="primary-btn"
+        onclick="forgotPassword()">
+        Отправить ссылку
       </button>
 
-      <button class="secondary-btn" onclick="showLogin()">
+
+      <button
+        class="secondary-btn"
+        onclick="showLogin()">
         Вернуться ко входу
       </button>
 
     </div>
 
-    <div id="authMessage" class="auth-message"></div>
+
+    <div
+      id="authMessage"
+      class="auth-message hidden">
+    </div>
 
   </div>
+
 </div>
 
 
-<!-- APP -->
+<!-- ================================
+     MAIN APP
+================================ -->
 
 <div id="app" class="app hidden">
 
-  <header class="header">
 
-    <div class="header-title">
+  <header class="topbar">
+
+    <div class="logo-small">
       ОГЭ Английский
     </div>
 
-    <div class="header-user">
-      <span id="userEmail"></span>
-      <button class="logout-btn" onclick="logout()">
-        Выйти
-      </button>
-    </div>
+    <button
+      class="profile-button"
+      onclick="openProfile()">
+      👤
+    </button>
 
   </header>
 
+
   <div class="layout">
+
 
     <aside class="sidebar">
 
-      <button class="nav-btn active" onclick="showPage('home', this)">
+      <button
+        class="nav-button active"
+        onclick="openPage('home', this)">
         🏠 Главная
       </button>
 
-      <button class="nav-btn" onclick="showPage('tasks', this)">
+
+      <button
+        class="nav-button"
+        onclick="openPage('tasks', this)">
         📚 Задания
       </button>
 
-      <button class="nav-btn" onclick="showPage('stats', this)">
+
+      <button
+        class="nav-button"
+        onclick="openPage('stats', this)">
         📊 Статистика
       </button>
 
-      <button class="nav-btn" onclick="showPage('errors', this)">
+
+      <button
+        class="nav-button"
+        onclick="openPage('errors', this)">
         ❌ Ошибки
       </button>
 
-      <button class="nav-btn" onclick="showPage('report', this)">
-        📝 Отчёт
-      </button>
 
-      <button class="nav-btn" onclick="showPage('profile', this)">
+      <button
+        class="nav-button"
+        onclick="openPage('profile', this)">
         👤 Профиль
       </button>
 
     </aside>
 
+
     <main class="content">
+
 
       <!-- HOME -->
 
       <section id="page-home">
 
-        <h1 class="page-title">
-          Привет! 👋
-        </h1>
+        <div class="welcome">
 
-        <p class="page-subtitle">
-          Здесь будет отображаться твой прогресс подготовки к ОГЭ.
-        </p>
+          <h1>
+            Привет, <span id="welcomeName">!</span> 👋
+          </h1>
 
-        <div class="stats-grid">
+          <p>
+            Продолжим подготовку к ОГЭ?
+          </p>
 
-          <div class="stat-card">
-            <div id="homeTotal" class="stat-number">0</div>
-            <div class="stat-label">Заданий решено</div>
+        </div>
+
+
+        <div class="quote">
+
+          <div class="quote-label">
+            Мотивация дня
           </div>
 
-          <div class="stat-card">
-            <div id="homeCorrect" class="stat-number">0</div>
-            <div class="stat-label">Правильных</div>
-          </div>
-
-          <div class="stat-card">
-            <div id="homeWrong" class="stat-number">0</div>
-            <div class="stat-label">Ошибок</div>
-          </div>
-
-          <div class="stat-card">
-            <div id="homePercent" class="stat-number">0%</div>
-            <div class="stat-label">Процент правильных</div>
+          <div
+            id="quoteText"
+            class="quote-text">
           </div>
 
         </div>
 
-        <div class="card" style="margin-top:20px">
 
-          <h2>Последние попытки</h2>
+        <div class="search">
 
-          <div id="recentAttempts"></div>
+          <input
+            id="taskSearch"
+            type="text"
+            placeholder="Поиск по коду задания..."
+            oninput="searchTasks()">
+
+        </div>
+
+
+        <h2>
+          Разделы заданий
+        </h2>
+
+
+        <div class="section-grid">
+
+
+          <button
+            class="section-card"
+            onclick="openSection('1-5')">
+
+            <span class="section-number">
+              1–5
+            </span>
+
+            <span class="section-title">
+              Задания 1–5
+            </span>
+
+            <span class="section-description">
+              Аудирование
+            </span>
+
+          </button>
+
+
+          <button
+            class="section-card"
+            onclick="openSection('6-11')">
+
+            <span class="section-number">
+              6–11
+            </span>
+
+            <span class="section-title">
+              Задания 6–11
+            </span>
+
+            <span class="section-description">
+              Чтение
+            </span>
+
+          </button>
+
+
+          <button
+            class="section-card"
+            onclick="openSection('12')">
+
+            <span class="section-number">
+              12
+            </span>
+
+            <span class="section-title">
+              Задание 12
+            </span>
+
+            <span class="section-description">
+              Грамматика
+            </span>
+
+          </button>
+
+
+          <button
+            class="section-card"
+            onclick="openSection('13-19')">
+
+            <span class="section-number">
+              13–19
+            </span>
+
+            <span class="section-title">
+              Задания 13–19
+            </span>
+
+            <span class="section-description">
+              Лексика и грамматика
+            </span>
+
+          </button>
+
+
+          <button
+            class="section-card"
+            onclick="openSection('20-28')">
+
+            <span class="section-number">
+              20–28
+            </span>
+
+            <span class="section-title">
+              Задания 20–28
+            </span>
+
+            <span class="section-description">
+              Лексика
+            </span>
+
+          </button>
+
+
+          <button
+            class="section-card"
+            onclick="openSection('29-34')">
+
+            <span class="section-number">
+              29–34
+            </span>
+
+            <span class="section-title">
+              Задания 29–34
+            </span>
+
+            <span class="section-description">
+              Письменная часть
+            </span>
+
+          </button>
+
 
         </div>
 
@@ -613,71 +1034,99 @@ button {
 
       <!-- TASKS -->
 
-      <section id="page-tasks" class="hidden">
+      <section
+        id="page-tasks"
+        class="hidden">
 
-        <h1 class="page-title">
+        <button
+          class="action-btn back-btn"
+          onclick="openPage('home')">
+          ← Назад
+        </button>
+
+        <h1
+          id="tasksTitle"
+          class="page-title"
+          style="margin-top:18px">
           Задания
         </h1>
 
-        <p class="page-subtitle">
-          Все доступные задания из твоего файла tasks.js.
+        <p
+          id="tasksSubtitle"
+          class="page-subtitle">
         </p>
 
-        <div id="taskList" class="task-list"></div>
+        <div
+          id="taskList"
+          class="task-list">
+        </div>
 
       </section>
 
 
       <!-- TASK -->
 
-      <section id="page-task" class="hidden">
+      <section
+        id="page-task"
+        class="hidden">
 
-        <button class="action-btn back-btn" onclick="showPage('tasks')">
+        <button
+          class="action-btn back-btn"
+          onclick="openPage('tasks')">
           ← Назад к заданиям
         </button>
 
-        <div class="card" style="margin-top:15px">
 
-          <h1 id="taskTitle"></h1>
+        <div class="card"
+             style="margin-top:15px">
 
-          <div id="taskContent"></div>
+          <h1 id="taskTitle">
+          </h1>
 
-          <div id="taskOptions"></div>
+          <div
+            id="taskContent"
+            class="task-content">
+          </div>
+
+
+          <div
+            id="taskOptions"
+            class="options">
+          </div>
+
 
           <div class="action-row">
 
             <button
               class="action-btn correct-btn"
-              onclick="markCurrentTask(true)"
-            >
+              onclick="markCorrect()">
               ✓ Я ответила правильно
             </button>
 
+
             <button
               class="action-btn wrong-btn"
-              onclick="showWrongReason()"
-            >
+              onclick="showReason()">
               ✕ Я ошиблась
             </button>
 
           </div>
 
-          <div id="reasonBox" class="reason-box hidden">
 
-            <label>
-              <b>Почему произошла ошибка?</b>
-            </label>
+          <div
+            id="reasonBox"
+            class="reason hidden">
 
             <textarea
               id="wrongReason"
-              placeholder="Например: не знала слово, перепутала правило, невнимательность..."
-            ></textarea>
+              placeholder="Напиши причину ошибки...">
+            </textarea>
+
 
             <button
               class="action-btn wrong-btn"
               style="margin-top:10px"
-              onclick="markCurrentTask(false)"
-            >
+              onclick="saveWrong()">
               Сохранить ошибку
             </button>
 
@@ -690,41 +1139,147 @@ button {
 
       <!-- STATS -->
 
-      <section id="page-stats" class="hidden">
+      <section
+        id="page-stats"
+        class="hidden">
 
         <h1 class="page-title">
           Статистика
         </h1>
 
+        <p class="page-subtitle">
+          Твой прогресс подготовки
+        </p>
+
+
         <div class="stats-grid">
 
-          <div class="stat-card">
-            <div id="statsTotal" class="stat-number">0</div>
-            <div class="stat-label">Всего попыток</div>
+          <div class="stat">
+
+            <div
+              id="statSolved"
+              class="stat-number">
+              0%
+            </div>
+
+            <div class="stat-label">
+              Заданий прорешано
+            </div>
+
+            <div class="progress">
+
+              <div
+                id="barSolved"
+                class="progress-bar"
+                style="width:0%">
+              </div>
+
+            </div>
+
           </div>
 
-          <div class="stat-card">
-            <div id="statsCorrect" class="stat-number">0</div>
-            <div class="stat-label">Правильных</div>
+
+          <div class="stat">
+
+            <div
+              id="statCorrect"
+              class="stat-number">
+              0%
+            </div>
+
+            <div class="stat-label">
+              Верных
+            </div>
+
+            <div class="progress">
+
+              <div
+                id="barCorrect"
+                class="progress-bar progress-green"
+                style="width:0%">
+              </div>
+
+            </div>
+
           </div>
 
-          <div class="stat-card">
-            <div id="statsWrong" class="stat-number">0</div>
-            <div class="stat-label">Неправильных</div>
+
+          <div class="stat">
+
+            <div
+              id="statWrong"
+              class="stat-number">
+              0%
+            </div>
+
+            <div class="stat-label">
+              Неверных
+            </div>
+
+            <div class="progress">
+
+              <div
+                id="barWrong"
+                class="progress-bar progress-red"
+                style="width:0%">
+              </div>
+
+            </div>
+
           </div>
 
-          <div class="stat-card">
-            <div id="statsPercent" class="stat-number">0%</div>
-            <div class="stat-label">Успешность</div>
+
+          <div class="stat">
+
+            <div
+              id="statAttempts"
+              class="stat-number">
+              0
+            </div>
+
+            <div class="stat-label">
+              Всего попыток
+            </div>
+
           </div>
 
         </div>
 
-        <div class="card" style="margin-top:20px">
 
-          <h2>Результаты по заданиям</h2>
+        <div
+          class="card"
+          style="margin-top:20px">
 
-          <div id="statsTasks"></div>
+          <h2>
+            По разделам
+          </h2>
+
+          <div id="sectionStats">
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <h2>
+            Ошибки по темам
+          </h2>
+
+          <div id="errorStats">
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <h2>
+            Активность
+          </h2>
+
+          <div id="activityStats">
+          </div>
 
         </div>
 
@@ -733,39 +1288,21 @@ button {
 
       <!-- ERRORS -->
 
-      <section id="page-errors" class="hidden">
+      <section
+        id="page-errors"
+        class="hidden">
 
         <h1 class="page-title">
           Анализ ошибок
         </h1>
 
         <p class="page-subtitle">
-          Здесь сохраняются причины прошлых ошибок.
+          Все предыдущие ошибки сохраняются.
         </p>
 
-        <div class="card">
 
-          <div id="errorsList"></div>
-
-        </div>
-
-      </section>
-
-
-      <!-- REPORT -->
-
-      <section id="page-report" class="hidden">
-
-        <h1 class="page-title">
-          Отчёт
-        </h1>
-
-        <div class="card">
-
-          <h2>Общий результат</h2>
-
-          <div id="reportContent"></div>
-
+        <div
+          id="errorsList">
         </div>
 
       </section>
@@ -773,30 +1310,62 @@ button {
 
       <!-- PROFILE -->
 
-      <section id="page-profile" class="hidden">
+      <section
+        id="page-profile"
+        class="hidden">
 
         <h1 class="page-title">
-          Профиль
+          Личный кабинет
         </h1>
 
-        <div class="card">
+        <div class="profile-card">
 
           <div class="profile-row">
-            <b>Email</b>
-            <div id="profileEmail"></div>
+
+            <div class="profile-label">
+              Никнейм
+            </div>
+
+            <div
+              id="profileNickname"
+              class="profile-value">
+            </div>
+
           </div>
+
 
           <div class="profile-row">
-            <b>Дата регистрации</b>
-            <div id="profileCreated"></div>
+
+            <div class="profile-label">
+              Email
+            </div>
+
+            <div
+              id="profileEmail"
+              class="profile-value">
+            </div>
+
           </div>
 
-          <div style="margin-top:20px">
+
+          <div
+            class="profile-row">
 
             <button
-              class="logout-btn"
-              onclick="logout()"
-            >
+              class="action-btn back-btn"
+              onclick="changeNickname()">
+              ✏️ Изменить ник
+            </button>
+
+          </div>
+
+
+          <div
+            class="profile-row">
+
+            <button
+              class="action-btn wrong-btn"
+              onclick="logout()">
               Выйти из аккаунта
             </button>
 
@@ -806,6 +1375,7 @@ button {
 
       </section>
 
+
     </main>
 
   </div>
@@ -813,9 +1383,11 @@ button {
 </div>
 
 
-<!-- SUPABASE -->
-
 <script>
+
+/* =========================================
+   SUPABASE
+========================================= */
 
 const SUPABASE_URL =
   "https://akaslsblnvxwtzlhveh.supabase.co";
@@ -836,31 +1408,259 @@ const sb =
     }
   );
 
+
 const SITE_URL =
   "https://darianovet.github.io/oge-english-tracker/";
 
 
+/* =========================================
+   TELEGRAM
+========================================= */
+
+const tg =
+  window.Telegram?.WebApp;
+
+if (tg) {
+  tg.ready();
+  tg.expand();
+}
+
+
+/* =========================================
+   DATA
+========================================= */
+
 let currentUser = null;
-let tasks = [];
+
 let currentTask = null;
+
+let currentSection = "1-5";
+
+let tasks = [];
+
 let progress = [];
+
 let history = [];
 
 
-/* =========================
-   AUTH FORMS
-========================= */
+/* =========================================
+   TASK CODES
+========================================= */
+
+const taskCodes = {
+
+  "1-5": [
+    "42BF66",
+    "7D08A8",
+    "0E593D",
+    "F515EF",
+    "E5CBA4"
+  ],
+
+  "6-11": [
+    "95E6B8",
+    "2EA061",
+    "C06EFC",
+    "29C2CA",
+    "386CD7"
+  ],
+
+  "12": [
+    "0C716B",
+    "EDB490",
+    "03F090",
+    "8C78E3",
+    "695F67"
+  ],
+
+  "13-19": [
+    "951E52",
+    "5A18F1",
+    "F5204D",
+    "0865DE",
+    "340853"
+  ],
+
+  "20-28": [
+    "CAABF3",
+    "2FFA67",
+    "5E6B43",
+    "EB7418",
+    "0658F3"
+  ],
+
+  "29-34": [
+    "F6BC9B",
+    "25AD45",
+    "859E73",
+    "B52DA7",
+    "42C953",
+
+    "007C41",
+    "1DCC0D",
+    "C50645",
+    "ED2819",
+    "B28913",
+
+    "A3D877",
+    "343566",
+    "93C67B",
+    "CD2086",
+    "7386BB",
+
+    "9AE50E",
+    "4C5108",
+    "B92FDF",
+    "7423A3",
+    "2352F4",
+
+    "FB72E3",
+    "1A9669",
+    "682257",
+    "04B37B",
+    "E50B58",
+
+    "B6B552",
+    "42482B",
+    "0F736B",
+    "6DA43C",
+    "8C8FB3",
+
+    "FBC2D3",
+    "7C6D94",
+    "96301E",
+    "9C5018",
+    "01CA56",
+
+    "4EBF61",
+    "B7B0DE",
+    "B5B0A7",
+    "6E7559",
+    "D14DE4",
+
+    "29C68A",
+    "DBC83C",
+    "5ED40C",
+    "0725BB",
+    "D6633E",
+
+    "920E68",
+    "159BD2",
+    "C57410",
+    "5FDAEE",
+    "A97A54",
+
+    "F1D6FB",
+    "95B82D",
+    "634191",
+    "DDDCAC",
+    "611D96",
+
+    "89F3B5",
+    "0978BF",
+    "56E075",
+    "154D08",
+    "FF5060",
+
+    "6464A0",
+    "3DB37F",
+    "A3EC89",
+    "419F82",
+    "42CFC3",
+
+    "C3D847",
+    "496FB0",
+    "9415FF",
+    "0839D5",
+    "70E447"
+  ]
+
+};
+
+
+/* =========================================
+   MOTIVATION
+========================================= */
+
+const quotes = [
+  "Ты не обязана знать всё сразу. Главное — становиться лучше каждый день.",
+  "Маленький шаг сегодня — большой результат на экзамене.",
+  "Ошибки — это не провал, а подсказка, что повторить.",
+  "Не сравнивай свой прогресс с чужим.",
+  "Ты уже ближе к цели, чем была вчера.",
+  "Регулярность важнее идеальности.",
+  "Каждое решённое задание делает тебя увереннее.",
+  "Не бойся сложных заданий — разбирай их по шагам.",
+  "Сегодняшние 20 минут подготовки тоже имеют значение.",
+  "Ты можешь больше, чем тебе кажется.",
+  "Главное — не остановиться.",
+  "Сначала трудно, потом привычно.",
+  "Твой результат складывается из маленьких усилий.",
+  "Ошиблась? Отлично. Теперь ты знаешь, что повторить.",
+  "Уверенность появляется после практики.",
+  "Не жди мотивации — начни, и она появится.",
+  "Каждая попытка — ещё один шаг к пятёрке.",
+  "Ты готовишься не зря.",
+  "Сложное задание становится простым после разбора.",
+  "Сегодня лучше, чем вчера.",
+  "Не обязательно сделать идеально. Нужно сделать.",
+  "Твоя цель достижима.",
+  "Пять минут подготовки лучше нуля.",
+  "Ты справишься.",
+  "Продолжай — результат обязательно появится.",
+  "Не сдавайся после одной ошибки.",
+  "Трудности показывают, что ты растёшь.",
+  "Практика делает уверенность.",
+  "Ты уже проделала большую работу.",
+  "Один день — одно маленькое достижение.",
+  "Не бойся начинать заново.",
+  "У тебя получится.",
+  "Твоя подготовка — это инвестиция в себя.",
+  "Каждое повторение закрепляет знания.",
+  "Ошибки помогают увидеть слабые места.",
+  "Не откладывай то, что можешь сделать сегодня.",
+  "Ты становишься сильнее с каждой попыткой.",
+  "Экзамен — это не страшно, если ты готовишься.",
+  "Разбирай ошибки, а не ругай себя за них.",
+  "Двигайся в своём темпе.",
+  "Сегодняшняя практика станет завтрашней уверенностью.",
+  "Не нужно знать всё. Нужно знать достаточно.",
+  "Ты способна разобраться.",
+  "Продолжай работать.",
+  "Результат приходит к тем, кто не бросает.",
+  "Один решённый блок — уже прогресс.",
+  "Ты ближе к своей цели.",
+  "Верь в себя и продолжай практиковаться.",
+  "У тебя всё получится.",
+  "Ты справишься с ОГЭ."
+];
+
+
+/* =========================================
+   AUTH UI
+========================================= */
 
 function showLogin() {
 
-  document.getElementById("loginForm")
+  document
+    .getElementById("loginForm")
     .classList.remove("hidden");
 
-  document.getElementById("registerForm")
+  document
+    .getElementById("registerForm")
     .classList.add("hidden");
 
-  document.getElementById("forgotForm")
+  document
+    .getElementById("forgotForm")
     .classList.add("hidden");
+
+  document
+    .getElementById("loginTab")
+    .classList.add("active");
+
+  document
+    .getElementById("registerTab")
+    .classList.remove("active");
 
   clearMessage();
 }
@@ -868,14 +1668,25 @@ function showLogin() {
 
 function showRegister() {
 
-  document.getElementById("loginForm")
+  document
+    .getElementById("loginForm")
     .classList.add("hidden");
 
-  document.getElementById("registerForm")
+  document
+    .getElementById("registerForm")
     .classList.remove("hidden");
 
-  document.getElementById("forgotForm")
+  document
+    .getElementById("forgotForm")
     .classList.add("hidden");
+
+  document
+    .getElementById("loginTab")
+    .classList.remove("active");
+
+  document
+    .getElementById("registerTab")
+    .classList.add("active");
 
   clearMessage();
 }
@@ -883,26 +1694,30 @@ function showRegister() {
 
 function showForgot() {
 
-  document.getElementById("loginForm")
+  document
+    .getElementById("loginForm")
     .classList.add("hidden");
 
-  document.getElementById("registerForm")
+  document
+    .getElementById("registerForm")
     .classList.add("hidden");
 
-  document.getElementById("forgotForm")
+  document
+    .getElementById("forgotForm")
     .classList.remove("hidden");
 
   clearMessage();
 }
 
 
-function showMessage(text) {
+function showMessage(message) {
 
   const box =
     document.getElementById("authMessage");
 
-  box.textContent = text;
-  box.style.display = "block";
+  box.textContent = message;
+
+  box.classList.remove("hidden");
 }
 
 
@@ -912,25 +1727,28 @@ function clearMessage() {
     document.getElementById("authMessage");
 
   box.textContent = "";
-  box.style.display = "none";
+
+  box.classList.add("hidden");
 }
 
 
-/* =========================
+/* =========================================
    LOGIN
-========================= */
+========================================= */
 
 async function login() {
 
   clearMessage();
 
   const email =
-    document.getElementById("loginEmail")
+    document
+      .getElementById("loginEmail")
       .value
       .trim();
 
   const password =
-    document.getElementById("loginPassword")
+    document
+      .getElementById("loginPassword")
       .value;
 
   if (!email || !password) {
@@ -942,6 +1760,7 @@ async function login() {
     return;
   }
 
+
   const {
     data,
     error
@@ -950,6 +1769,7 @@ async function login() {
       email,
       password
     });
+
 
   if (error) {
 
@@ -960,6 +1780,7 @@ async function login() {
     return;
   }
 
+
   currentUser =
     data.user;
 
@@ -967,28 +1788,38 @@ async function login() {
 }
 
 
-/* =========================
+/* =========================================
    REGISTER
-========================= */
+========================================= */
 
 async function register() {
 
   clearMessage();
 
+  const nickname =
+    document
+      .getElementById("registerNickname")
+      .value
+      .trim();
+
   const email =
-    document.getElementById("registerEmail")
+    document
+      .getElementById("registerEmail")
       .value
       .trim();
 
   const password =
-    document.getElementById("registerPassword")
+    document
+      .getElementById("registerPassword")
       .value;
 
   const password2 =
-    document.getElementById("registerPassword2")
+    document
+      .getElementById("registerPassword2")
       .value;
 
-  if (!email || !password || !password2) {
+
+  if (!nickname || !email || !password) {
 
     showMessage(
       "Заполните все поля."
@@ -996,6 +1827,7 @@ async function register() {
 
     return;
   }
+
 
   if (password !== password2) {
 
@@ -1006,6 +1838,7 @@ async function register() {
     return;
   }
 
+
   if (password.length < 6) {
 
     showMessage(
@@ -1015,14 +1848,22 @@ async function register() {
     return;
   }
 
+
   const {
     data,
     error
   } =
     await sb.auth.signUp({
       email,
-      password
+      password,
+
+      options: {
+        data: {
+          nickname: nickname
+        }
+      }
     });
+
 
   if (error) {
 
@@ -1032,6 +1873,7 @@ async function register() {
 
     return;
   }
+
 
   if (data.session) {
 
@@ -1051,18 +1893,20 @@ async function register() {
 }
 
 
-/* =========================
+/* =========================================
    FORGOT PASSWORD
-========================= */
+========================================= */
 
 async function forgotPassword() {
 
   clearMessage();
 
   const email =
-    document.getElementById("forgotEmail")
+    document
+      .getElementById("forgotEmail")
       .value
       .trim();
+
 
   if (!email) {
 
@@ -1072,6 +1916,7 @@ async function forgotPassword() {
 
     return;
   }
+
 
   const {
     error
@@ -1083,6 +1928,7 @@ async function forgotPassword() {
       }
     );
 
+
   if (error) {
 
     showMessage(
@@ -1092,16 +1938,17 @@ async function forgotPassword() {
     return;
   }
 
+
   showMessage(
-    "Письмо для восстановления пароля отправлено на вашу почту."
+    "Ссылка для восстановления отправлена на почту."
   );
 
 }
 
 
-/* =========================
+/* =========================================
    LOGOUT
-========================= */
+========================================= */
 
 async function logout() {
 
@@ -1123,9 +1970,9 @@ async function logout() {
 }
 
 
-/* =========================
+/* =========================================
    OPEN APP
-========================= */
+========================================= */
 
 async function openApp() {
 
@@ -1137,115 +1984,121 @@ async function openApp() {
     .getElementById("app")
     .classList.remove("hidden");
 
+
+  const nickname =
+    currentUser?.user_metadata?.nickname
+    ||
+    currentUser?.email?.split("@")[0]
+    ||
+    "ученик";
+
+
   document
-    .getElementById("userEmail")
+    .getElementById("welcomeName")
     .textContent =
-      currentUser.email;
+      nickname;
+
+
+  document
+    .getElementById("profileNickname")
+    .textContent =
+      nickname;
+
 
   document
     .getElementById("profileEmail")
     .textContent =
       currentUser.email;
 
-  document
-    .getElementById("profileCreated")
-    .textContent =
-      currentUser.created_at
-        ? new Date(
-            currentUser.created_at
-          ).toLocaleDateString("ru-RU")
-        : "—";
+
+  setDailyQuote();
 
   await loadTasks();
+
   await loadUserData();
 
-  showPage("home");
+  updateStatistics();
 
-  updateAll();
 }
 
 
-/* =========================
-   LOAD TASKS
-========================= */
+/* =========================================
+   TASKS
+========================================= */
 
 async function loadTasks() {
 
   tasks = [];
 
-  if (
-    Array.isArray(window.tasks)
-  ) {
 
-    tasks = window.tasks;
+  /*
+    tasks.js будет подключён
+    следующим отдельным шагом.
+  */
 
-  } else if (
-    Array.isArray(window.TASKS)
-  ) {
+  if (Array.isArray(window.tasks)) {
 
-    tasks = window.TASKS;
-
-  } else if (
-    Array.isArray(window.taskData)
-  ) {
-
-    tasks = window.taskData;
-
-  } else if (
-    Array.isArray(window.tasksData)
-  ) {
-
-    tasks = window.tasksData;
+    tasks =
+      window.tasks;
 
   }
 
+
+  if (Array.isArray(window.TASKS)) {
+
+    tasks =
+      window.TASKS;
+
+  }
+
+
   tasks =
     tasks.map(
-      (task, index) => {
+      (task, index) => ({
 
-        return {
-          ...task,
+        ...task,
 
-          id:
-            String(
-              task.id ??
-              task.task_id ??
-              index + 1
-            ),
+        id:
+          String(
+            task.id ??
+            task.task_id ??
+            index + 1
+          ),
 
-          title:
-            task.title ??
-            task.name ??
-            `Задание ${index + 1}`,
+        title:
+          task.title ??
+          task.name ??
+          `Задание ${index + 1}`,
 
-          question:
-            task.question ??
-            task.text ??
-            task.content ??
-            task.description ??
-            "",
+        question:
+          task.question ??
+          task.text ??
+          task.content ??
+          task.description ??
+          "",
 
-          options:
-            task.options ??
-            task.answers ??
-            task.choices ??
-            []
+        options:
+          task.options ??
+          task.answers ??
+          task.choices ??
+          []
 
-        };
-
-      }
+      })
     );
 
 }
 
 
-/* =========================
-   LOAD USER DATA
-========================= */
+/* =========================================
+   DATABASE
+========================================= */
 
 async function loadUserData() {
 
-  if (!currentUser) return;
+  if (!currentUser) {
+    return;
+  }
+
 
   const progressResult =
     await sb
@@ -1255,6 +2108,7 @@ async function loadUserData() {
         "user_id",
         currentUser.id
       );
+
 
   if (!progressResult.error) {
 
@@ -1283,6 +2137,7 @@ async function loadUserData() {
         }
       );
 
+
   if (!historyResult.error) {
 
     history =
@@ -1297,11 +2152,11 @@ async function loadUserData() {
 }
 
 
-/* =========================
+/* =========================================
    NAVIGATION
-========================= */
+========================================= */
 
-function showPage(
+function openPage(
   page,
   button = null
 ) {
@@ -1312,21 +2167,21 @@ function showPage(
     "task",
     "stats",
     "errors",
-    "report",
     "profile"
   ];
+
 
   pages.forEach(
     name => {
 
-      const el =
+      const element =
         document.getElementById(
           "page-" + name
         );
 
-      if (el) {
+      if (element) {
 
-        el.classList.toggle(
+        element.classList.toggle(
           "hidden",
           name !== page
         );
@@ -1338,10 +2193,10 @@ function showPage(
 
 
   document
-    .querySelectorAll(".nav-btn")
+    .querySelectorAll(".nav-button")
     .forEach(
-      btn =>
-        btn.classList.remove(
+      item =>
+        item.classList.remove(
           "active"
         )
     );
@@ -1353,186 +2208,384 @@ function showPage(
 
   }
 
-  updateAll();
+
+  if (page === "tasks") {
+
+    renderTasks();
+
+  }
+
+
+  if (page === "stats") {
+
+    updateStatistics();
+
+  }
+
+
+  if (page === "errors") {
+
+    renderErrors();
+
+  }
+
 }
 
 
-/* =========================
-   TASK LIST
-========================= */
+function openProfile() {
 
-function renderTasks() {
+  openPage("profile");
+
+}
+
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+function openSection(section) {
+
+  currentSection =
+    section;
+
+  const names = {
+
+    "1-5":
+      "Задания 1–5",
+
+    "6-11":
+      "Задания 6–11",
+
+    "12":
+      "Задание 12",
+
+    "13-19":
+      "Задания 13–19",
+
+    "20-28":
+      "Задания 20–28",
+
+    "29-34":
+      "Задания 29–34"
+
+  };
+
+
+  document
+    .getElementById("tasksTitle")
+    .textContent =
+      names[section];
+
+
+  document
+    .getElementById("tasksSubtitle")
+    .textContent =
+      `${taskCodes[section].length} задания`;
+
+
+  openPage("tasks");
+
+  renderTasks();
+
+}
+
+
+/* =========================================
+   RENDER TASKS
+========================================= */
+
+function renderTasks(
+  searchValue = ""
+) {
 
   const container =
     document.getElementById(
       "taskList"
     );
 
-  if (!tasks.length) {
 
-    container.innerHTML = `
-      <div class="card empty">
-        Задания не найдены.
-        <br><br>
-        Проверь, что файл
-        <b>data/tasks.js</b>
-        подключён.
+  let codes =
+    taskCodes[currentSection]
+    || [];
+
+
+  if (searchValue) {
+
+    codes =
+      codes.filter(
+        code =>
+          code
+            .toLowerCase()
+            .includes(
+              searchValue
+                .toLowerCase()
+            )
+      );
+
+  }
+
+
+  if (!codes.length) {
+
+    container.innerHTML =
+      `
+      <div class="empty">
+        Ничего не найдено.
       </div>
-    `;
+      `;
 
     return;
   }
 
 
   container.innerHTML =
-    tasks
-      .map(task => {
+    codes
+      .map(
+        code => {
 
-        const state =
-          progress.find(
-            item =>
-              String(item.task_id)
-              ===
-              String(task.id)
-          );
-
-        let statusClass =
-          "unanswered";
-
-        let statusText =
-          "Не решено";
-
-        if (state?.correct) {
-
-          statusClass =
-            "correct";
-
-          statusText =
-            "Правильно";
-
-        } else if (
-          state &&
-          state.result === "wrong"
-        ) {
-
-          statusClass =
-            "wrong";
-
-          statusText =
-            "Есть ошибка";
-
-        }
+          const task =
+            tasks.find(
+              item =>
+                String(item.id)
+                ===
+                String(code)
+            );
 
 
-        return `
-          <div class="task-item">
+          const states =
+            history.filter(
+              item =>
+                String(item.task_id)
+                ===
+                String(code)
+            );
 
-            <div class="task-info">
 
-              <h3>
-                ${escapeHtml(task.title)}
-              </h3>
+          const last =
+            states[0];
 
-              <p>
-                ${escapeHtml(
-                  String(
-                    task.question
-                  ).slice(0, 120)
-                )}
-              </p>
 
-            </div>
+          let statusClass =
+            "status-none";
 
-            <div>
-              <span class="status ${statusClass}">
+          let statusText =
+            "Нет попыток";
+
+
+          if (last) {
+
+            if (last.correct) {
+
+              statusClass =
+                "status-correct";
+
+              statusText =
+                "Верно";
+
+            } else {
+
+              statusClass =
+                "status-wrong";
+
+              statusText =
+                "Есть ошибка";
+
+            }
+
+          }
+
+
+          return `
+
+          <div class="task-card">
+
+            <div class="task-header">
+
+              <div class="task-title">
+                ${code}
+              </div>
+
+              <div
+                class="task-status ${statusClass}">
                 ${statusText}
-              </span>
+              </div>
 
-              <button
-                class="open-task"
-                onclick="openTask('${escapeJs(task.id)}')"
-              >
-                Открыть
-              </button>
             </div>
+
+
+            <button
+              class="open-task"
+              onclick="openTask('${code}')">
+
+              Открыть задание
+
+            </button>
 
           </div>
-        `;
 
-      })
+          `;
+
+        }
+      )
       .join("");
 
 }
 
 
-/* =========================
-   OPEN TASK
-========================= */
+/* =========================================
+   SEARCH
+========================================= */
 
-function openTask(id) {
+function searchTasks() {
+
+  const value =
+    document
+      .getElementById("taskSearch")
+      .value
+      .trim();
+
+
+  if (!value) {
+
+    return;
+
+  }
+
+
+  currentSection =
+    findSectionForCode(value);
+
+
+  openPage("tasks");
+
+  renderTasks(value);
+
+}
+
+
+function findSectionForCode(
+  code
+) {
+
+  for (
+    const section in taskCodes
+  ) {
+
+    if (
+      taskCodes[section]
+        .some(
+          item =>
+            item
+              .toLowerCase()
+              .includes(
+                code.toLowerCase()
+              )
+        )
+    ) {
+
+      return section;
+
+    }
+
+  }
+
+
+  return "1-5";
+
+}
+
+
+/* =========================================
+   OPEN TASK
+========================================= */
+
+function openTask(code) {
 
   currentTask =
     tasks.find(
       task =>
         String(task.id)
         ===
-        String(id)
+        String(code)
     );
 
-  if (!currentTask) return;
 
   document
     .getElementById("taskTitle")
     .textContent =
-      currentTask.title;
+      "Задание " + code;
 
 
-  document
-    .getElementById("taskContent")
-    .innerHTML =
-      formatTaskContent(
+  if (currentTask) {
+
+    document
+      .getElementById("taskContent")
+      .innerHTML =
         currentTask.question
-      );
+        || "Текст задания пока не добавлен.";
 
 
-  const options =
-    currentTask.options || [];
-
-  const optionsContainer =
-    document.getElementById(
-      "taskOptions"
-    );
+    const options =
+      currentTask.options
+      || [];
 
 
-  if (Array.isArray(options)
-      && options.length) {
-
-    optionsContainer.innerHTML =
+    document
+      .getElementById("taskOptions")
+      .innerHTML =
       options
         .map(
           (option, index) => `
-            <button
-              class="option"
-              onclick="selectOption(${index})"
-            >
-              ${escapeHtml(
-                typeof option === "object"
-                  ? (
-                      option.text ??
-                      option.label ??
-                      option.answer ??
-                      ""
-                    )
-                  : String(option)
-              )}
-            </button>
+
+          <button
+            class="option"
+            onclick="selectOption(this)">
+
+            ${
+              typeof option === "object"
+              ? (
+                  option.text
+                  ||
+                  option.label
+                  ||
+                  option.answer
+                  ||
+                  ""
+                )
+              : option
+            }
+
+          </button>
+
           `
         )
         .join("");
 
   } else {
 
-    optionsContainer.innerHTML = "";
+    document
+      .getElementById("taskContent")
+      .innerHTML = `
+
+        <p>
+          Задание с кодом
+          <b>${code}</b>
+          пока не загружено.
+        </p>
+
+        <p>
+          Код уже добавлен в трекер.
+          Когда мы подключим банк заданий,
+          сюда автоматически появится
+          содержание задания.
+        </p>
+
+      `;
+
+
+    document
+      .getElementById("taskOptions")
+      .innerHTML = "";
 
   }
 
@@ -1541,47 +2594,43 @@ function openTask(id) {
     .getElementById("reasonBox")
     .classList.add("hidden");
 
+
   document
     .getElementById("wrongReason")
     .value = "";
 
-  showPage("task");
+
+  openPage("task");
 
 }
 
 
-/* =========================
-   OPTION
-========================= */
+function selectOption(
+  element
+) {
 
-function selectOption(index) {
-
-  const buttons =
-    document.querySelectorAll(
-      "#taskOptions .option"
+  document
+    .querySelectorAll(".option")
+    .forEach(
+      item =>
+        item.classList.remove(
+          "selected"
+        )
     );
 
-  buttons.forEach(
-    btn =>
-      btn.style.borderColor =
-        "#e8e1f5"
+
+  element.classList.add(
+    "selected"
   );
-
-  if (buttons[index]) {
-
-    buttons[index].style.borderColor =
-      "#8b5cf6";
-
-  }
 
 }
 
 
-/* =========================
-   WRONG REASON
-========================= */
+/* =========================================
+   ATTEMPT
+========================================= */
 
-function showWrongReason() {
+function showReason() {
 
   document
     .getElementById("reasonBox")
@@ -1590,36 +2639,56 @@ function showWrongReason() {
 }
 
 
-/* =========================
-   SAVE ATTEMPT
-========================= */
+async function markCorrect() {
 
-async function markCurrentTask(
-  isCorrect
-) {
+  await saveAttempt(
+    true,
+    ""
+  );
 
-  if (!currentTask || !currentUser) {
+}
+
+
+async function saveWrong() {
+
+  const reason =
+    document
+      .getElementById("wrongReason")
+      .value
+      .trim();
+
+
+  if (!reason) {
+
+    alert(
+      "Напиши тему или причину ошибки."
+    );
+
     return;
+
   }
 
-  let reason = "";
 
-  if (!isCorrect) {
+  await saveAttempt(
+    false,
+    reason
+  );
 
-    reason =
-      document
-        .getElementById("wrongReason")
-        .value
-        .trim();
+}
 
-    if (!reason) {
 
-      alert(
-        "Напиши причину ошибки."
-      );
+async function saveAttempt(
+  correct,
+  reason
+) {
 
-      return;
-    }
+  if (!currentUser || !currentTask) {
+
+    alert(
+      "Не удалось определить пользователя или задание."
+    );
+
+    return;
 
   }
 
@@ -1627,6 +2696,8 @@ async function markCurrentTask(
   const taskId =
     String(
       currentTask.id
+      ||
+      currentTask.task_id
     );
 
 
@@ -1634,7 +2705,7 @@ async function markCurrentTask(
     new Date().toISOString();
 
 
-  const historyRecord = {
+  const record = {
 
     id:
       crypto.randomUUID(),
@@ -1646,12 +2717,12 @@ async function markCurrentTask(
       taskId,
 
     result:
-      isCorrect
+      correct
         ? "correct"
         : "wrong",
 
     correct:
-      isCorrect,
+      correct,
 
     reason:
       reason,
@@ -1662,55 +2733,49 @@ async function markCurrentTask(
   };
 
 
-  const historyResult =
+  const result =
     await sb
       .from("attempt_history")
-      .insert(
-        historyRecord
-      );
+      .insert(record);
 
 
-  if (historyResult.error) {
+  if (result.error) {
 
     alert(
-      "Ошибка сохранения попытки: " +
-      historyResult.error.message
+      "Ошибка сохранения: " +
+      result.error.message
     );
 
     return;
+
   }
-
-
-  const progressRecord = {
-
-    user_id:
-      currentUser.id,
-
-    task_id:
-      taskId,
-
-    result:
-      isCorrect
-        ? "correct"
-        : "wrong",
-
-    correct:
-      isCorrect,
-
-    reason:
-      reason,
-
-    updated_at:
-      now
-
-  };
 
 
   const progressResult =
     await sb
       .from("progress")
       .upsert(
-        progressRecord,
+        {
+          user_id:
+            currentUser.id,
+
+          task_id:
+            taskId,
+
+          result:
+            correct
+              ? "correct"
+              : "wrong",
+
+          correct:
+            correct,
+
+          reason:
+            reason,
+
+          updated_at:
+            now
+        },
         {
           onConflict:
             "user_id,task_id"
@@ -1721,7 +2786,7 @@ async function markCurrentTask(
   if (progressResult.error) {
 
     alert(
-      "Попытка сохранена, но текущий прогресс не обновился: " +
+      "Попытка сохранена, но прогресс не обновился: " +
       progressResult.error.message
     );
 
@@ -1730,372 +2795,359 @@ async function markCurrentTask(
 
   await loadUserData();
 
-  currentTask = null;
+  updateStatistics();
 
-  showPage("tasks");
-
-  updateAll();
+  openSection(
+    currentSection
+  );
 
 }
 
 
-/* =========================
-   HOME
-========================= */
+/* =========================================
+   STATISTICS
+========================================= */
 
-function updateHome() {
+function updateStatistics() {
 
-  const total =
+  const totalTasks =
+    Object.values(taskCodes)
+      .flat()
+      .length;
+
+
+  const solvedTasks =
+    progress.length;
+
+
+  const attempts =
     history.length;
+
 
   const correct =
     history.filter(
-      x => x.correct
+      item => item.correct
     ).length;
+
 
   const wrong =
     history.filter(
-      x => !x.correct
+      item => !item.correct
     ).length;
 
-  const percent =
-    total
+
+  const solvedPercent =
+    totalTasks
       ? Math.round(
-          correct / total * 100
+          solvedTasks /
+          totalTasks *
+          100
+        )
+      : 0;
+
+
+  const correctPercent =
+    attempts
+      ? Math.round(
+          correct /
+          attempts *
+          100
+        )
+      : 0;
+
+
+  const wrongPercent =
+    attempts
+      ? Math.round(
+          wrong /
+          attempts *
+          100
         )
       : 0;
 
 
   document
-    .getElementById("homeTotal")
+    .getElementById("statSolved")
     .textContent =
-      total;
+      solvedPercent + "%";
+
 
   document
-    .getElementById("homeCorrect")
+    .getElementById("statCorrect")
     .textContent =
-      correct;
+      correctPercent + "%";
+
 
   document
-    .getElementById("homeWrong")
+    .getElementById("statWrong")
     .textContent =
-      wrong;
+      wrongPercent + "%";
+
 
   document
-    .getElementById("homePercent")
+    .getElementById("statAttempts")
     .textContent =
-      percent + "%";
+      attempts;
 
 
-  const recent =
-    history.slice(0, 5);
+  document
+    .getElementById("barSolved")
+    .style.width =
+      solvedPercent + "%";
 
+
+  document
+    .getElementById("barCorrect")
+    .style.width =
+      correctPercent + "%";
+
+
+  document
+    .getElementById("barWrong")
+    .style.width =
+      wrongPercent + "%";
+
+
+  renderSectionStats();
+
+  renderErrorStats();
+
+  renderActivityStats();
+
+}
+
+
+/* =========================================
+   SECTION STATS
+========================================= */
+
+function renderSectionStats() {
 
   const container =
     document.getElementById(
-      "recentAttempts"
+      "sectionStats"
     );
 
 
-  if (!recent.length) {
-
-    container.innerHTML =
-      `<div class="empty">
-        Пока нет попыток.
-      </div>`;
-
-    return;
-  }
+  const sections =
+    Object.keys(taskCodes);
 
 
   container.innerHTML =
-    recent
-      .map(item => {
+    sections
+      .map(
+        section => {
 
-        const task =
-          tasks.find(
-            t =>
-              String(t.id)
-              ===
-              String(item.task_id)
-          );
+          const codes =
+            taskCodes[section];
 
-        return `
-          <div class="report-item">
 
-            <b>
-              ${escapeHtml(
-                task?.title ??
-                "Задание " +
-                item.task_id
-              )}
-            </b>
+          const solved =
+            codes.filter(
+              code =>
+                progress.some(
+                  item =>
+                    String(
+                      item.task_id
+                    )
+                    ===
+                    String(code)
+                )
+            ).length;
 
-            <div>
-              ${
-                item.correct
-                  ? "✓ Правильно"
-                  : "✕ Ошибка"
-              }
+
+          const percent =
+            codes.length
+              ? Math.round(
+                  solved /
+                  codes.length *
+                  100
+                )
+              : 0;
+
+
+          return `
+
+            <div style="margin-bottom:15px">
+
+              <div style="
+                display:flex;
+                justify-content:space-between;
+                font-weight:700;
+              ">
+
+                <span>
+                  ${section}
+                </span>
+
+                <span>
+                  ${percent}%
+                </span>
+
+              </div>
+
+
+              <div class="progress">
+
+                <div
+                  class="progress-bar"
+                  style="width:${percent}%">
+                </div>
+
+              </div>
+
             </div>
 
-            <small>
-              ${new Date(
-                item.created_at
-              ).toLocaleString("ru-RU")}
-            </small>
+          `;
 
-          </div>
-        `;
-
-      })
+        }
+      )
       .join("");
 
 }
 
 
-/* =========================
-   STATS
-========================= */
+/* =========================================
+   ERROR STATS
+========================================= */
 
-function updateStats() {
-
-  const total =
-    history.length;
-
-  const correct =
-    history.filter(
-      x => x.correct
-    ).length;
-
-  const wrong =
-    total - correct;
-
-  const percent =
-    total
-      ? Math.round(
-          correct / total * 100
-        )
-      : 0;
-
-
-  document
-    .getElementById("statsTotal")
-    .textContent =
-      total;
-
-  document
-    .getElementById("statsCorrect")
-    .textContent =
-      correct;
-
-  document
-    .getElementById("statsWrong")
-    .textContent =
-      wrong;
-
-  document
-    .getElementById("statsPercent")
-    .textContent =
-      percent + "%";
-
+function renderErrorStats() {
 
   const container =
     document.getElementById(
-      "statsTasks"
+      "errorStats"
     );
 
-
-  if (!tasks.length) {
-
-    container.innerHTML =
-      `<div class="empty">
-        Нет заданий.
-      </div>`;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    tasks
-      .map(task => {
-
-        const attempts =
-          history.filter(
-            x =>
-              String(x.task_id)
-              ===
-              String(task.id)
-          );
-
-        const taskCorrect =
-          attempts.filter(
-            x => x.correct
-          ).length;
-
-        const taskWrong =
-          attempts.filter(
-            x => !x.correct
-          ).length;
-
-
-        return `
-          <div class="report-item">
-
-            <b>
-              ${escapeHtml(task.title)}
-            </b>
-
-            <div>
-              Попыток: ${attempts.length}
-            </div>
-
-            <div>
-              Правильно: ${taskCorrect}
-            </div>
-
-            <div>
-              Ошибок: ${taskWrong}
-            </div>
-
-          </div>
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* =========================
-   ERRORS
-========================= */
-
-function updateErrors() {
 
   const errors =
     history.filter(
-      x => !x.correct
-    );
-
-
-  const container =
-    document.getElementById(
-      "errorsList"
+      item =>
+        !item.correct
     );
 
 
   if (!errors.length) {
 
     container.innerHTML =
-      `<div class="empty">
-        Ошибок пока нет 🎉
-      </div>`;
+      "<p>Ошибок пока нет 🎉</p>";
 
     return;
+
   }
 
 
+  const map = {};
+
+
+  errors.forEach(
+    item => {
+
+      const key =
+        item.reason
+        ||
+        "Причина не указана";
+
+
+      map[key] =
+        (map[key] || 0) + 1;
+
+    }
+  );
+
+
+  const sorted =
+    Object.entries(map)
+      .sort(
+        (a,b) =>
+          b[1] - a[1]
+      );
+
+
   container.innerHTML =
-    errors
-      .map(item => {
+    sorted
+      .slice(0, 10)
+      .map(
+        item => `
 
-        const task =
-          tasks.find(
-            t =>
-              String(t.id)
-              ===
-              String(item.task_id)
-          );
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              padding:9px 0;
+              border-bottom:1px solid #eee;
+            ">
 
-
-        return `
-          <div class="report-item">
+            <span>
+              ${escapeHtml(item[0])}
+            </span>
 
             <b>
-              ${escapeHtml(
-                task?.title ??
-                "Задание " +
-                item.task_id
-              )}
+              ${item[1]}
             </b>
 
-            <p>
-              <b>Причина:</b>
-              ${escapeHtml(
-                item.reason ||
-                "Причина не указана"
-              )}
-            </p>
-
-            <small>
-              ${new Date(
-                item.created_at
-              ).toLocaleString("ru-RU")}
-            </small>
-
           </div>
-        `;
 
-      })
+        `
+      )
       .join("");
 
 }
 
 
-/* =========================
-   REPORT
-========================= */
+/* =========================================
+   ACTIVITY
+========================================= */
 
-function updateReport() {
+function renderActivityStats() {
 
-  const total =
-    history.length;
+  const now =
+    Date.now();
 
-  const correct =
+
+  const day7 =
+    now -
+    7 * 24 * 60 * 60 * 1000;
+
+
+  const day30 =
+    now -
+    30 * 24 * 60 * 60 * 1000;
+
+
+  const last7 =
     history.filter(
-      x => x.correct
+      item =>
+        new Date(
+          item.created_at
+        ).getTime()
+        >=
+        day7
     ).length;
 
-  const wrong =
-    total - correct;
 
-  const percent =
-    total
-      ? Math.round(
-          correct / total * 100
-        )
-      : 0;
+  const last30 =
+    history.filter(
+      item =>
+        new Date(
+          item.created_at
+        ).getTime()
+        >=
+        day30
+    ).length;
 
 
   document
-    .getElementById("reportContent")
+    .getElementById("activityStats")
     .innerHTML = `
 
       <p>
-        <b>Всего попыток:</b>
-        ${total}
+        За последние 7 дней:
+        <b>${last7}</b>
       </p>
 
       <p>
-        <b>Правильных ответов:</b>
-        ${correct}
-      </p>
-
-      <p>
-        <b>Ошибок:</b>
-        ${wrong}
-      </p>
-
-      <p>
-        <b>Успешность:</b>
-        ${percent}%
-      </p>
-
-      <p>
-        <b>Заданий в базе:</b>
-        ${tasks.length}
+        За последние 30 дней:
+        <b>${last30}</b>
       </p>
 
     `;
@@ -2103,113 +3155,272 @@ function updateReport() {
 }
 
 
-/* =========================
-   UPDATE ALL
-========================= */
+/* =========================================
+   ERRORS PAGE
+========================================= */
 
-function updateAll() {
+function renderErrors() {
 
-  renderTasks();
-
-  updateHome();
-
-  updateStats();
-
-  updateErrors();
-
-  updateReport();
-
-}
+  const container =
+    document.getElementById(
+      "errorsList"
+    );
 
 
-/* =========================
-   HELPERS
-========================= */
-
-function escapeHtml(value) {
-
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-
-}
+  const errors =
+    history.filter(
+      item =>
+        !item.correct
+    );
 
 
-function escapeJs(value) {
+  if (!errors.length) {
 
-  return String(value ?? "")
-    .replaceAll("\\", "\\\\")
-    .replaceAll("'", "\\'");
+    container.innerHTML = `
 
-}
+      <div class="empty">
+        Пока нет ошибок 🎉
+      </div>
 
+    `;
 
-function formatTaskContent(value) {
-
-  if (!value) {
-
-    return "<p>Текст задания отсутствует.</p>";
+    return;
 
   }
 
-  return String(value)
+
+  container.innerHTML =
+    errors
+      .map(
+        item => `
+
+          <div class="card">
+
+            <b>
+              Задание ${escapeHtml(
+                item.task_id
+              )}
+            </b>
+
+            <p>
+              Причина:
+              ${escapeHtml(
+                item.reason
+                ||
+                "Не указана"
+              )}
+            </p>
+
+            <small>
+              ${new Date(
+                item.created_at
+              ).toLocaleString(
+                "ru-RU"
+              )}
+            </small>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+}
+
+
+/* =========================================
+   NICKNAME
+========================================= */
+
+async function changeNickname() {
+
+  const nickname =
+    prompt(
+      "Введите новый ник:"
+    );
+
+
+  if (!nickname) {
+    return;
+  }
+
+
+  const clean =
+    nickname.trim();
+
+
+  if (!clean) {
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await sb.auth.updateUser(
+      {
+        data: {
+          nickname:
+            clean
+        }
+      }
+    );
+
+
+  if (error) {
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  currentUser =
+    (
+      await sb.auth.getUser()
+    ).data.user;
+
+
+  document
+    .getElementById(
+      "profileNickname"
+    )
+    .textContent =
+      clean;
+
+
+  document
+    .getElementById(
+      "welcomeName"
+    )
+    .textContent =
+      clean;
+
+
+  alert(
+    "Ник изменён."
+  );
+
+}
+
+
+/* =========================================
+   DAILY QUOTE
+========================================= */
+
+function setDailyQuote() {
+
+  const now =
+    new Date();
+
+
+  /*
+    Москва = UTC+3.
+    Берём текущую дату по московскому времени.
+  */
+
+  const moscow =
+    new Date(
+      now.getTime()
+      +
+      3 * 60 * 60 * 1000
+    );
+
+
+  const dateKey =
+    moscow
+      .toISOString()
+      .slice(0, 10);
+
+
+  let hash = 0;
+
+
+  for (
+    let i = 0;
+    i < dateKey.length;
+    i++
+  ) {
+
+    hash =
+      (
+        (
+          hash << 5
+        )
+        -
+        hash
+        +
+        dateKey.charCodeAt(i)
+      )
+      |
+      0;
+
+  }
+
+
+  const index =
+    Math.abs(hash)
+    %
+    quotes.length;
+
+
+  document
+    .getElementById(
+      "quoteText"
+    )
+    .textContent =
+      quotes[index];
+
+}
+
+
+/* =========================================
+   HELPERS
+========================================= */
+
+function escapeHtml(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
     .replaceAll(
-      "\n",
-      "<br>"
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
     );
 
 }
 
 
-/* =========================
+/* =========================================
    AUTH STATE
-========================= */
+========================================= */
 
 sb.auth.onAuthStateChange(
-  async (event, session) => {
-
-    if (
-      event === "PASSWORD_RECOVERY"
-    ) {
-
-      const newPassword =
-        prompt(
-          "Введите новый пароль:"
-        );
-
-      if (
-        newPassword &&
-        newPassword.length >= 6
-      ) {
-
-        const {
-          error
-        } =
-          await sb.auth.updateUser({
-            password:
-              newPassword
-          });
-
-        if (error) {
-
-          alert(
-            error.message
-          );
-
-        } else {
-
-          alert(
-            "Пароль успешно изменён."
-          );
-
-        }
-
-      }
-
-    }
+  async (
+    event,
+    session
+  ) => {
 
     if (
       session &&
@@ -2227,9 +3438,9 @@ sb.auth.onAuthStateChange(
 );
 
 
-/* =========================
-   INITIALIZATION
-========================= */
+/* =========================================
+   INIT
+========================================= */
 
 async function init() {
 
@@ -2237,6 +3448,7 @@ async function init() {
     data
   } =
     await sb.auth.getSession();
+
 
   if (data.session) {
 
@@ -2248,12 +3460,12 @@ async function init() {
   } else {
 
     document
-      .getElementById("authScreen")
-      .classList.remove("hidden");
-
-    document
-      .getElementById("app")
-      .classList.add("hidden");
+      .getElementById(
+        "authScreen"
+      )
+      .classList.remove(
+        "hidden"
+      );
 
   }
 
@@ -2263,14 +3475,6 @@ async function init() {
 init();
 
 </script>
-
-
-<!-- ВАЖНО:
-     tasks.js должен подключаться ПОСЛЕ загрузки Supabase
-     и ДО запуска приложения.
--->
-
-<script src="./data/tasks.js"></script>
 
 </body>
 </html>
