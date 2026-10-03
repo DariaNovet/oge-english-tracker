@@ -1,2481 +1,1936 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
+<title>ОГЭ Английский — Трекер</title>
 
-  <title>ОГЭ Английский — Трекер</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="./data/tasks.js"></script>
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-  <!-- Telegram Mini App -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+}
 
-  <!-- Задания -->
-  <script src="./data/tasks.js"></script>
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 0 0,#eee6ff 0,transparent 30%),
+    radial-gradient(circle at 100% 0,#f9e7f4 0,transparent 28%),
+    #faf8ff;
+  color:#302b3f;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+button,input,textarea{
+  font:inherit;
+}
 
-    :root {
-      --purple: #9b7bea;
-      --purple-dark: #8063d5;
-      --purple-light: #f3edff;
-      --pink: #e6a6d2;
-      --background: #faf8ff;
-      --white: #ffffff;
-      --text: #302b3f;
-      --muted: #8b8498;
-      --green: #55c58b;
-      --red: #e97878;
-      --border: #eee9f7;
-      --shadow: 0 8px 28px rgba(117, 91, 174, 0.12);
-    }
+button{
+  cursor:pointer;
+}
 
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100%;
-    }
+.hidden{
+  display:none!important;
+}
 
-    body {
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+h1,h2,h3,p{
+  margin-top:0;
+}
 
-      background:
-        radial-gradient(
-          circle at 0 0,
-          #eee6ff 0,
-          transparent 28%
-        ),
-        radial-gradient(
-          circle at 100% 0,
-          #f9e7f4 0,
-          transparent 25%
-        ),
-        var(--background);
+/* =========================
+   AUTH
+========================= */
 
-      color: var(--text);
-    }
+#authScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
 
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
+.auth-box{
+  width:100%;
+  max-width:440px;
+  background:#fff;
+  border-radius:28px;
+  padding:28px;
+  box-shadow:0 15px 50px rgba(117,91,174,.15);
+}
 
-    button {
-      cursor: pointer;
-    }
+.logo{
+  text-align:center;
+  margin-bottom:24px;
+}
 
-    .hidden {
-      display: none !important;
-    }
-  </style>
+.logo-icon{
+  width:72px;
+  height:72px;
+  margin:0 auto 14px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#9b7bea,#e6a6d2);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  font-weight:800;
+}
+
+.logo h1{
+  font-size:24px;
+  margin-bottom:5px;
+}
+
+.logo p{
+  color:#8b8498;
+  font-size:14px;
+}
+
+.auth-tabs{
+  display:flex;
+  background:#f4f0fb;
+  padding:4px;
+  border-radius:14px;
+  margin-bottom:20px;
+}
+
+.auth-tab{
+  flex:1;
+  border:0;
+  background:transparent;
+  padding:11px;
+  border-radius:11px;
+  color:#8b8498;
+  font-weight:600;
+}
+
+.auth-tab.active{
+  background:#fff;
+  color:#8063d5;
+  box-shadow:0 3px 10px rgba(117,91,174,.1);
+}
+
+.form-group{
+  margin-bottom:14px;
+}
+
+.form-group label{
+  display:block;
+  margin-bottom:6px;
+  font-size:13px;
+  font-weight:600;
+}
+
+.form-group input,
+.form-group textarea{
+  width:100%;
+  border:1px solid #e7e1f1;
+  background:#fcfbff;
+  border-radius:13px;
+  padding:12px 14px;
+  outline:none;
+  color:#302b3f;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+  border-color:#9b7bea;
+  box-shadow:0 0 0 3px rgba(155,123,234,.1);
+}
+
+.main-btn{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:13px 16px;
+  background:#9b7bea;
+  color:white;
+  font-weight:700;
+  transition:.15s;
+}
+
+.main-btn:hover{
+  background:#8063d5;
+}
+
+.main-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.secondary-btn{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:12px 16px;
+  background:#f3edff;
+  color:#8063d5;
+  font-weight:700;
+}
+
+.text-btn{
+  border:0;
+  background:transparent;
+  color:#8063d5;
+  font-size:13px;
+  padding:8px 0;
+}
+
+.auth-message{
+  min-height:20px;
+  margin-top:10px;
+  font-size:13px;
+  text-align:center;
+}
+
+.auth-message.error{
+  color:#d85e5e;
+}
+
+.auth-message.success{
+  color:#42a875;
+}
+
+/* =========================
+   APP
+========================= */
+
+#app{
+  min-height:100vh;
+}
+
+.app-container{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  padding:18px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.user-mini{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.avatar{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#9b7bea,#e6a6d2);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+}
+
+.user-mini-name{
+  font-weight:700;
+  font-size:15px;
+}
+
+.user-mini-email{
+  color:#8b8498;
+  font-size:12px;
+  margin-top:2px;
+}
+
+.icon-btn{
+  width:42px;
+  height:42px;
+  border:0;
+  border-radius:13px;
+  background:#fff;
+  color:#8063d5;
+  box-shadow:0 5px 18px rgba(117,91,174,.09);
+}
+
+.screen{
+  display:none;
+}
+
+.screen.active{
+  display:block;
+}
+
+/* =========================
+   HOME
+========================= */
+
+.hero{
+  background:linear-gradient(135deg,#9b7bea,#b897ee);
+  color:#fff;
+  border-radius:26px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 12px 35px rgba(117,91,174,.2);
+}
+
+.hero h2{
+  margin-bottom:7px;
+  font-size:24px;
+}
+
+.hero p{
+  opacity:.88;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.progress-wrap{
+  background:rgba(255,255,255,.22);
+  height:11px;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  width:0;
+  background:#fff;
+  border-radius:20px;
+  transition:.3s;
+}
+
+.progress-info{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+  font-size:12px;
+  opacity:.9;
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.menu-card{
+  border:0;
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  text-align:left;
+  box-shadow:0 7px 25px rgba(117,91,174,.08);
+  color:#302b3f;
+}
+
+.menu-icon{
+  font-size:28px;
+  margin-bottom:12px;
+}
+
+.menu-card h3{
+  margin-bottom:5px;
+  font-size:16px;
+}
+
+.menu-card p{
+  margin:0;
+  color:#8b8498;
+  font-size:12px;
+}
+
+/* =========================
+   SCREENS
+========================= */
+
+.screen-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.back-btn{
+  border:0;
+  background:#fff;
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  color:#8063d5;
+  box-shadow:0 5px 18px rgba(117,91,174,.08);
+}
+
+.screen-title{
+  font-size:23px;
+  font-weight:800;
+}
+
+/* =========================
+   TASKS
+========================= */
+
+.search{
+  width:100%;
+  border:1px solid #e8e2f1;
+  background:#fff;
+  border-radius:15px;
+  padding:13px 15px;
+  outline:none;
+  margin-bottom:16px;
+}
+
+.tasks-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.task-card{
+  background:#fff;
+  border-radius:18px;
+  padding:17px;
+  box-shadow:0 6px 22px rgba(117,91,174,.07);
+  border:1px solid #f0ebf6;
+  cursor:pointer;
+}
+
+.task-card:hover{
+  border-color:#cfc1ee;
+}
+
+.task-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.task-number{
+  font-size:12px;
+  font-weight:800;
+  color:#8063d5;
+  background:#f3edff;
+  border-radius:8px;
+  padding:5px 8px;
+}
+
+.status{
+  font-size:11px;
+  padding:5px 8px;
+  border-radius:8px;
+  font-weight:700;
+}
+
+.status.correct{
+  background:#e9f8f0;
+  color:#3ca36e;
+}
+
+.status.wrong{
+  background:#fff0f0;
+  color:#d85e5e;
+}
+
+.status.none{
+  background:#f3f0f7;
+  color:#8b8498;
+}
+
+.task-title{
+  font-size:14px;
+  line-height:1.4;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.stat-card{
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 6px 22px rgba(117,91,174,.07);
+}
+
+.stat-label{
+  color:#8b8498;
+  font-size:12px;
+  margin-bottom:7px;
+}
+
+.stat-value{
+  font-size:27px;
+  font-weight:800;
+}
+
+/* =========================
+   ERRORS
+========================= */
+
+.error-card{
+  background:#fff;
+  border-left:4px solid #e97878;
+  border-radius:15px;
+  padding:16px;
+  margin-bottom:11px;
+  box-shadow:0 5px 18px rgba(117,91,174,.06);
+}
+
+.error-code{
+  color:#d85e5e;
+  font-weight:800;
+  font-size:12px;
+  margin-bottom:7px;
+}
+
+.error-reason{
+  font-size:14px;
+}
+
+.empty{
+  text-align:center;
+  color:#8b8498;
+  padding:40px 15px;
+}
+
+/* =========================
+   REPORT
+========================= */
+
+.report-box{
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 6px 22px rgba(117,91,174,.07);
+}
+
+.report-text{
+  line-height:1.7;
+  white-space:pre-wrap;
+}
+
+.history-item{
+  background:#fff;
+  border-radius:15px;
+  padding:13px;
+  margin-top:10px;
+  box-shadow:0 4px 15px rgba(117,91,174,.05);
+}
+
+.history-item.correct-history{
+  border-left:4px solid #55c58b;
+}
+
+.history-item.wrong-history{
+  border-left:4px solid #e97878;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-card{
+  background:#fff;
+  border-radius:24px;
+  padding:25px;
+  text-align:center;
+  box-shadow:0 7px 25px rgba(117,91,174,.08);
+}
+
+.big-avatar{
+  width:90px;
+  height:90px;
+  margin:0 auto 15px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#9b7bea,#e6a6d2);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  font-weight:800;
+}
+
+.profile-email{
+  color:#8b8498;
+  font-size:13px;
+  margin-bottom:20px;
+}
+
+.profile-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(35,28,48,.45);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:1000;
+}
+
+.modal.open{
+  display:flex;
+}
+
+.modal-content{
+  width:100%;
+  max-width:650px;
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:26px 26px 0 0;
+  padding:22px;
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.modal-code{
+  color:#8063d5;
+  font-weight:800;
+}
+
+.close-btn{
+  border:0;
+  background:#f3edff;
+  color:#8063d5;
+  width:38px;
+  height:38px;
+  border-radius:12px;
+}
+
+.modal-question{
+  background:#faf8ff;
+  border-radius:16px;
+  padding:16px;
+  line-height:1.6;
+  margin-bottom:15px;
+  white-space:pre-wrap;
+}
+
+.answer-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.answer-btn{
+  border:0;
+  padding:13px;
+  border-radius:13px;
+  font-weight:700;
+}
+
+.correct-answer{
+  background:#e9f8f0;
+  color:#3ca36e;
+}
+
+.wrong-answer{
+  background:#fff0f0;
+  color:#d85e5e;
+}
+
+.history-title{
+  margin-top:22px;
+  margin-bottom:10px;
+  font-size:15px;
+}
+
+.reason-box{
+  display:none;
+  margin-top:12px;
+}
+
+.reason-box textarea{
+  width:100%;
+  min-height:80px;
+  border:1px solid #e7e1f1;
+  border-radius:13px;
+  padding:12px;
+  resize:vertical;
+  outline:none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:650px){
+  .app-container{
+    padding:12px;
+  }
+
+  .menu-grid,
+  .tasks-grid,
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+
+  .auth-box{
+    padding:22px;
+  }
+}
+
+@media(min-width:651px){
+  .modal{
+    align-items:center;
+  }
+
+  .modal-content{
+    border-radius:26px;
+  }
+}
+
+/* =========================
+   PRINT
+========================= */
+
+@media print{
+  body{
+    background:#fff;
+  }
+
+  .topbar,
+  .screen-header,
+  .no-print{
+    display:none!important;
+  }
+
+  .report-box{
+    box-shadow:none;
+  }
+}
+</style>
 </head>
 
 <body>
-    <!-- =========================
-       ЭКРАН АВТОРИЗАЦИИ
-  ========================== -->
 
-  <div id="authScreen" class="auth-screen">
+<!-- =========================================================
+     AUTH SCREEN
+========================================================= -->
 
-    <div class="auth-card">
+<div id="authScreen">
 
-      <div class="auth-logo">
-        📚
-      </div>
+  <div class="auth-box">
 
+    <div class="logo">
+      <div class="logo-icon">ОГЭ</div>
       <h1>ОГЭ Английский</h1>
+      <p>Трекер подготовки</p>
+    </div>
 
-      <p class="auth-subtitle">
-        Трекер подготовки
-      </p>
+    <div class="auth-tabs">
+      <button id="loginTab" class="auth-tab active">Вход</button>
+      <button id="registerTab" class="auth-tab">Регистрация</button>
+    </div>
 
+    <!-- LOGIN -->
 
-      <!-- Вкладки -->
+    <div id="loginForm">
 
-      <div class="auth-tabs">
-
-        <button
-          id="loginTab"
-          class="auth-tab active"
-          type="button"
-        >
-          Войти
-        </button>
-
-        <button
-          id="registerTab"
-          class="auth-tab"
-          type="button"
-        >
-          Регистрация
-        </button>
-
-      </div>
-
-
-      <!-- =========================
-           ВХОД
-      ========================== -->
-
-      <div id="loginForm">
-
-        <label class="input-label">
-          Email
-        </label>
-
+      <div class="form-group">
+        <label>Почта</label>
         <input
           id="loginEmail"
-          class="auth-input"
           type="email"
-          placeholder="Введите email"
           autocomplete="email"
+          placeholder="example@mail.ru"
         >
+      </div>
 
-        <label class="input-label">
-          Пароль
-        </label>
-
+      <div class="form-group">
+        <label>Пароль</label>
         <input
           id="loginPassword"
-          class="auth-input"
           type="password"
-          placeholder="Введите пароль"
           autocomplete="current-password"
+          placeholder="Введите пароль"
         >
+      </div>
 
-        <button
-          id="loginBtn"
-          class="primary-btn"
-          type="button"
-        >
-          Войти
-        </button>
+      <button id="loginBtn" class="main-btn">
+        Войти
+      </button>
 
-        <button
-          id="forgotBtn"
-          class="link-btn"
-          type="button"
-        >
+      <div style="text-align:center;margin-top:8px;">
+        <button id="forgotBtn" class="text-btn">
           Забыли пароль?
         </button>
-
-        <div id="loginMessage"></div>
-
       </div>
 
+      <div id="loginMessage" class="auth-message"></div>
 
-      <!-- =========================
-           РЕГИСТРАЦИЯ
-      ========================== -->
+    </div>
 
-      <div
-        id="registerForm"
-        class="hidden"
-      >
+    <!-- REGISTER -->
 
-        <label class="input-label">
-          Никнейм
-        </label>
+    <div id="registerForm" class="hidden">
 
+      <div class="form-group">
+        <label>Имя</label>
         <input
           id="registerUsername"
-          class="auth-input"
           type="text"
-          placeholder="Как вас называть?"
-          autocomplete="nickname"
+          autocomplete="name"
+          placeholder="Как вас зовут?"
         >
+      </div>
 
-        <label class="input-label">
-          Email
-        </label>
-
+      <div class="form-group">
+        <label>Почта</label>
         <input
           id="registerEmail"
-          class="auth-input"
           type="email"
-          placeholder="Введите email"
           autocomplete="email"
+          placeholder="example@mail.ru"
         >
+      </div>
 
-        <label class="input-label">
-          Пароль
-        </label>
-
+      <div class="form-group">
+        <label>Пароль</label>
         <input
           id="registerPassword"
-          class="auth-input"
           type="password"
-          placeholder="Минимум 6 символов"
           autocomplete="new-password"
+          placeholder="Минимум 6 символов"
         >
+      </div>
 
-        <label class="input-label">
-          Повторите пароль
-        </label>
-
+      <div class="form-group">
+        <label>Повторите пароль</label>
         <input
           id="registerPassword2"
-          class="auth-input"
           type="password"
-          placeholder="Повторите пароль"
           autocomplete="new-password"
+          placeholder="Повторите пароль"
         >
-
-        <button
-          id="registerBtn"
-          class="primary-btn"
-          type="button"
-        >
-          Создать аккаунт
-        </button>
-
-        <div id="registerMessage"></div>
-
       </div>
 
+      <button id="registerBtn" class="main-btn">
+        Зарегистрироваться
+      </button>
 
-      <!-- =========================
-           ВОССТАНОВЛЕНИЕ ПАРОЛЯ
-      ========================== -->
+      <div id="registerMessage" class="auth-message"></div>
 
-      <div
-        id="forgotForm"
-        class="hidden"
-      >
+    </div>
 
-        <h2>
-          Восстановление пароля
-        </h2>
+    <!-- FORGOT -->
 
-        <p class="auth-description">
-          Введите email, который использовали
-          при регистрации.
-        </p>
+    <div id="forgotForm" class="hidden">
 
-        <label class="input-label">
-          Email
-        </label>
+      <h2 style="font-size:20px;">Восстановление пароля</h2>
 
+      <p style="font-size:13px;color:#8b8498;">
+        Введите почту, на которую зарегистрирован аккаунт.
+      </p>
+
+      <div class="form-group">
+        <label>Почта</label>
         <input
           id="forgotEmail"
-          class="auth-input"
           type="email"
-          placeholder="Введите email"
           autocomplete="email"
+          placeholder="example@mail.ru"
         >
+      </div>
 
-        <button
-          id="sendResetBtn"
-          class="primary-btn"
-          type="button"
-        >
-          Отправить письмо
-        </button>
+      <button id="sendResetBtn" class="main-btn">
+        Отправить письмо
+      </button>
 
-        <button
-          id="backToLoginBtn"
-          class="link-btn"
-          type="button"
-        >
+      <div style="text-align:center;margin-top:8px;">
+        <button id="backToLoginBtn" class="text-btn">
           Вернуться ко входу
         </button>
-
-        <div id="forgotMessage"></div>
-
       </div>
 
+      <div id="forgotMessage" class="auth-message"></div>
 
-      <!-- =========================
-           НОВЫЙ ПАРОЛЬ
-      ========================== -->
+    </div>
 
-      <div
-        id="resetForm"
-        class="hidden"
-      >
+    <!-- RESET -->
 
-        <h2>
-          Новый пароль
-        </h2>
+    <div id="resetForm" class="hidden">
 
-        <p class="auth-description">
-          Придумайте новый пароль для аккаунта.
-        </p>
+      <h2 style="font-size:20px;">Новый пароль</h2>
 
-        <label class="input-label">
-          Новый пароль
-        </label>
-
+      <div class="form-group">
+        <label>Новый пароль</label>
         <input
           id="newPassword"
-          class="auth-input"
           type="password"
-          placeholder="Минимум 6 символов"
           autocomplete="new-password"
+          placeholder="Новый пароль"
         >
+      </div>
 
-        <label class="input-label">
-          Повторите пароль
-        </label>
-
+      <div class="form-group">
+        <label>Повторите пароль</label>
         <input
           id="newPassword2"
-          class="auth-input"
           type="password"
-          placeholder="Повторите пароль"
           autocomplete="new-password"
+          placeholder="Повторите пароль"
         >
-
-        <button
-          id="updatePasswordBtn"
-          class="primary-btn"
-          type="button"
-        >
-          Сохранить пароль
-        </button>
-
-        <div id="resetMessage"></div>
-
       </div>
+
+      <button id="updatePasswordBtn" class="main-btn">
+        Сохранить пароль
+      </button>
+
+      <div id="resetMessage" class="auth-message"></div>
 
     </div>
 
   </div>
-    <!-- =========================
-       ОСНОВНОЕ ПРИЛОЖЕНИЕ
-  ========================== -->
 
-  <div id="app" class="hidden">
+</div>
 
-    <!-- =========================
-         ГЛАВНЫЙ ЭКРАН
-    ========================== -->
 
-    <div id="homeScreen" class="screen">
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
 
-      <header class="top-header">
+<div id="app" class="hidden">
+
+  <div class="app-container">
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+      <div class="user-mini">
+
+        <div id="miniAvatar" class="avatar">
+          ?
+        </div>
 
         <div>
-          <div class="small-greeting">
-            Привет!
+          <div id="miniName" class="user-mini-name">
+            Пользователь
           </div>
 
-          <h1 id="miniName">
-            Ученик
-          </h1>
-        </div>
-
-        <button
-          id="profileBtn"
-          class="avatar-button"
-          type="button"
-        >
-          <span id="miniAvatar">
-            👤
-          </span>
-        </button>
-
-      </header>
-
-
-      <!-- Прогресс -->
-
-      <section class="progress-card">
-
-        <div class="progress-card-top">
-
-          <div>
-            <div class="card-label">
-              Общий прогресс
-            </div>
-
-            <div
-              id="progressNumber"
-              class="progress-number"
-            >
-              0%
-            </div>
+          <div id="miniEmail" class="user-mini-email">
+            —
           </div>
-
-          <div class="progress-icon">
-            📈
-          </div>
-
         </div>
-
-        <div class="progress-bar">
-          <div
-            id="progressFill"
-            class="progress-fill"
-            style="width: 0%;"
-          ></div>
-        </div>
-
-      </section>
-
-
-      <!-- Основные действия -->
-
-      <div class="home-grid">
-
-        <button
-          id="tasksMenu"
-          class="home-card"
-          type="button"
-        >
-          <span class="home-card-icon">
-            📝
-          </span>
-
-          <span class="home-card-title">
-            Задания
-          </span>
-
-          <span class="home-card-text">
-            Практика и варианты
-          </span>
-        </button>
-
-
-        <button
-          id="statsMenu"
-          class="home-card"
-          type="button"
-        >
-          <span class="home-card-icon">
-            📊
-          </span>
-
-          <span class="home-card-title">
-            Статистика
-          </span>
-
-          <span class="home-card-text">
-            Твои результаты
-          </span>
-        </button>
-
-
-        <button
-          id="errorsMenu"
-          class="home-card"
-          type="button"
-        >
-          <span class="home-card-icon">
-            ❌
-          </span>
-
-          <span class="home-card-title">
-            Ошибки
-          </span>
-
-          <span class="home-card-text">
-            Разбор ошибок
-          </span>
-        </button>
-
-
-        <button
-          id="reportMenu"
-          class="home-card"
-          type="button"
-        >
-          <span class="home-card-icon">
-            📋
-          </span>
-
-          <span class="home-card-title">
-            Отчёт
-          </span>
-
-          <span class="home-card-text">
-            История попыток
-          </span>
-        </button>
 
       </div>
+
+      <button id="profileBtn" class="icon-btn">
+        👤
+      </button>
 
     </div>
 
 
-    <!-- =========================
-         ЭКРАН ЗАДАНИЙ
-    ========================== -->
+    <!-- =====================================================
+         HOME
+    ====================================================== -->
 
-    <div
-      id="tasksScreen"
-      class="screen hidden"
-    >
+    <section id="homeScreen" class="screen active">
 
-      <header class="page-header">
+      <div class="hero">
 
-        <button
-          id="tasksBack"
-          class="back-button"
-          type="button"
-        >
+        <h2>Привет! 👋</h2>
+
+        <p>
+          Продолжай подготовку к ОГЭ по английскому.
+        </p>
+
+        <div class="progress-wrap">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+
+        <div class="progress-info">
+          <span>Прогресс</span>
+          <span id="progressNumber">0%</span>
+        </div>
+
+      </div>
+
+
+      <div class="menu-grid">
+
+        <button id="tasksMenu" class="menu-card">
+
+          <div class="menu-icon">📚</div>
+
+          <h3>Задания</h3>
+
+          <p>
+            Решать задания ОГЭ
+          </p>
+
+        </button>
+
+
+        <button id="statsMenu" class="menu-card">
+
+          <div class="menu-icon">📊</div>
+
+          <h3>Статистика</h3>
+
+          <p>
+            Смотреть результаты
+          </p>
+
+        </button>
+
+
+        <button id="errorsMenu" class="menu-card">
+
+          <div class="menu-icon">❌</div>
+
+          <h3>Ошибки</h3>
+
+          <p>
+            Разобрать ошибки
+          </p>
+
+        </button>
+
+
+        <button id="reportMenu" class="menu-card">
+
+          <div class="menu-icon">📄</div>
+
+          <h3>Отчёт</h3>
+
+          <p>
+            Посмотреть отчёт
+          </p>
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TASKS
+    ====================================================== -->
+
+    <section id="tasksScreen" class="screen">
+
+      <div class="screen-header">
+
+        <button id="tasksBack" class="back-btn">
           ←
         </button>
 
-        <h2>
+        <div class="screen-title">
           Задания
-        </h2>
-
-      </header>
-
-
-      <div class="search-box">
-
-        <span>
-          🔎
-        </span>
-
-        <input
-          id="searchInput"
-          type="text"
-          placeholder="Поиск задания..."
-        >
+        </div>
 
       </div>
 
+      <input
+        id="searchInput"
+        class="search"
+        type="search"
+        placeholder="Поиск задания..."
+      >
 
-      <div
-        id="tasksContainer"
-        class="tasks-container"
-      ></div>
+      <div id="tasksContainer" class="tasks-grid"></div>
 
-    </div>
+    </section>
 
 
-    <!-- =========================
-         ЭКРАН ВАРИАНТА
-    ========================== -->
+    <!-- =====================================================
+         VARIANT
+    ====================================================== -->
 
-    <div
-      id="variantScreen"
-      class="screen hidden"
-    >
+    <section id="variantScreen" class="screen">
 
-      <header class="page-header">
+      <div class="screen-header">
 
-        <button
-          id="variantBack"
-          class="back-button"
-          type="button"
-        >
+        <button id="variantBack" class="back-btn">
           ←
         </button>
 
-        <h2 id="variantTitle">
+        <div id="variantTitle" class="screen-title">
           Вариант
-        </h2>
+        </div>
 
-      </header>
+      </div>
 
+      <div id="variantTasks" class="tasks-grid"></div>
 
-      <div
-        id="variantTasks"
-        class="variant-tasks"
-      ></div>
-
-    </div>
+    </section>
 
 
-    <!-- =========================
-         СТАТИСТИКА
-    ========================== -->
+    <!-- =====================================================
+         STATS
+    ====================================================== -->
 
-    <div
-      id="statsScreen"
-      class="screen hidden"
-    >
+    <section id="statsScreen" class="screen">
 
-      <header class="page-header">
+      <div class="screen-header">
 
-        <button
-          id="statsBack"
-          class="back-button"
-          type="button"
-        >
+        <button id="statsBack" class="back-btn">
           ←
         </button>
 
-        <h2>
+        <div class="screen-title">
           Статистика
-        </h2>
+        </div>
 
-      </header>
-
+      </div>
 
       <div class="stats-grid">
 
         <div class="stat-card">
-
-          <div class="stat-icon">
-            📝
-          </div>
-
-          <div
-            id="statTotal"
-            class="stat-number"
-          >
-            0
-          </div>
-
-          <div class="stat-label">
-            Всего заданий
-          </div>
-
+          <div class="stat-label">Всего заданий</div>
+          <div id="statTotal" class="stat-value">0</div>
         </div>
 
-
         <div class="stat-card">
-
-          <div class="stat-icon">
-            ✅
-          </div>
-
-          <div
-            id="statCorrect"
-            class="stat-number"
-          >
-            0
-          </div>
-
-          <div class="stat-label">
-            Правильных
-          </div>
-
+          <div class="stat-label">Решено</div>
+          <div id="statSolved" class="stat-value">0</div>
         </div>
 
-
         <div class="stat-card">
-
-          <div class="stat-icon">
-            ❌
-          </div>
-
-          <div
-            id="statWrong"
-            class="stat-number"
-          >
-            0
-          </div>
-
-          <div class="stat-label">
-            С ошибками
-          </div>
-
+          <div class="stat-label">Правильно</div>
+          <div id="statCorrect" class="stat-value">0</div>
         </div>
 
+        <div class="stat-card">
+          <div class="stat-label">Ошибок</div>
+          <div id="statWrong" class="stat-value">0</div>
+        </div>
 
         <div class="stat-card">
-
-          <div class="stat-icon">
-            🎯
-          </div>
-
-          <div
-            id="statPercent"
-            class="stat-number"
-          >
-            0%
-          </div>
-
-          <div class="stat-label">
-            Результат
-          </div>
-
+          <div class="stat-label">Процент правильных</div>
+          <div id="statPercent" class="stat-value">0%</div>
         </div>
 
       </div>
 
-    </div>
-        <!-- =========================
-         ЭКРАН ОШИБОК
-    ========================== -->
+    </section>
 
-    <div
-      id="errorsScreen"
-      class="screen hidden"
-    >
 
-      <header class="page-header">
+    <!-- =====================================================
+         ERRORS
+    ====================================================== -->
 
-        <button
-          id="errorsBack"
-          class="back-button"
-          type="button"
-        >
+    <section id="errorsScreen" class="screen">
+
+      <div class="screen-header">
+
+        <button id="errorsBack" class="back-btn">
           ←
         </button>
 
-        <h2>
+        <div class="screen-title">
           Ошибки
-        </h2>
+        </div>
 
-      </header>
+      </div>
 
-      <div
-        id="errorsContainer"
-        class="errors-container"
-      ></div>
+      <div id="errorsContainer"></div>
 
-    </div>
+    </section>
 
 
-    <!-- =========================
-         ЭКРАН ОТЧЁТА
-    ========================== -->
+    <!-- =====================================================
+         REPORT
+    ====================================================== -->
 
-    <div
-      id="reportScreen"
-      class="screen hidden"
-    >
+    <section id="reportScreen" class="screen">
 
-      <header class="page-header">
+      <div class="screen-header">
 
-        <button
-          id="reportBack"
-          class="back-button"
-          type="button"
-        >
+        <button id="reportBack" class="back-btn">
           ←
         </button>
 
-        <h2>
+        <div class="screen-title">
           Отчёт
-        </h2>
-
-      </header>
-
-
-      <div class="report-card">
-
-        <div class="report-title">
-          Твои результаты
         </div>
-
-        <div
-          id="reportText"
-          class="report-text"
-        ></div>
 
       </div>
 
+      <div class="report-box">
 
-      <div class="report-card">
-
-        <div class="report-title">
-          История попыток
-        </div>
-
-        <div
-          id="reportHistory"
-          class="report-history"
-        ></div>
-
-      </div>
-
-
-      <button
-        id="printBtn"
-        class="primary-btn"
-        type="button"
-      >
-        🖨️ Распечатать отчёт
-      </button>
-
-    </div>
-
-
-    <!-- =========================
-         ПРОФИЛЬ
-    ========================== -->
-
-    <div
-      id="profileScreen"
-      class="screen hidden"
-    >
-
-      <header class="page-header">
+        <div id="reportText" class="report-text"></div>
 
         <button
-          id="profileBack"
-          class="back-button"
-          type="button"
+          id="printBtn"
+          class="main-btn no-print"
+          style="margin-top:20px;"
         >
+          Распечатать отчёт
+        </button>
+
+      </div>
+
+      <h3 style="margin-top:22px;">
+        История
+      </h3>
+
+      <div id="reportHistory"></div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PROFILE
+    ====================================================== -->
+
+    <section id="profileScreen" class="screen">
+
+      <div class="screen-header">
+
+        <button id="profileBack" class="back-btn">
           ←
         </button>
 
-        <h2>
+        <div class="screen-title">
           Профиль
-        </h2>
+        </div>
 
-      </header>
-
+      </div>
 
       <div class="profile-card">
 
-        <div
-          id="bigAvatar"
-          class="big-avatar"
-        >
-          👤
+        <div id="bigAvatar" class="big-avatar">
+          ?
         </div>
 
         <h2 id="profileName">
-          Ученик
+          Пользователь
         </h2>
 
-        <div
-          id="profileEmail"
-          class="profile-email"
-        >
+        <div id="profileEmail" class="profile-email">
+          —
         </div>
 
-      </div>
+        <div id="profileEdit" class="hidden">
 
+          <div class="form-group">
+            <label>Новое имя</label>
 
-      <button
-        id="editProfileBtn"
-        class="secondary-btn"
-        type="button"
-      >
-        ✏️ Изменить имя
-      </button>
-
-
-      <!-- Редактирование профиля -->
-
-      <div
-        id="profileEdit"
-        class="profile-edit hidden"
-      >
-
-        <label class="input-label">
-          Новое имя
-        </label>
-
-        <input
-          id="newUsername"
-          class="auth-input"
-          type="text"
-          placeholder="Введите новое имя"
-        >
-
-        <button
-          id="saveUsernameBtn"
-          class="primary-btn"
-          type="button"
-        >
-          Сохранить
-        </button>
-
-      </div>
-
-
-      <button
-        id="logoutBtn"
-        class="logout-btn"
-        type="button"
-      >
-        Выйти из аккаунта
-      </button>
-
-    </div>
-
-
-    <!-- =========================
-         МОДАЛЬНОЕ ОКНО ЗАДАНИЯ
-    ========================== -->
-
-    <div
-      id="taskModal"
-      class="modal hidden"
-    >
-
-      <div class="modal-overlay"></div>
-
-      <div class="modal-card">
-
-        <button
-          id="modalClose"
-          class="modal-close"
-          type="button"
-        >
-          ×
-        </button>
-
-
-        <div
-          id="modalCode"
-          class="task-code"
-        >
-        </div>
-
-
-        <div
-          id="modalQuestion"
-          class="modal-question"
-        >
-        </div>
-
-
-        <!-- Причина ошибки -->
-
-        <div
-          id="wrongReasonBox"
-          class="wrong-reason-box hidden"
-        >
-
-          <label class="input-label">
-            Что было не так?
-          </label>
-
-          <textarea
-            id="wrongReason"
-            class="reason-input"
-            rows="4"
-            placeholder="Например: не знала правило, ошиблась в слове..."
-          ></textarea>
+            <input
+              id="newUsername"
+              type="text"
+              placeholder="Имя"
+            >
+          </div>
 
           <button
-            id="saveWrongBtn"
-            class="primary-btn"
-            type="button"
+            id="saveUsernameBtn"
+            class="main-btn"
           >
-            Сохранить ошибку
+            Сохранить
+          </button>
+
+          <div style="height:10px;"></div>
+
+        </div>
+
+        <div class="profile-actions">
+
+          <button
+            id="editProfileBtn"
+            class="secondary-btn"
+          >
+            Изменить имя
+          </button>
+
+          <button
+            id="logoutBtn"
+            class="secondary-btn"
+            style="background:#fff0f0;color:#d85e5e;"
+          >
+            Выйти из аккаунта
           </button>
 
         </div>
 
-
-        <!-- Кнопки результата -->
-
-        <div
-          id="answerButtons"
-          class="answer-buttons"
-        >
-
-          <button
-            id="correctBtn"
-            class="correct-btn"
-            type="button"
-          >
-            ✅ Правильно
-          </button>
-
-          <button
-            id="wrongBtn"
-            class="wrong-btn"
-            type="button"
-          >
-            ❌ Ошибка
-          </button>
-
-        </div>
-
-
-        <!-- История конкретного задания -->
-
-        <div class="task-history-title">
-          История попыток
-        </div>
-
-        <div
-          id="taskHistory"
-          class="task-history"
-        ></div>
-
       </div>
 
-    </div>
+    </section>
 
   </div>
 
+</div>
 
-  <!-- =========================
-       СТИЛИ ПРИЛОЖЕНИЯ
-  ========================== -->
 
-  <style>
+<!-- =========================================================
+     TASK MODAL
+========================================================= -->
 
-    /* ---------- ОБЩЕЕ ---------- */
+<div id="taskModal" class="modal">
 
-    .screen {
-      min-height: 100vh;
-      padding: 20px;
-      padding-bottom: 40px;
-    }
+  <div class="modal-content">
 
-    .auth-screen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+    <div class="modal-head">
 
-    .auth-card {
-      width: 100%;
-      max-width: 430px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 28px 22px;
-      box-shadow: var(--shadow);
-    }
+      <div id="modalCode" class="modal-code">
+        Задание
+      </div>
 
-    .auth-logo {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      background: var(--purple-light);
-      font-size: 32px;
-    }
+      <button id="modalClose" class="close-btn">
+        ✕
+      </button>
 
-    .auth-card h1 {
-      margin: 0;
-      text-align: center;
-      font-size: 26px;
-    }
+    </div>
 
-    .auth-subtitle {
-      margin: 7px 0 24px;
-      text-align: center;
-      color: var(--muted);
-    }
+    <div id="modalQuestion" class="modal-question"></div>
 
+    <div id="answerButtons" class="answer-buttons">
 
-    /* ---------- АВТОРИЗАЦИЯ ---------- */
+      <button
+        id="correctBtn"
+        class="answer-btn correct-answer"
+      >
+        ✓ Правильно
+      </button>
 
-    .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      padding: 5px;
-      margin-bottom: 22px;
-      background: var(--purple-light);
-      border-radius: 14px;
-    }
+      <button
+        id="wrongBtn"
+        class="answer-btn wrong-answer"
+      >
+        ✕ Ошибка
+      </button>
 
-    .auth-tab {
-      border: 0;
-      background: transparent;
-      color: var(--muted);
-      padding: 11px;
-      border-radius: 10px;
-      font-weight: 600;
-    }
+    </div>
 
-    .auth-tab.active {
-      background: var(--white);
-      color: var(--purple-dark);
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    }
+    <div id="wrongReasonBox" class="reason-box">
 
-    .input-label {
-      display: block;
-      margin: 14px 0 7px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-    }
+      <div style="font-weight:700;margin-bottom:7px;">
+        Что пошло не так?
+      </div>
 
-    .auth-input,
-    .reason-input,
-    #searchInput {
-      width: 100%;
-      border: 1px solid var(--border);
-      outline: none;
-      background: #fff;
-      color: var(--text);
-      border-radius: 13px;
-      padding: 13px 14px;
-    }
+      <textarea
+        id="wrongReason"
+        placeholder="Например: не знала правило..."
+      ></textarea>
 
-    .auth-input:focus,
-    .reason-input:focus,
-    #searchInput:focus {
-      border-color: var(--purple);
-      box-shadow: 0 0 0 3px rgba(155,123,234,.12);
-    }
+      <button
+        id="saveWrongBtn"
+        class="main-btn"
+        style="margin-top:10px;"
+      >
+        Сохранить ошибку
+      </button>
 
-    .primary-btn {
-      width: 100%;
-      margin-top: 16px;
-      border: 0;
-      border-radius: 14px;
-      padding: 13px 16px;
-      background: var(--purple);
-      color: white;
-      font-weight: 700;
-    }
+    </div>
 
-    .primary-btn:active {
-      transform: scale(.98);
-    }
+    <div class="history-title">
+      История попыток
+    </div>
 
-    .link-btn {
-      display: block;
-      margin: 12px auto 0;
-      border: 0;
-      background: transparent;
-      color: var(--purple-dark);
-      font-size: 14px;
-    }
+    <div id="taskHistory"></div>
 
-    .auth-description {
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 14px;
-    }
+  </div>
 
-    #loginMessage,
-    #registerMessage,
-    #forgotMessage,
-    #resetMessage {
-      margin-top: 12px;
-      font-size: 14px;
-      line-height: 1.4;
-    }
+</div>
 
 
-    /* ---------- ЗАГОЛОВКИ ---------- */
+<script>
 
-    .top-header,
-    .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 22px;
-    }
+/* =========================================================
+   SUPABASE
+========================================================= */
 
-    .page-header {
-      justify-content: flex-start;
-    }
+const SUPABASE_URL =
+  "https://akaslsblnvxwtzlhveh.supabase.co";
 
-    .page-header h2 {
-      margin: 0;
-      font-size: 23px;
-    }
+const SUPABASE_KEY =
+  "sb_publishable_0ZKH4SeD5Dg81SaxX7gz-g_1fp-pnch";
 
-    .small-greeting {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 3px;
+const sb = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  {
+    auth:{
+      persistSession:true,
+      autoRefreshToken:true,
+      detectSessionInUrl:true,
+      flowType:"pkce"
     }
+  }
+);
 
-    .top-header h1 {
-      margin: 0;
-      font-size: 26px;
-    }
 
-    .back-button,
-    .avatar-button {
-      border: 0;
-      background: var(--white);
-      color: var(--text);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-    }
+/* =========================================================
+   HELPERS
+========================================================= */
 
-    .back-button {
-      width: 42px;
-      height: 42px;
-      font-size: 22px;
-    }
+const $ = id => document.getElementById(id);
 
-    .avatar-button {
-      width: 48px;
-      height: 48px;
-      font-size: 24px;
-    }
+function show(id){
+  $(id)?.classList.remove("hidden");
+}
 
+function hide(id){
+  $(id)?.classList.add("hidden");
+}
 
-    /* ---------- ПРОГРЕСС ---------- */
+function text(id,value){
+  if($(id)){
+    $(id).textContent = value ?? "";
+  }
+}
 
-    .progress-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      margin-bottom: 18px;
-    }
+function setMessage(id,message,type=""){
+  const el = $(id);
 
-    .progress-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+  if(!el) return;
 
-    .card-label {
-      color: var(--muted);
-      font-size: 14px;
-    }
+  el.textContent = message || "";
+  el.className = "auth-message " + type;
+}
 
-    .progress-number {
-      margin-top: 4px;
-      font-size: 30px;
-      font-weight: 800;
-    }
 
-    .progress-icon {
-      width: 48px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 15px;
-      background: var(--purple-light);
-      font-size: 24px;
-    }
+/* =========================================================
+   STATE
+========================================================= */
 
-    .progress-bar {
-      height: 10px;
-      margin-top: 16px;
-      overflow: hidden;
-      border-radius: 20px;
-      background: #eeeaf7;
-    }
+let currentUser = null;
+let currentSession = null;
 
-    .progress-fill {
-      height: 100%;
-      border-radius: 20px;
-      background: var(--purple);
-      transition: width .3s ease;
-    }
+let currentTask = null;
 
+let attempts = [];
 
-    /* ---------- КАРТОЧКИ ГЛАВНОГО ЭКРАНА ---------- */
+let authBusy = false;
 
-    .home-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+let localStorageKey = "";
 
-    .home-card {
-      min-height: 150px;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 21px;
-      background: var(--white);
-      box-shadow: var(--shadow);
-      text-align: left;
-      color: var(--text);
-    }
+let cloudHistoryAvailable = true;
 
-    .home-card-icon {
-      display: block;
-      font-size: 29px;
-      margin-bottom: 14px;
-    }
 
-    .home-card-title {
-      display: block;
-      font-size: 17px;
-      font-weight: 750;
-    }
+/* =========================================================
+   TASKS
+========================================================= */
 
-    .home-card-text {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.4;
-    }
+function getTasks(){
 
+  let source = null;
 
-    /* ---------- ПОИСК ---------- */
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 0 13px;
-      margin-bottom: 16px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-    }
+  if(Array.isArray(window.tasks)){
+    source = window.tasks;
+  }
 
-    .search-box input {
-      border: 0 !important;
-      box-shadow: none !important;
-      outline: none;
-    }
+  else if(Array.isArray(window.TASKS)){
+    source = window.TASKS;
+  }
 
+  else if(Array.isArray(window.taskData)){
+    source = window.taskData;
+  }
 
-    /* ---------- ЗАДАНИЯ ---------- */
+  else if(Array.isArray(window.tasksData)){
+    source = window.tasksData;
+  }
 
-    .tasks-container,
-    .variant-tasks,
-    .errors-container {
-      display: grid;
-      gap: 11px;
-    }
+  else{
+    source = [];
+  }
 
-    .task-card {
-      width: 100%;
-      padding: 16px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: var(--white);
-      box-shadow: var(--shadow);
-      text-align: left;
-    }
+  return source;
+}
 
-    .task-card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
 
-    .task-code {
-      color: var(--purple-dark);
-      font-weight: 800;
-      font-size: 14px;
-    }
+function getTaskId(task){
 
-    .task-status {
-      font-size: 18px;
-    }
+  if(!task) return "";
 
-    .task-card-question {
-      margin-top: 9px;
-      line-height: 1.45;
-      font-size: 14px;
-    }
+  return String(
+    task.id ??
+    task.task_id ??
+    task.code ??
+    task.number ??
+    task.num ??
+    ""
+  );
+}
 
 
-    /* ---------- СТАТИСТИКА ---------- */
+function getTaskCode(task){
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+  if(!task) return "Задание";
 
-    .stat-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
+  return String(
+    task.code ??
+    task.number ??
+    task.num ??
+    task.id ??
+    "Задание"
+  );
+}
 
-    .stat-icon {
-      font-size: 24px;
-    }
 
-    .stat-number {
-      margin-top: 8px;
-      font-size: 27px;
-      font-weight: 800;
-    }
+function getTaskText(task){
 
-    .stat-label {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 12px;
-    }
+  if(!task) return "Задание";
 
+  return String(
+    task.question ??
+    task.text ??
+    task.title ??
+    task.content ??
+    task.description ??
+    "Задание"
+  );
+}
 
-    /* ---------- ПРОФИЛЬ ---------- */
 
-    .profile-card,
-    .report-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 22px;
-      box-shadow: var(--shadow);
-      margin-bottom: 14px;
-    }
+/* =========================================================
+   USERNAME
+========================================================= */
 
-    .profile-card {
-      text-align: center;
-    }
+function getUsername(user){
 
-    .big-avatar {
-      width: 86px;
-      height: 86px;
-      margin: 0 auto 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: var(--purple-light);
-      font-size: 42px;
-    }
+  if(!user) return "Пользователь";
 
-    .profile-card h2 {
-      margin: 0;
-    }
+  return (
+    user.user_metadata?.username ||
+    user.user_metadata?.name ||
+    user.email?.split("@")[0] ||
+    "Пользователь"
+  );
+}
 
-    .profile-email {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 14px;
-      word-break: break-word;
-    }
 
-    .secondary-btn {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 13px;
-      background: var(--white);
-      color: var(--text);
-      font-weight: 650;
-    }
+function getInitials(name){
 
-    .profile-edit {
-      margin-top: 14px;
-      padding: 16px;
-      background: var(--purple-light);
-      border-radius: 17px;
-    }
+  if(!name) return "?";
 
-    .logout-btn {
-      width: 100%;
-      margin-top: 18px;
-      padding: 13px;
-      border: 1px solid #f0caca;
-      border-radius: 14px;
-      background: #fff5f5;
-      color: #c64d4d;
-      font-weight: 700;
-    }
+  const parts = name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
 
+  if(parts.length === 1){
+    return parts[0].slice(0,2).toUpperCase();
+  }
 
-    /* ---------- ОТЧЁТ ---------- */
+  return (
+    parts[0][0] +
+    parts[1][0]
+  ).toUpperCase();
+}
 
-    .report-title {
-      font-size: 17px;
-      font-weight: 750;
-      margin-bottom: 12px;
-    }
 
-    .report-text {
-      color: var(--muted);
-      line-height: 1.6;
-    }
+/* =========================================================
+   AUTH SCREENS
+========================================================= */
 
-    .report-history {
-      display: grid;
-      gap: 9px;
-    }
+function showLogin(){
 
+  hide("registerForm");
+  hide("forgotForm");
+  hide("resetForm");
 
-    /* ---------- МОДАЛЬНОЕ ОКНО ---------- */
+  show("loginForm");
 
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-    }
+  $("loginTab").classList.add("active");
+  $("registerTab").classList.remove("active");
 
-    .modal-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(40, 32, 55, .48);
-      backdrop-filter: blur(3px);
-    }
+}
 
-    .modal-card {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      width: min(100%, 620px);
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 23px 20px 30px;
-      background: var(--white);
-      border-radius: 25px 25px 0 0;
-    }
 
-    .modal-close {
-      position: absolute;
-      right: 15px;
-      top: 12px;
-      width: 38px;
-      height: 38px;
-      border: 0;
-      border-radius: 50%;
-      background: var(--purple-light);
-      color: var(--text);
-      font-size: 24px;
-    }
+function showRegister(){
 
-    .modal-question {
-      margin: 17px 0;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
+  hide("loginForm");
+  hide("forgotForm");
+  hide("resetForm");
 
-    .answer-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 17px;
-    }
+  show("registerForm");
 
-    .correct-btn,
-    .wrong-btn {
-      padding: 13px;
-      border-radius: 14px;
-      border: 0;
-      font-weight: 700;
-    }
+  $("loginTab").classList.remove("active");
+  $("registerTab").classList.add("active");
 
-    .correct-btn {
-      background: #e9f9f0;
-      color: #29845a;
-    }
+}
 
-    .wrong-btn {
-      background: #fff0f0;
-      color: #bd5555;
-    }
 
-    .wrong-reason-box {
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 17px;
-      background: #fff5f5;
-    }
+function showForgot(){
 
-    .task-history-title {
-      margin-top: 22px;
-      margin-bottom: 10px;
-      font-weight: 750;
-    }
+  hide("loginForm");
+  hide("registerForm");
+  hide("resetForm");
 
-    .task-history {
-      display: grid;
-      gap: 8px;
-    }
+  show("forgotForm");
 
-    .history-item {
-      padding: 11px 13px;
-      border-radius: 13px;
-      background: #f8f6fc;
-      font-size: 13px;
-    }
+}
 
 
-    /* ---------- АДАПТАЦИЯ ---------- */
+function showReset(){
 
-    @media (max-width: 430px) {
+  hide("loginForm");
+  hide("registerForm");
+  hide("forgotForm");
 
-      .screen {
-        padding: 16px;
-      }
+  show("resetForm");
 
-      .home-grid {
-        gap: 9px;
-      }
+}
 
-      .home-card {
-        min-height: 135px;
-        padding: 15px;
-      }
 
-      .auth-card {
-        padding: 23px 18px;
-      }
+/* =========================================================
+   OPEN APPLICATION
+========================================================= */
 
-    }
+async function openApplication(session){
+
+  if(!session || !session.user){
+    return;
+  }
+
+  currentSession = session;
+  currentUser = session.user;
+
+  hide("authScreen");
+  show("app");
+
+  updateUserInterface();
+
+  await loadUserData();
+
+  updateStatistics();
+
+  openHome();
+
+}
+
+
+/* =========================================================
+   UPDATE USER UI
+========================================================= */
+
+function updateUserInterface(){
+
+  if(!currentUser) return;
+
+  const name = getUsername(currentUser);
+  const email = currentUser.email || "";
+
+  text("miniName",name);
+  text("miniEmail",email);
+
+  text("profileName",name);
+  text("profileEmail",email);
+
+  text("miniAvatar",getInitials(name));
+  text("bigAvatar",getInitials(name));
+
+  $("newUsername").value = name;
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function login(){
+
+  if(authBusy) return;
+
+  const email =
+    $("loginEmail").value.trim();
+
+  const password =
+    $("loginPassword").value;
+
+  if(!email || !password){
 
-  </style>
-    <!-- =========================
-       JAVASCRIPT
-  ========================== -->
-
-  <script>
-
-    /* =========================================
-       SUPABASE
-    ========================================= */
-
-    const SUPABASE_URL =
-      "https://akaslsblnvxwtzlhveh.supabase.co";
-
-    const SUPABASE_KEY =
-      "sb_publishable_0ZKH4SeD5Dg81SaxX7gz-g_1fp-pnch";
-
-    const sb = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY,
-      {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true,
-          flowType: "pkce"
-        }
-      }
+    setMessage(
+      "loginMessage",
+      "Введите почту и пароль.",
+      "error"
     );
 
+    return;
+  }
 
-    /* =========================================
-       ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-    ========================================= */
+  authBusy = true;
 
-    const $ = (id) =>
-      document.getElementById(id);
+  $("loginBtn").disabled = true;
 
+  setMessage(
+    "loginMessage",
+    "Выполняем вход..."
+  );
 
-    function show(id) {
-      const el = $(id);
+  try{
 
-      if (el) {
-        el.classList.remove("hidden");
-      }
-    }
-
-
-    function hide(id) {
-      const el = $(id);
-
-      if (el) {
-        el.classList.add("hidden");
-      }
-    }
-
-
-    function setText(id, value) {
-      const el = $(id);
-
-      if (el) {
-        el.textContent =
-          value == null ? "" : String(value);
-      }
-    }
-
-
-    function esc(value) {
-
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
-
-
-    function message(id, text, type = "") {
-
-      const el = $(id);
-
-      if (!el) return;
-
-      el.textContent = text || "";
-
-      if (type === "error") {
-        el.style.color = "#c64d4d";
-      }
-
-      else if (type === "success") {
-        el.style.color = "#29845a";
-      }
-
-      else {
-        el.style.color = "";
-      }
-
-    }
-
-
-    /* =========================================
-       СОСТОЯНИЕ ПРИЛОЖЕНИЯ
-    ========================================= */
-
-    let user = null;
-
-    let task = null;
-
-    let variant = null;
-
-    let attempts = [];
-
-    let busy = false;
-
-    let enteredUserId = null;
-
-
-    /* =========================================
-       РАБОТА С ЗАДАНИЯМИ
-    ========================================= */
-
-    function allTasks() {
-
-      if (
-        Array.isArray(window.tasks)
-      ) {
-        return window.tasks;
-      }
-
-      if (
-        Array.isArray(window.TASKS)
-      ) {
-        return window.TASKS;
-      }
-
-      if (
-        Array.isArray(window.taskData)
-      ) {
-        return window.taskData;
-      }
-
-      return [];
-
-    }
-
-
-    function taskId(item) {
-
-      return String(
-        item?.id ??
-        item?.task_id ??
-        item?.code ??
-        ""
-      );
-
-    }
-
-
-    function taskNumber(item) {
-
-      return (
-        item?.number ??
-        item?.num ??
-        item?.task_number ??
-        ""
-      );
-
-    }
-
-
-    function taskVariant(item) {
-
-      return (
-        item?.variant ??
-        item?.version ??
-        item?.v ??
-        ""
-      );
-
-    }
-
-
-    function taskCode(item) {
-
-      return String(
-        item?.code ??
-        taskNumber(item) ??
-        taskId(item)
-      );
-
-    }
-
-
-    function taskText(item) {
-
-      return String(
-        item?.question ??
-        item?.text ??
-        item?.title ??
-        item?.content ??
-        "Задание"
-      );
-
-    }
-
-
-    /* =========================================
-       ИМЯ ПОЛЬЗОВАТЕЛЯ
-    ========================================= */
-
-    function username() {
-
-      if (!user) {
-        return "Ученик";
-      }
-
-      return (
-        user.user_metadata?.username ||
-        user.user_metadata?.name ||
-        user.email?.split("@")[0] ||
-        "Ученик"
-      );
-
-    }
-
-
-    /* =========================================
-       ПЕРЕКЛЮЧЕНИЕ ФОРМ АВТОРИЗАЦИИ
-    ========================================= */
-
-    function authTabs(mode) {
-
-      hide("loginForm");
-      hide("registerForm");
-      hide("forgotForm");
-      hide("resetForm");
-
-      document
-        .querySelectorAll(".auth-tab")
-        .forEach(btn =>
-          btn.classList.remove("active")
-        );
-
-
-      if (mode === "login") {
-
-        show("loginForm");
-
-        $("loginTab")
-          ?.classList.add("active");
-
-      }
-
-
-      else if (mode === "register") {
-
-        show("registerForm");
-
-        $("registerTab")
-          ?.classList.add("active");
-
-      }
-
-
-      else if (mode === "forgot") {
-
-        show("forgotForm");
-
-      }
-
-
-      else if (mode === "reset") {
-
-        show("resetForm");
-
-      }
-
-    }
-
-
-    /* =========================================
-       ВХОД В ПРИЛОЖЕНИЕ
-    ========================================= */
-
-    async function enter(session) {
-
-      if (!session?.user) {
-        return;
-      }
-
-
-      if (
-        enteredUserId === session.user.id
-      ) {
-        return;
-      }
-
-
-      enteredUserId =
-        session.user.id;
-
-      user =
-        session.user;
-
-
-      hide("authScreen");
-      show("app");
-
-
-      setText(
-        "miniName",
-        username()
-      );
-
-      setText(
-        "profileName",
-        username()
-      );
-
-      setText(
-        "profileEmail",
-        user.email || ""
-      );
-
-
-      await loadCloud();
-
-      update();
-
-      openHome();
-
-    }
-
-
-    /* =========================================
-       ВЫХОД
-    ========================================= */
-
-    async function logout() {
-
-      try {
-
-        await sb.auth.signOut();
-
-      }
-
-      catch (error) {
-
-        console.error(
-          "Ошибка выхода:",
-          error
-        );
-
-      }
-
-
-      user = null;
-
-      enteredUserId = null;
-
-      attempts = [];
-
-      task = null;
-
-      variant = null;
-
-
-      hide("app");
-      show("authScreen");
-
-
-      authTabs("login");
-
-      message(
-        "loginMessage",
-        ""
-      );
-
-    }
-
-
-    /* =========================================
-       НАЧАЛЬНЫЙ ЗАПУСК
-    ========================================= */
-
-    async function initAuth() {
-
-      const {
-        data,
-        error
-      } = await sb.auth.getSession();
-
-
-      if (error) {
-
-        console.error(
-          "Ошибка получения сессии:",
-          error
-        );
-
-        show("authScreen");
-
-        hide("app");
-
-        return;
-
-      }
-
-
-      if (data?.session) {
-
-        await enter(
-          data.session
-        );
-
-      }
-
-      else {
-
-        show("authScreen");
-
-        hide("app");
-
-        authTabs("login");
-
-      }
-
-    }
-
-
-    /* =========================================
-       ОТСЛЕЖИВАНИЕ АВТОРИЗАЦИИ
-    ========================================= */
-
-    sb.auth.onAuthStateChange(
-      async (event, session) => {
-
-        console.log(
-          "Auth event:",
-          event
-        );
-
-
-        if (
-          event === "PASSWORD_RECOVERY"
-        ) {
-
-          show("authScreen");
-
-          hide("app");
-
-          authTabs("reset");
-
-          return;
-
-        }
-
-
-        if (
-          session?.user
-        ) {
-
-          await enter(session);
-
-        }
-
-        else {
-
-          user = null;
-
-          enteredUserId = null;
-
-          attempts = [];
-
-          hide("app");
-
-          show("authScreen");
-
-          authTabs("login");
-
-        }
-
-      }
-    );
-
-
-    /* =========================================
-       КНОПКИ АВТОРИЗАЦИИ
-    ========================================= */
-
-    $("loginTab")
-      ?.addEventListener(
-        "click",
-        () => {
-
-          authTabs("login");
-
-          message(
-            "loginMessage",
-            ""
-          );
-
-        }
-      );
-
-
-    $("registerTab")
-      ?.addEventListener(
-        "click",
-        () => {
-
-          authTabs("register");
-
-          message(
-            "registerMessage",
-            ""
-          );
-
-        }
-      );
-
-
-    $("forgotBtn")
-      ?.addEventListener(
-        "click",
-        () => {
-
-          const email =
-            $("loginEmail")?.value?.trim();
-
-          if (email) {
-            $("forgotEmail").value =
-              email;
-          }
-
-          authTabs("forgot");
-
-        }
-      );
-
-
-    $("backToLoginBtn")
-      ?.addEventListener(
-        "click",
-        () => {
-
-          authTabs("login");
-
-        }
-      );
-
-
-    /* =========================================
-       ВХОД
-    ========================================= */
-
-    async function login() {
-
-      if (busy) return;
-
-      busy = true;
-
-
-      const email =
-        $("loginEmail")
-          ?.value
-          ?.trim();
-
-      const password =
-        $("loginPassword")
-          ?.value;
-
-
-      if (!email || !password) {
-
-        message(
-          "loginMessage",
-          "Введите email и пароль.",
-          "error"
-        );
-
-        busy = false;
-
-        return;
-
-      }
-
-
-      message(
-        "loginMessage",
-        "Выполняется вход..."
-      );
-
-
-      const {
-        data,
-        error
-      } = await sb.auth.signInWithPassword({
+    const {data,error} =
+      await sb.auth.signInWithPassword({
         email,
         password
       });
 
-
-      if (error) {
-
-        message(
-          "loginMessage",
-          error.message,
-          "error"
-        );
-
-        busy = false;
-
-        return;
-
-      }
-
-
-      if (data?.session) {
-
-        await enter(
-          data.session
-        );
-
-      }
-
-
-      busy = false;
-
+    if(error){
+      throw error;
     }
 
+    if(!data.session){
 
-    $("loginBtn")
-      ?.addEventListener(
-        "click",
-        login
+      setMessage(
+        "loginMessage",
+        "Не удалось создать сессию.",
+        "error"
       );
 
+      return;
+    }
 
-    $("loginPassword")
-      ?.addEventListener(
-        "keydown",
-        event => {
+    setMessage(
+      "loginMessage",
+      ""
+    );
 
-          if (
-            event.key === "Enter"
-          ) {
+    await openApplication(data.session);
 
-            login();
+  }
 
-          }
+  catch(error){
 
-        }
-      );
+    console.error("LOGIN ERROR:",error);
 
+    let message =
+      error?.message ||
+      "Не удалось войти.";
 
-    /* =========================================
-       РЕГИСТРАЦИЯ
-    ========================================= */
+    if(
+      message.toLowerCase().includes(
+        "email not confirmed"
+      )
+    ){
+      message =
+        "Сначала подтвердите почту по ссылке из письма.";
+    }
 
-    async function register() {
+    setMessage(
+      "loginMessage",
+      message,
+      "error"
+    );
 
-      if (busy) return;
+  }
 
-      busy = true;
+  finally{
 
+    authBusy = false;
 
-      const usernameValue =
-        $("registerUsername")
-          ?.value
-          ?.trim();
+    $("loginBtn").disabled = false;
 
-      const email =
-        $("registerEmail")
-          ?.value
-          ?.trim();
+  }
 
-      const password =
-        $("registerPassword")
-          ?.value;
-
-      const password2 =
-        $("registerPassword2")
-          ?.value;
-
-
-      if (
-        !usernameValue ||
-        !email ||
-        !password ||
-        !password2
-      ) {
-
-        message(
-          "registerMessage",
-          "Заполните все поля.",
-          "error"
-        );
-
-        busy = false;
-
-        return;
-
-      }
+}
 
 
-      if (
-        password.length < 6
-      ) {
+/* =========================================================
+   REGISTER
+========================================================= */
 
-        message(
-          "registerMessage",
-          "Пароль должен содержать минимум 6 символов.",
-          "error"
-        );
+async function register(){
 
-        busy = false;
+  if(authBusy) return;
 
-        return;
+  const username =
+    $("registerUsername").value.trim();
 
-      }
+  const email =
+    $("registerEmail").value.trim();
 
+  const password =
+    $("registerPassword").value;
 
-      if (
-        password !== password2
-      ) {
+  const password2 =
+    $("registerPassword2").value;
 
-        message(
-          "registerMessage",
-          "Пароли не совпадают.",
-          "error"
-        );
+  if(!username){
 
-        busy = false;
+    setMessage(
+      "registerMessage",
+      "Введите имя.",
+      "error"
+    );
 
-        return;
+    return;
+  }
 
-      }
+  if(!email){
 
+    setMessage(
+      "registerMessage",
+      "Введите почту.",
+      "error"
+    );
 
-      message(
-        "registerMessage",
-        "Создаём аккаунт..."
-      );
+    return;
+  }
 
+  if(password.length < 6){
 
-      const {
-        data,
-        error
-      } = await sb.auth.signUp({
+    setMessage(
+      "registerMessage",
+      "Пароль должен содержать минимум 6 символов.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(password !== password2){
+
+    setMessage(
+      "registerMessage",
+      "Пароли не совпадают.",
+      "error"
+    );
+
+    return;
+  }
+
+  authBusy = true;
+
+  $("registerBtn").disabled = true;
+
+  setMessage(
+    "registerMessage",
+    "Создаём аккаунт..."
+  );
+
+  try{
+
+    const {data,error} =
+      await sb.auth.signUp({
 
         email,
-
         password,
 
-        options: {
-
+        options:{
           emailRedirectTo:
             "https://darianovet.github.io/oge-english-tracker/",
 
-          data: {
-            username:
-              usernameValue
+          data:{
+            username
           }
 
         }
 
       });
 
+    if(error){
+      throw error;
+    }
 
-      if (error) {
+    if(data.session){
 
-        message(
-          "registerMessage",
-          error.message,
-          "error"
-        );
+      currentSession = data.session;
+      currentUser = data.user;
 
-        busy = false;
+      await openApplication(data.session);
 
-        return;
+    }
+    else{
 
-      }
-
-
-      if (
-        data?.session
-      ) {
-
-        await enter(
-          data.session
-        );
-
-      }
-
-      else {
-
-        message(
-          "registerMessage",
-          "Аккаунт создан. Проверьте почту и подтвердите email.",
-          "success"
-        );
-
-      }
-
-
-      busy = false;
+      setMessage(
+        "registerMessage",
+        "Аккаунт создан. Проверьте почту и подтвердите регистрацию.",
+        "success"
+      );
 
     }
 
+  }
 
-    $("registerBtn")
-      ?.addEventListener(
-        "click",
-        register
-      );
+  catch(error){
 
+    console.error("REGISTER ERROR:",error);
 
-    /* =========================================
-       ВОССТАНОВЛЕНИЕ ПАРОЛЯ
-    ========================================= */
+    setMessage(
+      "registerMessage",
+      error?.message ||
+      "Не удалось создать аккаунт.",
+      "error"
+    );
 
-    async function sendReset() {
+  }
 
-      if (busy) return;
+  finally{
 
-      busy = true;
+    authBusy = false;
 
+    $("registerBtn").disabled = false;
 
-      const email =
-        $("forgotEmail")
-          ?.value
-          ?.trim();
+  }
 
-
-      if (!email) {
-
-        message(
-          "forgotMessage",
-          "Введите email.",
-          "error"
-        );
-
-        busy = false;
-
-        return;
-
-      }
+}
 
 
-      message(
-        "forgotMessage",
-        "Отправляем письмо..."
-      );
+/* =========================================================
+   FORGOT PASSWORD
+========================================================= */
 
+async function sendReset(){
 
-      const {
-        error
-      } = await sb.auth.resetPasswordForEmail(
+  const email =
+    $("forgotEmail").value.trim();
+
+  if(!email){
+
+    setMessage(
+      "forgotMessage",
+      "Введите почту.",
+      "error"
+    );
+
+    return;
+  }
+
+  $("sendResetBtn").disabled = true;
+
+  setMessage(
+    "forgotMessage",
+    "Отправляем письмо..."
+  );
+
+  try{
+
+    const {error} =
+      await sb.auth.resetPasswordForEmail(
         email,
         {
           redirectTo:
@@ -2483,2063 +1938,1844 @@
         }
       );
 
-
-      if (error) {
-
-        message(
-          "forgotMessage",
-          error.message,
-          "error"
-        );
-
-      }
-
-      else {
-
-        message(
-          "forgotMessage",
-          "Письмо для восстановления отправлено. Проверьте почту.",
-          "success"
-        );
-
-      }
-
-
-      busy = false;
-
+    if(error){
+      throw error;
     }
 
+    setMessage(
+      "forgotMessage",
+      "Письмо отправлено. Проверьте почту.",
+      "success"
+    );
 
-    $("sendResetBtn")
-      ?.addEventListener(
-        "click",
-        sendReset
-      );
+  }
 
+  catch(error){
 
-    /* =========================================
-       ОБНОВЛЕНИЕ ПАРОЛЯ
-    ========================================= */
+    setMessage(
+      "forgotMessage",
+      error?.message ||
+      "Не удалось отправить письмо.",
+      "error"
+    );
 
-    async function updatePassword() {
+  }
 
-      if (busy) return;
+  finally{
 
-      busy = true;
+    $("sendResetBtn").disabled = false;
 
+  }
 
-      const password =
-        $("newPassword")
-          ?.value;
-
-      const password2 =
-        $("newPassword2")
-          ?.value;
-
-
-      if (
-        !password ||
-        !password2
-      ) {
-
-        message(
-          "resetMessage",
-          "Заполните оба поля.",
-          "error"
-        );
-
-        busy = false;
-
-        return;
-
-      }
+}
 
 
-      if (
-        password.length < 6
-      ) {
+/* =========================================================
+   UPDATE PASSWORD
+========================================================= */
 
-        message(
-          "resetMessage",
-          "Пароль должен содержать минимум 6 символов.",
-          "error"
-        );
+async function updatePassword(){
 
-        busy = false;
+  const password =
+    $("newPassword").value;
 
-        return;
+  const password2 =
+    $("newPassword2").value;
 
-      }
+  if(password.length < 6){
 
+    setMessage(
+      "resetMessage",
+      "Пароль должен содержать минимум 6 символов.",
+      "error"
+    );
 
-      if (
-        password !== password2
-      ) {
+    return;
+  }
 
-        message(
-          "resetMessage",
-          "Пароли не совпадают.",
-          "error"
-        );
+  if(password !== password2){
 
-        busy = false;
+    setMessage(
+      "resetMessage",
+      "Пароли не совпадают.",
+      "error"
+    );
 
-        return;
+    return;
+  }
 
-      }
+  $("updatePasswordBtn").disabled = true;
 
+  try{
 
-      const {
-        error
-      } = await sb.auth.updateUser({
+    const {error} =
+      await sb.auth.updateUser({
         password
       });
 
-
-      if (error) {
-
-        message(
-          "resetMessage",
-          error.message,
-          "error"
-        );
-
-        busy = false;
-
-        return;
-
-      }
-
-
-      message(
-        "resetMessage",
-        "Пароль успешно изменён.",
-        "success"
-      );
-
-
-      setTimeout(
-        () => {
-
-          authTabs("login");
-
-        },
-        1200
-      );
-
-
-      busy = false;
-
+    if(error){
+      throw error;
     }
 
-
-    $("updatePasswordBtn")
-      ?.addEventListener(
-        "click",
-        updatePassword
-      );
-
-
-    /* =========================================
-       ЗАПУСК
-    ========================================= */
-
-    initAuth();
-
-  </script>
-    <script>
-
-    /* =========================================
-       ЗАГРУЗКА ПРОГРЕССА И ИСТОРИИ
-    ========================================= */
-
-    async function loadCloud() {
-
-      if (!user) {
-        attempts = [];
-        return;
-      }
-
-
-      attempts = [];
-
-
-      /*
-       * Сначала пытаемся загрузить полную историю.
-       * Если таблицы attempt_history ещё нет,
-       * используем таблицу progress.
-       */
-
-      const historyResult =
-        await sb
-          .from("attempt_history")
-          .select("*")
-          .eq("user_id", user.id)
-          .order("created_at", {
-            ascending: true
-          });
-
-
-      if (!historyResult.error) {
-
-        attempts =
-          Array.isArray(historyResult.data)
-            ? historyResult.data
-            : [];
-
-        return;
-
-      }
-
-
-      console.warn(
-        "attempt_history недоступна:",
-        historyResult.error.message
-      );
-
-
-      /*
-       * Резервный вариант:
-       * загружаем текущее состояние заданий
-       * из progress.
-       */
-
-      const progressResult =
-        await sb
-          .from("progress")
-          .select("*")
-          .eq("user_id", user.id);
-
-
-      if (
-        progressResult.error
-      ) {
-
-        console.error(
-          "Ошибка загрузки progress:",
-          progressResult.error
-        );
-
-        attempts = [];
-
-        return;
-
-      }
-
-
-      const rows =
-        progressResult.data || [];
-
-
-      attempts =
-        rows.map(row => ({
-
-          id:
-            row.id,
-
-          user_id:
-            row.user_id,
-
-          task_id:
-            String(
-              row.task_id ??
-              row.taskId ??
-              ""
-            ),
-
-          result:
-            row.result ??
-            row.status ??
-            (
-              row.correct
-                ? "correct"
-                : "wrong"
-            ),
-
-          correct:
-            row.correct === true ||
-            row.result === "correct" ||
-            row.status === "correct",
-
-          reason:
-            row.reason ??
-            row.wrong_reason ??
-            "",
-
-          created_at:
-            row.created_at ??
-            new Date().toISOString()
-
-        }));
-
-    }
-
-
-    /* =========================================
-       ПОСЛЕДНЯЯ ПОПЫТКА ЗАДАНИЯ
-    ========================================= */
-
-    function latest(taskIdValue) {
-
-      const id =
-        String(taskIdValue);
-
-
-      const list =
-        attempts.filter(
-          item =>
-            String(
-              item.task_id ??
-              item.taskId ??
-              ""
-            ) === id
-        );
-
-
-      if (!list.length) {
-        return null;
-      }
-
-
-      return list[list.length - 1];
-
-    }
-
-
-    /* =========================================
-       ВЫПОЛНЕНО ЛИ ЗАДАНИЕ
-    ========================================= */
-
-    function done(taskIdValue) {
-
-      const last =
-        latest(taskIdValue);
-
-
-      if (!last) {
-        return false;
-      }
-
-
-      return (
-        last.correct === true ||
-        last.result === "correct" ||
-        last.status === "correct"
-      );
-
-    }
-
-
-    /* =========================================
-       ДОБАВЛЕНИЕ ПОПЫТКИ
-    ========================================= */
-
-    async function saveAttempt(
-      taskItem,
-      isCorrect,
-      reason = ""
-    ) {
-
-      if (!user || !taskItem) {
-        return false;
-      }
-
-
-      const id =
-        taskId(taskItem);
-
-
-      if (!id) {
-        return false;
-      }
-
-
-      const result =
-        isCorrect
-          ? "correct"
-          : "wrong";
-
-
-      const createdAt =
-        new Date().toISOString();
-
-
-      /*
-       * Новая попытка.
-       *
-       * ВАЖНО:
-       * мы НЕ удаляем старые попытки.
-       * Поэтому если сначала была ошибка,
-       * а потом правильный ответ,
-       * обе записи останутся в истории.
-       */
-
-      const attempt = {
-
-        user_id:
-          user.id,
-
-        task_id:
-          id,
-
-        result:
-          result,
-
-        correct:
-          Boolean(isCorrect),
-
-        reason:
-          reason || null,
-
-        created_at:
-          createdAt
-
-      };
-
-
-      /*
-       * Сначала добавляем запись
-       * в полную историю.
-       */
-
-      const historyResult =
-        await sb
-          .from("attempt_history")
-          .insert(attempt);
-
-
-      if (
-        historyResult.error
-      ) {
-
-        console.warn(
-          "Не удалось записать attempt_history:",
-          historyResult.error.message
-        );
-
-      }
-
-
-      /*
-       * Обновляем локальную историю сразу,
-       * чтобы интерфейс не ждал перезагрузки.
-       */
-
-      attempts.push({
-
-        ...attempt,
-
-        id:
-          historyResult.data?.[0]?.id ??
-          crypto.randomUUID()
-
-      });
-
-
-      /*
-       * Теперь обновляем таблицу progress.
-       *
-       * В progress хранится только
-       * последнее состояние задания.
-       */
-
-      const progressData = {
-
-        user_id:
-          user.id,
-
-        task_id:
-          id,
-
-        result:
-          result,
-
-        correct:
-          Boolean(isCorrect),
-
-        reason:
-          reason || null,
-
-        updated_at:
-          createdAt
-
-      };
-
-
-      const progressResult =
-        await sb
-          .from("progress")
-          .upsert(
-            progressData,
-            {
-              onConflict:
-                "user_id,task_id"
-            }
-          );
-
-
-      if (
-        progressResult.error
-      ) {
-
-        /*
-         * Если в старой таблице progress
-         * нет нужных колонок,
-         * пробуем более простой вариант.
-         */
-
-        console.warn(
-          "Не удалось обновить progress:",
-          progressResult.error.message
-        );
-
-      }
-
-
-      update();
-
-
-      return true;
-
-    }
-
-
-    /* =========================================
-       ПРОГРЕСС ПОЛЬЗОВАТЕЛЯ
-    ========================================= */
-
-    function calculateProgress() {
-
-      const tasks =
-        allTasks();
-
-
-      if (!tasks.length) {
-        return {
-          total: 0,
-          solved: 0,
-          correct: 0,
-          wrong: 0,
-          percent: 0
-        };
-      }
-
-
-      let solved = 0;
-
-      let correct = 0;
-
-      let wrong = 0;
-
-
-      tasks.forEach(item => {
-
-        const id =
-          taskId(item);
-
-        const last =
-          latest(id);
-
-
-        if (!last) {
-          return;
-        }
-
-
-        solved++;
-
-
-        if (
-          last.correct === true ||
-          last.result === "correct"
-        ) {
-
-          correct++;
-
-        }
-
-        else {
-
-          wrong++;
-
-        }
-
-      });
-
-
-      const percent =
-        tasks.length
-          ? Math.round(
-              (solved / tasks.length) * 100
-            )
-          : 0;
-
-
-      return {
-
-        total:
-          tasks.length,
-
-        solved,
-
-        correct,
-
-        wrong,
-
-        percent
-
-      };
-
-    }
-
-
-    /* =========================================
-       ОБНОВЛЕНИЕ ВСЕЙ СТАТИСТИКИ
-    ========================================= */
-
-    function update() {
-
-      const stats =
-        calculateProgress();
-
-
-      setText(
-        "progressNumber",
-        `${stats.percent}%`
-      );
-
-
-      const fill =
-        $("progressFill");
-
-
-      if (fill) {
-
-        fill.style.width =
-          `${stats.percent}%`;
-
-      }
-
-
-      setText(
-        "statTotal",
-        stats.total
-      );
-
-
-      setText(
-        "statCorrect",
-        stats.correct
-      );
-
-
-      setText(
-        "statWrong",
-        stats.wrong
-      );
-
-
-      const accuracy =
-        stats.solved
-          ? Math.round(
-              (
-                stats.correct /
-                stats.solved
-              ) * 100
-            )
-          : 0;
-
-
-      setText(
-        "statPercent",
-        `${accuracy}%`
-      );
-
-
-      setText(
-        "miniName",
-        username()
-      );
-
-
-      setText(
-        "profileName",
-        username()
-      );
-
-
-      if (user) {
-
-        setText(
-          "profileEmail",
-          user.email || ""
-        );
-
-      }
-
-    }
-
-  </script>
-    <script>
-
-    /* =========================================
-       НАВИГАЦИЯ
-    ========================================= */
-
-    function closeAllScreens() {
-
-      hide("homeScreen");
-      hide("tasksScreen");
-      hide("variantScreen");
-      hide("statsScreen");
-      hide("errorsScreen");
-      hide("reportScreen");
-      hide("profileScreen");
-
-    }
-
-
-    function openHome() {
-
-      closeAllScreens();
-
-      show("homeScreen");
-
-      update();
-
-    }
-
-
-    function openTasks() {
-
-      closeAllScreens();
-
-      show("tasksScreen");
-
-      renderTasks();
-
-    }
-
-
-    function openStats() {
-
-      closeAllScreens();
-
-      show("statsScreen");
-
-      update();
-
-    }
-
-
-    function openErrors() {
-
-      closeAllScreens();
-
-      show("errorsScreen");
-
-      renderErrors();
-
-    }
-
-
-    function openReport() {
-
-      closeAllScreens();
-
-      show("reportScreen");
-
-      renderReport();
-
-    }
-
-
-    function openProfile() {
-
-      closeAllScreens();
-
-      show("profileScreen");
-
-      setText(
-        "profileName",
-        username()
-      );
-
-      setText(
-        "profileEmail",
-        user?.email || ""
-      );
-
-    }
-
-
-    /* =========================================
-       КНОПКИ ГЛАВНОЙ
-    ========================================= */
-
-    $("tasksMenu")
-      ?.addEventListener(
-        "click",
-        openTasks
-      );
-
-
-    $("statsMenu")
-      ?.addEventListener(
-        "click",
-        openStats
-      );
-
-
-    $("errorsMenu")
-      ?.addEventListener(
-        "click",
-        openErrors
-      );
-
-
-    $("reportMenu")
-      ?.addEventListener(
-        "click",
-        openReport
-      );
-
-
-    $("profileBtn")
-      ?.addEventListener(
-        "click",
-        openProfile
-      );
-
-
-    /* =========================================
-       КНОПКИ "НАЗАД"
-    ========================================= */
-
-    $("tasksBack")
-      ?.addEventListener(
-        "click",
-        openHome
-      );
-
-
-    $("statsBack")
-      ?.addEventListener(
-        "click",
-        openHome
-      );
-
-
-    $("errorsBack")
-      ?.addEventListener(
-        "click",
-        openHome
-      );
-
-
-    $("reportBack")
-      ?.addEventListener(
-        "click",
-        openHome
-      );
-
-
-    $("profileBack")
-      ?.addEventListener(
-        "click",
-        openHome
-      );
-
-
-    $("variantBack")
-      ?.addEventListener(
-        "click",
-        openTasks
-      );
-
-
-    /* =========================================
-       ПРОФИЛЬ
-    ========================================= */
-
-    $("editProfileBtn")
-      ?.addEventListener(
-        "click",
-        () => {
-
-          const edit =
-            $("profileEdit");
-
-          if (!edit) return;
-
-          edit.classList.toggle(
-            "hidden"
-          );
-
-
-          const input =
-            $("newUsername");
-
-          if (input) {
-
-            input.value =
-              username();
-
-          }
-
-        }
-      );
-
-
-    $("saveUsernameBtn")
-      ?.addEventListener(
-        "click",
-        async () => {
-
-          if (!user) return;
-
-
-          const input =
-            $("newUsername");
-
-          const newName =
-            input?.value?.trim();
-
-
-          if (!newName) {
-
-            alert(
-              "Введите имя."
-            );
-
-            return;
-
-          }
-
-
-          if (newName.length > 50) {
-
-            alert(
-              "Имя слишком длинное."
-            );
-
-            return;
-
-          }
-
-
-          const {
-            data,
-            error
-          } =
-            await sb.auth.updateUser({
-
-              data: {
-
-                ...(
-                  user.user_metadata || {}
-                ),
-
-                username:
-                  newName
-
-              }
-
-            });
-
-
-          if (error) {
-
-            alert(
-              "Не удалось изменить имя: " +
-              error.message
-            );
-
-            return;
-
-          }
-
-
-          if (data?.user) {
-
-            user =
-              data.user;
-
-          }
-
-
-          setText(
-            "miniName",
-            username()
-          );
-
-          setText(
-            "profileName",
-            username()
-          );
-
-
-          hide("profileEdit");
-
-
-          alert(
-            "Имя сохранено."
-          );
-
-        }
-      );
-
-
-    $("logoutBtn")
-      ?.addEventListener(
-        "click",
-        logout
-      );
-
-
-    /* =========================================
-       ОТРИСОВКА СПИСКА ЗАДАНИЙ
-    ========================================= */
-
-    function renderTasks(
-      filter = ""
-    ) {
-
-      const container =
-        $("tasksContainer");
-
-
-      if (!container) {
-        return;
-      }
-
-
-      const query =
-        String(filter)
-          .trim()
-          .toLowerCase();
-
-
-      let list =
-        allTasks();
-
-
-      if (query) {
-
-        list =
-          list.filter(item => {
-
-            const text =
-              [
-                taskCode(item),
-                taskText(item),
-                taskVariant(item),
-                taskNumber(item)
-              ]
-                .join(" ")
-                .toLowerCase();
-
-
-            return text.includes(
-              query
-            );
-
-          });
-
-      }
-
-
-      if (!list.length) {
-
-        container.innerHTML = `
-
-          <div class="profile-card">
-
-            <div class="report-title">
-              Задания не найдены
-            </div>
-
-            <div class="report-text">
-              Попробуй изменить запрос.
-            </div>
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        list.map(item => {
-
-          const id =
-            taskId(item);
-
-          const last =
-            latest(id);
-
-
-          let status =
-            "○";
-
-
-          if (last) {
-
-            if (
-              last.correct === true ||
-              last.result === "correct"
-            ) {
-
-              status = "✅";
-
-            }
-
-            else {
-
-              status = "❌";
-
-            }
-
-          }
-
-
-          return `
-
-            <button
-              class="task-card"
-              type="button"
-              data-task-id="${esc(id)}"
-            >
-
-              <div class="task-card-top">
-
-                <div class="task-code">
-                  ${esc(taskCode(item))}
-                </div>
-
-                <div class="task-status">
-                  ${status}
-                </div>
-
-              </div>
-
-              <div class="task-card-question">
-                ${esc(taskText(item))}
-              </div>
-
-            </button>
-
-          `;
-
-        })
-        .join("");
-
-
-      container
-        .querySelectorAll(
-          "[data-task-id]"
-        )
-        .forEach(card => {
-
-          card.addEventListener(
-            "click",
-            () => {
-
-              const id =
-                card.dataset.taskId;
-
-              const found =
-                allTasks().find(
-                  item =>
-                    taskId(item) === id
-                );
-
-
-              if (found) {
-
-                openTask(
-                  found
-                );
-
-              }
-
-            }
-          );
-
-        });
-
-    }
-
-
-    /* =========================================
-       ПОИСК
-    ========================================= */
-
-    $("searchInput")
-      ?.addEventListener(
-        "input",
-        event => {
-
-          renderTasks(
-            event.target.value
-          );
-
-        }
-      );
-
-
-    /* =========================================
-       ОТКРЫТИЕ ЗАДАНИЯ
-    ========================================= */
-
-    function openTask(item) {
-
-      task =
-        item;
-
-
-      setText(
-        "modalCode",
-        taskCode(item)
-      );
-
-
-      const question =
-        taskText(item);
-
-
-      const questionElement =
-        $("modalQuestion");
-
-
-      if (questionElement) {
-
-        questionElement.textContent =
-          question;
-
-      }
-
-
-      hide("wrongReasonBox");
-
-      show("answerButtons");
-
-
-      const reason =
-        $("wrongReason");
-
-
-      if (reason) {
-
-        reason.value = "";
-
-      }
-
-
-      renderTaskHistory(
-        taskId(item)
-      );
-
-
-      show("taskModal");
-
-    }
-
-
-    /* =========================================
-       ИСТОРИЯ КОНКРЕТНОГО ЗАДАНИЯ
-    ========================================= */
-
-    function renderTaskHistory(
-      id
-    ) {
-
-      const container =
-        $("taskHistory");
-
-
-      if (!container) {
-        return;
-      }
-
-
-      const history =
-        attempts.filter(
-          item =>
-            String(
-              item.task_id ??
-              item.taskId ??
-              ""
-            ) === String(id)
-        );
-
-
-      if (!history.length) {
-
-        container.innerHTML = `
-
-          <div class="history-item">
-            Попыток пока нет.
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        history
-          .slice()
-          .reverse()
-          .map(item => {
-
-            const correct =
-              item.correct === true ||
-              item.result === "correct";
-
-
-            const date =
-              item.created_at
-                ? new Date(
-                    item.created_at
-                  ).toLocaleString(
-                    "ru-RU"
-                  )
-                : "";
-
-
-            return `
-
-              <div class="history-item">
-
-                <strong>
-                  ${
-                    correct
-                      ? "✅ Правильно"
-                      : "❌ Ошибка"
-                  }
-                </strong>
-
-                ${
-                  date
-                    ? `<div>${esc(date)}</div>`
-                    : ""
-                }
-
-                ${
-                  !correct &&
-                  item.reason
-                    ? `
-                      <div>
-                        Причина:
-                        ${esc(item.reason)}
-                      </div>
-                    `
-                    : ""
-                }
-
-              </div>
-
-            `;
-
-          })
-          .join("");
-
-    }
-
-
-    /* =========================================
-       ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА
-    ========================================= */
-
-    function closeTaskModal() {
-
-      hide("taskModal");
-
-      task = null;
-
-    }
-
-
-    $("modalClose")
-      ?.addEventListener(
-        "click",
-        closeTaskModal
-      );
-
-
-    document
-      .querySelector(".modal-overlay")
-      ?.addEventListener(
-        "click",
-        closeTaskModal
-      );
-
-
-    /* =========================================
-       ESC — ЗАКРЫТЬ ОКНО
-    ========================================= */
-
-    document.addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          event.key === "Escape"
-        ) {
-
-          if (
-            !$("taskModal")
-              ?.classList
-              .contains("hidden")
-          ) {
-
-            closeTaskModal();
-
-          }
-
-        }
-
-      }
+    setMessage(
+      "resetMessage",
+      "Пароль изменён. Теперь войдите с новым паролем.",
+      "success"
     );
 
-  </script>
-    <script>
+    setTimeout(() => {
 
-    /* =========================================
-       РЕЗУЛЬТАТ: ПРАВИЛЬНО
-    ========================================= */
+      showLogin();
 
-    $("correctBtn")
-      ?.addEventListener(
-        "click",
-        async () => {
+      $("loginEmail").value =
+        currentUser?.email || "";
 
-          if (!task || busy) {
-            return;
-          }
+    },1200);
 
-          busy = true;
+  }
 
-          const success =
-            await saveAttempt(
-              task,
-              true,
-              ""
-            );
+  catch(error){
 
-          busy = false;
+    setMessage(
+      "resetMessage",
+      error?.message ||
+      "Не удалось изменить пароль.",
+      "error"
+    );
 
-          if (!success) {
-            alert(
-              "Не удалось сохранить результат."
-            );
-            return;
-          }
+  }
 
-          renderTaskHistory(
-            taskId(task)
-          );
+  finally{
 
-          renderTasks(
-            $("searchInput")?.value || ""
-          );
+    $("updatePasswordBtn").disabled = false;
 
-          update();
+  }
 
-          setTimeout(
-            () => {
-              closeTaskModal();
-            },
-            350
-          );
+}
 
-        }
-      );
 
+/* =========================================================
+   LOGOUT
+========================================================= */
 
-    /* =========================================
-       РЕЗУЛЬТАТ: ОШИБКА
-    ========================================= */
+async function logout(){
 
-    $("wrongBtn")
-      ?.addEventListener(
-        "click",
-        () => {
+  try{
+    await sb.auth.signOut();
+  }
+  catch(error){
+    console.error(error);
+  }
 
-          if (!task) {
-            return;
-          }
+  currentUser = null;
+  currentSession = null;
+  attempts = [];
+  currentTask = null;
 
-          show("wrongReasonBox");
+  $("app").classList.add("hidden");
+  $("authScreen").classList.remove("hidden");
 
-          hide("answerButtons");
+  showLogin();
 
-          $("wrongReason")
-            ?.focus();
+  $("loginPassword").value = "";
 
-        }
-      );
+  setMessage("loginMessage","");
 
+}
 
-    /* =========================================
-       СОХРАНЕНИЕ ОШИБКИ
-    ========================================= */
 
-    $("saveWrongBtn")
-      ?.addEventListener(
-        "click",
-        async () => {
+/* =========================================================
+   CLOUD DATA
+========================================================= */
 
-          if (!task || busy) {
-            return;
-          }
+function getLocalKey(){
 
-          const reason =
-            $("wrongReason")
-              ?.value
-              ?.trim() || "";
+  if(!currentUser){
+    return "";
+  }
 
-          busy = true;
+  return "oge_attempts_" + currentUser.id;
 
-          const success =
-            await saveAttempt(
-              task,
-              false,
-              reason
-            );
+}
 
-          busy = false;
 
-          if (!success) {
+function loadLocalAttempts(){
 
-            alert(
-              "Не удалось сохранить ошибку."
-            );
+  if(!currentUser){
+    return [];
+  }
 
-            return;
+  try{
 
-          }
+    const key =
+      getLocalKey();
 
+    const raw =
+      localStorage.getItem(key);
 
-          renderTaskHistory(
-            taskId(task)
-          );
+    if(!raw){
+      return [];
+    }
 
-          renderTasks(
-            $("searchInput")?.value || ""
-          );
+    const parsed =
+      JSON.parse(raw);
 
-          update();
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
 
+  }
 
-          /*
-           * После сохранения ошибки
-           * оставляем окно открытым,
-           * чтобы пользователь видел историю.
-           */
+  catch(error){
 
-          show("wrongReasonBox");
+    console.error(
+      "LOCAL LOAD ERROR:",
+      error
+    );
 
-        }
-      );
+    return [];
 
+  }
 
-    /* =========================================
-       ОШИБКИ
-    ========================================= */
+}
 
-    function renderErrors() {
 
-      const container =
-        $("errorsContainer");
+function saveLocalAttempts(){
 
+  if(!currentUser){
+    return;
+  }
 
-      if (!container) {
-        return;
-      }
+  try{
 
+    localStorage.setItem(
+      getLocalKey(),
+      JSON.stringify(attempts)
+    );
 
-      const errors =
-        attempts
-          .filter(item => {
+  }
 
-            return !(
-              item.correct === true ||
-              item.result === "correct"
-            );
+  catch(error){
 
-          })
-          .slice()
-          .reverse();
+    console.error(
+      "LOCAL SAVE ERROR:",
+      error
+    );
 
+  }
 
-      if (!errors.length) {
+}
 
-        container.innerHTML = `
 
-          <div class="profile-card">
+async function loadUserData(){
 
-            <div class="report-title">
-              Ошибок пока нет 🎉
-            </div>
+  attempts = loadLocalAttempts();
 
-            <div class="report-text">
-              Здесь будут появляться задания,
-              в которых были ошибки.
-            </div>
+  if(!currentUser){
+    return;
+  }
 
-          </div>
+  try{
 
-        `;
+    const {data,error} =
+      await sb
+        .from("attempt_history")
+        .select("*")
+        .eq("user_id",currentUser.id)
+        .order("created_at",{ascending:true});
 
-        return;
+    if(!error && Array.isArray(data)){
 
-      }
+      cloudHistoryAvailable = true;
 
+      attempts = data.map(row => ({
 
-      /*
-       * Показываем именно последние ошибки
-       * по заданиям.
-       *
-       * Если задание выполнялось несколько раз,
-       * в списке остаётся его последнее
-       * состояние.
-       */
+        id:
+          row.id ||
+          crypto.randomUUID(),
 
-      const map =
-        new Map();
+        user_id:
+          row.user_id,
 
-
-      errors.forEach(item => {
-
-        const id =
+        task_id:
           String(
-            item.task_id ??
-            item.taskId ??
+            row.task_id ??
+            row.taskId ??
             ""
-          );
+          ),
+
+        result:
+          row.result === true ||
+          row.correct === true,
+
+        correct:
+          row.correct === true ||
+          row.result === true,
+
+        reason:
+          row.reason || "",
+
+        created_at:
+          row.created_at ||
+          new Date().toISOString()
+
+      }));
+
+      saveLocalAttempts();
+
+      return;
+    }
+
+    cloudHistoryAvailable = false;
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "attempt_history unavailable:",
+      error
+    );
+
+    cloudHistoryAvailable = false;
+
+  }
+
+}
 
 
-        if (!map.has(id)) {
+/* =========================================================
+   SAVE ATTEMPT
+========================================================= */
 
-          map.set(
-            id,
-            item
-          );
+async function saveAttempt(task,isCorrect,reason=""){
 
-        }
+  if(!currentUser || !task){
+    return;
+  }
 
-      });
+  const id =
+    getTaskId(task);
 
+  const attempt = {
 
-      container.innerHTML =
-        Array.from(map.entries())
-          .map(([id, item]) => {
+    id:
+      crypto.randomUUID(),
 
-            const found =
-              allTasks().find(
-                taskItem =>
-                  taskId(taskItem) === id
-              );
+    user_id:
+      currentUser.id,
 
+    task_id:
+      String(id),
 
-            const code =
-              found
-                ? taskCode(found)
-                : id;
+    result:
+      !!isCorrect,
 
+    correct:
+      !!isCorrect,
 
-            const text =
-              found
-                ? taskText(found)
-                : "Задание";
+    reason:
+      reason || "",
 
+    created_at:
+      new Date().toISOString()
 
-            return `
-
-              <button
-                class="task-card"
-                type="button"
-                data-error-task="${esc(id)}"
-              >
-
-                <div class="task-card-top">
-
-                  <div class="task-code">
-                    ${esc(code)}
-                  </div>
-
-                  <div class="task-status">
-                    ❌
-                  </div>
-
-                </div>
-
-                <div class="task-card-question">
-                  ${esc(text)}
-                </div>
-
-                ${
-                  item.reason
-                    ? `
-                      <div
-                        class="report-text"
-                        style="margin-top:8px;"
-                      >
-                        Причина:
-                        ${esc(item.reason)}
-                      </div>
-                    `
-                    : ""
-                }
-
-              </button>
-
-            `;
-
-          })
-          .join("");
+  };
 
 
-      container
-        .querySelectorAll(
-          "[data-error-task]"
-        )
-        .forEach(card => {
+  /* сохраняем локально сразу */
 
-          card.addEventListener(
-            "click",
-            () => {
+  attempts.push(attempt);
 
-              const id =
-                card.dataset.errorTask;
+  saveLocalAttempts();
+
+  updateStatistics();
 
 
-              const found =
-                allTasks().find(
-                  item =>
-                    taskId(item) === id
-                );
+  /* пытаемся сохранить в Supabase */
 
+  try{
 
-              if (found) {
+    const {error} =
+      await sb
+        .from("attempt_history")
+        .insert({
 
-                openTask(
-                  found
-                );
+          id:attempt.id,
 
-              }
+          user_id:attempt.user_id,
 
-            }
-          );
+          task_id:attempt.task_id,
+
+          result:attempt.result,
+
+          correct:attempt.correct,
+
+          reason:attempt.reason,
+
+          created_at:attempt.created_at
 
         });
 
-    }
-
-
-    /* =========================================
-       ОТЧЁТ
-    ========================================= */
-
-    function renderReport() {
-
-      const stats =
-        calculateProgress();
-
-
-      const reportText =
-        $("reportText");
-
-
-      if (reportText) {
-
-        reportText.innerHTML = `
-
-          <div>
-            Всего заданий:
-            <strong>
-              ${stats.total}
-            </strong>
-          </div>
-
-          <div>
-            Выполнено:
-            <strong>
-              ${stats.solved}
-            </strong>
-          </div>
-
-          <div>
-            Правильных:
-            <strong>
-              ${stats.correct}
-            </strong>
-          </div>
-
-          <div>
-            С ошибками:
-            <strong>
-              ${stats.wrong}
-            </strong>
-          </div>
-
-          <div>
-            Прогресс:
-            <strong>
-              ${stats.percent}%
-            </strong>
-          </div>
-
-        `;
-
-      }
-
-
-      renderReportHistory();
-
-    }
-
-
-    /* =========================================
-       ПОЛНАЯ ИСТОРИЯ ПОПЫТОК
-    ========================================= */
-
-    function renderReportHistory() {
-
-      const container =
-        $("reportHistory");
-
-
-      if (!container) {
-        return;
-      }
-
-
-      if (!attempts.length) {
-
-        container.innerHTML = `
-
-          <div class="history-item">
-            Попыток пока нет.
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        attempts
-          .slice()
-          .reverse()
-          .map(item => {
-
-            const id =
-              String(
-                item.task_id ??
-                item.taskId ??
-                ""
-              );
-
-
-            const found =
-              allTasks().find(
-                taskItem =>
-                  taskId(taskItem) === id
-              );
-
-
-            const code =
-              found
-                ? taskCode(found)
-                : id;
-
-
-            const correct =
-              item.correct === true ||
-              item.result === "correct";
-
-
-            const date =
-              item.created_at
-                ? new Date(
-                    item.created_at
-                  ).toLocaleString(
-                    "ru-RU"
-                  )
-                : "";
-
-
-            return `
-
-              <div class="history-item">
-
-                <strong>
-                  ${esc(code)}
-                  —
-                  ${
-                    correct
-                      ? "✅ Правильно"
-                      : "❌ Ошибка"
-                  }
-                </strong>
-
-                ${
-                  date
-                    ? `
-                      <div
-                        style="margin-top:4px;"
-                      >
-                        ${esc(date)}
-                      </div>
-                    `
-                    : ""
-                }
-
-                ${
-                  !correct &&
-                  item.reason
-                    ? `
-                      <div
-                        style="margin-top:5px;"
-                      >
-                        Причина:
-                        ${esc(item.reason)}
-                      </div>
-                    `
-                    : ""
-                }
-
-              </div>
-
-            `;
-
-          })
-          .join("");
-
-    }
-
-
-    /* =========================================
-       ПЕЧАТЬ ОТЧЁТА
-    ========================================= */
-
-    $("printBtn")
-      ?.addEventListener(
-        "click",
-        () => {
-
-          window.print();
-
-        }
-      );
-
-
-    /* =========================================
-       ОБНОВЛЕНИЕ ОШИБОК / ОТЧЁТА
-       ПРИ ПЕРЕКЛЮЧЕНИИ ЭКРАНОВ
-    ========================================= */
-
-    const originalOpenErrors =
-      openErrors;
-
-
-    openErrors = function () {
-
-      originalOpenErrors();
-
-      renderErrors();
-
-    };
-
-
-    const originalOpenReport =
-      openReport;
-
-
-    openReport = function () {
-
-      originalOpenReport();
-
-      renderReport();
-
-    };
-
-
-    /* =========================================
-       ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА
-       ПО КЛИКУ ВНЕ КАРТОЧКИ
-    ========================================= */
-
-    const modal =
-      $("taskModal");
-
-
-    if (modal) {
-
-      modal.addEventListener(
-        "click",
-        event => {
-
-          if (
-            event.target === modal
-          ) {
-
-            closeTaskModal();
-
-          }
-
-        }
-      );
-
-    }
-
-
-    /* =========================================
-       TELEGRAM WEB APP
-    ========================================= */
-
-    try {
-
-      if (
-        window.Telegram &&
-        window.Telegram.WebApp
-      ) {
-
-        window.Telegram.WebApp.ready();
-
-        window.Telegram.WebApp.expand();
-
-      }
-
-    }
-
-    catch (error) {
+    if(error){
 
       console.warn(
-        "Telegram WebApp недоступен:",
+        "Supabase history error:",
         error
       );
 
     }
 
+  }
 
-    /* =========================================
-       ПЕРВИЧНОЕ ОБНОВЛЕНИЕ
-    ========================================= */
+  catch(error){
 
-    update();
+    console.warn(
+      "Supabase history unavailable:",
+      error
+    );
 
-  </script>
+  }
+
+
+  /* current progress */
+
+  try{
+
+    const {error} =
+      await sb
+        .from("progress")
+        .upsert(
+
+          {
+            user_id:currentUser.id,
+
+            task_id:String(id),
+
+            result:!!isCorrect,
+
+            correct:!!isCorrect,
+
+            reason:reason || "",
+
+            updated_at:new Date().toISOString()
+          },
+
+          {
+            onConflict:
+              "user_id,task_id"
+          }
+
+        );
+
+    if(error){
+
+      console.warn(
+        "Progress save error:",
+        error
+      );
+
+    }
+
+  }
+
+  catch(error){
+
+    console.warn(
+      "Progress table unavailable:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LATEST ATTEMPT
+========================================================= */
+
+function latestAttempt(taskId){
+
+  const id =
+    String(taskId);
+
+  const list =
+    attempts.filter(
+      a =>
+        String(a.task_id) === id
+    );
+
+  if(!list.length){
+    return null;
+  }
+
+  return list[list.length - 1];
+
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+function calculateStats(){
+
+  const tasks =
+    getTasks();
+
+  const total =
+    tasks.length;
+
+  const latest = new Map();
+
+  for(const attempt of attempts){
+
+    latest.set(
+      String(attempt.task_id),
+      attempt
+    );
+
+  }
+
+  let solved = 0;
+  let correct = 0;
+  let wrong = 0;
+
+  for(const attempt of latest.values()){
+
+    solved++;
+
+    if(
+      attempt.correct === true ||
+      attempt.result === true
+    ){
+      correct++;
+    }
+    else{
+      wrong++;
+    }
+
+  }
+
+  const percent =
+    solved > 0
+      ? Math.round(correct / solved * 100)
+      : 0;
+
+  return {
+    total,
+    solved,
+    correct,
+    wrong,
+    percent
+  };
+
+}
+
+
+function updateStatistics(){
+
+  const s =
+    calculateStats();
+
+  text(
+    "progressNumber",
+    s.percent + "%"
+  );
+
+  if($("progressFill")){
+    $("progressFill").style.width =
+      s.percent + "%";
+  }
+
+  text(
+    "statTotal",
+    s.total
+  );
+
+  text(
+    "statSolved",
+    s.solved
+  );
+
+  text(
+    "statCorrect",
+    s.correct
+  );
+
+  text(
+    "statWrong",
+    s.wrong
+  );
+
+  text(
+    "statPercent",
+    s.percent + "%"
+  );
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function closeScreens(){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(el => {
+      el.classList.remove("active");
+    });
+
+}
+
+
+function openHome(){
+
+  closeScreens();
+
+  show("homeScreen");
+
+  updateStatistics();
+
+}
+
+
+function openTasks(){
+
+  closeScreens();
+
+  show("tasksScreen");
+
+  renderTasks(
+    $("searchInput").value || ""
+  );
+
+}
+
+
+function openStats(){
+
+  closeScreens();
+
+  show("statsScreen");
+
+  updateStatistics();
+
+}
+
+
+function openErrors(){
+
+  closeScreens();
+
+  show("errorsScreen");
+
+  renderErrors();
+
+}
+
+
+function openReport(){
+
+  closeScreens();
+
+  show("reportScreen");
+
+  renderReport();
+
+}
+
+
+function openProfile(){
+
+  closeScreens();
+
+  show("profileScreen");
+
+  updateUserInterface();
+
+}
+
+
+/* =========================================================
+   TASK RENDER
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function getTaskStatus(task){
+
+  const attempt =
+    latestAttempt(
+      getTaskId(task)
+    );
+
+  if(!attempt){
+    return {
+      text:"Не решено",
+      cls:"none"
+    };
+  }
+
+  if(
+    attempt.correct === true ||
+    attempt.result === true
+  ){
+    return {
+      text:"Правильно",
+      cls:"correct"
+    };
+  }
+
+  return {
+    text:"Ошибка",
+    cls:"wrong"
+  };
+
+}
+
+
+function renderTasks(filter=""){
+
+  const container =
+    $("tasksContainer");
+
+  if(!container){
+    return;
+  }
+
+  const tasks =
+    getTasks();
+
+  if(!tasks.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        Задания не найдены.
+      </div>
+    `;
+
+    return;
+  }
+
+  const q =
+    String(filter || "")
+      .trim()
+      .toLowerCase();
+
+  const filtered =
+    tasks.filter(task => {
+
+      if(!q){
+        return true;
+      }
+
+      return (
+        getTaskCode(task)
+          .toLowerCase()
+          .includes(q) ||
+
+        getTaskText(task)
+          .toLowerCase()
+          .includes(q)
+      );
+
+    });
+
+
+  if(!filtered.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        По вашему запросу ничего не найдено.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    filtered.map((task,index) => {
+
+      const status =
+        getTaskStatus(task);
+
+      return `
+
+        <div
+          class="task-card"
+          data-task-index="${tasks.indexOf(task)}"
+        >
+
+          <div class="task-top">
+
+            <span class="task-number">
+              № ${escapeHtml(getTaskCode(task))}
+            </span>
+
+            <span class="status ${status.cls}">
+              ${status.text}
+            </span>
+
+          </div>
+
+          <div class="task-title">
+            ${escapeHtml(
+              getTaskText(task)
+            )}
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  container
+    .querySelectorAll(".task-card")
+    .forEach(card => {
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          const index =
+            Number(
+              card.dataset.taskIndex
+            );
+
+          const task =
+            tasks[index];
+
+          openTask(task);
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   OPEN TASK
+========================================================= */
+
+function openTask(task){
+
+  if(!task){
+    return;
+  }
+
+  currentTask = task;
+
+  text(
+    "modalCode",
+    "Задание № " +
+    getTaskCode(task)
+  );
+
+  text(
+    "modalQuestion",
+    getTaskText(task)
+  );
+
+  $("wrongReasonBox").style.display =
+    "none";
+
+  $("answerButtons").style.display =
+    "grid";
+
+  $("wrongReason").value = "";
+
+  renderTaskHistory();
+
+  $("taskModal").classList.add("open");
+
+}
+
+
+function closeTask(){
+
+  currentTask = null;
+
+  $("taskModal")
+    .classList.remove("open");
+
+}
+
+
+function renderTaskHistory(){
+
+  const container =
+    $("taskHistory");
+
+  if(!container || !currentTask){
+    return;
+  }
+
+  const id =
+    getTaskId(currentTask);
+
+  const history =
+    attempts.filter(
+      a =>
+        String(a.task_id) ===
+        String(id)
+    );
+
+
+  if(!history.length){
+
+    container.innerHTML = `
+      <div class="empty" style="padding:20px 0;">
+        Попыток пока нет.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    history
+      .slice()
+      .reverse()
+      .map((attempt,index) => {
+
+        const correct =
+          attempt.correct === true ||
+          attempt.result === true;
+
+        const date =
+          new Date(
+            attempt.created_at
+          ).toLocaleString(
+            "ru-RU",
+            {
+              day:"2-digit",
+              month:"2-digit",
+              year:"numeric",
+              hour:"2-digit",
+              minute:"2-digit"
+            }
+          );
+
+        return `
+
+          <div
+            class="history-item ${
+              correct
+                ? "correct-history"
+                : "wrong-history"
+            }"
+          >
+
+            <div style="font-weight:700;">
+              ${
+                correct
+                  ? "✓ Правильно"
+                  : "✕ Ошибка"
+              }
+            </div>
+
+            <div
+              style="
+                color:#8b8498;
+                font-size:12px;
+                margin-top:4px;
+              "
+            >
+              ${date}
+            </div>
+
+            ${
+              !correct && attempt.reason
+                ? `
+                  <div
+                    style="
+                      margin-top:7px;
+                      font-size:13px;
+                    "
+                  >
+                    ${escapeHtml(
+                      attempt.reason
+                    )}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =========================================================
+   ERRORS
+========================================================= */
+
+function renderErrors(){
+
+  const container =
+    $("errorsContainer");
+
+  if(!container){
+    return;
+  }
+
+  const latest = new Map();
+
+  for(const attempt of attempts){
+
+    latest.set(
+      String(attempt.task_id),
+      attempt
+    );
+
+  }
+
+
+  const errors = [];
+
+  for(const task of getTasks()){
+
+    const attempt =
+      latest.get(
+        String(
+          getTaskId(task)
+        )
+      );
+
+    if(
+      attempt &&
+      !(
+        attempt.correct === true ||
+        attempt.result === true
+      )
+    ){
+
+      errors.push({
+        task,
+        attempt
+      });
+
+    }
+
+  }
+
+
+  if(!errors.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        Ошибок пока нет 🎉
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    errors.map(({task,attempt}) => {
+
+      return `
+
+        <div
+          class="error-card"
+          data-error-id="${escapeHtml(
+            getTaskId(task)
+          )}"
+        >
+
+          <div class="error-code">
+            Задание № ${escapeHtml(
+              getTaskCode(task)
+            )}
+          </div>
+
+          <div style="font-size:14px;margin-bottom:8px;">
+            ${escapeHtml(
+              getTaskText(task)
+            )}
+          </div>
+
+          ${
+            attempt.reason
+              ? `
+                <div class="error-reason">
+                  <b>Причина:</b>
+                  ${escapeHtml(
+                    attempt.reason
+                  )}
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  container
+    .querySelectorAll(".error-card")
+    .forEach(card => {
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          const id =
+            card.dataset.errorId;
+
+          const task =
+            getTasks().find(
+              t =>
+                String(
+                  getTaskId(t)
+                ) === String(id)
+            );
+
+          if(task){
+            openTask(task);
+          }
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   REPORT
+========================================================= */
+
+function renderReport(){
+
+  const s =
+    calculateStats();
+
+  const totalAttempts =
+    attempts.length;
+
+  const report =
+
+`ОТЧЁТ ПО ПОДГОТОВКЕ К ОГЭ
+
+Всего заданий: ${s.total}
+Решено заданий: ${s.solved}
+Правильных: ${s.correct}
+Ошибок: ${s.wrong}
+Процент правильных: ${s.percent}%
+
+Всего попыток: ${totalAttempts}`;
+
+  text(
+    "reportText",
+    report
+  );
+
+
+  const history =
+    $("reportHistory");
+
+  if(!history){
+    return;
+  }
+
+  if(!attempts.length){
+
+    history.innerHTML = `
+      <div class="empty">
+        История попыток пока пуста.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  history.innerHTML =
+    attempts
+      .slice()
+      .reverse()
+      .map(attempt => {
+
+        const task =
+          getTasks().find(
+            t =>
+              String(
+                getTaskId(t)
+              ) ===
+              String(
+                attempt.task_id
+              )
+          );
+
+        const correct =
+          attempt.correct === true ||
+          attempt.result === true;
+
+        const date =
+          new Date(
+            attempt.created_at
+          ).toLocaleString(
+            "ru-RU"
+          );
+
+        return `
+
+          <div
+            class="
+              history-item
+              ${
+                correct
+                  ? "correct-history"
+                  : "wrong-history"
+              }
+            "
+          >
+
+            <div style="font-weight:700;">
+
+              ${
+                correct
+                  ? "✓ Правильно"
+                  : "✕ Ошибка"
+              }
+
+              ${
+                task
+                  ? `
+                    — задание №
+                    ${escapeHtml(
+                      getTaskCode(task)
+                    )}
+                  `
+                  : ""
+              }
+
+            </div>
+
+            <div
+              style="
+                color:#8b8498;
+                font-size:12px;
+                margin-top:4px;
+              "
+            >
+              ${date}
+            </div>
+
+            ${
+              !correct && attempt.reason
+                ? `
+                  <div
+                    style="
+                      margin-top:6px;
+                      font-size:13px;
+                    "
+                  >
+                    ${escapeHtml(
+                      attempt.reason
+                    )}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =========================================================
+   PROFILE EDIT
+========================================================= */
+
+async function saveUsername(){
+
+  if(!currentUser){
+    return;
+  }
+
+  const newName =
+    $("newUsername")
+      .value
+      .trim();
+
+  if(!newName){
+
+    alert("Введите имя.");
+
+    return;
+  }
+
+  $("saveUsernameBtn")
+    .disabled = true;
+
+  try{
+
+    const {data,error} =
+      await sb.auth.updateUser({
+
+        data:{
+          ...(
+            currentUser.user_metadata ||
+            {}
+          ),
+
+          username:newName
+
+        }
+
+      });
+
+    if(error){
+      throw error;
+    }
+
+    if(data.user){
+
+      currentUser =
+        data.user;
+
+      updateUserInterface();
+
+    }
+
+    hide("profileEdit");
+
+  }
+
+  catch(error){
+
+    console.error(
+      "PROFILE ERROR:",
+      error
+    );
+
+    alert(
+      error?.message ||
+      "Не удалось сохранить имя."
+    );
+
+  }
+
+  finally{
+
+    $("saveUsernameBtn")
+      .disabled = false;
+
+  }
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+$("loginTab")
+  .addEventListener(
+    "click",
+    showLogin
+  );
+
+$("registerTab")
+  .addEventListener(
+    "click",
+    showRegister
+  );
+
+$("loginBtn")
+  .addEventListener(
+    "click",
+    login
+  );
+
+$("registerBtn")
+  .addEventListener(
+    "click",
+    register
+  );
+
+$("forgotBtn")
+  .addEventListener(
+    "click",
+    showForgot
+  );
+
+$("backToLoginBtn")
+  .addEventListener(
+    "click",
+    showLogin
+  );
+
+$("sendResetBtn")
+  .addEventListener(
+    "click",
+    sendReset
+  );
+
+$("updatePasswordBtn")
+  .addEventListener(
+    "click",
+    updatePassword
+  );
+
+
+/* Enter key */
+
+$("loginPassword")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if(event.key === "Enter"){
+        login();
+      }
+
+    }
+  );
+
+
+$("registerPassword2")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if(event.key === "Enter"){
+        register();
+      }
+
+    }
+  );
+
+
+/* navigation */
+
+$("tasksMenu")
+  .addEventListener(
+    "click",
+    openTasks
+  );
+
+$("statsMenu")
+  .addEventListener(
+    "click",
+    openStats
+  );
+
+$("errorsMenu")
+  .addEventListener(
+    "click",
+    openErrors
+  );
+
+$("reportMenu")
+  .addEventListener(
+    "click",
+    openReport
+  );
+
+$("profileBtn")
+  .addEventListener(
+    "click",
+    openProfile
+  );
+
+
+$("tasksBack")
+  .addEventListener(
+    "click",
+    openHome
+  );
+
+$("statsBack")
+  .addEventListener(
+    "click",
+    openHome
+  );
+
+$("errorsBack")
+  .addEventListener(
+    "click",
+    openHome
+  );
+
+$("reportBack")
+  .addEventListener(
+    "click",
+    openHome
+  );
+
+$("profileBack")
+  .addEventListener(
+    "click",
+    openHome
+  );
+
+
+$("searchInput")
+  .addEventListener(
+    "input",
+    event => {
+
+      renderTasks(
+        event.target.value
+      );
+
+    }
+  );
+
+
+$("modalClose")
+  .addEventListener(
+    "click",
+    closeTask
+  );
+
+
+$("taskModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target ===
+        $("taskModal")
+      ){
+        closeTask();
+      }
+
+    }
+  );
+
+
+/* correct */
+
+$("correctBtn")
+  .addEventListener(
+    "click",
+    async () => {
+
+      if(!currentTask){
+        return;
+      }
+
+      $("correctBtn")
+        .disabled = true;
+
+      await saveAttempt(
+        currentTask,
+        true,
+        ""
+      );
+
+      renderTaskHistory();
+
+      renderTasks(
+        $("searchInput").value
+      );
+
+      updateStatistics();
+
+      setTimeout(
+        closeTask,
+        300
+      );
+
+      $("correctBtn")
+        .disabled = false;
+
+    }
+  );
+
+
+/* wrong */
+
+$("wrongBtn")
+  .addEventListener(
+    "click",
+    () => {
+
+      $("answerButtons")
+        .style.display = "none";
+
+      $("wrongReasonBox")
+        .style.display = "block";
+
+      $("wrongReason")
+        .focus();
+
+    }
+  );
+
+
+/* save wrong */
+
+$("saveWrongBtn")
+  .addEventListener(
+    "click",
+    async () => {
+
+      if(!currentTask){
+        return;
+      }
+
+      const reason =
+        $("wrongReason")
+          .value
+          .trim();
+
+      $("saveWrongBtn")
+        .disabled = true;
+
+      await saveAttempt(
+        currentTask,
+        false,
+        reason
+      );
+
+      renderTaskHistory();
+
+      renderTasks(
+        $("searchInput").value
+      );
+
+      updateStatistics();
+
+      setTimeout(
+        closeTask,
+        300
+      );
+
+      $("saveWrongBtn")
+        .disabled = false;
+
+    }
+  );
+
+
+/* profile */
+
+$("editProfileBtn")
+  .addEventListener(
+    "click",
+    () => {
+
+      const box =
+        $("profileEdit");
+
+      box.classList.toggle(
+        "hidden"
+      );
+
+    }
+  );
+
+
+$("saveUsernameBtn")
+  .addEventListener(
+    "click",
+    saveUsername
+  );
+
+
+$("logoutBtn")
+  .addEventListener(
+    "click",
+    logout
+  );
+
+
+$("printBtn")
+  .addEventListener(
+    "click",
+    () => {
+      window.print();
+    }
+  );
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+sb.auth.onAuthStateChange(
+  (event,session) => {
+
+    console.log(
+      "AUTH:",
+      event
+    );
+
+    /*
+      НЕ вызываем здесь openApplication().
+      Иначе Supabase может одновременно
+      вызвать LOGIN + SIGNED_IN и
+      приложение откроется дважды.
+
+      После первоначальной проверки сессии
+      приложение открывается отдельно.
+    */
+
+  }
+);
+
+
+/* =========================================================
+   INITIAL AUTH CHECK
+========================================================= */
+
+async function init(){
+
+  try{
+
+    /*
+      Сначала проверяем, есть ли
+      уже сохранённая сессия.
+    */
+
+    const {
+      data,
+      error
+    } =
+      await sb.auth.getSession();
+
+    if(error){
+
+      console.error(
+        "SESSION ERROR:",
+        error
+      );
+
+      showLogin();
+
+      return;
+    }
+
+
+    if(data?.session){
+
+      await openApplication(
+        data.session
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Если сессии нет —
+      оставляем экран входа.
+    */
+
+    showLogin();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "INIT ERROR:",
+      error
+    );
+
+    showLogin();
+
+  }
+
+}
+
+
+/* =========================================================
+   PASSWORD RECOVERY
+========================================================= */
+
+sb.auth.onAuthStateChange(
+  (event,session) => {
+
+    if(event === "PASSWORD_RECOVERY"){
+
+      showReset();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   TELEGRAM
+========================================================= */
+
+try{
+
+  if(
+    window.Telegram &&
+    window.Telegram.WebApp
+  ){
+
+    window.Telegram.WebApp.ready();
+
+    window.Telegram.WebApp.expand();
+
+  }
+
+}
+catch(error){
+
+  console.warn(
+    "Telegram WebApp:",
+    error
+  );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+updateStatistics();
+
+init();
+
+</script>
 
 </body>
 </html>
