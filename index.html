@@ -6,8 +6,8 @@
 
   <title>OGE English Tracker</title>
 
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./data/tasks.js"></script>
 
   <style>
     * {
@@ -16,26 +16,27 @@
 
     :root {
       --purple: #7c5cff;
-      --purple-dark: #6847ed;
-      --purple-light: #eee9ff;
-      --purple-soft: #f7f4ff;
+      --purple-light: #b99cff;
+      --purple-pale: #f3efff;
+      --purple-dark: #5c43d6;
 
-      --text: #272333;
-      --muted: #7c7688;
+      --text: #27233a;
+      --muted: #77738a;
 
-      --bg: #f7f5fc;
       --white: #ffffff;
-      --border: #e7e2f1;
+      --bg: #f7f5fb;
 
-      --green: #19915d;
+      --green: #16a34a;
       --green-bg: #dcfce7;
       --green-border: #86efac;
 
-      --red: #d94d62;
-      --red-bg: #ffe4e8;
+      --red: #dc2626;
+      --red-bg: #ffe4e6;
       --red-border: #fda4af;
 
-      --shadow: 0 10px 30px rgba(73, 53, 130, 0.08);
+      --border: #e7e3ef;
+
+      --shadow: 0 10px 30px rgba(74, 53, 140, 0.08);
     }
 
     html {
@@ -63,506 +64,377 @@
       display: none !important;
     }
 
-    /* =========================================================
+    /* =========================
        AUTH
-    ========================================================= */
+    ========================= */
 
     #authScreen {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
-
+      padding: 25px;
       background:
-        radial-gradient(
-          circle at top left,
-          #eee8ff 0,
-          transparent 36%
-        ),
-        radial-gradient(
-          circle at bottom right,
-          #e7dcff 0,
-          transparent 36%
-        ),
-        #f8f6fd;
+        radial-gradient(circle at top left, #eee8ff 0, transparent 35%),
+        radial-gradient(circle at bottom right, #e9e2ff 0, transparent 35%),
+        var(--bg);
     }
 
     .auth-card {
       width: 100%;
-      max-width: 450px;
-
-      background: white;
+      max-width: 460px;
+      background: var(--white);
       border: 1px solid var(--border);
       border-radius: 28px;
-
-      padding: 34px;
-
+      padding: 35px;
       box-shadow: var(--shadow);
     }
 
-    .auth-logo {
-      font-size: 29px;
-      font-weight: 800;
-      color: var(--purple);
-      letter-spacing: -1px;
+    .logo-big {
+      text-align: center;
+      margin-bottom: 25px;
     }
 
-    .auth-title {
-      margin: 25px 0 8px;
+    .logo-big .logo-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 15px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #b99cff, #7c5cff);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 28px;
+      font-weight: 800;
     }
 
-    .auth-subtitle {
-      margin: 0 0 24px;
+    .logo-big h1 {
+      margin: 0 0 8px;
+      font-size: 27px;
+    }
+
+    .logo-big p {
+      margin: 0;
       color: var(--muted);
-      line-height: 1.5;
     }
 
     .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-
-      background: #f1eef7;
+      display: flex;
+      background: #f3f1f8;
       padding: 4px;
-
-      border-radius: 12px;
-      margin-bottom: 23px;
+      border-radius: 13px;
+      margin-bottom: 25px;
     }
 
     .auth-tab {
+      flex: 1;
       border: 0;
       background: transparent;
-
-      padding: 11px;
-      border-radius: 9px;
-
       color: var(--muted);
+      padding: 11px;
+      border-radius: 10px;
       font-weight: 700;
     }
 
     .auth-tab.active {
       background: white;
-      color: var(--purple);
-
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      color: var(--purple-dark);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
     }
 
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
     .form-group label {
       display: block;
       margin-bottom: 7px;
-
       font-size: 14px;
       font-weight: 700;
     }
 
-    input,
-    textarea {
+    .form-group input,
+    .form-group textarea,
+    .task-search {
       width: 100%;
-
       border: 1px solid var(--border);
       border-radius: 12px;
-
-      padding: 12px 14px;
-
       background: white;
-      color: var(--text);
-
+      padding: 12px 14px;
       outline: none;
-
       transition: 0.2s;
     }
 
-    input:focus,
-    textarea:focus {
-      border-color: var(--purple);
-
-      box-shadow:
-        0 0 0 3px rgba(124, 92, 255, 0.12);
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .task-search:focus {
+      border-color: var(--purple-light);
+      box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.1);
     }
 
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .primary-btn {
+    .primary-button {
       width: 100%;
-
       border: 0;
       border-radius: 12px;
-
-      padding: 13px 18px;
-
-      background: var(--purple);
+      padding: 13px 16px;
+      background: linear-gradient(135deg, #a98aff, #7c5cff);
       color: white;
-
-      font-weight: 700;
-
+      font-weight: 800;
       transition: 0.2s;
     }
 
-    .primary-btn:hover {
-      background: var(--purple-dark);
+    .primary-button:hover {
       transform: translateY(-1px);
     }
 
-    .secondary-btn {
+    .secondary-button {
       border: 1px solid var(--border);
-      border-radius: 11px;
-
       background: white;
       color: var(--text);
-
-      padding: 10px 15px;
-
+      border-radius: 11px;
+      padding: 10px 14px;
       font-weight: 700;
     }
 
-    .secondary-btn:hover {
-      border-color: var(--purple);
-      color: var(--purple);
+    .secondary-button:hover {
+      border-color: var(--purple-light);
     }
 
-    .text-btn {
+    .danger-button {
+      border: 0;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 11px;
+      padding: 10px 14px;
+      font-weight: 700;
+    }
+
+    .text-button {
       border: 0;
       background: transparent;
-
-      color: var(--purple);
-
-      padding: 8px 0;
-
+      color: var(--purple-dark);
+      padding: 5px 0;
       font-weight: 700;
+    }
+
+    .auth-link-row {
+      text-align: right;
+      margin-top: 8px;
+      margin-bottom: 18px;
     }
 
     .auth-message {
-      display: none;
-
-      margin-top: 15px;
-      padding: 12px;
-
-      border-radius: 10px;
-
+      min-height: 20px;
+      margin-bottom: 12px;
       font-size: 14px;
-      line-height: 1.45;
+      color: var(--red);
     }
 
-    .auth-message.show {
-      display: block;
-    }
-
-    .auth-message.error {
-      background: #fff0f2;
-      color: #a52c40;
-    }
-
-    .auth-message.success {
-      background: #ecfff5;
-      color: #17734c;
-    }
-
-    /* =========================================================
-       TOP BAR
-    ========================================================= */
+    /* =========================
+       APP HEADER
+    ========================= */
 
     #app {
       min-height: 100vh;
     }
 
-    .topbar {
+    .top-header {
       position: sticky;
       top: 0;
-      z-index: 50;
-
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(14px);
-
+      z-index: 20;
+      height: 72px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-    }
-
-    .topbar-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-
-      padding: 15px 22px;
-
       display: flex;
       align-items: center;
       justify-content: space-between;
-
-      gap: 20px;
+      padding: 0 28px;
     }
 
-    .site-logo {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--purple);
-    }
-
-    .topbar-user {
+    .brand {
       display: flex;
       align-items: center;
-      gap: 11px;
+      gap: 12px;
+      font-weight: 900;
+      font-size: 18px;
     }
 
-    .avatar {
-      width: 39px;
-      height: 39px;
-
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: white;
+      background: linear-gradient(135deg, #b99cff, #7c5cff);
+    }
 
-      border-radius: 50%;
-
-      background: var(--purple-light);
-      color: var(--purple);
-
-      font-weight: 800;
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
     .user-name {
       font-weight: 700;
     }
 
-    .logout-btn {
-      border: 0;
-      background: transparent;
+    /* =========================
+       NAV
+    ========================= */
 
-      color: var(--muted);
-
-      font-size: 14px;
-    }
-
-    .logout-btn:hover {
-      color: var(--red);
-    }
-
-    /* =========================================================
-       NAVIGATION
-    ========================================================= */
-
-    .navigation {
-      max-width: 1200px;
-      margin: 0 auto;
-
-      padding: 10px 22px 14px;
-
+    .main-nav {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 25px;
       display: flex;
-      gap: 7px;
-
+      gap: 6px;
       overflow-x: auto;
     }
 
-    .nav-btn {
-      white-space: nowrap;
-
+    .nav-button {
       border: 0;
       background: transparent;
-
       color: var(--muted);
-
-      padding: 10px 14px;
-
-      border-radius: 10px;
-
+      padding: 11px 17px;
+      border-radius: 11px;
       font-weight: 700;
+      white-space: nowrap;
     }
 
-    .nav-btn:hover {
-      background: #f2eff9;
-      color: var(--purple);
+    .nav-button:hover {
+      background: var(--purple-pale);
+      color: var(--purple-dark);
     }
 
-    .nav-btn.active {
-      background: var(--purple-light);
-      color: var(--purple);
+    .nav-button.active {
+      background: var(--purple-pale);
+      color: var(--purple-dark);
     }
 
-    /* =========================================================
+    /* =========================
        MAIN
-    ========================================================= */
+    ========================= */
 
-    .main {
+    .main-container {
       max-width: 1200px;
       margin: 0 auto;
-
-      padding: 28px 22px 70px;
+      padding: 35px 25px 60px;
     }
 
     .page-title {
-      margin: 0 0 8px;
-
-      font-size: 30px;
-      letter-spacing: -0.5px;
+      margin-bottom: 25px;
     }
 
-    .page-description {
-      margin: 0 0 25px;
-
-      color: var(--muted);
-      line-height: 1.5;
+    .page-title h2 {
+      margin: 0 0 7px;
+      font-size: 29px;
     }
 
-    /* =========================================================
-       HOME
-    ========================================================= */
-
-    .hero {
-      background:
-        linear-gradient(
-          135deg,
-          #8e72ff,
-          #7354ed
-        );
-
-      color: white;
-
-      border-radius: 27px;
-
-      padding: 32px;
-
-      margin-bottom: 22px;
-
-      box-shadow:
-        0 15px 35px rgba(124, 92, 255, 0.20);
-    }
-
-    .hero h1 {
-      margin: 0 0 12px;
-
-      font-size: 34px;
-      letter-spacing: -0.5px;
-    }
-
-    .hero > p {
+    .page-title p {
       margin: 0;
-
-      opacity: 0.94;
-
-      line-height: 1.5;
+      color: var(--muted);
     }
 
-    .quote-box {
-      margin-top: 24px;
+    /* =========================
+       HOME
+    ========================= */
 
-      padding: 17px 20px;
+    .hero-card {
+      background: linear-gradient(135deg, #ede8ff, #f8f5ff);
+      border: 1px solid #ddd4ff;
+      border-radius: 25px;
+      padding: 32px;
+      margin-bottom: 25px;
+    }
 
-      background: rgba(255, 255, 255, 0.14);
+    .hero-card h2 {
+      margin: 0 0 10px;
+      font-size: 31px;
+    }
 
-      border:
-        1px solid
-        rgba(255, 255, 255, 0.20);
+    .hero-card p {
+      margin: 0;
+      color: #625d73;
+      line-height: 1.6;
+    }
 
-      border-radius: 15px;
-
-      line-height: 1.5;
+    .quote-card {
+      margin-top: 22px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 17px;
+      padding: 18px;
+      color: #5b4a96;
+      font-weight: 700;
     }
 
     .stats-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(4, 1fr);
-
+      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
-
-      margin-bottom: 22px;
+      margin-bottom: 25px;
     }
 
     .stat-card {
       background: white;
-
       border: 1px solid var(--border);
-      border-radius: 20px;
-
-      padding: 20px;
-
+      border-radius: 18px;
+      padding: 22px;
       box-shadow: var(--shadow);
     }
 
     .stat-label {
       color: var(--muted);
-
-      font-size: 14px;
-
-      margin-bottom: 9px;
+      font-size: 13px;
+      margin-bottom: 8px;
     }
 
     .stat-value {
       font-size: 29px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
     .progress-card {
       background: white;
-
       border: 1px solid var(--border);
-      border-radius: 22px;
-
-      padding: 24px;
-
-      margin-bottom: 22px;
-
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
       box-shadow: var(--shadow);
     }
 
-    .progress-header {
-      display: flex;
-
-      justify-content: space-between;
-      align-items: center;
-
-      gap: 15px;
-
-      margin-bottom: 15px;
+    .progress-card h3 {
+      margin: 0 0 17px;
     }
 
-    .progress-header strong {
-      font-size: 18px;
+    .progress-line-wrap {
+      width: 100%;
     }
 
     .progress-line {
-      width: 100%;
       height: 18px;
-
-      background: #eeeaf5;
-
+      background: #eee;
       border-radius: 999px;
-
       overflow: hidden;
     }
 
     .progress-line-fill {
       width: 0;
       height: 100%;
-
-      background:
-        linear-gradient(
-          90deg,
-          #b99cff,
-          #7c5cff
-        );
-
+      background: linear-gradient(90deg, #b99cff, #7c5cff);
       border-radius: 999px;
-
       transition: width 0.8s ease;
     }
 
     .progress-line-labels {
       display: flex;
-
       justify-content: space-between;
-
       color: var(--muted);
-
-      font-size: 13px;
-
       margin-top: 8px;
+      font-size: 13px;
     }
 
     .home-action {
@@ -570,784 +442,503 @@
       justify-content: center;
     }
 
-    .big-action {
+    .home-action button {
       border: 0;
-      border-radius: 13px;
-
-      background: var(--purple);
+      background: linear-gradient(135deg, #a98aff, #7c5cff);
       color: white;
-
-      padding: 14px 28px;
-
-      font-weight: 700;
-    }
-
-    .big-action:hover {
-      background: var(--purple-dark);
-    }
-
-    /* =========================================================
-       TASK SECTION SELECTOR
-    ========================================================= */
-
-    .task-section-selector {
-      background: white;
-
-      border: 1px solid var(--border);
-      border-radius: 22px;
-
-      padding: 22px;
-
-      margin-bottom: 22px;
-
-      box-shadow: var(--shadow);
-    }
-
-    .selector-title {
-      margin: 0 0 7px;
-
-      font-size: 19px;
+      border-radius: 13px;
+      padding: 13px 25px;
       font-weight: 800;
     }
 
-    .selector-description {
-      margin: 0 0 17px;
+    /* =========================
+       TASKS
+    ========================= */
 
-      color: var(--muted);
-
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .task-section-buttons {
+    .task-number-selector {
       display: flex;
       flex-wrap: wrap;
       gap: 9px;
+      margin-bottom: 20px;
     }
 
-    .task-section-btn {
+    .number-selector-button {
       border: 1px solid var(--border);
-
       background: white;
       color: var(--text);
-
       border-radius: 11px;
-
       padding: 10px 15px;
-
-      font-weight: 700;
-
-      transition: 0.2s;
+      font-weight: 800;
     }
 
-    .task-section-btn:hover {
-      border-color: var(--purple);
-      color: var(--purple);
-    }
-
-    .task-section-btn.active {
-      border-color: var(--purple);
+    .number-selector-button:hover,
+    .number-selector-button.active {
       background: var(--purple);
+      border-color: var(--purple);
       color: white;
     }
 
-    /* =========================================================
-       TASK SEARCH
-    ========================================================= */
-
     .task-toolbar {
       display: flex;
-
       gap: 10px;
-
       margin-bottom: 25px;
     }
 
-    .task-search-wrap {
-      position: relative;
-
+    .task-search {
       flex: 1;
     }
-
-    .task-search {
-      padding-left: 43px;
-    }
-
-    .search-icon {
-      position: absolute;
-
-      left: 15px;
-      top: 50%;
-
-      transform: translateY(-50%);
-
-      color: var(--muted);
-
-      pointer-events: none;
-    }
-
-    /* =========================================================
-       TASK CARDS
-    ========================================================= */
 
     .variant-section {
       margin-bottom: 30px;
     }
 
     .variant-title {
-      margin: 0 0 14px;
-
-      font-size: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 13px;
     }
 
-    .task-grid {
+    .variant-title h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .variant-count {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tasks-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(5, 1fr);
-
-      gap: 14px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 13px;
     }
 
     .task-card {
-      min-height: 125px;
-
+      min-height: 110px;
+      border-radius: 17px;
+      border: 1px solid var(--border);
       background: white;
-
-      border:
-        2px solid
-        var(--border);
-
-      border-radius: 18px;
-
-      padding: 20px;
-
+      padding: 18px;
       cursor: pointer;
-
-      box-shadow:
-        0 5px 18px
-        rgba(70, 50, 120, 0.04);
-
-      transition: 0.2s;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
 
     .task-card:hover {
       transform: translateY(-2px);
-
-      border-color: var(--purple);
-
-      box-shadow:
-        0 10px 24px
-        rgba(70, 50, 120, 0.10);
-    }
-
-    .task-card.correct {
-      background:
-        linear-gradient(
-          135deg,
-          #dcfce7,
-          #bbf7d0
-        );
-
-      border-color: var(--green-border);
-    }
-
-    .task-card.wrong {
-      background:
-        linear-gradient(
-          135deg,
-          #ffe4e8,
-          #fecdd3
-        );
-
-      border-color: var(--red-border);
-    }
-
-    .task-number {
-      font-size: 17px;
-
-      font-weight: 800;
-
-      margin-bottom: 12px;
-    }
-
-    .task-code {
-      font-family: monospace;
-
-      font-size: 17px;
-
-      font-weight: 700;
-
-      letter-spacing: 1px;
-    }
-
-    .task-status {
-      margin-top: 13px;
-
-      font-size: 12px;
-
-      font-weight: 700;
-    }
-
-    .task-card:not(.correct):not(.wrong)
-      .task-status {
-      color: var(--muted);
-    }
-
-    .task-card.correct .task-status {
-      color: #177245;
-    }
-
-    .task-card.wrong .task-status {
-      color: #b3263d;
-    }
-
-    .no-results {
-      background: white;
-
-      border: 1px solid var(--border);
-
-      border-radius: 18px;
-
-      padding: 32px;
-
-      text-align: center;
-
-      color: var(--muted);
-    }
-
-    /* =========================================================
-       GENERAL CARDS
-    ========================================================= */
-
-    .section-card {
-      background: white;
-
-      border: 1px solid var(--border);
-
-      border-radius: 22px;
-
-      padding: 24px;
-
-      margin-bottom: 22px;
-
       box-shadow: var(--shadow);
     }
 
-    .section-card h3 {
-      margin: 0 0 17px;
+    .task-card.correct {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      border-color: #86efac;
     }
 
-    /* =========================================================
-       STATISTICS
-    ========================================================= */
+    .task-card.wrong {
+      background: linear-gradient(135deg, #ffe4e6, #fecdd3);
+      border-color: #fda4af;
+    }
 
-    .stats-page-grid {
+    .task-number {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .task-code {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+    }
+
+    .empty-state {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 35px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* =========================
+       STATS
+    ========================= */
+
+    .stats-summary {
       display: grid;
-
-      grid-template-columns:
-        repeat(4, 1fr);
-
-      gap: 16px;
-
-      margin-bottom: 22px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
     }
 
     .report-actions {
       display: flex;
-
       justify-content: flex-end;
-
-      gap: 10px;
-
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
-    .report-button {
-      border: 0;
-
-      border-radius: 12px;
-
-      padding: 12px 18px;
-
-      background: var(--purple);
-      color: white;
-
-      font-weight: 700;
-    }
-
-    .report-button:hover {
-      background: var(--purple-dark);
-    }
-
-    .task-stat-row {
-      padding: 15px 0;
-
-      border-bottom:
-        1px solid
-        var(--border);
-    }
-
-    .task-stat-row:last-child {
-      border-bottom: 0;
-    }
-
-    .task-stat-head {
+    .stats-task-list {
       display: flex;
-
-      justify-content: space-between;
-
-      gap: 15px;
-
-      margin-bottom: 7px;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .task-stat-code {
-      font-family: monospace;
-
-      font-weight: 700;
-    }
-
-    .attempt-small {
-      color: var(--muted);
-
-      font-size: 13px;
-    }
-
-    .status-correct-text {
-      color: var(--green);
-
-      font-weight: 700;
-    }
-
-    .status-wrong-text {
-      color: var(--red);
-
-      font-weight: 700;
-    }
-
-    .status-none-text {
-      color: var(--muted);
-
-      font-weight: 700;
-    }
-
-    /* =========================================================
-       ERRORS
-    ========================================================= */
-
-    .error-item {
+    .stats-task {
       background: white;
-
-      border:
-        1px solid
-        #ffd0d7;
-
-      border-left:
-        5px solid
-        #ef7182;
-
-      border-radius: 15px;
-
+      border: 1px solid var(--border);
+      border-radius: 17px;
       padding: 18px;
+    }
 
+    .stats-task-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center;
       margin-bottom: 12px;
     }
 
-    .error-item-head {
-      display: flex;
-
-      justify-content: space-between;
-
-      gap: 15px;
-
-      margin-bottom: 8px;
+    .stats-task-name {
+      font-weight: 900;
     }
 
-    .error-code {
-      font-family: monospace;
-
-      font-weight: 800;
-    }
-
-    .error-date {
+    .stats-task-meta {
       color: var(--muted);
-
       font-size: 13px;
     }
 
-    .error-reason {
-      color: #5f3640;
-
-      line-height: 1.5;
-    }
-
-    .empty-state {
-      padding: 35px 15px;
-
-      text-align: center;
-
-      color: var(--muted);
-    }
-
-    /* =========================================================
-       PROFILE
-    ========================================================= */
-
-    .profile-card {
-      max-width: 600px;
-    }
-
-    .profile-avatar {
-      width: 82px;
-      height: 82px;
-
+    .attempt-list {
       display: flex;
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 50%;
-
-      background: var(--purple-light);
-      color: var(--purple);
-
-      font-size: 30px;
-      font-weight: 800;
-
-      margin-bottom: 18px;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    /* =========================================================
-       MODAL
-    ========================================================= */
-
-    .modal {
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 100;
-
+    .attempt-row {
+      border-radius: 11px;
+      padding: 10px 12px;
+      background: #f7f5fb;
       display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      padding: 20px;
-
-      background: rgba(25, 18, 43, 0.55);
-    }
-
-    .modal-content {
-      width: 100%;
-      max-width: 680px;
-
-      max-height: 90vh;
-
-      overflow-y: auto;
-
-      background: white;
-
-      border-radius: 24px;
-
-      padding: 26px;
-
-      box-shadow:
-        0 25px 70px
-        rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-header {
-      display: flex;
-
       justify-content: space-between;
+      gap: 12px;
       align-items: flex-start;
-
-      gap: 20px;
-
-      margin-bottom: 22px;
     }
 
-    .modal-header h2 {
-      margin: 0 0 7px;
+    .attempt-row.correct {
+      background: #f0fdf4;
     }
 
-    .modal-code {
-      font-family: monospace;
-
-      color: var(--purple);
-
-      font-weight: 800;
-
-      letter-spacing: 1px;
+    .attempt-row.wrong {
+      background: #fff1f2;
     }
 
-    .close-btn {
-      width: 35px;
-      height: 35px;
-
-      border: 0;
-      border-radius: 50%;
-
-      background: #f3f0f8;
-
-      font-size: 20px;
-    }
-
-    .close-btn:hover {
-      background: #e9e4f3;
-    }
-
-    .attempts-title {
-      margin: 0 0 12px;
-
-      font-size: 18px;
-    }
-
-    .attempt-item {
-      padding: 14px;
-
-      border-radius: 13px;
-
-      margin-bottom: 9px;
-    }
-
-    .attempt-item.correct {
-      background: var(--green-bg);
-
-      border: 1px solid var(--green-border);
-    }
-
-    .attempt-item.wrong {
-      background: var(--red-bg);
-
-      border: 1px solid var(--red-border);
-    }
-
-    .attempt-top {
+    .attempt-left {
       display: flex;
-
-      justify-content: space-between;
-
       gap: 10px;
-
-      margin-bottom: 6px;
+      align-items: flex-start;
     }
 
-    .attempt-result {
+    .attempt-status {
       font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .attempt-status.correct {
+      color: var(--green);
+    }
+
+    .attempt-status.wrong {
+      color: var(--red);
     }
 
     .attempt-date {
       color: var(--muted);
-
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .attempt-reason {
-      margin-top: 7px;
-
-      color: #623a42;
-
-      line-height: 1.45;
+      margin-top: 4px;
+      color: #9f1239;
+      font-size: 13px;
     }
 
-    .modal-actions {
-      display: grid;
+    /* =========================
+       ERRORS
+    ========================= */
 
-      grid-template-columns: 1fr 1fr;
-
+    .errors-list {
+      display: flex;
+      flex-direction: column;
       gap: 12px;
-
-      margin-top: 22px;
     }
 
-    .correct-btn,
-    .wrong-btn {
+    .error-card {
+      background: white;
+      border: 1px solid var(--red-border);
+      border-left: 5px solid var(--red);
+      border-radius: 15px;
+      padding: 17px;
+    }
+
+    .error-card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 8px;
+    }
+
+    .error-task-name {
+      font-weight: 900;
+    }
+
+    .error-date {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .error-reason {
+      color: #9f1239;
+    }
+
+    /* =========================
+       PROFILE
+    ========================= */
+
+    .profile-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 650px;
+    }
+
+    .profile-email {
+      margin-bottom: 25px;
+      color: var(--muted);
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(24, 20, 39, 0.55);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 23px;
+      padding: 25px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      margin: 0 0 6px;
+    }
+
+    .modal-header p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .modal-close {
       border: 0;
+      background: #f3f1f8;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
 
-      border-radius: 13px;
+    .modal-section {
+      margin-top: 20px;
+    }
 
+    .modal-section h3 {
+      margin: 0 0 12px;
+    }
+
+    .modal-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .correct-button {
+      border: 0;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 12px;
       padding: 13px;
-
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    .correct-btn {
-      background: var(--green-bg);
-      color: #167044;
-
-      border:
-        1px solid
-        var(--green-border);
-    }
-
-    .wrong-btn {
-      background: var(--red-bg);
-      color: #ad2e43;
-
-      border:
-        1px solid
-        var(--red-border);
+    .wrong-button {
+      border: 0;
+      background: #ffe4e6;
+      color: #be123c;
+      border-radius: 12px;
+      padding: 13px;
+      font-weight: 900;
     }
 
     .wrong-form {
-      margin-top: 18px;
-
-      padding: 18px;
-
-      background: #fff8f9;
-
-      border:
-        1px solid
-        #ffd6dc;
-
-      border-radius: 15px;
+      margin-top: 15px;
+      padding: 15px;
+      background: #fff1f2;
+      border-radius: 13px;
     }
 
-    .wrong-form-buttons {
-      display: flex;
+    .wrong-form textarea {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      border: 1px solid #fecdd3;
+      border-radius: 11px;
+      padding: 11px;
+      outline: none;
+    }
 
-      gap: 10px;
-
+    .wrong-submit {
       margin-top: 10px;
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      padding: 11px;
+      background: #e11d48;
+      color: white;
+      font-weight: 800;
     }
 
-    /* =========================================================
+    /* =========================
        TOAST
-    ========================================================= */
+    ========================= */
 
     #toast {
       position: fixed;
-
-      left: 50%;
-      bottom: 25px;
-
       z-index: 200;
-
-      transform:
-        translate(-50%, 20px);
-
+      right: 20px;
+      bottom: 20px;
+      max-width: 350px;
+      padding: 13px 17px;
+      border-radius: 12px;
+      background: #27233a;
+      color: white;
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
       opacity: 0;
       pointer-events: none;
-
-      padding: 13px 18px;
-
-      border-radius: 12px;
-
-      background: #292431;
-      color: white;
-
-      box-shadow:
-        0 10px 30px
-        rgba(0,0,0,.18);
-
-      transition: .25s;
+      transition: 0.25s;
     }
 
     #toast.show {
-      transform:
-        translate(-50%, 0);
-
+      transform: translateY(0);
       opacity: 1;
     }
 
-    /* =========================================================
+    /* =========================
        RESPONSIVE
-    ========================================================= */
+    ========================= */
 
-    @media (max-width: 950px) {
-      .task-grid {
-        grid-template-columns:
-          repeat(4, 1fr);
+    @media (max-width: 900px) {
+      .tasks-grid {
+        grid-template-columns: repeat(3, 1fr);
       }
 
       .stats-grid,
-      .stats-page-grid {
-        grid-template-columns:
-          repeat(2, 1fr);
+      .stats-summary {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 700px) {
-      .topbar-inner {
-        padding: 13px 15px;
-      }
-
-      .navigation {
-        padding-left: 15px;
-        padding-right: 15px;
-      }
-
-      .main {
-        padding:
-          22px
-          15px
-          50px;
-      }
-
-      .site-logo {
-        font-size: 19px;
+    @media (max-width: 650px) {
+      .top-header {
+        padding: 0 15px;
       }
 
       .user-name {
         display: none;
       }
 
-      .hero {
+      .main-nav {
+        padding: 7px 10px;
+      }
+
+      .main-container {
+        padding: 25px 15px 45px;
+      }
+
+      .auth-card {
         padding: 25px;
       }
 
-      .hero h1 {
-        font-size: 28px;
+      .hero-card {
+        padding: 23px;
+      }
+
+      .hero-card h2 {
+        font-size: 25px;
+      }
+
+      .tasks-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .stats-grid,
-      .stats-page-grid {
-        grid-template-columns:
-          repeat(2, 1fr);
-      }
-
-      .task-grid {
-        grid-template-columns:
-          repeat(2, 1fr);
+      .stats-summary {
+        grid-template-columns: 1fr 1fr;
       }
 
       .task-toolbar {
         flex-direction: column;
       }
 
-      .modal-actions {
+      .attempt-row {
+        flex-direction: column;
+      }
+
+      .modal-buttons {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 480px) {
-      .auth-card {
-        padding: 25px 20px;
+    @media (max-width: 430px) {
+      .stats-grid,
+      .stats-summary {
+        grid-template-columns: 1fr;
       }
 
-      .stats-grid,
-      .stats-page-grid {
+      .tasks-grid {
         grid-template-columns: 1fr 1fr;
       }
 
-      .stat-card {
-        padding: 15px;
-      }
-
-      .stat-value {
-        font-size: 24px;
-      }
-
       .task-card {
-        min-height: 110px;
-
-        padding: 16px;
+        min-height: 95px;
+        padding: 14px;
       }
 
       .task-code {
-        font-size: 15px;
+        font-size: 17px;
       }
     }
   </style>
@@ -1355,436 +946,313 @@
 
 <body>
 
-  <!-- =======================================================
+  <!-- =========================
        AUTH SCREEN
-  ======================================================== -->
+  ========================= -->
 
   <div id="authScreen">
 
     <div class="auth-card">
 
-      <div class="auth-logo">
-        OGE English
+      <div class="logo-big">
+        <div class="logo-icon">E</div>
+        <h1>OGE English Tracker</h1>
+        <p>Твой трекер подготовки к ОГЭ</p>
       </div>
+
+      <div class="auth-tabs">
+        <button
+          class="auth-tab active"
+          id="loginTab"
+          type="button"
+        >
+          Войти
+        </button>
+
+        <button
+          class="auth-tab"
+          id="registerTab"
+          type="button"
+        >
+          Регистрация
+        </button>
+      </div>
+
+      <div id="authMessage" class="auth-message"></div>
 
       <!-- LOGIN -->
 
-      <div id="loginForm">
+      <form id="loginForm">
 
-        <h1 class="auth-title">
-          С возвращением
-        </h1>
-
-        <p class="auth-subtitle">
-          Войди в свой аккаунт, чтобы продолжить подготовку.
-        </p>
-
-        <div class="auth-tabs">
-          <button
-            class="auth-tab active"
-            id="showLoginBtn"
-            type="button"
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input
+            id="loginEmail"
+            type="email"
+            autocomplete="email"
+            required
           >
-            Войти
-          </button>
+        </div>
 
-          <button
-            class="auth-tab"
-            id="showRegisterBtn"
-            type="button"
+        <div class="form-group">
+          <label for="loginPassword">Пароль</label>
+          <input
+            id="loginPassword"
+            type="password"
+            autocomplete="current-password"
+            required
           >
-            Регистрация
+        </div>
+
+        <div class="auth-link-row">
+          <button
+            type="button"
+            class="text-button"
+            id="showForgotButton"
+          >
+            Забыли пароль?
           </button>
         </div>
 
-        <form id="loginFormElement">
-
-          <div class="form-group">
-            <label for="loginEmail">
-              Email
-            </label>
-
-            <input
-              id="loginEmail"
-              type="email"
-              autocomplete="email"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="loginPassword">
-              Пароль
-            </label>
-
-            <input
-              id="loginPassword"
-              type="password"
-              autocomplete="current-password"
-              required
-            >
-          </div>
-
-          <button
-            class="primary-btn"
-            type="submit"
-          >
-            Войти
-          </button>
-
-        </form>
-
         <button
-          class="text-btn"
-          id="showForgotBtn"
-          type="button"
+          class="primary-button"
+          type="submit"
         >
-          Забыли пароль?
+          Войти
         </button>
 
-      </div>
-
+      </form>
 
       <!-- REGISTER -->
 
-      <div id="registerForm" class="hidden">
+      <form id="registerForm" class="hidden">
 
-        <h1 class="auth-title">
-          Создание аккаунта
-        </h1>
-
-        <p class="auth-subtitle">
-          Создай аккаунт, чтобы прогресс и ошибки сохранялись отдельно для тебя.
-        </p>
-
-        <div class="auth-tabs">
-
-          <button
-            class="auth-tab"
-            id="showLoginBtn2"
-            type="button"
+        <div class="form-group">
+          <label for="registerNickname">Никнейм</label>
+          <input
+            id="registerNickname"
+            type="text"
+            autocomplete="nickname"
+            required
           >
-            Войти
-          </button>
-
-          <button
-            class="auth-tab active"
-            id="showRegisterBtn2"
-            type="button"
-          >
-            Регистрация
-          </button>
-
         </div>
 
-        <form id="registerFormElement">
-
-          <div class="form-group">
-            <label for="registerNickname">
-              Никнейм
-            </label>
-
-            <input
-              id="registerNickname"
-              type="text"
-              maxlength="50"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="registerEmail">
-              Email
-            </label>
-
-            <input
-              id="registerEmail"
-              type="email"
-              autocomplete="email"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="registerPassword">
-              Пароль
-            </label>
-
-            <input
-              id="registerPassword"
-              type="password"
-              minlength="6"
-              autocomplete="new-password"
-              required
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="registerPasswordRepeat">
-              Повтори пароль
-            </label>
-
-            <input
-              id="registerPasswordRepeat"
-              type="password"
-              minlength="6"
-              autocomplete="new-password"
-              required
-            >
-          </div>
-
-          <button
-            class="primary-btn"
-            type="submit"
+        <div class="form-group">
+          <label for="registerEmail">Email</label>
+          <input
+            id="registerEmail"
+            type="email"
+            autocomplete="email"
+            required
           >
-            Создать аккаунт
-          </button>
+        </div>
 
-        </form>
+        <div class="form-group">
+          <label for="registerPassword">Пароль</label>
+          <input
+            id="registerPassword"
+            type="password"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+        </div>
 
-      </div>
+        <div class="form-group">
+          <label for="registerPasswordRepeat">Повторите пароль</label>
+          <input
+            id="registerPasswordRepeat"
+            type="password"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+        </div>
 
+        <button
+          class="primary-button"
+          type="submit"
+        >
+          Создать аккаунт
+        </button>
+
+      </form>
 
       <!-- FORGOT PASSWORD -->
 
-      <div id="forgotForm" class="hidden">
+      <form id="forgotForm" class="hidden">
 
-        <h1 class="auth-title">
-          Восстановление пароля
-        </h1>
-
-        <p class="auth-subtitle">
-          Введи email, на который нужно отправить ссылку для восстановления.
-        </p>
-
-        <form id="forgotFormElement">
-
-          <div class="form-group">
-
-            <label for="forgotEmail">
-              Email
-            </label>
-
-            <input
-              id="forgotEmail"
-              type="email"
-              autocomplete="email"
-              required
-            >
-
-          </div>
-
-          <button
-            class="primary-btn"
-            type="submit"
+        <div class="form-group">
+          <label for="forgotEmail">Email</label>
+          <input
+            id="forgotEmail"
+            type="email"
+            required
           >
-            Отправить ссылку
-          </button>
-
-        </form>
+        </div>
 
         <button
-          class="text-btn"
-          id="backToLoginBtn"
-          type="button"
+          class="primary-button"
+          type="submit"
         >
-          Вернуться ко входу
+          Отправить ссылку
         </button>
 
-      </div>
+        <div style="text-align:center; margin-top:14px;">
+          <button
+            type="button"
+            class="text-button"
+            id="backToLoginButton"
+          >
+            Вернуться ко входу
+          </button>
+        </div>
 
+      </form>
 
       <!-- RESET PASSWORD -->
 
-      <div id="resetForm" class="hidden">
+      <form id="resetForm" class="hidden">
 
-        <h1 class="auth-title">
-          Новый пароль
-        </h1>
-
-        <p class="auth-subtitle">
-          Придумай новый пароль для своего аккаунта.
-        </p>
-
-        <form id="resetFormElement">
-
-          <div class="form-group">
-
-            <label for="newPassword">
-              Новый пароль
-            </label>
-
-            <input
-              id="newPassword"
-              type="password"
-              minlength="6"
-              required
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="newPasswordRepeat">
-              Повтори новый пароль
-            </label>
-
-            <input
-              id="newPasswordRepeat"
-              type="password"
-              minlength="6"
-              required
-            >
-
-          </div>
-
-          <button
-            class="primary-btn"
-            type="submit"
+        <div class="form-group">
+          <label for="newPassword">Новый пароль</label>
+          <input
+            id="newPassword"
+            type="password"
+            minlength="6"
+            required
           >
-            Сохранить пароль
-          </button>
+        </div>
 
-        </form>
+        <div class="form-group">
+          <label for="newPasswordRepeat">Повторите новый пароль</label>
+          <input
+            id="newPasswordRepeat"
+            type="password"
+            minlength="6"
+            required
+          >
+        </div>
 
-      </div>
+        <button
+          class="primary-button"
+          type="submit"
+        >
+          Сохранить новый пароль
+        </button>
 
-
-      <div
-        id="authMessage"
-        class="auth-message"
-      ></div>
+      </form>
 
     </div>
-
   </div>
 
 
-  <!-- =======================================================
-       APPLICATION
-  ======================================================== -->
+  <!-- =========================
+       APP
+  ========================= -->
 
-  <div
-    id="app"
-    class="hidden"
-  >
+  <div id="app" class="hidden">
 
-    <!-- TOP BAR -->
+    <header class="top-header">
 
-    <header class="topbar">
-
-      <div class="topbar-inner">
-
-        <div class="site-logo">
-          OGE English
-        </div>
-
-        <div class="topbar-user">
-
-          <div
-            class="avatar"
-            id="headerAvatar"
-          >
-            ?
-          </div>
-
-          <span
-            class="user-name"
-            id="headerNickname"
-          >
-            Пользователь
-          </span>
-
-          <button
-            class="logout-btn"
-            id="logoutBtn"
-            type="button"
-          >
-            Выйти
-          </button>
-
-        </div>
-
+      <div class="brand">
+        <div class="brand-icon">E</div>
+        <span>OGE English Tracker</span>
       </div>
 
+      <div class="header-right">
 
-      <!-- NAVIGATION -->
-
-      <nav class="navigation">
+        <span
+          class="user-name"
+          id="headerNickname"
+        >
+          Пользователь
+        </span>
 
         <button
-          class="nav-btn active"
-          data-page="home"
+          class="danger-button"
+          id="logoutButton"
           type="button"
         >
-          Главная
+          Выйти
         </button>
 
-        <button
-          class="nav-btn"
-          data-page="tasks"
-          type="button"
-        >
-          Задания
-        </button>
-
-        <button
-          class="nav-btn"
-          data-page="stats"
-          type="button"
-        >
-          Статистика
-        </button>
-
-        <button
-          class="nav-btn"
-          data-page="errors"
-          type="button"
-        >
-          Ошибки
-        </button>
-
-        <button
-          class="nav-btn"
-          data-page="profile"
-          type="button"
-        >
-          Профиль
-        </button>
-
-      </nav>
+      </div>
 
     </header>
 
 
-    <main class="main">
+    <nav class="main-nav">
 
-      <!-- ===================================================
+      <button
+        class="nav-button active"
+        data-page="home"
+        type="button"
+      >
+        Главная
+      </button>
+
+      <button
+        class="nav-button"
+        data-page="tasks"
+        type="button"
+      >
+        Задания
+      </button>
+
+      <button
+        class="nav-button"
+        data-page="stats"
+        type="button"
+      >
+        Статистика
+      </button>
+
+      <button
+        class="nav-button"
+        data-page="errors"
+        type="button"
+      >
+        Ошибки
+      </button>
+
+      <button
+        class="nav-button"
+        data-page="profile"
+        type="button"
+      >
+        Профиль
+      </button>
+
+    </nav>
+
+
+    <main class="main-container">
+
+      <!-- =========================
            HOME
-      ==================================================== -->
+      ========================= -->
 
       <section
         id="page-home"
         class="page"
       >
 
-        <div class="hero">
+        <div class="hero-card">
 
-          <h1 id="homeGreeting">
+          <h2 id="homeGreeting">
             Привет!
-          </h1>
+          </h2>
 
           <p>
-            Здесь можно спокойно отслеживать подготовку,
-            разбирать ошибки и видеть свой прогресс.
+            Здесь ты можешь решать задания ФИПИ,
+            отслеживать ошибки и видеть свой прогресс.
           </p>
 
           <div
-            class="quote-box"
-            id="motivationalQuote"
-          >
-            Ты уже начала. Теперь просто продолжай.
-          </div>
+            class="quote-card"
+            id="homeQuote"
+          ></div>
 
         </div>
 
@@ -1792,7 +1260,6 @@
         <div class="stats-grid">
 
           <div class="stat-card">
-
             <div class="stat-label">
               Выполнено заданий
             </div>
@@ -1803,14 +1270,12 @@
             >
               0
             </div>
-
           </div>
 
 
           <div class="stat-card">
-
             <div class="stat-label">
-              Верных попыток
+              Правильных попыток
             </div>
 
             <div
@@ -1819,12 +1284,10 @@
             >
               0
             </div>
-
           </div>
 
 
           <div class="stat-card">
-
             <div class="stat-label">
               Ошибок
             </div>
@@ -1835,12 +1298,10 @@
             >
               0
             </div>
-
           </div>
 
 
           <div class="stat-card">
-
             <div class="stat-label">
               Точность
             </div>
@@ -1851,7 +1312,6 @@
             >
               0%
             </div>
-
           </div>
 
         </div>
@@ -1859,47 +1319,33 @@
 
         <div class="progress-card">
 
-          <div class="progress-header">
+          <h3>
+            Прогресс
+          </h3>
 
-            <strong>
-              Общий прогресс
-            </strong>
+          <div class="progress-line-wrap">
 
-            <span
-              id="homeProgressCompleted"
-              class="attempt-small"
-            >
-              Выполнено 0 из 0
-            </span>
+            <div class="progress-line">
+              <div
+                class="progress-line-fill"
+                id="homeProgressFill"
+              ></div>
+            </div>
 
-          </div>
-
-
-          <div class="progress-line">
-
-            <div
-              class="progress-line-fill"
-              id="homeProgressFill"
-            ></div>
+            <div class="progress-line-labels">
+              <span>0</span>
+              <span id="homeProgressText">0%</span>
+              <span id="homeProgressTotal">0</span>
+            </div>
 
           </div>
 
-
-          <div class="progress-line-labels">
-
-            <span>
-              0
-            </span>
-
-            <span id="homeProgressText">
-              0%
-            </span>
-
-            <span id="homeProgressTotal">
-              0
-            </span>
-
-          </div>
+          <p
+            id="homeProgressDescription"
+            style="color:var(--muted); margin-bottom:0;"
+          >
+            Выполнено 0 из 0
+          </p>
 
         </div>
 
@@ -1907,8 +1353,7 @@
         <div class="home-action">
 
           <button
-            class="big-action"
-            id="homeTasksButton"
+            id="goToTasksButton"
             type="button"
           >
             Перейти к заданиям
@@ -1919,156 +1364,132 @@
       </section>
 
 
-      <!-- ===================================================
+      <!-- =========================
            TASKS
-      ==================================================== -->
+      ========================= -->
 
       <section
         id="page-tasks"
         class="page hidden"
       >
 
-        <h1 class="page-title">
-          Задания
-        </h1>
+        <div class="page-title">
 
-        <p class="page-description">
-          Сначала выбери номера заданий, затем найди нужное задание по его коду.
-        </p>
+          <h2>
+            Задания
+          </h2>
 
-
-        <!-- BLOCK SELECTOR -->
-
-        <div class="task-section-selector">
-
-          <h3 class="selector-title">
-            Выбор номеров заданий
-          </h3>
-
-          <p class="selector-description">
-            Сейчас в базе загружены 95 заданий блока 1–5.
-            Остальные блоки готовы для добавления заданий.
+          <p>
+            Выбери номера заданий, затем нужный вариант.
           </p>
-
-
-          <div class="task-section-buttons">
-
-            <button
-              class="task-section-btn active"
-              data-task-group="1-5"
-              type="button"
-            >
-              1–5
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="6-11"
-              type="button"
-            >
-              6–11
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="12"
-              type="button"
-            >
-              12
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="13"
-              type="button"
-            >
-              13
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="14"
-              type="button"
-            >
-              14
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="15"
-              type="button"
-            >
-              15
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="16"
-              type="button"
-            >
-              16
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="17"
-              type="button"
-            >
-              17
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="18"
-              type="button"
-            >
-              18
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="19"
-              type="button"
-            >
-              19
-            </button>
-
-            <button
-              class="task-section-btn"
-              data-task-group="20-35"
-              type="button"
-            >
-              20–35
-            </button>
-
-          </div>
 
         </div>
 
 
-        <!-- SEARCH -->
+        <!-- НОМЕРА ЗАДАНИЙ -->
+
+        <div
+          class="task-number-selector"
+          id="taskNumberSelector"
+        >
+
+          <button
+            class="number-selector-button active"
+            data-task-range="1-5"
+            type="button"
+          >
+            1–5
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="6-11"
+            type="button"
+          >
+            6–11
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="12"
+            type="button"
+          >
+            12
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="13"
+            type="button"
+          >
+            13
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="14"
+            type="button"
+          >
+            14
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="15"
+            type="button"
+          >
+            15
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="16"
+            type="button"
+          >
+            16
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="17"
+            type="button"
+          >
+            17
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="18"
+            type="button"
+          >
+            18
+          </button>
+
+          <button
+            class="number-selector-button"
+            data-task-range="19"
+            type="button"
+          >
+            19
+          </button>
+
+        </div>
+
+
+        <!-- ПОИСК -->
 
         <div class="task-toolbar">
 
-          <div class="task-search-wrap">
-
-            <span class="search-icon">
-              🔎
-            </span>
-
-            <input
-              id="taskSearch"
-              class="task-search"
-              type="search"
-              placeholder="Поиск по коду задания, например 42BF66"
-              autocomplete="off"
-            >
-
-          </div>
-
+          <input
+            class="task-search"
+            id="taskSearch"
+            type="search"
+            placeholder="Поиск по коду задания ФИПИ, например 42BF66"
+            autocomplete="off"
+          >
 
           <button
-            class="secondary-btn"
+            class="secondary-button"
             id="clearSearch"
             type="button"
           >
@@ -2083,38 +1504,29 @@
       </section>
 
 
-      <!-- ===================================================
-           STATISTICS
-      ==================================================== -->
+      <!-- =========================
+           STATS
+      ========================= -->
 
       <section
         id="page-stats"
         class="page hidden"
       >
 
-        <h1 class="page-title">
-          Статистика
-        </h1>
+        <div class="page-title">
 
-        <p class="page-description">
-          Здесь сохраняется вся история твоих попыток.
-        </p>
+          <h2>
+            Статистика
+          </h2>
 
-
-        <div class="report-actions">
-
-          <button
-            class="report-button"
-            id="generateReportBtn"
-            type="button"
-          >
-            Сформировать PDF
-          </button>
+          <p>
+            Здесь отображается вся история твоих попыток.
+          </p>
 
         </div>
 
 
-        <div class="stats-page-grid">
+        <div class="stats-summary">
 
           <div class="stat-card">
 
@@ -2167,7 +1579,7 @@
           <div class="stat-card">
 
             <div class="stat-label">
-              Неверно
+              Ошибки
             </div>
 
             <div
@@ -2184,111 +1596,119 @@
 
         <div class="progress-card">
 
-          <div class="progress-header">
-
-            <strong>
-              Прогресс по заданиям
-            </strong>
-
-            <span
-              class="attempt-small"
-              id="statsProgressLabel"
-            >
-              0 из 0
-            </span>
-
-          </div>
-
-
-          <div class="progress-line">
-
-            <div
-              class="progress-line-fill"
-              id="statsProgressFill"
-            ></div>
-
-          </div>
-
-
-          <div class="progress-line-labels">
-
-            <span>
-              0
-            </span>
-
-            <span id="statsProgressText">
-              0%
-            </span>
-
-            <span id="statsProgressTotal">
-              0
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <div class="section-card">
-
           <h3>
-            Задания и количество попыток
+            Общий прогресс
           </h3>
 
-          <div id="taskStatistics"></div>
+          <div class="progress-line-wrap">
+
+            <div class="progress-line">
+
+              <div
+                class="progress-line-fill"
+                id="statsProgressFill"
+              ></div>
+
+            </div>
+
+            <div class="progress-line-labels">
+
+              <span>0</span>
+
+              <span id="statsProgressText">
+                0%
+              </span>
+
+              <span id="statsProgressTotal">
+                0
+              </span>
+
+            </div>
+
+          </div>
 
         </div>
+
+
+        <div class="report-actions">
+
+          <button
+            class="primary-button"
+            id="generateReportButton"
+            type="button"
+            style="width:auto;"
+          >
+            Сформировать PDF
+          </button>
+
+        </div>
+
+
+        <div
+          class="stats-task-list"
+          id="statsTaskList"
+        ></div>
 
       </section>
 
 
-      <!-- ===================================================
+      <!-- =========================
            ERRORS
-      ==================================================== -->
+      ========================= -->
 
       <section
         id="page-errors"
         class="page hidden"
       >
 
-        <h1 class="page-title">
-          Ошибки
-        </h1>
+        <div class="page-title">
 
-        <p class="page-description">
-          Все неправильные попытки сохраняются здесь, даже если позже ты решила задание правильно.
-        </p>
+          <h2>
+            Ошибки
+          </h2>
 
-        <div id="errorsContainer"></div>
+          <p>
+            Все неправильные попытки и указанные тобой причины.
+          </p>
+
+        </div>
+
+
+        <div
+          class="errors-list"
+          id="errorsList"
+        ></div>
 
       </section>
 
 
-      <!-- ===================================================
+      <!-- =========================
            PROFILE
-      ==================================================== -->
+      ========================= -->
 
       <section
         id="page-profile"
         class="page hidden"
       >
 
-        <h1 class="page-title">
-          Профиль
-        </h1>
+        <div class="page-title">
 
-        <p class="page-description">
-          Здесь можно изменить имя, которое отображается в приложении.
-        </p>
+          <h2>
+            Профиль
+          </h2>
+
+          <p>
+            Здесь можно изменить данные профиля.
+          </p>
+
+        </div>
 
 
-        <div class="section-card profile-card">
+        <div class="profile-card">
 
-          <div
-            class="profile-avatar"
-            id="profileAvatar"
-          >
-            ?
+          <div class="profile-email">
+            Email:
+            <strong id="profileEmail"></strong>
           </div>
 
 
@@ -2303,33 +1723,17 @@
               <input
                 id="profileNickname"
                 type="text"
-                maxlength="50"
                 required
               >
 
             </div>
 
 
-            <div class="form-group">
-
-              <label>
-                Email
-              </label>
-
-              <input
-                id="profileEmail"
-                type="email"
-                readonly
-              >
-
-            </div>
-
-
             <button
-              class="primary-btn"
+              class="primary-button"
               type="submit"
             >
-              Сохранить изменения
+              Сохранить
             </button>
 
           </form>
@@ -2343,9 +1747,9 @@
   </div>
 
 
-  <!-- =======================================================
+  <!-- =========================
        TASK MODAL
-  ======================================================== -->
+  ========================= -->
 
   <div
     id="taskModal"
@@ -2362,19 +1766,15 @@
             Задание
           </h2>
 
-          <div
-            class="modal-code"
-            id="modalTaskCode"
-          >
-            CODE
-          </div>
+          <p id="modalTaskCode">
+            Код
+          </p>
 
         </div>
 
-
         <button
-          class="close-btn"
-          id="closeModalBtn"
+          class="modal-close"
+          id="modalClose"
           type="button"
         >
           ×
@@ -2383,33 +1783,36 @@
       </div>
 
 
-      <h3 class="attempts-title">
-        История попыток
-      </h3>
+      <div class="modal-section">
+
+        <h3>
+          История попыток
+        </h3>
+
+        <div
+          class="attempt-list"
+          id="modalAttempts"
+        ></div>
+
+      </div>
 
 
-      <div id="modalAttempts"></div>
-
-
-      <div
-        class="modal-actions"
-        id="modalActions"
-      >
+      <div class="modal-buttons">
 
         <button
-          class="correct-btn"
-          id="markCorrectBtn"
+          class="correct-button"
+          id="markCorrectButton"
           type="button"
         >
-          ✓ Верно
+          ✓ Решено верно
         </button>
 
         <button
-          class="wrong-btn"
-          id="showWrongFormBtn"
+          class="wrong-button"
+          id="showWrongFormButton"
           type="button"
         >
-          ✕ Неверно
+          ✕ Решено неправильно
         </button>
 
       </div>
@@ -2420,39 +1823,25 @@
         id="wrongForm"
       >
 
-        <div class="form-group">
+        <label
+          for="wrongReason"
+          style="display:block; font-weight:800; margin-bottom:7px;"
+        >
+          Причина ошибки
+        </label>
 
-          <label for="wrongReason">
-            Причина ошибки
-          </label>
+        <textarea
+          id="wrongReason"
+          placeholder="Напиши, почему ошиблась..."
+        ></textarea>
 
-          <textarea
-            id="wrongReason"
-            placeholder="Напиши, почему допустила ошибку..."
-          ></textarea>
-
-        </div>
-
-
-        <div class="wrong-form-buttons">
-
-          <button
-            class="secondary-btn"
-            id="cancelWrongBtn"
-            type="button"
-          >
-            Отмена
-          </button>
-
-          <button
-            class="wrong-btn"
-            id="saveWrongBtn"
-            type="button"
-          >
-            Сохранить ошибку
-          </button>
-
-        </div>
+        <button
+          class="wrong-submit"
+          id="saveWrongButton"
+          type="button"
+        >
+          Сохранить ошибку
+        </button>
 
       </div>
 
@@ -2461,28 +1850,14 @@
   </div>
 
 
-  <!-- TOAST -->
-
   <div id="toast"></div>
 
 
-  <!-- =======================================================
-       TASK DATA
-       НЕ ИЗМЕНЯТЬ data/tasks.js
-  ======================================================== -->
-
-  <script src="./data/tasks.js"></script>
-
-
-  <!-- =======================================================
-       APPLICATION JS
-  ======================================================== -->
-
   <script>
 
-    /* =======================================================
+    /* =====================================================
        SUPABASE
-    ======================================================== */
+    ===================================================== */
 
     const SUPABASE_URL =
       "https://rbffkodkjrmvltnlqzkn.supabase.co";
@@ -2493,53 +1868,28 @@
     const REDIRECT =
       "https://darianovet.github.io/oge-english-tracker/";
 
-    const sb =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY,
-        {
-          auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true
-          }
+    const sb = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
         }
-      );
+      }
+    );
 
 
-    /* =======================================================
-       GLOBAL STATE
-    ======================================================== */
-
-    let currentUser = null;
-
-    let currentSession = null;
-
-    let currentProfile = null;
-
-    let progressRows = [];
-
-    let attemptHistory = [];
-
-    let progressMap = {};
-
-    let currentTask = null;
-
-    let currentTaskGroup = "1-5";
-
-
-    /* =======================================================
+    /* =====================================================
        TASKS
-    ======================================================== */
+    ===================================================== */
 
-    function getTasks() {
-      return (
-        typeof TASKS !== "undefined" &&
-        Array.isArray(TASKS)
-      )
+    const getTasks = () => (
+      typeof TASKS !== "undefined" && Array.isArray(TASKS)
         ? TASKS
-        : [];
-    }
+        : []
+    );
 
 
     function getId(task) {
@@ -2570,57 +1920,77 @@
     }
 
 
-    /*
-      Сейчас все имеющиеся данные tasks.js
-      относятся к заданиям 1–5.
+    /* =====================================================
+       STATE
+    ===================================================== */
 
-      Когда в tasks.js появятся реальные задания
-      других номеров, эта функция автоматически
-      сможет распределять их по соответствующим блокам.
-    */
+    let currentUser = null;
 
-    function taskBelongsToGroup(task, group) {
+    let currentSession = null;
 
-      const number =
-        Number(getNumber(task));
+    let nickname = "";
 
-      if (group === "1-5") {
-        return number >= 1 && number <= 5;
+    let progressMap = {};
+
+    let attemptHistory = [];
+
+    let currentTask = null;
+
+    let selectedTaskRange = "1-5";
+
+
+    /* =====================================================
+       QUOTES
+    ===================================================== */
+
+    const quotes = [
+      "Ты уже начала. Теперь просто продолжай.",
+      "Один шаг сегодня — меньше стресса перед экзаменом.",
+      "Не нужно идеально. Нужно регулярно.",
+      "Каждое выполненное задание — плюс один балл к уверенности.",
+      "Ошибки здесь нужны, чтобы не повторять их на экзамене.",
+      "Ты не обязана знать всё сразу. Разберёшься по шагам.",
+      "Сегодняшние 20 минут работают на твою уверенность завтра.",
+      "Маленький прогресс — тоже прогресс.",
+      "Продолжай. Ты уже дальше, чем была вчера.",
+      "Сделай ещё одно задание. Потом ещё одно."
+    ];
+
+
+    function setRandomQuote() {
+
+      let previous =
+        sessionStorage.getItem("lastMotivationalQuote");
+
+      let available =
+        quotes.filter(q => q !== previous);
+
+      if (!available.length) {
+        available = quotes;
       }
 
-      if (group === "6-11") {
-        return number >= 6 && number <= 11;
-      }
+      const quote =
+        available[
+          Math.floor(Math.random() * available.length)
+        ];
 
-      if (
-        group === "12" ||
-        group === "13" ||
-        group === "14" ||
-        group === "15" ||
-        group === "16" ||
-        group === "17" ||
-        group === "18" ||
-        group === "19"
-      ) {
-        return number === Number(group);
-      }
+      sessionStorage.setItem(
+        "lastMotivationalQuote",
+        quote
+      );
 
-      if (group === "20-35") {
-        return number >= 20 && number <= 35;
-      }
+      const element =
+        document.getElementById("homeQuote");
 
-      return false;
+      if (element) {
+        element.textContent = `«${quote}»`;
+      }
     }
 
 
-    /* =======================================================
-       DOM HELPERS
-    ======================================================== */
-
-    function $(id) {
-      return document.getElementById(id);
-    }
-
+    /* =====================================================
+       HELPERS
+    ===================================================== */
 
     function escapeHtml(value) {
 
@@ -2639,14 +2009,9 @@
         return "Дата неизвестна";
       }
 
-      const date =
-        new Date(dateValue);
+      const date = new Date(dateValue);
 
-      if (
-        Number.isNaN(
-          date.getTime()
-        )
-      ) {
+      if (Number.isNaN(date.getTime())) {
         return "Дата неизвестна";
       }
 
@@ -2665,7 +2030,8 @@
 
     function showToast(message) {
 
-      const toast = $("toast");
+      const toast =
+        document.getElementById("toast");
 
       toast.textContent = message;
 
@@ -2673,486 +2039,124 @@
 
       setTimeout(() => {
         toast.classList.remove("show");
-      }, 2500);
+      }, 3000);
     }
 
 
-    function getNickname() {
+    function showAuthMessage(message, isError = true) {
 
-      if (
-        currentProfile &&
-        currentProfile.nickname
-      ) {
-        return currentProfile.nickname;
-      }
+      const element =
+        document.getElementById("authMessage");
 
-      if (
-        currentUser &&
-        currentUser.user_metadata &&
-        currentUser.user_metadata.username
-      ) {
-        return currentUser.user_metadata.username;
-      }
+      element.textContent = message;
 
-      if (
-        currentUser &&
-        currentUser.email
-      ) {
-        return currentUser.email.split("@")[0];
-      }
-
-      return "Пользователь";
-    }
-
-
-    function getInitials(name) {
-
-      const value =
-        String(name || "?").trim();
-
-      if (!value) {
-        return "?";
-      }
-
-      return value
-        .split(/\s+/)
-        .map(part => part[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase();
-    }
-
-
-    /* =======================================================
-       AUTH UI
-    ======================================================== */
-
-    function hideAllAuthForms() {
-
-      $("loginForm")
-        .classList.add("hidden");
-
-      $("registerForm")
-        .classList.add("hidden");
-
-      $("forgotForm")
-        .classList.add("hidden");
-
-      $("resetForm")
-        .classList.add("hidden");
-    }
-
-
-    function showAuthForm(formName) {
-
-      hideAllAuthForms();
-
-      if (formName === "login") {
-        $("loginForm")
-          .classList.remove("hidden");
-      }
-
-      if (formName === "register") {
-        $("registerForm")
-          .classList.remove("hidden");
-      }
-
-      if (formName === "forgot") {
-        $("forgotForm")
-          .classList.remove("hidden");
-      }
-
-      if (formName === "reset") {
-        $("resetForm")
-          .classList.remove("hidden");
-      }
-
-      clearAuthMessage();
-    }
-
-
-    function showAuthMessage(
-      message,
-      type = "error"
-    ) {
-
-      const box =
-        $("authMessage");
-
-      box.textContent = message;
-
-      box.className =
-        "auth-message show " +
-        type;
+      element.style.color =
+        isError
+          ? "#dc2626"
+          : "#16a34a";
     }
 
 
     function clearAuthMessage() {
 
-      const box =
-        $("authMessage");
-
-      box.textContent = "";
-
-      box.className =
-        "auth-message";
+      document.getElementById(
+        "authMessage"
+      ).textContent = "";
     }
 
 
-    /* =======================================================
-       AUTH EVENTS
-    ======================================================== */
+    /* =====================================================
+       AUTH FORMS
+    ===================================================== */
 
-    $("showLoginBtn")
-      .addEventListener(
-        "click",
-        () => showAuthForm("login")
-      );
+    function showAuthForm(type) {
 
+      const forms = [
+        "loginForm",
+        "registerForm",
+        "forgotForm",
+        "resetForm"
+      ];
 
-    $("showRegisterBtn")
-      .addEventListener(
-        "click",
-        () => showAuthForm("register")
-      );
+      forms.forEach(id => {
+        document
+          .getElementById(id)
+          .classList.add("hidden");
+      });
 
 
-    $("showLoginBtn2")
-      .addEventListener(
-        "click",
-        () => showAuthForm("login")
-      );
+      if (type === "login") {
 
+        document
+          .getElementById("loginForm")
+          .classList.remove("hidden");
 
-    $("showRegisterBtn2")
-      .addEventListener(
-        "click",
-        () => showAuthForm("register")
-      );
+        document
+          .getElementById("loginTab")
+          .classList.add("active");
 
+        document
+          .getElementById("registerTab")
+          .classList.remove("active");
 
-    $("showForgotBtn")
-      .addEventListener(
-        "click",
-        () => showAuthForm("forgot")
-      );
+      }
 
 
-    $("backToLoginBtn")
-      .addEventListener(
-        "click",
-        () => showAuthForm("login")
-      );
+      if (type === "register") {
 
+        document
+          .getElementById("registerForm")
+          .classList.remove("hidden");
 
-    /* =======================================================
-       LOGIN
-    ======================================================== */
+        document
+          .getElementById("registerTab")
+          .classList.add("active");
 
-    $("loginFormElement")
-      .addEventListener(
-        "submit",
-        async event => {
+        document
+          .getElementById("loginTab")
+          .classList.remove("active");
 
-          event.preventDefault();
+      }
 
-          clearAuthMessage();
 
-          const email =
-            $("loginEmail")
-              .value
-              .trim();
+      if (type === "forgot") {
 
-          const password =
-            $("loginPassword")
-              .value;
+        document
+          .getElementById("forgotForm")
+          .classList.remove("hidden");
 
-          const {
-            data,
-            error
-          } =
-            await sb.auth.signInWithPassword({
-              email,
-              password
-            });
+        document
+          .getElementById("loginTab")
+          .classList.remove("active");
 
-          if (error) {
+        document
+          .getElementById("registerTab")
+          .classList.remove("active");
 
-            showAuthMessage(
-              error.message
-            );
+      }
 
-            return;
-          }
 
-          if (!data.session) {
+      if (type === "reset") {
 
-            showAuthMessage(
-              "Не удалось создать сессию.",
-              "error"
-            );
+        document
+          .getElementById("resetForm")
+          .classList.remove("hidden");
 
-            return;
-          }
+        document
+          .getElementById("loginTab")
+          .classList.remove("active");
 
-          await enterApplication(
-            data.session
-          );
+        document
+          .getElementById("registerTab")
+          .classList.remove("active");
 
-        }
-      );
+      }
+    }
 
 
-    /* =======================================================
-       REGISTER
-    ======================================================== */
-
-    $("registerFormElement")
-      .addEventListener(
-        "submit",
-        async event => {
-
-          event.preventDefault();
-
-          clearAuthMessage();
-
-          const nickname =
-            $("registerNickname")
-              .value
-              .trim();
-
-          const email =
-            $("registerEmail")
-              .value
-              .trim();
-
-          const password =
-            $("registerPassword")
-              .value;
-
-          const repeatPassword =
-            $("registerPasswordRepeat")
-              .value;
-
-
-          if (!nickname) {
-
-            showAuthMessage(
-              "Введите никнейм."
-            );
-
-            return;
-          }
-
-
-          if (password !== repeatPassword) {
-
-            showAuthMessage(
-              "Пароли не совпадают."
-            );
-
-            return;
-          }
-
-
-          if (password.length < 6) {
-
-            showAuthMessage(
-              "Пароль должен содержать минимум 6 символов."
-            );
-
-            return;
-          }
-
-
-          const {
-            data,
-            error
-          } =
-            await sb.auth.signUp({
-
-              email,
-
-              password,
-
-              options: {
-                data: {
-                  username: nickname
-                },
-
-                emailRedirectTo:
-                  REDIRECT
-              }
-
-            });
-
-
-          if (error) {
-
-            showAuthMessage(
-              error.message
-            );
-
-            return;
-          }
-
-
-          if (data.session) {
-
-            await enterApplication(
-              data.session
-            );
-
-            return;
-          }
-
-
-          showAuthMessage(
-            "Аккаунт создан. Теперь войди в него.",
-            "success"
-          );
-
-          showAuthForm("login");
-
-        }
-      );
-
-
-    /* =======================================================
-       FORGOT PASSWORD
-    ======================================================== */
-
-    $("forgotFormElement")
-      .addEventListener(
-        "submit",
-        async event => {
-
-          event.preventDefault();
-
-          clearAuthMessage();
-
-          const email =
-            $("forgotEmail")
-              .value
-              .trim();
-
-
-          const {
-            error
-          } =
-            await sb.auth
-              .resetPasswordForEmail(
-                email,
-                {
-                  redirectTo:
-                    REDIRECT
-                }
-              );
-
-
-          if (error) {
-
-            showAuthMessage(
-              error.message
-            );
-
-            return;
-          }
-
-
-          showAuthMessage(
-            "Ссылка для восстановления отправлена на email.",
-            "success"
-          );
-
-        }
-      );
-
-
-    /* =======================================================
-       RESET PASSWORD
-    ======================================================== */
-
-    $("resetFormElement")
-      .addEventListener(
-        "submit",
-        async event => {
-
-          event.preventDefault();
-
-          clearAuthMessage();
-
-          const password =
-            $("newPassword")
-              .value;
-
-          const repeatPassword =
-            $("newPasswordRepeat")
-              .value;
-
-
-          if (password !== repeatPassword) {
-
-            showAuthMessage(
-              "Пароли не совпадают."
-            );
-
-            return;
-          }
-
-
-          if (password.length < 6) {
-
-            showAuthMessage(
-              "Пароль должен содержать минимум 6 символов."
-            );
-
-            return;
-          }
-
-
-          const {
-            error
-          } =
-            await sb.auth.updateUser({
-              password
-            });
-
-
-          if (error) {
-
-            showAuthMessage(
-              error.message
-            );
-
-            return;
-          }
-
-
-          showAuthMessage(
-            "Пароль успешно изменён. Теперь войди снова.",
-            "success"
-          );
-
-
-          setTimeout(
-            async () => {
-
-              await sb.auth.signOut();
-
-              showAuthForm("login");
-
-            },
-            1200
-          );
-
-        }
-      );
-
-
-    /* =======================================================
+    /* =====================================================
        PROFILE
-    ======================================================== */
+    ===================================================== */
 
     async function ensureProfile() {
 
@@ -3160,103 +2164,75 @@
         return;
       }
 
+      const userId =
+        currentUser.id;
+
+      const metadataNickname =
+        currentUser.user_metadata?.username || "";
+
 
       const {
         data,
         error
-      } =
-        await sb
-          .from("profiles")
-          .select("*")
-          .eq("id", currentUser.id)
-          .maybeSingle();
+      } = await sb
+        .from("profiles")
+        .select("id,nickname")
+        .eq("id", userId)
+        .maybeSingle();
 
 
       if (error) {
-
-        console.error(
-          "Profile select error:",
-          error
-        );
-
+        console.error(error);
         return;
       }
-
-
-      const metadataNickname =
-        currentUser.user_metadata?.username ||
-        currentUser.email?.split("@")[0] ||
-        "Пользователь";
 
 
       if (!data) {
 
         const {
-          data: inserted,
           error: insertError
-        } =
-          await sb
-            .from("profiles")
-            .insert({
-              id: currentUser.id,
-              nickname: metadataNickname
-            })
-            .select()
-            .single();
-
+        } = await sb
+          .from("profiles")
+          .insert({
+            id: userId,
+            nickname: metadataNickname
+          });
 
         if (insertError) {
-
-          console.error(
-            "Profile insert error:",
-            insertError
-          );
-
-          currentProfile = {
-            id: currentUser.id,
-            nickname: metadataNickname
-          };
-
-          return;
+          console.error(insertError);
         }
 
-
-        currentProfile = inserted;
+        nickname =
+          metadataNickname || "Пользователь";
 
         return;
       }
 
 
-      currentProfile = data;
+      nickname =
+        data.nickname ||
+        metadataNickname ||
+        "Пользователь";
 
 
-      if (!data.nickname) {
+      if (
+        !data.nickname &&
+        metadataNickname
+      ) {
 
-        const {
-          data: updated,
-          error: updateError
-        } =
-          await sb
-            .from("profiles")
-            .update({
-              nickname: metadataNickname
-            })
-            .eq("id", currentUser.id)
-            .select()
-            .single();
-
-
-        if (!updateError) {
-          currentProfile = updated;
-        }
+        await sb
+          .from("profiles")
+          .update({
+            nickname: metadataNickname
+          })
+          .eq("id", userId);
       }
-
     }
 
 
-    /* =======================================================
+    /* =====================================================
        LOAD DATA
-    ======================================================== */
+    ===================================================== */
 
     async function loadUserData() {
 
@@ -3265,364 +2241,257 @@
       }
 
 
-      const {
-        data: progress,
-        error: progressError
-      } =
-        await sb
+      const [
+        progressResult,
+        attemptsResult
+      ] = await Promise.all([
+
+        sb
           .from("progress")
           .select("*")
-          .eq("user_id", currentUser.id);
+          .eq("user_id", currentUser.id),
 
-
-      if (progressError) {
-
-        console.error(
-          "Progress error:",
-          progressError
-        );
-
-        showToast(
-          "Не удалось загрузить прогресс."
-        );
-
-      } else {
-
-        progressRows =
-          progress || [];
-
-      }
-
-
-      const {
-        data: history,
-        error: historyError
-      } =
-        await sb
+        sb
           .from("attempt_history")
           .select("*")
           .eq("user_id", currentUser.id)
-          .order(
-            "created_at",
-            {
-              ascending: true
-            }
-          );
+          .order("created_at", {
+            ascending: true
+          })
+
+      ]);
 
 
-      if (historyError) {
+      if (progressResult.error) {
 
         console.error(
-          "History error:",
-          historyError
+          progressResult.error
         );
 
         showToast(
-          "Не удалось загрузить историю попыток."
+          "Не удалось загрузить прогресс"
         );
 
-      } else {
+        return;
+      }
 
-        attemptHistory =
-          history || [];
 
+      if (attemptsResult.error) {
+
+        console.error(
+          attemptsResult.error
+        );
+
+        showToast(
+          "Не удалось загрузить историю попыток"
+        );
+
+        return;
       }
 
 
       progressMap = {};
 
-
-      for (
-        const row
-        of progressRows
-      ) {
+      progressResult.data.forEach(row => {
 
         progressMap[
           String(row.task_id)
         ] = row;
 
-      }
-
-    }
-
-
-    /* =======================================================
-       ENTER APPLICATION
-    ======================================================== */
-
-    async function enterApplication(
-      session
-    ) {
-
-      if (!session) {
-        return;
-      }
-
-
-      currentSession =
-        session;
-
-      currentUser =
-        session.user;
-
-
-      await ensureProfile();
-
-      await loadUserData();
-
-
-      $("authScreen")
-        .classList.add("hidden");
-
-      $("app")
-        .classList.remove("hidden");
-
-
-      updateHeader();
-
-      renderAll();
-
-      showPage("home");
-
-    }
-
-
-    /* =======================================================
-       LOGOUT
-    ======================================================== */
-
-    $("logoutBtn")
-      .addEventListener(
-        "click",
-        async () => {
-
-          await sb.auth.signOut();
-
-          currentUser = null;
-          currentSession = null;
-          currentProfile = null;
-
-          progressRows = [];
-          attemptHistory = [];
-          progressMap = {};
-
-          $("app")
-            .classList.add("hidden");
-
-          $("authScreen")
-            .classList.remove("hidden");
-
-          showAuthForm("login");
-
-        }
-      );
-
-
-    /* =======================================================
-       AUTH STATE
-    ======================================================== */
-
-    sb.auth.onAuthStateChange(
-      async (event, session) => {
-
-        if (
-          event ===
-          "PASSWORD_RECOVERY"
-        ) {
-
-          $("authScreen")
-            .classList.remove("hidden");
-
-          $("app")
-            .classList.add("hidden");
-
-          showAuthForm("reset");
-
-          return;
-        }
-
-
-        if (
-          session &&
-          session.user
-        ) {
-
-          await enterApplication(
-            session
-          );
-
-          return;
-        }
-
-
-        if (!session) {
-
-          $("app")
-            .classList.add("hidden");
-
-          $("authScreen")
-            .classList.remove("hidden");
-
-        }
-
-      }
-    );
-
-
-    /* =======================================================
-       INITIAL SESSION
-    ======================================================== */
-
-    async function init() {
-
-      const {
-        data,
-        error
-      } =
-        await sb.auth.getSession();
-
-
-      if (error) {
-
-        console.error(
-          "Session error:",
-          error
-        );
-
-        showAuthMessage(
-          "Не удалось проверить авторизацию."
-        );
-
-        return;
-      }
-
-
-      const hash =
-        window.location.hash || "";
-
-
-      if (
-        hash.includes(
-          "type=recovery"
-        )
-      ) {
-
-        showAuthForm("reset");
-
-        return;
-      }
-
-
-      if (
-        data.session &&
-        data.session.user
-      ) {
-
-        await enterApplication(
-          data.session
-        );
-
-      } else {
-
-        $("authScreen")
-          .classList.remove("hidden");
-
-        $("app")
-          .classList.add("hidden");
-
-        showAuthForm("login");
-
-      }
-
-    }
-
-
-    /* =======================================================
-       HEADER
-    ======================================================== */
-
-    function updateHeader() {
-
-      const nickname =
-        getNickname();
-
-      $("headerNickname")
-        .textContent =
-        nickname;
-
-      $("headerAvatar")
-        .textContent =
-        getInitials(nickname);
-
-
-      $("profileNickname")
-        .value =
-        nickname;
-
-
-      $("profileAvatar")
-        .textContent =
-        getInitials(nickname);
-
-
-      if (currentUser) {
-
-        $("profileEmail")
-          .value =
-          currentUser.email || "";
-
-      }
-
-    }
-
-
-    /* =======================================================
-       NAVIGATION
-    ======================================================== */
-
-    document
-      .querySelectorAll(".nav-btn")
-      .forEach(button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const page =
-              button.dataset.page;
-
-            showPage(page);
-
-          }
-        );
-
       });
 
 
-    $("homeTasksButton")
-      .addEventListener(
-        "click",
-        () => showPage("tasks")
+      attemptHistory =
+        attemptsResult.data || [];
+
+
+      renderAll();
+    }
+
+
+    /* =====================================================
+       SAVE ATTEMPT
+    ===================================================== */
+
+    async function saveAttempt(
+      taskId,
+      result,
+      reason = ""
+    ) {
+
+      if (!currentUser) {
+        return false;
+      }
+
+
+      const now =
+        new Date().toISOString();
+
+
+      const {
+        data: insertedAttempt,
+        error: historyError
+      } = await sb
+        .from("attempt_history")
+        .insert({
+          user_id: currentUser.id,
+          task_id: taskId,
+          result: result,
+          reason: reason || null,
+          created_at: now
+        })
+        .select()
+        .single();
+
+
+      if (historyError) {
+
+        console.error(historyError);
+
+        showToast(
+          "Не удалось сохранить попытку"
+        );
+
+        return false;
+      }
+
+
+      const {
+        error: progressError
+      } = await sb
+        .from("progress")
+        .upsert(
+          {
+            user_id: currentUser.id,
+            task_id: taskId,
+            status: result,
+            updated_at: now
+          },
+          {
+            onConflict: "user_id,task_id"
+          }
+        );
+
+
+      if (progressError) {
+
+        console.error(progressError);
+
+        showToast(
+          "Попытка сохранена, но прогресс не обновился"
+        );
+
+      }
+
+
+      attemptHistory.push(
+        insertedAttempt
       );
 
+
+      progressMap[taskId] = {
+        user_id: currentUser.id,
+        task_id: taskId,
+        status: result,
+        updated_at: now
+      };
+
+
+      return true;
+    }
+
+
+    /* =====================================================
+       CALCULATIONS
+    ===================================================== */
+
+    function getAttemptsForTask(taskId) {
+
+      return attemptHistory
+        .filter(
+          attempt =>
+            String(attempt.task_id) ===
+            String(taskId)
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.created_at) -
+            new Date(b.created_at)
+        );
+    }
+
+
+    function getCompletedCount() {
+
+      return Object.keys(progressMap).length;
+    }
+
+
+    function getCorrectAttemptsCount() {
+
+      return attemptHistory.filter(
+        attempt =>
+          attempt.result === "correct"
+      ).length;
+    }
+
+
+    function getWrongAttemptsCount() {
+
+      return attemptHistory.filter(
+        attempt =>
+          attempt.result === "wrong"
+      ).length;
+    }
+
+
+    function getAccuracy() {
+
+      if (!attemptHistory.length) {
+        return 0;
+      }
+
+      return Math.round(
+        (
+          getCorrectAttemptsCount() /
+          attemptHistory.length
+        ) * 100
+      );
+    }
+
+
+    function getProgressPercent() {
+
+      const total =
+        getTasks().length;
+
+      if (!total) {
+        return 0;
+      }
+
+      return Math.round(
+        (getCompletedCount() / total) * 100
+      );
+    }
+
+
+    /* =====================================================
+       NAVIGATION
+    ===================================================== */
 
     function showPage(pageName) {
 
       document
         .querySelectorAll(".page")
         .forEach(page => {
-
           page.classList.add("hidden");
-
         });
 
 
       const target =
-        $(
-          "page-" +
-          pageName
+        document.getElementById(
+          `page-${pageName}`
         );
-
 
       if (target) {
         target.classList.remove("hidden");
@@ -3630,7 +2499,7 @@
 
 
       document
-        .querySelectorAll(".nav-btn")
+        .querySelectorAll(".nav-button")
         .forEach(button => {
 
           button.classList.toggle(
@@ -3642,387 +2511,195 @@
 
 
       if (pageName === "home") {
-
-        updateMotivationalQuote();
-
+        setRandomQuote();
+        renderHome();
       }
-
 
       if (pageName === "tasks") {
-
         renderTasks();
-
       }
-
 
       if (pageName === "stats") {
-
-        renderStatistics();
-
+        renderStats();
       }
-
 
       if (pageName === "errors") {
-
         renderErrors();
-
       }
-
 
       if (pageName === "profile") {
-
-        updateHeader();
-
+        renderProfile();
       }
 
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
     }
 
 
-    /* =======================================================
-       MOTIVATIONAL QUOTES
-    ======================================================== */
-
-    const quotes = [
-
-      "Ты уже начала. Теперь просто продолжай.",
-
-      "Один шаг сегодня — меньше стресса перед экзаменом.",
-
-      "Не нужно идеально. Нужно регулярно.",
-
-      "Каждое выполненное задание — плюс один балл к уверенности.",
-
-      "Ошибки здесь нужны, чтобы не повторять их на экзамене.",
-
-      "Ты не обязана знать всё сразу. Разберёшься по шагам.",
-
-      "Сегодняшние 20 минут работают на твою уверенность завтра.",
-
-      "Маленький прогресс — тоже прогресс.",
-
-      "Продолжай. Ты уже дальше, чем была вчера.",
-
-      "Сделай ещё одно задание. Потом ещё одно."
-
-    ];
-
-
-    function updateMotivationalQuote() {
-
-      let previous =
-        sessionStorage.getItem(
-          "oge_previous_quote"
-        );
-
-
-      let available =
-        quotes.filter(
-          quote =>
-            quote !== previous
-        );
-
-
-      if (!available.length) {
-        available = quotes;
-      }
-
-
-      const quote =
-        available[
-          Math.floor(
-            Math.random() *
-            available.length
-          )
-        ];
-
-
-      sessionStorage.setItem(
-        "oge_previous_quote",
-        quote
-      );
-
-
-      $("motivationalQuote")
-        .textContent =
-        quote;
-
-    }
-
-
-    /* =======================================================
-       CALCULATE STATISTICS
-    ======================================================== */
-
-    function getCompletedCount() {
-
-      return Object.keys(
-        progressMap
-      ).length;
-
-    }
-
-
-    function getCorrectCount() {
-
-      return attemptHistory
-        .filter(
-          attempt =>
-            attempt.result ===
-            "correct"
-        )
-        .length;
-
-    }
-
-
-    function getWrongCount() {
-
-      return attemptHistory
-        .filter(
-          attempt =>
-            attempt.result ===
-            "wrong"
-        )
-        .length;
-
-    }
-
-
-    function getTotalAttempts() {
-
-      return attemptHistory.length;
-
-    }
-
-
-    function getAccuracy() {
-
-      const total =
-        getTotalAttempts();
-
-      if (!total) {
-        return 0;
-      }
-
-      return Math.round(
-        (
-          getCorrectCount() /
-          total
-        ) * 100
-      );
-
-    }
-
-
-    /* =======================================================
-       RENDER ALL
-    ======================================================== */
-
-    function renderAll() {
-
-      updateHeader();
-
-      renderHome();
-
-      renderTasks();
-
-      renderStatistics();
-
-      renderErrors();
-
-    }
-
-
-    /* =======================================================
+    /* =====================================================
        HOME
-    ======================================================== */
+    ===================================================== */
 
     function renderHome() {
 
-      const tasks =
-        getTasks();
-
-      const totalTasks =
-        tasks.length;
+      const total =
+        getTasks().length;
 
       const completed =
         getCompletedCount();
 
       const correct =
-        getCorrectCount();
+        getCorrectAttemptsCount();
 
       const wrong =
-        getWrongCount();
+        getWrongAttemptsCount();
 
       const accuracy =
         getAccuracy();
 
-
-      $("homeGreeting")
-        .textContent =
-        `Привет, ${getNickname()}!`;
+      const percent =
+        getProgressPercent();
 
 
-      $("homeCompleted")
-        .textContent =
+      document.getElementById(
+        "homeGreeting"
+      ).textContent =
+        `Привет, ${nickname || "Пользователь"}!`;
+
+
+      document.getElementById(
+        "homeCompleted"
+      ).textContent =
         completed;
 
 
-      $("homeCorrect")
-        .textContent =
+      document.getElementById(
+        "homeCorrect"
+      ).textContent =
         correct;
 
 
-      $("homeWrong")
-        .textContent =
+      document.getElementById(
+        "homeWrong"
+      ).textContent =
         wrong;
 
 
-      $("homeAccuracy")
-        .textContent =
+      document.getElementById(
+        "homeAccuracy"
+      ).textContent =
         `${accuracy}%`;
 
 
-      const percent =
-        totalTasks
-          ? Math.round(
-              (
-                completed /
-                totalTasks
-              ) * 100
-            )
-          : 0;
-
-
-      $("homeProgressFill")
-        .style.width =
+      document.getElementById(
+        "homeProgressFill"
+      ).style.width =
         `${percent}%`;
 
 
-      $("homeProgressText")
-        .textContent =
+      document.getElementById(
+        "homeProgressText"
+      ).textContent =
         `${percent}%`;
 
 
-      $("homeProgressTotal")
-        .textContent =
-        totalTasks;
+      document.getElementById(
+        "homeProgressTotal"
+      ).textContent =
+        total;
 
 
-      $("homeProgressCompleted")
-        .textContent =
-        `Выполнено ${completed} из ${totalTasks}`;
-
+      document.getElementById(
+        "homeProgressDescription"
+      ).textContent =
+        `Выполнено ${completed} из ${total}`;
     }
 
 
-    /* =======================================================
-       TASK GROUP SELECTOR
-    ======================================================== */
+    /* =====================================================
+       TASK RANGE
+    ===================================================== */
 
-    document
-      .querySelectorAll(
-        ".task-section-btn"
-      )
-      .forEach(button => {
+    function taskBelongsToRange(
+      task,
+      range
+    ) {
 
-        button.addEventListener(
-          "click",
-          () => {
-
-            currentTaskGroup =
-              button.dataset.taskGroup;
+      const number =
+        Number(getNumber(task));
 
 
-            document
-              .querySelectorAll(
-                ".task-section-btn"
-              )
-              .forEach(btn => {
-
-                btn.classList.toggle(
-                  "active",
-                  btn === button
-                );
-
-              });
+      if (range === "1-5") {
+        return number >= 1 && number <= 5;
+      }
 
 
-            $("taskSearch")
-              .value = "";
+      if (range === "6-11") {
+        return number >= 6 && number <= 11;
+      }
 
 
-            renderTasks();
-
-          }
-        );
-
-      });
+      return String(number) === String(range);
+    }
 
 
-    /* =======================================================
-       TASK SEARCH
-    ======================================================== */
+    function selectTaskRange(range) {
 
-    $("taskSearch")
-      .addEventListener(
-        "input",
-        () => {
-
-          renderTasks();
-
-        }
-      );
+      selectedTaskRange = range;
 
 
-    $("clearSearch")
-      .addEventListener(
-        "click",
-        () => {
+      document
+        .querySelectorAll(
+          ".number-selector-button"
+        )
+        .forEach(button => {
 
-          $("taskSearch")
-            .value = "";
+          button.classList.toggle(
+            "active",
+            button.dataset.taskRange === range
+          );
 
-          renderTasks();
-
-          $("taskSearch")
-            .focus();
-
-        }
-      );
+        });
 
 
-    /* =======================================================
-       RENDER TASKS
-    ======================================================== */
+      renderTasks();
+    }
+
+
+    /* =====================================================
+       TASKS
+    ===================================================== */
 
     function renderTasks() {
 
       const container =
-        $("tasksContainer");
-
-      const allTasks =
-        getTasks();
-
-
-      let tasks =
-        allTasks.filter(
-          task =>
-            taskBelongsToGroup(
-              task,
-              currentTaskGroup
-            )
+        document.getElementById(
+          "tasksContainer"
         );
 
 
-      const search =
-        $("taskSearch")
+      const searchValue =
+        document
+          .getElementById("taskSearch")
           .value
           .trim()
           .toLowerCase();
 
 
-      if (search) {
+      let tasks =
+        getTasks()
+          .filter(
+            task =>
+              taskBelongsToRange(
+                task,
+                selectedTaskRange
+              )
+          );
+
+
+      if (searchValue) {
 
         tasks =
           tasks.filter(task => {
@@ -4031,28 +2708,18 @@
               getCode(task)
                 .toLowerCase();
 
-            return code.includes(search);
-
+            return code.includes(
+              searchValue
+            );
           });
-
       }
 
 
       if (!tasks.length) {
 
         container.innerHTML = `
-          <div class="no-results">
-            ${
-              search
-                ? `
-                  По коду
-                  <strong>${escapeHtml(search)}</strong>
-                  ничего не найдено.
-                `
-                : `
-                  В этом разделе пока нет загруженных заданий.
-                `
-            }
+          <div class="empty-state">
+            Задания не найдены.
           </div>
         `;
 
@@ -4060,266 +2727,191 @@
       }
 
 
-      /*
-        Группируем задания по variant.
-        Для текущего tasks.js получится:
-        Вариант 1, Вариант 2, ... Вариант 19.
-      */
-
       const variants = {};
 
 
       tasks.forEach(task => {
 
         const variant =
-          String(
-            getVariant(task)
-          );
-
+          String(getVariant(task) || "1");
 
         if (!variants[variant]) {
           variants[variant] = [];
         }
-
 
         variants[variant].push(task);
 
       });
 
 
-      const variantKeys =
+      const sortedVariants =
         Object.keys(variants)
           .sort(
             (a, b) =>
-              Number(a) -
-              Number(b)
+              Number(a) - Number(b)
           );
 
 
-      container.innerHTML = "";
+      container.innerHTML =
+        sortedVariants
+          .map(variant => {
+
+            const variantTasks =
+              variants[variant];
 
 
-      variantKeys.forEach(
-        variant => {
+            const cards =
+              variantTasks
+                .sort(
+                  (a, b) =>
+                    Number(getNumber(a)) -
+                    Number(getNumber(b))
+                )
+                .map(task => {
 
-          const section =
-            document.createElement(
-              "div"
-            );
+                  const taskId =
+                    getId(task);
 
-          section.className =
-            "variant-section";
+                  const status =
+                    progressMap[taskId]?.status ||
+                    "";
 
+                  return `
+                    <div
+                      class="task-card ${status}"
+                      data-task-id="${escapeHtml(taskId)}"
+                    >
 
-          section.innerHTML = `
-            <h2 class="variant-title">
-              Вариант ${escapeHtml(variant)}
-            </h2>
+                      <div class="task-number">
+                        Задание ${escapeHtml(
+                          getNumber(task)
+                        )}
+                      </div>
 
-            <div class="task-grid"></div>
-          `;
+                      <div class="task-code">
+                        ${escapeHtml(
+                          getCode(task)
+                        )}
+                      </div>
 
+                    </div>
+                  `;
 
-          const grid =
-            section.querySelector(
-              ".task-grid"
-            );
-
-
-          variants[variant]
-            .forEach(task => {
-
-              const card =
-                createTaskCard(task);
-
-              grid.appendChild(card);
-
-            });
+                })
+                .join("");
 
 
-          container.appendChild(
-            section
+            return `
+              <div class="variant-section">
+
+                <div class="variant-title">
+
+                  <h3>
+                    Вариант ${escapeHtml(variant)}
+                  </h3>
+
+                  <span class="variant-count">
+                    ${variantTasks.length} заданий
+                  </span>
+
+                </div>
+
+                <div class="tasks-grid">
+                  ${cards}
+                </div>
+
+              </div>
+            `;
+
+          })
+          .join("");
+
+
+      container
+        .querySelectorAll(".task-card")
+        .forEach(card => {
+
+          card.addEventListener(
+            "click",
+            () => {
+
+              const taskId =
+                card.dataset.taskId;
+
+              const task =
+                getTasks().find(
+                  item =>
+                    getId(item) === taskId
+                );
+
+              if (task) {
+                openTaskModal(task);
+              }
+
+            }
           );
 
-        }
-      );
-
+        });
     }
 
 
-    /* =======================================================
-       CREATE TASK CARD
-    ======================================================== */
-
-    function createTaskCard(task) {
-
-      const id =
-        getId(task);
-
-      const code =
-        getCode(task);
-
-      const number =
-        getNumber(task);
-
-
-      const status =
-        progressMap[id]?.status ||
-        null;
-
-
-      const card =
-        document.createElement(
-          "div"
-        );
-
-
-      card.className =
-        "task-card";
-
-
-      if (
-        status ===
-        "correct"
-      ) {
-
-        card.classList.add(
-          "correct"
-        );
-
-      }
-
-
-      if (
-        status ===
-        "wrong"
-      ) {
-
-        card.classList.add(
-          "wrong"
-        );
-
-      }
-
-
-      let statusText =
-        "Ещё не выполнялось";
-
-
-      if (
-        status ===
-        "correct"
-      ) {
-
-        statusText =
-          "Последняя попытка: верно";
-
-      }
-
-
-      if (
-        status ===
-        "wrong"
-      ) {
-
-        statusText =
-          "Последняя попытка: ошибка";
-
-      }
-
-
-      card.innerHTML = `
-
-        <div class="task-number">
-          Задание ${escapeHtml(number)}
-        </div>
-
-        <div class="task-code">
-          ${escapeHtml(code)}
-        </div>
-
-        <div class="task-status">
-          ${statusText}
-        </div>
-
-      `;
-
-
-      card.addEventListener(
-        "click",
-        () => {
-
-          openTaskModal(task);
-
-        }
-      );
-
-
-      return card;
-
-    }
-
-
-    /* =======================================================
-       GET TASK HISTORY
-    ======================================================== */
-
-    function getTaskAttempts(taskId) {
-
-      return attemptHistory
-        .filter(
-          attempt =>
-            String(
-              attempt.task_id
-            ) === String(taskId)
-        )
-        .sort(
-          (a, b) =>
-            new Date(a.created_at) -
-            new Date(b.created_at)
-        );
-
-    }
-
-
-    /* =======================================================
+    /* =====================================================
        TASK MODAL
-    ======================================================== */
+    ===================================================== */
 
     function openTaskModal(task) {
 
-      currentTask =
-        task;
+      currentTask = task;
 
 
-      $("taskModal")
-        .classList.remove("hidden");
-
-
-      $("modalTaskTitle")
-        .textContent =
+      document.getElementById(
+        "modalTaskTitle"
+      ).textContent =
         `Задание ${getNumber(task)}`;
 
 
-      $("modalTaskCode")
-        .textContent =
-        getCode(task);
+      document.getElementById(
+        "modalTaskCode"
+      ).textContent =
+        `Код ФИПИ: ${getCode(task)}`;
 
 
-      $("wrongForm")
+      document
+        .getElementById("wrongForm")
         .classList.add("hidden");
 
 
-      $("wrongReason")
-        .value = "";
+      document.getElementById(
+        "wrongReason"
+      ).value = "";
 
 
       renderModalAttempts();
 
+
+      document
+        .getElementById("taskModal")
+        .classList.remove("hidden");
+    }
+
+
+    function closeTaskModal() {
+
+      currentTask = null;
+
+      document
+        .getElementById("taskModal")
+        .classList.add("hidden");
     }
 
 
     function renderModalAttempts() {
+
+      const container =
+        document.getElementById(
+          "modalAttempts"
+        );
+
 
       if (!currentTask) {
         return;
@@ -4331,18 +2923,14 @@
 
 
       const attempts =
-        getTaskAttempts(taskId);
-
-
-      const container =
-        $("modalAttempts");
+        getAttemptsForTask(taskId);
 
 
       if (!attempts.length) {
 
         container.innerHTML = `
           <div class="empty-state">
-            Это задание ещё не выполнялось.
+            Задание ещё не выполнялось.
           </div>
         `;
 
@@ -4356,234 +2944,124 @@
             (attempt, index) => {
 
               const isCorrect =
-                attempt.result ===
-                "correct";
+                attempt.result === "correct";
 
 
               return `
+                <div class="attempt-row ${
+                  isCorrect
+                    ? "correct"
+                    : "wrong"
+                }">
 
-                <div
-                  class="
-                    attempt-item
-                    ${
-                      isCorrect
-                        ? "correct"
-                        : "wrong"
-                    }
-                  "
-                >
+                  <div class="attempt-left">
 
-                  <div class="attempt-top">
-
-                    <span class="attempt-result">
-
-                      Попытка ${index + 1}
-                      —
+                    <div
+                      class="attempt-status ${
+                        isCorrect
+                          ? "correct"
+                          : "wrong"
+                      }"
+                    >
+                      Попытка ${index + 1} —
                       ${
                         isCorrect
                           ? "Верно"
                           : "Неверно"
                       }
+                    </div>
 
-                    </span>
+                    <div>
 
-                    <span class="attempt-date">
-                      ${escapeHtml(
-                        formatDate(
-                          attempt.created_at
-                        )
-                      )}
-                    </span>
+                      <div class="attempt-date">
+                        ${escapeHtml(
+                          formatDate(
+                            attempt.created_at
+                          )
+                        )}
+                      </div>
+
+                      ${
+                        !isCorrect &&
+                        attempt.reason
+                          ? `
+                            <div class="attempt-reason">
+                              Причина ошибки:
+                              ${escapeHtml(
+                                attempt.reason
+                              )}
+                            </div>
+                          `
+                          : ""
+                      }
+
+                    </div>
 
                   </div>
 
-                  ${
-                    !isCorrect &&
-                    attempt.reason
-                      ? `
-                        <div class="attempt-reason">
-                          <strong>
-                            Причина ошибки:
-                          </strong>
-                          ${escapeHtml(
-                            attempt.reason
-                          )}
-                        </div>
-                      `
-                      : ""
-                  }
-
                 </div>
-
               `;
 
             }
           )
           .join("");
-
     }
 
 
-    $("closeModalBtn")
-      .addEventListener(
-        "click",
-        closeTaskModal
+    async function markCurrentTaskCorrect() {
+
+      if (!currentTask) {
+        return;
+      }
+
+
+      const taskId =
+        getId(currentTask);
+
+
+      const success =
+        await saveAttempt(
+          taskId,
+          "correct",
+          ""
+        );
+
+
+      if (!success) {
+        return;
+      }
+
+
+      renderModalAttempts();
+
+      renderTasks();
+
+      renderAll();
+
+      showToast(
+        "Правильная попытка сохранена"
       );
-
-
-    $("taskModal")
-      .addEventListener(
-        "click",
-        event => {
-
-          if (
-            event.target ===
-            $("taskModal")
-          ) {
-
-            closeTaskModal();
-
-          }
-
-        }
-      );
-
-
-    function closeTaskModal() {
-
-      $("taskModal")
-        .classList.add("hidden");
-
-      $("wrongForm")
-        .classList.add("hidden");
-
-      $("wrongReason")
-        .value = "";
-
-      currentTask = null;
-
     }
 
 
-    /* =======================================================
-       MARK CORRECT
-    ======================================================== */
+    async function saveCurrentTaskWrong() {
 
-    $("markCorrectBtn")
-      .addEventListener(
-        "click",
-        async () => {
-
-          if (!currentTask) {
-            return;
-          }
+      if (!currentTask) {
+        return;
+      }
 
 
-          await saveAttempt(
-            currentTask,
-            "correct",
-            null
-          );
-
-        }
-      );
+      const reason =
+        document
+          .getElementById("wrongReason")
+          .value
+          .trim();
 
 
-    /* =======================================================
-       SHOW WRONG FORM
-    ======================================================== */
-
-    $("showWrongFormBtn")
-      .addEventListener(
-        "click",
-        () => {
-
-          $("wrongForm")
-            .classList.remove(
-              "hidden"
-            );
-
-          $("wrongReason")
-            .focus();
-
-        }
-      );
-
-
-    $("cancelWrongBtn")
-      .addEventListener(
-        "click",
-        () => {
-
-          $("wrongForm")
-            .classList.add(
-              "hidden"
-            );
-
-          $("wrongReason")
-            .value = "";
-
-        }
-      );
-
-
-    /* =======================================================
-       SAVE WRONG
-    ======================================================== */
-
-    $("saveWrongBtn")
-      .addEventListener(
-        "click",
-        async () => {
-
-          if (!currentTask) {
-            return;
-          }
-
-
-          const reason =
-            $("wrongReason")
-              .value
-              .trim();
-
-
-          if (!reason) {
-
-            showToast(
-              "Укажи причину ошибки."
-            );
-
-            $("wrongReason")
-              .focus();
-
-            return;
-          }
-
-
-          await saveAttempt(
-            currentTask,
-            "wrong",
-            reason
-          );
-
-        }
-      );
-
-
-    /* =======================================================
-       SAVE ATTEMPT
-    ======================================================== */
-
-    async function saveAttempt(
-      task,
-      result,
-      reason
-    ) {
-
-      if (!currentUser) {
+      if (!reason) {
 
         showToast(
-          "Сначала войди в аккаунт."
+          "Укажи причину ошибки"
         );
 
         return;
@@ -4591,377 +3069,309 @@
 
 
       const taskId =
-        getId(task);
+        getId(currentTask);
 
 
-      const {
-        data: insertedAttempt,
-        error: attemptError
-      } =
-        await sb
-          .from("attempt_history")
-          .insert({
-            user_id:
-              currentUser.id,
-
-            task_id:
-              taskId,
-
-            result:
-              result,
-
-            reason:
-              result === "wrong"
-                ? reason
-                : null
-          })
-          .select()
-          .single();
-
-
-      if (attemptError) {
-
-        console.error(
-          "Attempt insert error:",
-          attemptError
+      const success =
+        await saveAttempt(
+          taskId,
+          "wrong",
+          reason
         );
 
-        showToast(
-          "Не удалось сохранить попытку."
-        );
 
+      if (!success) {
         return;
       }
 
 
-      const {
-        data: progress,
-        error: progressError
-      } =
-        await sb
-          .from("progress")
-          .upsert(
-            {
-              user_id:
-                currentUser.id,
-
-              task_id:
-                taskId,
-
-              status:
-                result,
-
-              updated_at:
-                new Date().toISOString()
-            },
-            {
-              onConflict:
-                "user_id,task_id"
-            }
-          )
-          .select()
-          .single();
+      document.getElementById(
+        "wrongReason"
+      ).value = "";
 
 
-      if (progressError) {
+      document
+        .getElementById("wrongForm")
+        .classList.add("hidden");
 
-        console.error(
-          "Progress save error:",
-          progressError
-        );
-
-        /*
-          История попытки уже сохранена.
-          Поэтому не удаляем её.
-        */
-
-        showToast(
-          "Попытка сохранена, но статус задания не обновился."
-        );
-
-      } else {
-
-        progressMap[taskId] =
-          progress;
-
-      }
-
-
-      attemptHistory.push(
-        insertedAttempt
-      );
-
-
-      attemptHistory.sort(
-        (a, b) =>
-          new Date(a.created_at) -
-          new Date(b.created_at)
-      );
-
-
-      renderAll();
 
       renderModalAttempts();
 
+      renderTasks();
 
-      $("wrongForm")
-        .classList.add("hidden");
-
-      $("wrongReason")
-        .value = "";
-
+      renderAll();
 
       showToast(
-        result === "correct"
-          ? "Попытка сохранена: верно."
-          : "Ошибка сохранена."
+        "Ошибка сохранена"
       );
-
     }
 
 
-    /* =======================================================
-       STATISTICS
-    ======================================================== */
+    /* =====================================================
+       STATS
+    ===================================================== */
 
-    function renderStatistics() {
+    function renderStats() {
 
       const tasks =
         getTasks();
-
-      const totalTasks =
-        tasks.length;
 
       const completed =
         getCompletedCount();
 
       const attempts =
-        getTotalAttempts();
+        attemptHistory.length;
 
       const correct =
-        getCorrectCount();
+        getCorrectAttemptsCount();
 
       const wrong =
-        getWrongCount();
+        getWrongAttemptsCount();
+
+      const percent =
+        getProgressPercent();
 
 
-      $("statsCompleted")
-        .textContent =
+      document.getElementById(
+        "statsCompleted"
+      ).textContent =
         completed;
 
 
-      $("statsAttempts")
-        .textContent =
+      document.getElementById(
+        "statsAttempts"
+      ).textContent =
         attempts;
 
 
-      $("statsCorrect")
-        .textContent =
+      document.getElementById(
+        "statsCorrect"
+      ).textContent =
         correct;
 
 
-      $("statsWrong")
-        .textContent =
+      document.getElementById(
+        "statsWrong"
+      ).textContent =
         wrong;
 
 
-      const percent =
-        totalTasks
-          ? Math.round(
-              (
-                completed /
-                totalTasks
-              ) * 100
-            )
-          : 0;
-
-
-      $("statsProgressFill")
-        .style.width =
+      document.getElementById(
+        "statsProgressFill"
+      ).style.width =
         `${percent}%`;
 
 
-      $("statsProgressText")
-        .textContent =
+      document.getElementById(
+        "statsProgressText"
+      ).textContent =
         `${percent}%`;
 
 
-      $("statsProgressTotal")
-        .textContent =
-        totalTasks;
+      document.getElementById(
+        "statsProgressTotal"
+      ).textContent =
+        tasks.length;
 
-
-      $("statsProgressLabel")
-        .textContent =
-        `${completed} из ${totalTasks}`;
-
-
-      renderTaskStatistics();
-
-    }
-
-
-    function renderTaskStatistics() {
 
       const container =
-        $("taskStatistics");
-
-
-      const tasks =
-        getTasks();
-
-
-      if (!tasks.length) {
-
-        container.innerHTML = `
-          <div class="empty-state">
-            Заданий пока нет.
-          </div>
-        `;
-
-        return;
-      }
+        document.getElementById(
+          "statsTaskList"
+        );
 
 
       container.innerHTML =
         tasks
           .map(task => {
 
-            const id =
+            const taskId =
               getId(task);
 
+            const code =
+              getCode(task);
+
+            const number =
+              getNumber(task);
+
             const attempts =
-              getTaskAttempts(id);
-
-
-            const count =
-              attempts.length;
-
-
-            const rerun =
-              count > 1;
-
+              getAttemptsForTask(taskId);
 
             const latest =
-              attempts[count - 1];
+              attempts.length
+                ? attempts[attempts.length - 1]
+                : null;
+
+            const reSolved =
+              attempts.length > 1;
 
 
-            let latestHtml =
-              `
-                <span class="status-none-text">
-                  Не выполнялось
-                </span>
+            let historyHtml = "";
+
+
+            if (!attempts.length) {
+
+              historyHtml = `
+                <div class="empty-state">
+                  Задание ещё не выполнялось.
+                </div>
               `;
 
+            } else {
 
-            if (
-              latest &&
-              latest.result ===
-              "correct"
-            ) {
-
-              latestHtml =
+              historyHtml =
                 `
-                  <span class="status-correct-text">
-                    Последняя попытка: верно
-                  </span>
+                  <div class="attempt-list">
+                    ${
+                      attempts
+                        .map(
+                          (attempt, index) => {
+
+                            const correct =
+                              attempt.result ===
+                              "correct";
+
+
+                            return `
+                              <div
+                                class="attempt-row ${
+                                  correct
+                                    ? "correct"
+                                    : "wrong"
+                                }"
+                              >
+
+                                <div class="attempt-left">
+
+                                  <div
+                                    class="attempt-status ${
+                                      correct
+                                        ? "correct"
+                                        : "wrong"
+                                    }"
+                                  >
+                                    Попытка
+                                    ${index + 1}
+                                    —
+                                    ${
+                                      correct
+                                        ? "Верно"
+                                        : "Неверно"
+                                    }
+                                  </div>
+
+                                  <div>
+
+                                    <div class="attempt-date">
+                                      ${escapeHtml(
+                                        formatDate(
+                                          attempt.created_at
+                                        )
+                                      )}
+                                    </div>
+
+                                    ${
+                                      !correct &&
+                                      attempt.reason
+                                        ? `
+                                          <div class="attempt-reason">
+                                            Причина ошибки:
+                                            ${escapeHtml(
+                                              attempt.reason
+                                            )}
+                                          </div>
+                                        `
+                                        : ""
+                                    }
+
+                                  </div>
+
+                                </div>
+
+                              </div>
+                            `;
+
+                          }
+                        )
+                        .join("")
+                    }
+                  </div>
                 `;
-
-            }
-
-
-            if (
-              latest &&
-              latest.result ===
-              "wrong"
-            ) {
-
-              latestHtml =
-                `
-                  <span class="status-wrong-text">
-                    Последняя попытка: неверно
-                  </span>
-                `;
-
             }
 
 
             return `
+              <div class="stats-task">
 
-              <div class="task-stat-row">
-
-                <div class="task-stat-head">
+                <div class="stats-task-header">
 
                   <div>
 
-                    <strong>
-                      Задание
-                      ${escapeHtml(
-                        getNumber(task)
-                      )}
-                    </strong>
+                    <div class="stats-task-name">
+                      Задание ${escapeHtml(number)}
+                      · ${escapeHtml(code)}
+                    </div>
 
-                    <span class="task-stat-code">
-                      ${escapeHtml(
-                        getCode(task)
-                      )}
-                    </span>
+                    <div class="stats-task-meta">
+                      Попыток: ${attempts.length}
+                      ·
+                      Перерешано:
+                      ${
+                        reSolved
+                          ? "да"
+                          : "нет"
+                      }
+                    </div>
 
                   </div>
 
-                  <div>
-                    ${latestHtml}
-                  </div>
 
-                </div>
+                  <div class="stats-task-meta">
 
-
-                <div class="attempt-small">
-
-                  Попыток:
-                  <strong>
-                    ${count}
-                  </strong>
-
-                  &nbsp;•&nbsp;
-
-                  Перерешано:
-                  <strong>
                     ${
-                      rerun
-                        ? "да"
-                        : "нет"
+                      latest
+                        ? `
+                          Последняя попытка:
+                          ${
+                            latest.result === "correct"
+                              ? "верно"
+                              : "неверно"
+                          }
+                        `
+                        : "Не выполнялось"
                     }
-                  </strong>
+
+                  </div>
 
                 </div>
+
+
+                ${historyHtml}
 
               </div>
-
             `;
 
           })
           .join("");
-
     }
 
 
-    /* =======================================================
+    /* =====================================================
        ERRORS
-    ======================================================== */
+    ===================================================== */
 
     function renderErrors() {
 
       const container =
-        $("errorsContainer");
+        document.getElementById(
+          "errorsList"
+        );
 
 
       const errors =
         attemptHistory
           .filter(
             attempt =>
-              attempt.result ===
-              "wrong"
+              attempt.result === "wrong"
           )
           .sort(
             (a, b) =>
@@ -4973,10 +3383,8 @@
       if (!errors.length) {
 
         container.innerHTML = `
-          <div class="section-card">
-            <div class="empty-state">
-              Пока ошибок нет. Так держать!
-            </div>
+          <div class="empty-state">
+            Ошибок пока нет.
           </div>
         `;
 
@@ -4984,198 +3392,214 @@
       }
 
 
-      const tasks =
-        getTasks();
-
-
       container.innerHTML =
         errors
-          .map(error => {
+          .map(attempt => {
 
             const task =
-              tasks.find(
+              getTasks().find(
                 item =>
-                  String(
-                    getId(item)
-                  ) ===
-                  String(
-                    error.task_id
-                  )
+                  getId(item) ===
+                  String(attempt.task_id)
               );
 
 
             const number =
               task
                 ? getNumber(task)
-                : "";
+                : attempt.task_id;
 
 
             const code =
               task
                 ? getCode(task)
-                : error.task_id;
+                : attempt.task_id;
 
 
             return `
+              <div class="error-card">
 
-              <div class="error-item">
+                <div class="error-card-top">
 
-                <div class="error-item-head">
-
-                  <div>
-
-                    <strong>
-                      Задание
-                      ${escapeHtml(number)}
-                    </strong>
-
-                    &nbsp;
-
-                    <span class="error-code">
-                      ${escapeHtml(code)}
-                    </span>
-
+                  <div class="error-task-name">
+                    Задание ${escapeHtml(number)}
+                    · ${escapeHtml(code)}
                   </div>
-
 
                   <div class="error-date">
                     ${escapeHtml(
                       formatDate(
-                        error.created_at
+                        attempt.created_at
                       )
                     )}
                   </div>
 
                 </div>
 
-
                 <div class="error-reason">
-
-                  <strong>
-                    Причина ошибки:
-                  </strong>
-
+                  Причина ошибки:
                   ${
                     escapeHtml(
-                      error.reason ||
-                      "Причина не указана."
+                      attempt.reason ||
+                      "Причина не указана"
                     )
                   }
-
                 </div>
 
               </div>
-
             `;
 
           })
           .join("");
-
     }
 
 
-    /* =======================================================
-       PROFILE SAVE
-    ======================================================== */
+    /* =====================================================
+       PROFILE
+    ===================================================== */
 
-    $("profileForm")
-      .addEventListener(
-        "submit",
-        async event => {
+    function renderProfile() {
 
-          event.preventDefault();
-
-
-          if (!currentUser) {
-            return;
-          }
+      document.getElementById(
+        "profileEmail"
+      ).textContent =
+        currentUser?.email || "";
 
 
-          const nickname =
-            $("profileNickname")
-              .value
-              .trim();
+      document.getElementById(
+        "profileNickname"
+      ).value =
+        nickname || "";
+    }
 
 
-          if (!nickname) {
+    async function saveProfile(event) {
 
-            showToast(
-              "Введите никнейм."
-            );
+      event.preventDefault();
 
-            return;
-          }
-
-
-          const {
-            data,
-            error
-          } =
-            await sb
-              .from("profiles")
-              .update({
-                nickname
-              })
-              .eq(
-                "id",
-                currentUser.id
-              )
-              .select()
-              .single();
-
-
-          if (error) {
-
-            console.error(
-              "Profile update error:",
-              error
-            );
-
-            showToast(
-              "Не удалось сохранить профиль."
-            );
-
-            return;
-          }
-
-
-          currentProfile =
-            data;
-
-
-          updateHeader();
-
-          renderHome();
-
-          showToast(
-            "Профиль сохранён."
-          );
-
-        }
-      );
-
-
-    /* =======================================================
-       PDF / PRINT REPORT
-    ======================================================== */
-
-    $("generateReportBtn")
-      .addEventListener(
-        "click",
-        generatePdfReport
-      );
-
-
-    function generatePdfReport() {
 
       if (!currentUser) {
+        return;
+      }
+
+
+      const newNickname =
+        document
+          .getElementById("profileNickname")
+          .value
+          .trim();
+
+
+      if (!newNickname) {
 
         showToast(
-          "Сначала войди в аккаунт."
+          "Никнейм не может быть пустым"
         );
 
         return;
       }
+
+
+      const {
+        error
+      } = await sb
+        .from("profiles")
+        .update({
+          nickname: newNickname
+        })
+        .eq("id", currentUser.id);
+
+
+      if (error) {
+
+        console.error(error);
+
+        showToast(
+          "Не удалось сохранить профиль"
+        );
+
+        return;
+      }
+
+
+      nickname =
+        newNickname;
+
+
+      document.getElementById(
+        "headerNickname"
+      ).textContent =
+        nickname;
+
+
+      renderHome();
+
+      showToast(
+        "Профиль сохранён"
+      );
+    }
+
+
+    /* =====================================================
+       RENDER ALL
+    ===================================================== */
+
+    function renderAll() {
+
+      renderHome();
+
+      renderTasks();
+
+      renderStats();
+
+      renderErrors();
+
+      renderProfile();
+
+
+      document.getElementById(
+        "headerNickname"
+      ).textContent =
+        nickname || "Пользователь";
+    }
+
+
+    /* =====================================================
+       PDF / PRINT REPORT
+    ===================================================== */
+
+    function generateReport() {
+
+      const tasks =
+        getTasks();
+
+
+      const totalTasks =
+        tasks.length;
+
+      const completedTasks =
+        getCompletedCount();
+
+      const totalAttempts =
+        attemptHistory.length;
+
+      const correctAttempts =
+        getCorrectAttemptsCount();
+
+      const wrongAttempts =
+        getWrongAttemptsCount();
+
+      const accuracy =
+        getAccuracy();
+
+      const progress =
+        getProgressPercent();
+
+
+      const reportTime =
+        formatDate(
+          new Date().toISOString()
+        );
 
 
       const pdfWindow =
@@ -5195,57 +3619,33 @@
       }
 
 
-      const tasks =
-        getTasks();
-
-
-      const completed =
-        getCompletedCount();
-
-      const totalAttempts =
-        getTotalAttempts();
-
-      const correct =
-        getCorrectCount();
-
-      const wrong =
-        getWrongCount();
-
-      const accuracy =
-        getAccuracy();
-
-
-      const percent =
-        tasks.length
-          ? Math.round(
-              (
-                completed /
-                tasks.length
-              ) * 100
-            )
-          : 0;
-
-
-      const taskHtml =
+      const taskBlocks =
         tasks
           .map(task => {
 
-            const id =
+            const taskId =
               getId(task);
 
-            const attempts =
-              getTaskAttempts(id);
+            const number =
+              getNumber(task);
 
-            const rerun =
+            const code =
+              getCode(task);
+
+            const attempts =
+              getAttemptsForTask(taskId);
+
+
+            const reSolved =
               attempts.length > 1;
 
 
-            let historyHtml = "";
+            let history = "";
 
 
             if (!attempts.length) {
 
-              historyHtml = `
+              history = `
                 <div class="no-attempts">
                   Задание ещё не выполнялось.
                 </div>
@@ -5253,724 +3653,455 @@
 
             } else {
 
-              historyHtml =
+              history =
                 attempts
                   .map(
-                    (
-                      attempt,
-                      index
-                    ) => {
+                    (attempt, index) => {
 
-                      const isCorrect =
+                      const correct =
                         attempt.result ===
                         "correct";
 
 
                       return `
-
                         <div
-                          class="
-                            report-attempt
-                            ${
-                              isCorrect
-                                ? "report-correct"
-                                : "report-wrong"
-                            }
-                          "
+                          class="attempt ${
+                            correct
+                              ? "attempt-correct"
+                              : "attempt-wrong"
+                          }"
                         >
 
-                          <div>
+                          <div class="attempt-title">
 
-                            <strong>
-                              Попытка
-                              ${index + 1}
-                              —
-                              ${
-                                isCorrect
-                                  ? "Верно"
-                                  : "Неверно"
-                              }
-                            </strong>
+                            Попытка ${index + 1}
+                            —
+                            ${
+                              correct
+                                ? "Верно"
+                                : "Неверно"
+                            }
 
                           </div>
 
-
-                          <div class="report-date">
-
+                          <div class="attempt-date">
                             ${escapeHtml(
                               formatDate(
                                 attempt.created_at
                               )
                             )}
-
                           </div>
 
-
                           ${
-                            !isCorrect
+                            !correct
                               ? `
-                                <div class="report-reason">
-
+                                <div class="reason">
                                   <strong>
                                     Причина ошибки:
                                   </strong>
-
                                   ${
                                     escapeHtml(
                                       attempt.reason ||
-                                      "Причина не указана."
+                                      "Причина не указана"
                                     )
                                   }
-
                                 </div>
                               `
                               : ""
                           }
 
                         </div>
-
                       `;
 
                     }
                   )
                   .join("");
-
             }
 
 
-            let latestStatus =
-              "Не выполнялось";
-
-
-            if (attempts.length) {
-
-              const latest =
-                attempts[
-                  attempts.length - 1
-                ];
-
-
-              latestStatus =
-                latest.result ===
-                "correct"
-                  ? "Верно"
-                  : "Неверно";
-
-            }
+            const latest =
+              attempts.length
+                ? attempts[
+                    attempts.length - 1
+                  ]
+                : null;
 
 
             return `
+              <div class="task-report">
 
-              <div class="report-task">
-
-                <div class="report-task-header">
+                <div class="task-report-header">
 
                   <div>
 
-                    <div class="report-task-number">
-
+                    <h3>
                       Задание
-                      ${escapeHtml(
-                        getNumber(task)
-                      )}
+                      ${escapeHtml(number)}
+                      — ${escapeHtml(code)}
+                    </h3>
 
-                    </div>
-
-                    <div class="report-task-code">
-
-                      ${escapeHtml(
-                        getCode(task)
-                      )}
-
-                    </div>
-
-                  </div>
-
-
-                  <div class="report-task-summary">
-
-                    <div>
+                    <div class="task-meta">
                       Попыток:
-                      <strong>
-                        ${attempts.length}
-                      </strong>
+                      ${attempts.length}
                     </div>
 
-                    <div>
+                    <div class="task-meta">
                       Перерешано:
-                      <strong>
-                        ${
-                          rerun
-                            ? "да"
-                            : "нет"
-                        }
-                      </strong>
+                      ${
+                        reSolved
+                          ? "да"
+                          : "нет"
+                      }
                     </div>
 
-                    <div>
-                      Последний результат:
-                      <strong>
-                        ${latestStatus}
-                      </strong>
-                    </div>
+                  </div>
+
+
+                  <div class="latest">
+
+                    ${
+                      latest
+                        ? `
+                          Последняя попытка:
+                          <strong>
+                            ${
+                              latest.result ===
+                              "correct"
+                                ? "верно"
+                                : "неверно"
+                            }
+                          </strong>
+                        `
+                        : ""
+                    }
 
                   </div>
 
                 </div>
 
 
-                <div class="report-history">
-
-                  ${historyHtml}
-
+                <div class="history-title">
+                  История попыток
                 </div>
+
+                ${history}
 
               </div>
-
             `;
 
           })
           .join("");
 
 
-      const html = `
+      const reportHtml = `
+<!DOCTYPE html>
+
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+  Отчёт — OGE English Tracker
+</title>
+
+<style>
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #27233a;
+    background: white;
+  }
+
+  .report {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 30px;
+  }
+
+  h2 {
+    margin-top: 35px;
+  }
+
+  .subtitle {
+    color: #77738a;
+    margin-bottom: 25px;
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+
+  .summary-card {
+    border: 1px solid #e7e3ef;
+    border-radius: 12px;
+    padding: 13px;
+  }
+
+  .summary-label {
+    color: #77738a;
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .summary-value {
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .progress {
+    margin: 20px 0 30px;
+  }
+
+  .progress-bar {
+    height: 16px;
+    background: #eee;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: ${progress}%;
+    background: #7c5cff;
+  }
+
+  .task-report {
+    border: 1px solid #ddd9e6;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+  }
+
+  .task-report-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
 
-        <!DOCTYPE html>
+  .task-report h3 {
+    margin: 0 0 7px;
+    font-size: 17px;
+  }
 
-        <html lang="ru">
+  .task-meta {
+    color: #77738a;
+    font-size: 13px;
+    margin-top: 3px;
+  }
 
-        <head>
-
-          <meta charset="UTF-8">
-
-          <title>
-            Отчёт OGE English
-          </title>
-
-
-          <style>
-
-            * {
-              box-sizing: border-box;
-            }
-
-
-            body {
-
-              margin: 0;
-
-              padding: 30px;
-
-              font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
-              color: #222;
-
-              background: white;
-
-              line-height: 1.45;
-
-            }
-
-
-            .report {
-
-              max-width: 900px;
-
-              margin: 0 auto;
-
-            }
-
-
-            h1 {
-
-              margin: 0 0 5px;
-
-              font-size: 30px;
-
-            }
-
-
-            .subtitle {
-
-              color: #777;
-
-              margin-bottom: 25px;
-
-            }
-
-
-            .summary {
-
-              display: grid;
-
-              grid-template-columns:
-                repeat(4, 1fr);
-
-              gap: 12px;
-
-              margin-bottom: 25px;
-
-            }
-
-
-            .summary-card {
-
-              padding: 15px;
-
-              border:
-                1px solid
-                #ddd;
-
-              border-radius: 12px;
-
-            }
-
-
-            .summary-label {
-
-              color: #777;
-
-              font-size: 13px;
-
-              margin-bottom: 5px;
-
-            }
-
-
-            .summary-value {
-
-              font-size: 23px;
-
-              font-weight: 800;
-
-            }
-
-
-            .progress-title {
-
-              display: flex;
-
-              justify-content:
-                space-between;
-
-              margin-bottom: 8px;
-
-              font-weight: 700;
-
-            }
-
-
-            .progress {
-
-              height: 16px;
-
-              background: #eee;
-
-              border-radius: 999px;
-
-              overflow: hidden;
-
-              margin-bottom: 25px;
-
-            }
-
-
-            .progress-fill {
-
-              height: 100%;
-
-              width:
-                ${percent}%;
-
-              background:
-                #7c5cff;
-
-            }
-
-
-            .report-task {
-
-              page-break-inside:
-                avoid;
-
-              border:
-                1px solid
-                #ddd;
-
-              border-radius: 13px;
-
-              margin-bottom: 15px;
-
-              overflow: hidden;
-
-            }
-
-
-            .report-task-header {
-
-              padding: 15px;
-
-              background: #f7f5fc;
-
-              display: flex;
-
-              justify-content:
-                space-between;
-
-              gap: 20px;
-
-            }
-
-
-            .report-task-number {
-
-              font-weight: 800;
-
-              margin-bottom: 5px;
-
-            }
-
-
-            .report-task-code {
-
-              font-family: monospace;
-
-              font-size: 17px;
-
-              font-weight: 800;
-
-              letter-spacing: 1px;
-
-            }
-
-
-            .report-task-summary {
-
-              text-align: right;
-
-              font-size: 13px;
-
-            }
-
-
-            .report-history {
-
-              padding: 12px 15px;
-
-            }
-
-
-            .report-attempt {
-
-              padding: 10px;
-
-              margin-bottom: 8px;
-
-              border-radius: 9px;
-
-            }
-
-
-            .report-attempt:last-child {
-
-              margin-bottom: 0;
-
-            }
-
-
-            .report-correct {
-
-              background: #ecfdf3;
-
-              border:
-                1px solid
-                #b7ebca;
-
-            }
-
-
-            .report-wrong {
-
-              background: #fff0f2;
-
-              border:
-                1px solid
-                #f4c3ca;
-
-            }
-
-
-            .report-date {
-
-              color: #777;
-
-              font-size: 12px;
-
-              margin-top: 3px;
-
-            }
-
-
-            .report-reason {
-
-              margin-top: 6px;
-
-            }
-
-
-            .no-attempts {
-
-              color: #888;
-
-              padding: 5px 0;
-
-            }
-
-
-            .footer {
-
-              margin-top: 30px;
-
-              padding-top: 15px;
-
-              border-top:
-                1px solid
-                #ddd;
-
-              color: #777;
-
-              font-size: 12px;
-
-            }
-
-
-            @media print {
-
-              body {
-
-                padding: 0;
-
-              }
-
-
-              .report {
-
-                max-width: none;
-
-              }
-
-
-              .report-task {
-
-                page-break-inside:
-                  avoid;
-
-              }
-
-            }
-
-
-            @media (max-width: 700px) {
-
-              .summary {
-
-                grid-template-columns:
-                  repeat(2, 1fr);
-
-              }
-
-
-              .report-task-header {
-
-                flex-direction:
-                  column;
-
-              }
-
-
-              .report-task-summary {
-
-                text-align: left;
-
-              }
-
-            }
-
-          </style>
-
-        </head>
-
-
-        <body>
-
-          <div class="report">
-
-
-            <h1>
-              OGE English — отчёт
-            </h1>
-
-
-            <div class="subtitle">
-
-              Ученик:
-              <strong>
-                ${escapeHtml(
-                  getNickname()
-                )}
-              </strong>
-
-              <br>
-
-              Дата формирования:
-              ${escapeHtml(
-                formatDate(
-                  new Date()
-                    .toISOString()
-                )
-              )}
-
-            </div>
-
-
-            <div class="summary">
-
-
-              <div class="summary-card">
-
-                <div class="summary-label">
-                  Всего заданий
-                </div>
-
-                <div class="summary-value">
-                  ${tasks.length}
-                </div>
-
-              </div>
-
-
-              <div class="summary-card">
-
-                <div class="summary-label">
-                  Выполнено
-                </div>
-
-                <div class="summary-value">
-                  ${completed}
-                </div>
-
-              </div>
-
-
-              <div class="summary-card">
-
-                <div class="summary-label">
-                  Всего попыток
-                </div>
-
-                <div class="summary-value">
-                  ${totalAttempts}
-                </div>
-
-              </div>
-
-
-              <div class="summary-card">
-
-                <div class="summary-label">
-                  Точность
-                </div>
-
-                <div class="summary-value">
-                  ${accuracy}%
-                </div>
-
-              </div>
-
-
-              <div class="summary-card">
-
-                <div class="summary-label">
-                  Верных попыток
-                </div>
-
-                <div class="summary-value">
-                  ${correct}
-                </div>
-
-              </div>
-
-
-              <div class="summary-card">
-
-                <div class="summary-label">
-                  Неверных попыток
-                </div>
-
-                <div class="summary-value">
-                  ${wrong}
-                </div>
-
-              </div>
-
-            </div>
-
-
-            <div class="progress-title">
-
-              <span>
-                Общий прогресс
-              </span>
-
-              <span>
-                ${completed}
-                из
-                ${tasks.length}
-              </span>
-
-            </div>
-
-
-            <div class="progress">
-
-              <div class="progress-fill"></div>
-
-            </div>
-
-
-            <h2>
-              История заданий
-            </h2>
-
-
-            ${taskHtml}
-
-
-            <div class="footer">
-
-              Отчёт содержит полную историю попыток.
-              Неправильные попытки не удаляются после
-              последующего правильного решения.
-
-            </div>
-
-
-          </div>
-
-        </body>
-
-        </html>
-
+  .latest {
+    font-size: 13px;
+    color: #77738a;
+  }
+
+  .history-title {
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .attempt {
+    padding: 10px;
+    border-radius: 9px;
+    margin-bottom: 7px;
+  }
+
+  .attempt-correct {
+    background: #f0fdf4;
+  }
+
+  .attempt-wrong {
+    background: #fff1f2;
+  }
+
+  .attempt-title {
+    font-weight: 800;
+  }
+
+  .attempt-date {
+    color: #77738a;
+    font-size: 12px;
+    margin-top: 3px;
+  }
+
+  .reason {
+    margin-top: 5px;
+    color: #9f1239;
+    font-size: 13px;
+  }
+
+  .no-attempts {
+    color: #77738a;
+    font-size: 13px;
+  }
+
+  @media print {
+
+    body {
+      padding: 10px;
+    }
+
+    .task-report {
+      break-inside: avoid;
+    }
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="report">
+
+  <h1>
+    OGE English Tracker — отчёт
+  </h1>
+
+  <div class="subtitle">
+
+    Ученик:
+    <strong>
+      ${escapeHtml(
+        nickname || "Пользователь"
+      )}
+    </strong>
+
+    <br>
+
+    Дата формирования:
+    ${escapeHtml(reportTime)}
+
+  </div>
+
+
+  <div class="summary">
+
+    <div class="summary-card">
+      <div class="summary-label">
+        Всего заданий
+      </div>
+      <div class="summary-value">
+        ${totalTasks}
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">
+        Выполнено
+      </div>
+      <div class="summary-value">
+        ${completedTasks}
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">
+        Всего попыток
+      </div>
+      <div class="summary-value">
+        ${totalAttempts}
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">
+        Точность
+      </div>
+      <div class="summary-value">
+        ${accuracy}%
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="summary">
+
+    <div class="summary-card">
+      <div class="summary-label">
+        Правильных попыток
+      </div>
+      <div class="summary-value">
+        ${correctAttempts}
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">
+        Неправильных попыток
+      </div>
+      <div class="summary-value">
+        ${wrongAttempts}
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">
+        Прогресс
+      </div>
+      <div class="summary-value">
+        ${progress}%
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="progress">
+
+    <strong>
+      Выполнено ${completedTasks} из ${totalTasks}
+    </strong>
+
+    <div
+      class="progress-bar"
+      style="margin-top:8px;"
+    >
+      <div class="progress-fill"></div>
+    </div>
+
+  </div>
+
+
+  <h2>
+    История заданий
+  </h2>
+
+
+  ${taskBlocks}
+
+</div>
+
+</body>
+
+</html>
       `;
 
 
       pdfWindow.document.open();
 
       pdfWindow.document.write(
-        html
+        reportHtml
       );
 
       pdfWindow.document.close();
@@ -5978,23 +4109,732 @@
       pdfWindow.focus();
 
 
-      setTimeout(
-        () => {
+      setTimeout(() => {
 
-          pdfWindow.print();
+        pdfWindow.print();
 
-        },
-        500
-      );
-
+      }, 500);
     }
 
 
-    /* =======================================================
-       START
-    ======================================================== */
+    /* =====================================================
+       INITIALIZATION
+    ===================================================== */
 
-    init();
+    async function enterApp(session) {
+
+      currentSession = session;
+
+      currentUser =
+        session?.user || null;
+
+
+      if (!currentUser) {
+        return;
+      }
+
+
+      await ensureProfile();
+
+      await loadUserData();
+
+
+      document
+        .getElementById("authScreen")
+        .classList.add("hidden");
+
+
+      document
+        .getElementById("app")
+        .classList.remove("hidden");
+
+
+      showPage("home");
+    }
+
+
+    async function leaveApp() {
+
+      currentSession = null;
+
+      currentUser = null;
+
+      nickname = "";
+
+      progressMap = {};
+
+      attemptHistory = [];
+
+
+      document
+        .getElementById("app")
+        .classList.add("hidden");
+
+
+      document
+        .getElementById("authScreen")
+        .classList.remove("hidden");
+
+
+      showAuthForm("login");
+    }
+
+
+    /* =====================================================
+       EVENT LISTENERS
+    ===================================================== */
+
+    document
+      .getElementById("loginTab")
+      .addEventListener(
+        "click",
+        () => {
+
+          clearAuthMessage();
+
+          showAuthForm("login");
+
+        }
+      );
+
+
+    document
+      .getElementById("registerTab")
+      .addEventListener(
+        "click",
+        () => {
+
+          clearAuthMessage();
+
+          showAuthForm("register");
+
+        }
+      );
+
+
+    document
+      .getElementById("showForgotButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          clearAuthMessage();
+
+          showAuthForm("forgot");
+
+        }
+      );
+
+
+    document
+      .getElementById("backToLoginButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          clearAuthMessage();
+
+          showAuthForm("login");
+
+        }
+      );
+
+
+    /* LOGIN */
+
+    document
+      .getElementById("loginForm")
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          clearAuthMessage();
+
+
+          const email =
+            document
+              .getElementById("loginEmail")
+              .value
+              .trim();
+
+          const password =
+            document
+              .getElementById("loginPassword")
+              .value;
+
+
+          const {
+            data,
+            error
+          } = await sb.auth.signInWithPassword({
+            email,
+            password
+          });
+
+
+          if (error) {
+
+            console.error(error);
+
+            showAuthMessage(
+              error.message ||
+              "Не удалось войти."
+            );
+
+            return;
+          }
+
+
+          await enterApp(
+            data.session
+          );
+
+        }
+      );
+
+
+    /* REGISTER */
+
+    document
+      .getElementById("registerForm")
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          clearAuthMessage();
+
+
+          const nicknameValue =
+            document
+              .getElementById("registerNickname")
+              .value
+              .trim();
+
+          const email =
+            document
+              .getElementById("registerEmail")
+              .value
+              .trim();
+
+          const password =
+            document
+              .getElementById("registerPassword")
+              .value;
+
+          const repeatPassword =
+            document
+              .getElementById(
+                "registerPasswordRepeat"
+              )
+              .value;
+
+
+          if (
+            password !==
+            repeatPassword
+          ) {
+
+            showAuthMessage(
+              "Пароли не совпадают."
+            );
+
+            return;
+          }
+
+
+          const {
+            data,
+            error
+          } = await sb.auth.signUp({
+
+            email,
+
+            password,
+
+            options: {
+              data: {
+                username:
+                  nicknameValue
+              },
+
+              emailRedirectTo:
+                REDIRECT
+            }
+
+          });
+
+
+          if (error) {
+
+            console.error(error);
+
+            showAuthMessage(
+              error.message ||
+              "Не удалось зарегистрироваться."
+            );
+
+            return;
+          }
+
+
+          if (data.session) {
+
+            await enterApp(
+              data.session
+            );
+
+          } else {
+
+            showAuthMessage(
+              "Аккаунт создан. Теперь войди в него.",
+              false
+            );
+
+            showAuthForm("login");
+
+            document.getElementById(
+              "loginEmail"
+            ).value = email;
+          }
+
+        }
+      );
+
+
+    /* FORGOT PASSWORD */
+
+    document
+      .getElementById("forgotForm")
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          clearAuthMessage();
+
+
+          const email =
+            document
+              .getElementById("forgotEmail")
+              .value
+              .trim();
+
+
+          const {
+            error
+          } =
+            await sb.auth.resetPasswordForEmail(
+              email,
+              {
+                redirectTo:
+                  REDIRECT
+              }
+            );
+
+
+          if (error) {
+
+            console.error(error);
+
+            showAuthMessage(
+              error.message ||
+              "Не удалось отправить ссылку."
+            );
+
+            return;
+          }
+
+
+          showAuthMessage(
+            "Ссылка для восстановления отправлена на email.",
+            false
+          );
+
+        }
+      );
+
+
+    /* RESET PASSWORD */
+
+    document
+      .getElementById("resetForm")
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          clearAuthMessage();
+
+
+          const password =
+            document
+              .getElementById("newPassword")
+              .value;
+
+          const repeatPassword =
+            document
+              .getElementById(
+                "newPasswordRepeat"
+              )
+              .value;
+
+
+          if (
+            password !==
+            repeatPassword
+          ) {
+
+            showAuthMessage(
+              "Пароли не совпадают."
+            );
+
+            return;
+          }
+
+
+          const {
+            error
+          } =
+            await sb.auth.updateUser({
+              password
+            });
+
+
+          if (error) {
+
+            console.error(error);
+
+            showAuthMessage(
+              error.message ||
+              "Не удалось изменить пароль."
+            );
+
+            return;
+          }
+
+
+          await sb.auth.signOut();
+
+          showAuthMessage(
+            "Пароль изменён. Теперь войди с новым паролем.",
+            false
+          );
+
+          showAuthForm("login");
+
+        }
+      );
+
+
+    /* NAV */
+
+    document
+      .querySelectorAll(".nav-button")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            showPage(
+              button.dataset.page
+            );
+
+          }
+        );
+
+      });
+
+
+    /* HOME → TASKS */
+
+    document
+      .getElementById("goToTasksButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          showPage("tasks");
+
+        }
+      );
+
+
+    /* TASK RANGE */
+
+    document
+      .querySelectorAll(
+        ".number-selector-button"
+      )
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectTaskRange(
+              button.dataset.taskRange
+            );
+
+          }
+        );
+
+      });
+
+
+    /* SEARCH */
+
+    document
+      .getElementById("taskSearch")
+      .addEventListener(
+        "input",
+        () => {
+
+          renderTasks();
+
+        }
+      );
+
+
+    document
+      .getElementById("clearSearch")
+      .addEventListener(
+        "click",
+        () => {
+
+          document.getElementById(
+            "taskSearch"
+          ).value = "";
+
+          renderTasks();
+
+        }
+      );
+
+
+    /* MODAL */
+
+    document
+      .getElementById("modalClose")
+      .addEventListener(
+        "click",
+        closeTaskModal
+      );
+
+
+    document
+      .getElementById("taskModal")
+      .addEventListener(
+        "click",
+        event => {
+
+          if (
+            event.target.id ===
+            "taskModal"
+          ) {
+            closeTaskModal();
+          }
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "markCorrectButton"
+      )
+      .addEventListener(
+        "click",
+        markCurrentTaskCorrect
+      );
+
+
+    document
+      .getElementById(
+        "showWrongFormButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          document
+            .getElementById("wrongForm")
+            .classList.remove("hidden");
+
+          document
+            .getElementById("wrongReason")
+            .focus();
+
+        }
+      );
+
+
+    document
+      .getElementById("saveWrongButton")
+      .addEventListener(
+        "click",
+        saveCurrentTaskWrong
+      );
+
+
+    /* PROFILE */
+
+    document
+      .getElementById("profileForm")
+      .addEventListener(
+        "submit",
+        saveProfile
+      );
+
+
+    /* REPORT */
+
+    document
+      .getElementById(
+        "generateReportButton"
+      )
+      .addEventListener(
+        "click",
+        generateReport
+      );
+
+
+    /* LOGOUT */
+
+    document
+      .getElementById("logoutButton")
+      .addEventListener(
+        "click",
+        async () => {
+
+          await sb.auth.signOut();
+
+          await leaveApp();
+
+        }
+      );
+
+
+    /* =====================================================
+       AUTH STATE
+    ===================================================== */
+
+    sb.auth.onAuthStateChange(
+      (event, session) => {
+
+        if (
+          event === "PASSWORD_RECOVERY"
+        ) {
+
+          showAuthForm("reset");
+
+          document
+            .getElementById("authScreen")
+            .classList.remove("hidden");
+
+          document
+            .getElementById("app")
+            .classList.add("hidden");
+
+          return;
+        }
+
+
+        if (
+          session &&
+          (
+            event === "SIGNED_IN" ||
+            event === "INITIAL_SESSION" ||
+            event === "TOKEN_REFRESHED"
+          )
+        ) {
+
+          setTimeout(
+            () => {
+              enterApp(session);
+            },
+            0
+          );
+
+        }
+
+
+        if (
+          event === "SIGNED_OUT"
+        ) {
+
+          leaveApp();
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       INITIAL SESSION
+    ===================================================== */
+
+    (async function init() {
+
+      const {
+        data,
+        error
+      } = await sb.auth.getSession();
+
+
+      if (error) {
+
+        console.error(error);
+
+        showAuthForm("login");
+
+        return;
+      }
+
+
+      const hash =
+        window.location.hash || "";
+
+
+      const search =
+        window.location.search || "";
+
+
+      if (
+        hash.includes(
+          "type=recovery"
+        ) ||
+        search.includes(
+          "type=recovery"
+        )
+      ) {
+
+        showAuthForm("reset");
+
+        return;
+      }
+
+
+      if (data.session) {
+
+        await enterApp(
+          data.session
+        );
+
+      } else {
+
+        showAuthForm("login");
+
+      }
+
+    })();
 
   </script>
 
