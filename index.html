@@ -17,18 +17,19 @@
     :root {
       --purple: #7c5cff;
       --purple-dark: #6344e8;
-      --purple-light: #f1edff;
+      --purple-light: #f0ecff;
+
       --bg: #f7f6fb;
       --card: #ffffff;
-      --text: #252332;
-      --muted: #777386;
-      --border: #e8e5f0;
+      --text: #282532;
+      --muted: #7d788a;
+      --border: #e8e4f0;
 
-      --green-bg: #d9f8e5;
+      --green-bg: #dcf8e7;
       --green-border: #7cdda1;
       --green-text: #14733a;
 
-      --red-bg: #ffe0e5;
+      --red-bg: #ffe1e6;
       --red-border: #ff9aaa;
       --red-text: #a52943;
 
@@ -66,9 +67,18 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
+
       background:
-        radial-gradient(circle at top left, #e9e2ff 0, transparent 35%),
-        radial-gradient(circle at bottom right, #eee8ff 0, transparent 35%),
+        radial-gradient(
+          circle at top left,
+          #e8e0ff 0,
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at bottom right,
+          #eee8ff 0,
+          transparent 35%
+        ),
         var(--bg);
     }
 
@@ -85,13 +95,21 @@
       width: 58px;
       height: 58px;
       border-radius: 18px;
-      background: linear-gradient(135deg, #8e74ff, #6748e8);
+      background: linear-gradient(
+        135deg,
+        #8e74ff,
+        #6748e8
+      );
+
       color: white;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 25px;
+
+      font-size: 24px;
       font-weight: 800;
+
       margin-bottom: 20px;
     }
 
@@ -156,7 +174,8 @@
     .field textarea:focus {
       border-color: var(--purple);
       background: white;
-      box-shadow: 0 0 0 3px rgba(124,92,255,.1);
+      box-shadow:
+        0 0 0 3px rgba(124,92,255,.1);
     }
 
     .primary-btn {
@@ -165,13 +184,15 @@
       border-radius: 13px;
       padding: 14px;
       color: white;
-      background: linear-gradient(135deg, #8368ff, #6949e9);
-      font-weight: 700;
-      margin-top: 5px;
-    }
 
-    .primary-btn:hover {
-      filter: brightness(.97);
+      background:
+        linear-gradient(
+          135deg,
+          #8368ff,
+          #6949e9
+        );
+
+      font-weight: 700;
     }
 
     .secondary-btn {
@@ -234,18 +255,23 @@
       position: sticky;
       top: 0;
       z-index: 20;
+
       background: rgba(255,255,255,.93);
       backdrop-filter: blur(15px);
+
       border-bottom: 1px solid var(--border);
     }
 
     .topbar-inner {
       max-width: 1180px;
       margin: auto;
+
       padding: 14px 20px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       gap: 15px;
     }
 
@@ -259,9 +285,12 @@
     .brand-icon {
       width: 40px;
       height: 40px;
+
       border-radius: 12px;
+
       background: var(--purple);
       color: white;
+
       display: flex;
       align-items: center;
       justify-content: center;
@@ -271,6 +300,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+
       color: var(--muted);
       font-size: 14px;
     }
@@ -278,38 +308,51 @@
     .avatar {
       width: 38px;
       height: 38px;
+
       border-radius: 50%;
+
       background: var(--purple-light);
       color: var(--purple);
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       font-weight: 800;
     }
 
     .layout {
       max-width: 1180px;
       margin: auto;
+
       padding: 24px 20px 100px;
     }
 
     .nav {
       display: flex;
       gap: 7px;
+
       padding: 5px;
+
       background: white;
       border: 1px solid var(--border);
       border-radius: 16px;
+
       margin-bottom: 25px;
+
       overflow-x: auto;
     }
 
     .nav button {
       border: 0;
       background: transparent;
+
       color: var(--muted);
+
       border-radius: 11px;
+
       padding: 11px 17px;
+
       white-space: nowrap;
     }
 
@@ -334,6 +377,169 @@
     }
 
     /* =========================
+       HOME
+    ========================= */
+
+    .home-hero {
+      background:
+        linear-gradient(
+          135deg,
+          #eee9ff 0%,
+          #f9f7ff 55%,
+          #ffffff 100%
+        );
+
+      border: 1px solid #e4def8;
+
+      border-radius: 25px;
+
+      padding: 30px;
+
+      margin-bottom: 18px;
+
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-hero::after {
+      content: "";
+      position: absolute;
+
+      width: 180px;
+      height: 180px;
+
+      border-radius: 50%;
+
+      background: rgba(124,92,255,.08);
+
+      right: -50px;
+      top: -55px;
+    }
+
+    .home-hello {
+      color: var(--purple);
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .home-hero h1 {
+      margin: 0 0 12px;
+      font-size: 31px;
+      line-height: 1.15;
+      position: relative;
+      z-index: 1;
+    }
+
+    .motivation {
+      max-width: 700px;
+
+      font-size: 18px;
+      line-height: 1.5;
+
+      color: #5e596b;
+
+      margin: 0 0 22px;
+
+      position: relative;
+      z-index: 1;
+    }
+
+    .home-action {
+      width: auto;
+      min-width: 190px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .home-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+
+      margin-bottom: 18px;
+    }
+
+    .home-stat {
+      background: white;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      padding: 18px;
+    }
+
+    .home-stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .home-stat-value {
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .home-progress-card {
+      background: white;
+
+      border: 1px solid var(--border);
+      border-radius: 20px;
+
+      padding: 21px;
+    }
+
+    .home-progress-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 12px;
+    }
+
+    .home-progress-head strong {
+      font-size: 16px;
+    }
+
+    .home-progress-percent {
+      color: var(--purple);
+      font-weight: 800;
+    }
+
+    .progress-track {
+      height: 13px;
+
+      border-radius: 999px;
+
+      background: #eeebf5;
+
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+
+      width: 0%;
+
+      border-radius: 999px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #9b86ff,
+          #704ff0
+        );
+
+      transition: width .5s ease;
+    }
+
+    .home-progress-text {
+      margin-top: 9px;
+
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =========================
        TASKS
     ========================= */
 
@@ -350,24 +556,32 @@
 
     .search-wrap input {
       width: 100%;
+
       border: 1px solid var(--border);
       border-radius: 14px;
+
       background: white;
+
       padding: 14px 16px 14px 43px;
+
       outline: none;
-      box-shadow: 0 2px 8px rgba(0,0,0,.02);
     }
 
     .search-wrap input:focus {
       border-color: var(--purple);
-      box-shadow: 0 0 0 3px rgba(124,92,255,.08);
+
+      box-shadow:
+        0 0 0 3px rgba(124,92,255,.08);
     }
 
     .search-icon {
       position: absolute;
+
       left: 15px;
       top: 50%;
+
       transform: translateY(-50%);
+
       color: var(--muted);
     }
 
@@ -379,6 +593,7 @@
       display: flex;
       align-items: center;
       gap: 9px;
+
       margin-bottom: 12px;
     }
 
@@ -394,36 +609,63 @@
 
     .tasks-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
       gap: 13px;
     }
 
     .task-card {
       position: relative;
+
       min-height: 145px;
+
       padding: 17px;
+
       border: 1px solid var(--border);
       border-radius: 18px;
+
       background: white;
+
       cursor: pointer;
-      transition: transform .18s, box-shadow .18s, border-color .18s;
-      box-shadow: 0 3px 12px rgba(50,35,90,.04);
+
+      transition:
+        transform .18s,
+        box-shadow .18s;
+
+      box-shadow:
+        0 3px 12px rgba(50,35,90,.04);
     }
 
     .task-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 22px rgba(50,35,90,.1);
+
+      box-shadow:
+        0 8px 22px rgba(50,35,90,.1);
     }
 
-    /* ПОЛНОСТЬЮ окрашенная карточка */
     .task-card.correct {
-      background: linear-gradient(145deg, #e5faec 0%, #c9f4d9 100%);
-      border-color: var(--green-border);
+      background:
+        linear-gradient(
+          145deg,
+          #e5faec 0%,
+          #c9f4d9 100%
+        );
+
+      border-color:
+        var(--green-border);
     }
 
     .task-card.wrong {
-      background: linear-gradient(145deg, #ffeaed 0%, #ffd2da 100%);
-      border-color: var(--red-border);
+      background:
+        linear-gradient(
+          145deg,
+          #ffeaed 0%,
+          #ffd2da 100%
+        );
+
+      border-color:
+        var(--red-border);
     }
 
     .task-number {
@@ -442,9 +684,11 @@
 
     .task-status {
       position: absolute;
+
       bottom: 14px;
       left: 15px;
       right: 15px;
+
       font-size: 12px;
       font-weight: 700;
     }
@@ -459,10 +703,15 @@
 
     .empty-state {
       text-align: center;
+
       padding: 45px 20px;
+
       color: var(--muted);
+
       background: white;
+
       border-radius: 18px;
+
       border: 1px solid var(--border);
     }
 
@@ -472,15 +721,22 @@
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
       gap: 15px;
+
       margin-bottom: 22px;
     }
 
     .stat-card {
       background: white;
+
       border: 1px solid var(--border);
+
       border-radius: 18px;
+
       padding: 20px;
     }
 
@@ -497,53 +753,54 @@
 
     .chart-card {
       background: white;
+
       border: 1px solid var(--border);
+
       border-radius: 20px;
-      padding: 20px;
+
+      padding: 22px;
+
       margin-bottom: 22px;
     }
 
     .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      gap: 10px;
+      margin-bottom: 18px;
     }
 
     .chart-header h3 {
+      margin: 0 0 6px;
+    }
+
+    .chart-header p {
       margin: 0;
-    }
 
-    .legend {
-      display: flex;
-      gap: 15px;
-      font-size: 13px;
       color: var(--muted);
+      font-size: 13px;
     }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .progress-chart-wrap {
+      position: relative;
 
-    .legend-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-    }
+      height: 320px;
 
-    .chart-scroll {
-      width: 100%;
-      overflow-x: auto;
+      border-radius: 15px;
+
+      background:
+        linear-gradient(
+          to bottom,
+          #faf9fd,
+          #ffffff
+        );
+
+      border: 1px solid #eeeaf5;
+
+      overflow: hidden;
     }
 
     #progressChart {
-      display: block;
       width: 100%;
-      min-width: 600px;
-      height: 300px;
+      height: 100%;
+      display: block;
     }
 
     /* =========================
@@ -558,16 +815,21 @@
 
     .error-item {
       background: white;
+
       border: 1px solid var(--border);
       border-left: 5px solid #ff8b9d;
+
       border-radius: 16px;
+
       padding: 16px;
     }
 
     .error-top {
       display: flex;
       justify-content: space-between;
+
       gap: 15px;
+
       margin-bottom: 7px;
     }
 
@@ -587,8 +849,11 @@
 
     .no-errors {
       background: #e9faef;
+
       color: var(--green-text);
+
       border-radius: 16px;
+
       padding: 20px;
     }
 
@@ -598,28 +863,38 @@
 
     .profile-card {
       max-width: 650px;
+
       background: white;
+
       border: 1px solid var(--border);
+
       border-radius: 22px;
+
       padding: 25px;
     }
 
     .profile-head {
       display: flex;
       align-items: center;
+
       gap: 15px;
+
       margin-bottom: 25px;
     }
 
     .profile-avatar {
       width: 65px;
       height: 65px;
+
       border-radius: 50%;
+
       background: var(--purple-light);
       color: var(--purple);
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       font-size: 25px;
       font-weight: 800;
     }
@@ -636,31 +911,48 @@
 
     .modal-overlay {
       position: fixed;
+
       inset: 0;
+
       z-index: 100;
-      background: rgba(30,24,45,.48);
+
+      background:
+        rgba(30,24,45,.48);
+
       display: flex;
+
       align-items: center;
       justify-content: center;
+
       padding: 20px;
     }
 
     .modal {
       width: 100%;
       max-width: 580px;
+
       max-height: 90vh;
+
       overflow-y: auto;
+
       background: white;
+
       border-radius: 24px;
+
       padding: 25px;
-      box-shadow: 0 20px 70px rgba(0,0,0,.2);
+
+      box-shadow:
+        0 20px 70px rgba(0,0,0,.2);
     }
 
     .modal-head {
       display: flex;
       justify-content: space-between;
+
       gap: 15px;
+
       align-items: flex-start;
+
       margin-bottom: 20px;
     }
 
@@ -672,24 +964,35 @@
     .close-btn {
       width: 38px;
       height: 38px;
+
       border: 0;
+
       border-radius: 11px;
+
       background: #f3f1f7;
+
       font-size: 20px;
     }
 
     .attempt-buttons {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+
+      grid-template-columns:
+        1fr 1fr;
+
       gap: 10px;
+
       margin: 20px 0;
     }
 
     .correct-btn,
     .wrong-btn {
       border: 0;
+
       border-radius: 13px;
+
       padding: 13px;
+
       font-weight: 700;
     }
 
@@ -710,8 +1013,11 @@
 
     .history-item {
       background: #f8f7fb;
+
       border-radius: 13px;
+
       padding: 12px;
+
       margin-bottom: 8px;
     }
 
@@ -725,9 +1031,13 @@
 
     .history-main {
       display: flex;
+
       justify-content: space-between;
+
       gap: 10px;
+
       font-weight: 700;
+
       font-size: 14px;
     }
 
@@ -739,7 +1049,9 @@
 
     .history-reason {
       margin-top: 6px;
+
       font-size: 13px;
+
       color: #5c5767;
     }
 
@@ -752,47 +1064,67 @@
     }
 
     @media (max-width: 900px) {
+
       .tasks-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns:
+          repeat(3, 1fr);
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .stats-grid,
+      .home-stats {
+        grid-template-columns:
+          repeat(2, 1fr);
       }
+
     }
 
     @media (max-width: 600px) {
+
       .auth-card {
         padding: 25px;
       }
 
       .layout {
-        padding: 18px 13px 80px;
+        padding:
+          18px 13px 80px;
       }
 
       .tasks-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+          repeat(2, 1fr);
       }
 
       .task-toolbar {
         flex-direction: column;
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .chart-header {
-        flex-direction: column;
-        align-items: flex-start;
+      .stats-grid,
+      .home-stats {
+        grid-template-columns:
+          repeat(2, 1fr);
       }
 
       .attempt-buttons {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+          1fr;
       }
+
+      .home-hero {
+        padding: 24px;
+      }
+
+      .home-hero h1 {
+        font-size: 26px;
+      }
+
+      .motivation {
+        font-size: 16px;
+      }
+
     }
 
     @media print {
+
       body {
         background: white;
       }
@@ -822,8 +1154,12 @@
 
       .print-stats {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+
+        grid-template-columns:
+          repeat(4, 1fr);
+
         gap: 10px;
+
         margin-bottom: 25px;
       }
 
@@ -834,7 +1170,9 @@
 
       .print-stat strong {
         display: block;
+
         font-size: 22px;
+
         margin-top: 5px;
       }
 
@@ -846,107 +1184,229 @@
         border-bottom: 1px solid #ddd;
         padding: 10px 0;
       }
+
     }
   </style>
 </head>
 
 <body>
 
-<!-- =========================
-     AUTH SCREEN
-========================= -->
+
+<!-- ==========================================================
+     AUTH
+========================================================== -->
 
 <div id="authScreen">
 
   <div class="auth-card">
 
-    <div class="logo">OGE</div>
+    <div class="logo">
+      OGE
+    </div>
 
-    <h1>OGE English Tracker</h1>
+    <h1>
+      OGE English Tracker
+    </h1>
+
     <p class="auth-subtitle">
       Отслеживай задания, ошибки и свой прогресс подготовки.
     </p>
 
+
     <div class="auth-tabs">
-      <button class="auth-tab active" id="loginTab">Войти</button>
-      <button class="auth-tab" id="registerTab">Регистрация</button>
+
+      <button
+        class="auth-tab active"
+        id="loginTab"
+      >
+        Войти
+      </button>
+
+      <button
+        class="auth-tab"
+        id="registerTab"
+      >
+        Регистрация
+      </button>
+
     </div>
+
 
     <form id="loginForm">
 
       <div class="field">
-        <label>Email</label>
-        <input id="loginEmail" type="email" required>
+
+        <label>
+          Email
+        </label>
+
+        <input
+          id="loginEmail"
+          type="email"
+          required
+        >
+
       </div>
+
 
       <div class="field">
-        <label>Пароль</label>
-        <input id="loginPassword" type="password" required>
+
+        <label>
+          Пароль
+        </label>
+
+        <input
+          id="loginPassword"
+          type="password"
+          required
+        >
+
       </div>
 
-      <button class="primary-btn" type="submit">
+
+      <button
+        class="primary-btn"
+        type="submit"
+      >
         Войти
       </button>
 
-      <button class="auth-link" type="button" id="forgotPassword">
+
+      <button
+        class="auth-link"
+        type="button"
+        id="forgotPassword"
+      >
         Забыли пароль?
       </button>
 
     </form>
 
-    <form id="registerForm" class="hidden">
+
+    <form
+      id="registerForm"
+      class="hidden"
+    >
 
       <div class="field">
-        <label>Никнейм</label>
-        <input id="registerNickname" type="text" required>
+
+        <label>
+          Никнейм
+        </label>
+
+        <input
+          id="registerNickname"
+          type="text"
+          required
+        >
+
       </div>
+
 
       <div class="field">
-        <label>Email</label>
-        <input id="registerEmail" type="email" required>
+
+        <label>
+          Email
+        </label>
+
+        <input
+          id="registerEmail"
+          type="email"
+          required
+        >
+
       </div>
+
 
       <div class="field">
-        <label>Пароль</label>
-        <input id="registerPassword" type="password" minlength="6" required>
+
+        <label>
+          Пароль
+        </label>
+
+        <input
+          id="registerPassword"
+          type="password"
+          minlength="6"
+          required
+        >
+
       </div>
+
 
       <div class="field">
-        <label>Повторите пароль</label>
-        <input id="registerPassword2" type="password" minlength="6" required>
+
+        <label>
+          Повторите пароль
+        </label>
+
+        <input
+          id="registerPassword2"
+          type="password"
+          minlength="6"
+          required
+        >
+
       </div>
 
-      <button class="primary-btn" type="submit">
+
+      <button
+        class="primary-btn"
+        type="submit"
+      >
         Создать аккаунт
       </button>
 
     </form>
 
-    <div id="authMessage" class="message"></div>
+
+    <div
+      id="authMessage"
+      class="message"
+    ></div>
 
   </div>
 
 </div>
 
 
-<!-- =========================
+<!-- ==========================================================
      APP
-========================= -->
+========================================================== -->
 
-<div id="appScreen" class="hidden">
+<div
+  id="appScreen"
+  class="hidden"
+>
 
   <header class="topbar">
 
     <div class="topbar-inner">
 
       <div class="brand">
-        <div class="brand-icon">✓</div>
-        <span>OGE English Tracker</span>
+
+        <div class="brand-icon">
+          ✓
+        </div>
+
+        <span>
+          OGE English Tracker
+        </span>
+
       </div>
 
+
       <div class="user-mini">
+
         <span id="topNickname"></span>
-        <div class="avatar" id="topAvatar">?</div>
+
+        <div
+          class="avatar"
+          id="topAvatar"
+        >
+          ?
+        </div>
+
       </div>
 
     </div>
@@ -956,43 +1416,221 @@
 
   <main class="layout">
 
+
+    <!-- NAVIGATION -->
+
     <nav class="nav">
 
-      <button class="nav-btn active" data-section="tasks">
+      <button
+        class="nav-btn active"
+        data-section="home"
+      >
+        Главная
+      </button>
+
+      <button
+        class="nav-btn"
+        data-section="tasks"
+      >
         Задания
       </button>
 
-      <button class="nav-btn" data-section="statistics">
+      <button
+        class="nav-btn"
+        data-section="statistics"
+      >
         Статистика
       </button>
 
-      <button class="nav-btn" data-section="errors">
+      <button
+        class="nav-btn"
+        data-section="errors"
+      >
         Ошибки
       </button>
 
-      <button class="nav-btn" data-section="profile">
+      <button
+        class="nav-btn"
+        data-section="profile"
+      >
         Профиль
       </button>
 
     </nav>
 
 
-    <!-- =========================
-         TASKS SECTION
-    ========================= -->
+    <!-- ======================================================
+         HOME
+    ====================================================== -->
 
-    <section id="section-tasks">
+    <section id="section-home">
+
+      <div class="home-hero">
+
+        <div
+          class="home-hello"
+          id="homeHello"
+        >
+          С возвращением!
+        </div>
+
+        <h1 id="homeTitle">
+          Готова продолжать подготовку?
+        </h1>
+
+        <p
+          class="motivation"
+          id="motivationText"
+        >
+        </p>
+
+        <button
+          class="primary-btn home-action"
+          id="goToTasksBtn"
+        >
+          Перейти к заданиям →
+        </button>
+
+      </div>
+
+
+      <div class="home-stats">
+
+        <div class="home-stat">
+
+          <div class="home-stat-label">
+            Выполнено заданий
+          </div>
+
+          <div
+            class="home-stat-value"
+            id="homeCompleted"
+          >
+            0
+          </div>
+
+        </div>
+
+
+        <div class="home-stat">
+
+          <div class="home-stat-label">
+            Всего попыток
+          </div>
+
+          <div
+            class="home-stat-value"
+            id="homeAttempts"
+          >
+            0
+          </div>
+
+        </div>
+
+
+        <div class="home-stat">
+
+          <div class="home-stat-label">
+            Верных ответов
+          </div>
+
+          <div
+            class="home-stat-value"
+            id="homeCorrect"
+          >
+            0
+          </div>
+
+        </div>
+
+
+        <div class="home-stat">
+
+          <div class="home-stat-label">
+            Точность
+          </div>
+
+          <div
+            class="home-stat-value"
+            id="homeAccuracy"
+          >
+            0%
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="home-progress-card">
+
+        <div class="home-progress-head">
+
+          <strong>
+            Прогресс подготовки
+          </strong>
+
+          <span
+            class="home-progress-percent"
+            id="homeProgressPercent"
+          >
+            0%
+          </span>
+
+        </div>
+
+
+        <div class="progress-track">
+
+          <div
+            class="progress-fill"
+            id="homeProgressFill"
+          ></div>
+
+        </div>
+
+
+        <div
+          class="home-progress-text"
+          id="homeProgressText"
+        >
+          Выполнено 0 из 0 заданий
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         TASKS
+    ====================================================== -->
+
+    <section
+      id="section-tasks"
+      class="hidden"
+    >
 
       <div class="section-title">
-        <h2>Задания</h2>
-        <p>Выбирай задание и отмечай результат каждой попытки.</p>
+
+        <h2>
+          Задания
+        </h2>
+
+        <p>
+          Выбирай задание и отмечай результат каждой попытки.
+        </p>
+
       </div>
+
 
       <div class="task-toolbar">
 
         <div class="search-wrap">
 
-          <span class="search-icon">⌕</span>
+          <span class="search-icon">
+            ⌕
+          </span>
 
           <input
             id="taskSearch"
@@ -1002,6 +1640,7 @@
           >
 
         </div>
+
 
         <button
           id="clearSearch"
@@ -1013,42 +1652,97 @@
 
       </div>
 
+
       <div id="tasksContainer"></div>
 
     </section>
 
 
-    <!-- =========================
+    <!-- ======================================================
          STATISTICS
-    ========================= -->
+    ====================================================== -->
 
-    <section id="section-statistics" class="hidden">
+    <section
+      id="section-statistics"
+      class="hidden"
+    >
 
       <div class="section-title">
-        <h2>Статистика</h2>
-        <p>Твой прогресс по всем выполненным попыткам.</p>
+
+        <h2>
+          Статистика
+        </h2>
+
+        <p>
+          Здесь видно, как меняется результат по мере выполнения заданий.
+        </p>
+
       </div>
+
 
       <div class="stats-grid">
 
         <div class="stat-card">
-          <div class="stat-label">Всего попыток</div>
-          <div class="stat-value" id="statTotal">0</div>
+
+          <div class="stat-label">
+            Всего попыток
+          </div>
+
+          <div
+            class="stat-value"
+            id="statTotal"
+          >
+            0
+          </div>
+
         </div>
 
-        <div class="stat-card">
-          <div class="stat-label">Верных</div>
-          <div class="stat-value" id="statCorrect">0</div>
-        </div>
 
         <div class="stat-card">
-          <div class="stat-label">Ошибок</div>
-          <div class="stat-value" id="statWrong">0</div>
+
+          <div class="stat-label">
+            Верных
+          </div>
+
+          <div
+            class="stat-value"
+            id="statCorrect"
+          >
+            0
+          </div>
+
         </div>
 
+
         <div class="stat-card">
-          <div class="stat-label">Точность</div>
-          <div class="stat-value" id="statAccuracy">0%</div>
+
+          <div class="stat-label">
+            Ошибок
+          </div>
+
+          <div
+            class="stat-value"
+            id="statWrong"
+          >
+            0
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            Точность
+          </div>
+
+          <div
+            class="stat-value"
+            id="statAccuracy"
+          >
+            0%
+          </div>
+
         </div>
 
       </div>
@@ -1058,36 +1752,25 @@
 
         <div class="chart-header">
 
-          <h3>Динамика выполнения</h3>
+          <h3>
+            Линия прогресса
+          </h3>
 
-          <div class="legend">
-
-            <div class="legend-item">
-              <span
-                class="legend-dot"
-                style="background:#55bf7d"
-              ></span>
-              Верные
-            </div>
-
-            <div class="legend-item">
-              <span
-                class="legend-dot"
-                style="background:#ef7187"
-              ></span>
-              Ошибки
-            </div>
-
-          </div>
+          <p>
+            После каждого нового выполненного задания линия показывает текущий процент правильных ответов.
+          </p>
 
         </div>
 
-        <div class="chart-scroll">
+
+        <div class="progress-chart-wrap">
+
           <svg
             id="progressChart"
-            viewBox="0 0 900 300"
+            viewBox="0 0 1000 320"
             preserveAspectRatio="none"
           ></svg>
+
         </div>
 
       </div>
@@ -1104,54 +1787,88 @@
     </section>
 
 
-    <!-- =========================
+    <!-- ======================================================
          ERRORS
-    ========================= -->
+    ====================================================== -->
 
-    <section id="section-errors" class="hidden">
+    <section
+      id="section-errors"
+      class="hidden"
+    >
 
       <div class="section-title">
-        <h2>Ошибки</h2>
-        <p>Все неправильные попытки сохраняются отдельно.</p>
+
+        <h2>
+          Ошибки
+        </h2>
+
+        <p>
+          Все неправильные попытки сохраняются отдельно.
+        </p>
+
       </div>
+
 
       <div id="errorsContainer"></div>
 
     </section>
 
 
-    <!-- =========================
+    <!-- ======================================================
          PROFILE
-    ========================= -->
+    ====================================================== -->
 
-    <section id="section-profile" class="hidden">
+    <section
+      id="section-profile"
+      class="hidden"
+    >
 
       <div class="section-title">
-        <h2>Профиль</h2>
-        <p>Настройки аккаунта.</p>
+
+        <h2>
+          Профиль
+        </h2>
+
+        <p>
+          Настройки аккаунта.
+        </p>
+
       </div>
+
 
       <div class="profile-card">
 
         <div class="profile-head">
 
-          <div class="profile-avatar" id="profileAvatar">
+          <div
+            class="profile-avatar"
+            id="profileAvatar"
+          >
             ?
           </div>
 
+
           <div>
-            <strong id="profileNickname"></strong>
+
+            <strong
+              id="profileNickname"
+            ></strong>
+
             <div
               class="profile-email"
               id="profileEmail"
             ></div>
+
           </div>
 
         </div>
 
+
         <div class="field">
 
-          <label>Никнейм</label>
+          <label>
+            Никнейм
+          </label>
 
           <input
             id="profileNicknameInput"
@@ -1160,6 +1877,7 @@
 
         </div>
 
+
         <button
           class="primary-btn"
           id="saveProfileBtn"
@@ -1167,21 +1885,30 @@
           Сохранить никнейм
         </button>
 
+
         <button
           class="secondary-btn"
           id="changePasswordBtn"
-          style="width:100%;margin-top:12px"
+          style="
+            width:100%;
+            margin-top:12px
+          "
         >
           Изменить пароль
         </button>
 
+
         <button
           class="danger-btn"
           id="logoutBtn"
-          style="width:100%;margin-top:12px"
+          style="
+            width:100%;
+            margin-top:12px
+          "
         >
           Выйти из аккаунта
         </button>
+
 
         <div
           id="profileMessage"
@@ -1197,9 +1924,9 @@
 </div>
 
 
-<!-- =========================
+<!-- ==========================================================
      TASK MODAL
-========================= -->
+========================================================== -->
 
 <div
   id="taskModal"
@@ -1211,6 +1938,7 @@
     <div class="modal-head">
 
       <div>
+
         <h3 id="modalTaskTitle">
           Задание
         </h3>
@@ -1219,7 +1947,9 @@
           id="modalTaskCode"
           style="color:#777386"
         ></div>
+
       </div>
+
 
       <button
         class="close-btn"
@@ -1253,6 +1983,7 @@
         ✓ Выполнено верно
       </button>
 
+
       <button
         class="wrong-btn"
         id="markWrongBtn"
@@ -1282,6 +2013,7 @@
 
       </div>
 
+
       <button
         class="wrong-btn"
         id="saveWrongBtn"
@@ -1297,6 +2029,7 @@
       История попыток
     </h4>
 
+
     <div id="taskHistory"></div>
 
   </div>
@@ -1304,9 +2037,9 @@
 </div>
 
 
-<!-- =========================
+<!-- ==========================================================
      PRINT REPORT
-========================= -->
+========================================================== -->
 
 <div id="printReport">
 
@@ -1314,33 +2047,53 @@
     OGE English Tracker
   </div>
 
-  <div class="print-date" id="printDate"></div>
+  <div
+    class="print-date"
+    id="printDate"
+  ></div>
+
 
   <div>
     Ученик:
     <strong id="printNickname"></strong>
   </div>
 
+
   <div class="print-stats">
 
     <div class="print-stat">
       Всего попыток
-      <strong id="printTotal">0</strong>
+
+      <strong id="printTotal">
+        0
+      </strong>
     </div>
+
 
     <div class="print-stat">
       Верно
-      <strong id="printCorrect">0</strong>
+
+      <strong id="printCorrect">
+        0
+      </strong>
     </div>
+
 
     <div class="print-stat">
       Ошибки
-      <strong id="printWrong">0</strong>
+
+      <strong id="printWrong">
+        0
+      </strong>
     </div>
+
 
     <div class="print-stat">
       Точность
-      <strong id="printAccuracy">0%</strong>
+
+      <strong id="printAccuracy">
+        0%
+      </strong>
     </div>
 
   </div>
@@ -1348,7 +2101,9 @@
 
   <div class="print-section">
 
-    <h2>Ошибки</h2>
+    <h2>
+      Ошибки
+    </h2>
 
     <div id="printErrors"></div>
 
@@ -1357,9 +2112,9 @@
 </div>
 
 
-<!-- =========================
-     TASKS DATA
-========================= -->
+<!-- ==========================================================
+     TASKS
+========================================================== -->
 
 <script src="./data/tasks.js"></script>
 
@@ -1379,79 +2134,19 @@
   const REDIRECT =
     "https://darianovet.github.io/oge-english-tracker/";
 
-  const sb = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY,
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
+
+  const sb =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
       }
-    }
-  );
-
-
-  /* ==========================================================
-     TASKS
-  ========================================================== */
-
-  function getTasks() {
-
-    if (
-      typeof TASKS !== "undefined" &&
-      Array.isArray(TASKS)
-    ) {
-      return TASKS;
-    }
-
-    if (
-      Array.isArray(window.TASKS)
-    ) {
-      return window.TASKS;
-    }
-
-    return [];
-  }
-
-
-  function taskId(task) {
-    return String(
-      task.id ??
-      task.taskId ??
-      task.code ??
-      ""
     );
-  }
-
-
-  function taskNumber(task) {
-    return (
-      task.number ??
-      task.task ??
-      task.taskNumber ??
-      task.task_number ??
-      ""
-    );
-  }
-
-
-  function taskVariant(task) {
-    return (
-      task.variant ??
-      task.variantNumber ??
-      task.variant_number ??
-      ""
-    );
-  }
-
-
-  function taskCode(task) {
-    return String(
-      task.code ??
-      taskId(task)
-    );
-  }
 
 
   /* ==========================================================
@@ -1472,21 +2167,146 @@
 
 
   /* ==========================================================
-     ELEMENTS
+     MOTIVATIONS
   ========================================================== */
 
-  const authScreen =
-    document.getElementById("authScreen");
+  const motivations = [
 
-  const appScreen =
-    document.getElementById("appScreen");
+    "Каждое выполненное задание — ещё один шаг к результату, которым ты будешь гордиться.",
 
-  const authMessage =
-    document.getElementById("authMessage");
+    "Не нужно сделать всё сразу. Сегодня достаточно стать немного лучше, чем вчера.",
+
+    "Ошибки здесь не провал — они показывают, что именно стоит повторить.",
+
+    "Даже одно выполненное задание сегодня лучше, чем ноль заданий завтра.",
+
+    "Ты уже начала подготовку. Теперь главное — продолжать.",
+
+    "Стабильность важнее идеального результата с первой попытки.",
+
+    "Каждая ошибка сейчас экономит тебе одну ошибку на экзамене.",
+
+    "Маленький прогресс каждый день складывается в большой результат.",
+
+    "Не сравнивай свой прогресс с чужим. Сравнивай его со своим вчерашним.",
+
+    "Ты не обязана знать всё сразу. Твоя задача — постепенно разобраться.",
+
+    "Ещё одно задание — и ты станешь чуть ближе к своей цели.",
+
+    "Ошиблась? Отлично. Теперь ты знаешь, что нужно потренировать.",
+
+    "Подготовка становится легче, когда видишь собственный прогресс.",
+
+    "Главное — не идеальность, а движение вперёд.",
+
+    "Ты можешь больше, чем кажется после одной сложной ошибки."
+
+  ];
+
+
+  function getRandomMotivation() {
+
+    return motivations[
+      Math.floor(
+        Math.random() *
+        motivations.length
+      )
+    ];
+
+  }
 
 
   /* ==========================================================
-     MESSAGE
+     TASK HELPERS
+  ========================================================== */
+
+  function getTasks() {
+
+    if (
+      typeof TASKS !== "undefined" &&
+      Array.isArray(TASKS)
+    ) {
+      return TASKS;
+    }
+
+    if (
+      Array.isArray(window.TASKS)
+    ) {
+      return window.TASKS;
+    }
+
+    return [];
+
+  }
+
+
+  function taskId(task) {
+
+    return String(
+      task.id ??
+      task.taskId ??
+      task.code ??
+      ""
+    );
+
+  }
+
+
+  function taskNumber(task) {
+
+    return (
+      task.number ??
+      task.task ??
+      task.taskNumber ??
+      task.task_number ??
+      ""
+    );
+
+  }
+
+
+  function taskVariant(task) {
+
+    return (
+      task.variant ??
+      task.variantNumber ??
+      task.variant_number ??
+      ""
+    );
+
+  }
+
+
+  function taskCode(task) {
+
+    return String(
+      task.code ??
+      taskId(task)
+    );
+
+  }
+
+
+  function escapeHtml(value) {
+
+    return String(value)
+
+      .replaceAll("&", "&amp;")
+
+      .replaceAll("<", "&lt;")
+
+      .replaceAll(">", "&gt;")
+
+      .replaceAll('"', "&quot;")
+
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  /* ==========================================================
+     MESSAGES
   ========================================================== */
 
   function showMessage(
@@ -1505,7 +2325,8 @@
 
   function hideMessage(element) {
 
-    element.className = "message";
+    element.className =
+      "message";
 
     element.textContent = "";
 
@@ -1517,29 +2338,51 @@
   ========================================================== */
 
   const loginTab =
-    document.getElementById("loginTab");
+    document.getElementById(
+      "loginTab"
+    );
 
   const registerTab =
-    document.getElementById("registerTab");
+    document.getElementById(
+      "registerTab"
+    );
 
   const loginForm =
-    document.getElementById("loginForm");
+    document.getElementById(
+      "loginForm"
+    );
 
   const registerForm =
-    document.getElementById("registerForm");
+    document.getElementById(
+      "registerForm"
+    );
 
 
   loginTab.addEventListener(
     "click",
     () => {
 
-      loginTab.classList.add("active");
-      registerTab.classList.remove("active");
+      loginTab.classList.add(
+        "active"
+      );
 
-      loginForm.classList.remove("hidden");
-      registerForm.classList.add("hidden");
+      registerTab.classList.remove(
+        "active"
+      );
 
-      hideMessage(authMessage);
+      loginForm.classList.remove(
+        "hidden"
+      );
+
+      registerForm.classList.add(
+        "hidden"
+      );
+
+      hideMessage(
+        document.getElementById(
+          "authMessage"
+        )
+      );
 
     }
   );
@@ -1549,13 +2392,27 @@
     "click",
     () => {
 
-      registerTab.classList.add("active");
-      loginTab.classList.remove("active");
+      registerTab.classList.add(
+        "active"
+      );
 
-      registerForm.classList.remove("hidden");
-      loginForm.classList.add("hidden");
+      loginTab.classList.remove(
+        "active"
+      );
 
-      hideMessage(authMessage);
+      registerForm.classList.remove(
+        "hidden"
+      );
+
+      loginForm.classList.add(
+        "hidden"
+      );
+
+      hideMessage(
+        document.getElementById(
+          "authMessage"
+        )
+      );
 
     }
   );
@@ -1571,32 +2428,53 @@
 
       event.preventDefault();
 
+
+      const authMessage =
+        document.getElementById(
+          "authMessage"
+        );
+
+
       hideMessage(authMessage);
+
 
       const nickname =
         document
-          .getElementById("registerNickname")
+          .getElementById(
+            "registerNickname"
+          )
           .value
           .trim();
+
 
       const email =
         document
-          .getElementById("registerEmail")
+          .getElementById(
+            "registerEmail"
+          )
           .value
           .trim();
 
+
       const password =
         document
-          .getElementById("registerPassword")
+          .getElementById(
+            "registerPassword"
+          )
           .value;
+
 
       const password2 =
         document
-          .getElementById("registerPassword2")
+          .getElementById(
+            "registerPassword2"
+          )
           .value;
 
 
-      if (password !== password2) {
+      if (
+        password !== password2
+      ) {
 
         showMessage(
           authMessage,
@@ -1605,10 +2483,13 @@
         );
 
         return;
+
       }
 
 
-      if (password.length < 6) {
+      if (
+        password.length < 6
+      ) {
 
         showMessage(
           authMessage,
@@ -1617,27 +2498,32 @@
         );
 
         return;
+
       }
 
 
       const {
         data,
         error
-      } = await sb.auth.signUp({
+      } =
+        await sb.auth.signUp({
 
-        email,
+          email,
 
-        password,
+          password,
 
-        options: {
-          data: {
-            username: nickname
-          },
+          options: {
 
-          emailRedirectTo: REDIRECT
-        }
+            data: {
+              username: nickname
+            },
 
-      });
+            emailRedirectTo:
+              REDIRECT
+
+          }
+
+        });
 
 
       if (error) {
@@ -1649,20 +2535,27 @@
         );
 
         return;
+
       }
 
 
       if (data.user) {
 
-        currentUser = data.user;
+        currentUser =
+          data.user;
 
-        await ensureProfile(nickname);
+
+        await ensureProfile(
+          nickname
+        );
+
 
         showMessage(
           authMessage,
           "Аккаунт создан. Выполняем вход...",
           "success"
         );
+
 
         setTimeout(
           () => openApp(),
@@ -1685,29 +2578,43 @@
 
       event.preventDefault();
 
+
+      const authMessage =
+        document.getElementById(
+          "authMessage"
+        );
+
+
       hideMessage(authMessage);
+
 
       const email =
         document
-          .getElementById("loginEmail")
+          .getElementById(
+            "loginEmail"
+          )
           .value
           .trim();
 
+
       const password =
         document
-          .getElementById("loginPassword")
+          .getElementById(
+            "loginPassword"
+          )
           .value;
 
 
       const {
         data,
         error
-      } = await sb.auth.signInWithPassword({
+      } =
+        await sb.auth.signInWithPassword({
 
-        email,
-        password
+          email,
+          password
 
-      });
+        });
 
 
       if (error) {
@@ -1719,10 +2626,13 @@
         );
 
         return;
+
       }
 
 
-      currentUser = data.user;
+      currentUser =
+        data.user;
+
 
       await ensureProfile();
 
@@ -1737,16 +2647,26 @@
   ========================================================== */
 
   document
-    .getElementById("forgotPassword")
+    .getElementById(
+      "forgotPassword"
+    )
     .addEventListener(
       "click",
       async () => {
 
         const email =
           document
-            .getElementById("loginEmail")
+            .getElementById(
+              "loginEmail"
+            )
             .value
             .trim();
+
+
+        const authMessage =
+          document.getElementById(
+            "authMessage"
+          );
 
 
         if (!email) {
@@ -1758,17 +2678,19 @@
           );
 
           return;
+
         }
 
 
         const {
           error
-        } = await sb.auth.resetPasswordForEmail(
-          email,
-          {
-            redirectTo: REDIRECT
-          }
-        );
+        } =
+          await sb.auth.resetPasswordForEmail(
+            email,
+            {
+              redirectTo: REDIRECT
+            }
+          );
 
 
         if (error) {
@@ -1780,6 +2702,7 @@
           );
 
           return;
+
         }
 
 
@@ -1809,11 +2732,15 @@
     const {
       data,
       error
-    } = await sb
-      .from("profiles")
-      .select("*")
-      .eq("id", currentUser.id)
-      .maybeSingle();
+    } =
+      await sb
+        .from("profiles")
+        .select("*")
+        .eq(
+          "id",
+          currentUser.id
+        )
+        .maybeSingle();
 
 
     if (error) {
@@ -1823,36 +2750,48 @@
 
     if (data) {
 
-      currentProfile = data;
+      currentProfile =
+        data;
 
       return;
+
     }
 
 
     const newNickname =
       nickname ||
-      currentUser.user_metadata?.username ||
-      currentUser.email?.split("@")[0] ||
+      currentUser
+        .user_metadata
+        ?.username ||
+      currentUser
+        .email
+        ?.split("@")[0] ||
       "Пользователь";
 
 
     const {
       data: created
-    } = await sb
-      .from("profiles")
-      .insert({
+    } =
+      await sb
+        .from("profiles")
+        .insert({
 
-        id: currentUser.id,
+          id:
+            currentUser.id,
 
-        nickname: newNickname
+          nickname:
+            newNickname
 
-      })
-      .select()
-      .single();
+        })
+        .select()
+        .single();
 
 
     if (created) {
-      currentProfile = created;
+
+      currentProfile =
+        created;
+
     }
 
   }
@@ -1867,22 +2806,29 @@
 
     const {
       data
-    } = await sb
-      .from("profiles")
-      .select("*")
-      .eq("id", currentUser.id)
-      .maybeSingle();
+    } =
+      await sb
+        .from("profiles")
+        .select("*")
+        .eq(
+          "id",
+          currentUser.id
+        )
+        .maybeSingle();
 
 
     if (data) {
-      currentProfile = data;
+
+      currentProfile =
+        data;
+
     }
 
   }
 
 
   /* ==========================================================
-     LOAD CLOUD DATA
+     CLOUD DATA
   ========================================================== */
 
   async function loadCloudData() {
@@ -1894,39 +2840,58 @@
 
     const {
       data: progress
-    } = await sb
-      .from("progress")
-      .select("*")
-      .eq("user_id", currentUser.id);
+    } =
+      await sb
+        .from("progress")
+        .select("*")
+        .eq(
+          "user_id",
+          currentUser.id
+        );
 
 
     const {
       data: history
-    } = await sb
-      .from("attempt_history")
-      .select("*")
-      .eq("user_id", currentUser.id)
-      .order("created_at", {
-        ascending: true
-      });
+    } =
+      await sb
+        .from("attempt_history")
+        .select("*")
+        .eq(
+          "user_id",
+          currentUser.id
+        )
+        .order(
+          "created_at",
+          {
+            ascending: true
+          }
+        );
 
 
-    progressRows = progress || [];
+    progressRows =
+      progress || [];
 
-    historyRows = history || [];
+
+    historyRows =
+      history || [];
 
 
     progressMap = {};
 
 
-    progressRows.forEach(row => {
+    progressRows.forEach(
+      row => {
 
-      progressMap[row.task_id] =
-        row.status;
+        progressMap[
+          row.task_id
+        ] =
+          row.status;
 
-    });
+      }
+    );
 
 
+    renderHome();
     renderTasks();
     renderStatistics();
     renderErrors();
@@ -1950,65 +2915,84 @@
     }
 
 
-    const id = taskId(task);
+    const id =
+      taskId(task);
 
 
     const {
       error: historyError
-    } = await sb
-      .from("attempt_history")
-      .insert({
+    } =
+      await sb
+        .from(
+          "attempt_history"
+        )
+        .insert({
 
-        user_id: currentUser.id,
+          user_id:
+            currentUser.id,
 
-        task_id: id,
+          task_id:
+            id,
 
-        result: result,
+          result:
+            result,
 
-        reason:
-          result === "wrong"
-            ? reason
-            : null
+          reason:
+            result === "wrong"
+              ? reason
+              : null
 
-      });
+        });
 
 
     if (historyError) {
 
-      alert(historyError.message);
+      alert(
+        historyError.message
+      );
 
       return false;
+
     }
 
 
     const {
       error: progressError
-    } = await sb
-      .from("progress")
-      .upsert(
-        {
+    } =
+      await sb
+        .from("progress")
+        .upsert(
+          {
 
-          user_id: currentUser.id,
+            user_id:
+              currentUser.id,
 
-          task_id: id,
+            task_id:
+              id,
 
-          status: result,
+            status:
+              result,
 
-          updated_at: new Date().toISOString()
+            updated_at:
+              new Date()
+                .toISOString()
 
-        },
-        {
-          onConflict:
-            "user_id,task_id"
-        }
-      );
+          },
+          {
+            onConflict:
+              "user_id,task_id"
+          }
+        );
 
 
     if (progressError) {
 
-      alert(progressError.message);
+      alert(
+        progressError.message
+      );
 
       return false;
+
     }
 
 
@@ -2020,7 +3004,171 @@
 
 
   /* ==========================================================
-     RENDER TASKS
+     HOME
+  ========================================================== */
+
+  function renderHome() {
+
+    const tasks =
+      getTasks();
+
+
+    const totalTasks =
+      tasks.length;
+
+
+    const completed =
+      progressRows.length;
+
+
+    const totalAttempts =
+      historyRows.length;
+
+
+    const correct =
+      historyRows.filter(
+        row =>
+          row.result ===
+          "correct"
+      ).length;
+
+
+    const accuracy =
+      totalAttempts
+        ? Math.round(
+            correct /
+            totalAttempts *
+            100
+          )
+        : 0;
+
+
+    const progress =
+      totalTasks
+        ? Math.round(
+            completed /
+            totalTasks *
+            100
+          )
+        : 0;
+
+
+    const nickname =
+      currentProfile?.nickname ||
+      currentUser
+        ?.email
+        ?.split("@")[0] ||
+      "Пользователь";
+
+
+    document
+      .getElementById(
+        "homeHello"
+      )
+      .textContent =
+        `С возвращением, ${nickname}!`;
+
+
+    document
+      .getElementById(
+        "homeTitle"
+      )
+      .textContent =
+        completed === 0
+          ? "Начнём подготовку?"
+          : completed < totalTasks
+            ? "Продолжаем двигаться к цели?"
+            : "Ты прошла все задания!";
+
+
+    document
+      .getElementById(
+        "motivationText"
+      )
+      .textContent =
+        getRandomMotivation();
+
+
+    document
+      .getElementById(
+        "homeCompleted"
+      )
+      .textContent =
+        completed;
+
+
+    document
+      .getElementById(
+        "homeAttempts"
+      )
+      .textContent =
+        totalAttempts;
+
+
+    document
+      .getElementById(
+        "homeCorrect"
+      )
+      .textContent =
+        correct;
+
+
+    document
+      .getElementById(
+        "homeAccuracy"
+      )
+      .textContent =
+        accuracy + "%";
+
+
+    document
+      .getElementById(
+        "homeProgressPercent"
+      )
+      .textContent =
+        progress + "%";
+
+
+    document
+      .getElementById(
+        "homeProgressFill"
+      )
+      .style.width =
+        progress + "%";
+
+
+    document
+      .getElementById(
+        "homeProgressText"
+      )
+      .textContent =
+        `Выполнено ${completed} из ${totalTasks} заданий`;
+
+  }
+
+
+  /* ==========================================================
+     GO TO TASKS
+  ========================================================== */
+
+  document
+    .getElementById(
+      "goToTasksBtn"
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        activateSection(
+          "tasks"
+        );
+
+      }
+    );
+
+
+  /* ==========================================================
+     TASKS
   ========================================================== */
 
   function renderTasks() {
@@ -2031,7 +3179,8 @@
       );
 
 
-    const tasks = getTasks();
+    const tasks =
+      getTasks();
 
 
     if (!tasks.length) {
@@ -2043,31 +3192,39 @@
       `;
 
       return;
+
     }
 
 
     const filtered =
-      tasks.filter(task => {
+      tasks.filter(
+        task => {
 
-        if (!searchValue) {
-          return true;
+          if (!searchValue) {
+            return true;
+          }
+
+
+          return taskCode(task)
+            .toUpperCase()
+            .includes(
+              searchValue
+            );
+
         }
-
-        return taskCode(task)
-          .toUpperCase()
-          .includes(
-            searchValue.toUpperCase()
-          );
-
-      });
+      );
 
 
     if (!filtered.length) {
 
       container.innerHTML = `
         <div class="empty-state">
-          <strong>Задания не найдены</strong>
+          <strong>
+            Задания не найдены
+          </strong>
+
           <br>
+
           <span>
             Проверь код задания.
           </span>
@@ -2075,149 +3232,168 @@
       `;
 
       return;
+
     }
 
 
-    const variants = [...new Set(
-      filtered.map(task => taskVariant(task))
-    )];
+    const variants =
+      [
+        ...new Set(
+          filtered.map(
+            task =>
+              taskVariant(task)
+          )
+        )
+      ];
 
 
     variants.sort(
-      (a, b) => Number(a) - Number(b)
+      (a, b) =>
+        Number(a) -
+        Number(b)
     );
 
 
     let html = "";
 
 
-    variants.forEach(variant => {
+    variants.forEach(
+      variant => {
 
-      const variantTasks =
-        filtered.filter(
-          task =>
-            String(taskVariant(task)) ===
-            String(variant)
-        );
-
-
-      html += `
-        <div class="variant-block">
-
-          <div class="variant-title">
-
-            <h3>
-              Вариант ${variant}
-            </h3>
-
-            <span class="variant-count">
-              ${variantTasks.length} заданий
-            </span>
-
-          </div>
-
-          <div class="tasks-grid">
-      `;
-
-
-      variantTasks.forEach(task => {
-
-        const id =
-          taskId(task);
-
-        const status =
-          progressMap[id] || "";
-
-
-        const statusText =
-          status === "correct"
-            ? "✓ Последняя попытка — верно"
-            : status === "wrong"
-              ? "✕ Последняя попытка — ошибка"
-              : "○ Ещё не выполнено";
-
-
-        const statusClass =
-          status === "correct"
-            ? "correct"
-            : status === "wrong"
-              ? "wrong"
-              : "";
+        const variantTasks =
+          filtered.filter(
+            task =>
+              String(
+                taskVariant(task)
+              ) ===
+              String(variant)
+          );
 
 
         html += `
-          <div
-            class="task-card ${statusClass}"
-            data-task-id="${escapeHtml(id)}"
-          >
+          <div class="variant-block">
 
-            <div class="task-number">
-              Задание ${escapeHtml(
-                String(taskNumber(task))
-              )}
+            <div class="variant-title">
+
+              <h3>
+                Вариант ${variant}
+              </h3>
+
+              <span class="variant-count">
+                ${variantTasks.length} заданий
+              </span>
+
             </div>
 
-            <div class="task-code">
-              ${escapeHtml(taskCode(task))}
-            </div>
-
-            <div class="task-status">
-              ${statusText}
-            </div>
-
-          </div>
+            <div class="tasks-grid">
         `;
 
-      });
+
+        variantTasks.forEach(
+          task => {
+
+            const id =
+              taskId(task);
 
 
-      html += `
-          </div>
-        </div>
-      `;
-
-    });
+            const status =
+              progressMap[id] ||
+              "";
 
 
-    container.innerHTML = html;
+            const statusText =
+              status === "correct"
+                ? "✓ Последняя попытка — верно"
+                : status === "wrong"
+                  ? "✕ Последняя попытка — ошибка"
+                  : "○ Ещё не выполнено";
 
 
-    container
-      .querySelectorAll(".task-card")
-      .forEach(card => {
-
-        card.addEventListener(
-          "click",
-          () => {
-
-            const task =
-              tasks.find(
-                item =>
-                  taskId(item) ===
-                  card.dataset.taskId
-              );
+            const statusClass =
+              status === "correct"
+                ? "correct"
+                : status === "wrong"
+                  ? "wrong"
+                  : "";
 
 
-            if (task) {
-              openTaskModal(task);
-            }
+            html += `
+              <div
+                class="task-card ${statusClass}"
+                data-task-id="${escapeHtml(id)}"
+              >
+
+                <div class="task-number">
+                  Задание
+                  ${escapeHtml(
+                    String(
+                      taskNumber(task)
+                    )
+                  )}
+                </div>
+
+                <div class="task-code">
+                  ${escapeHtml(
+                    taskCode(task)
+                  )}
+                </div>
+
+                <div class="task-status">
+                  ${statusText}
+                </div>
+
+              </div>
+            `;
 
           }
         );
 
-      });
 
-  }
+        html += `
+            </div>
+          </div>
+        `;
+
+      }
+    );
 
 
-  function escapeHtml(value) {
+    container.innerHTML =
+      html;
 
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+
+    container
+      .querySelectorAll(
+        ".task-card"
+      )
+      .forEach(
+        card => {
+
+          card.addEventListener(
+            "click",
+            () => {
+
+              const task =
+                tasks.find(
+                  item =>
+                    taskId(item) ===
+                    card.dataset.taskId
+                );
+
+
+              if (task) {
+
+                openTaskModal(
+                  task
+                );
+
+              }
+
+            }
+          );
+
+        }
+      );
 
   }
 
@@ -2227,7 +3403,9 @@
   ========================================================== */
 
   document
-    .getElementById("taskSearch")
+    .getElementById(
+      "taskSearch"
+    )
     .addEventListener(
       "input",
       event => {
@@ -2237,6 +3415,7 @@
             .trim()
             .toUpperCase();
 
+
         renderTasks();
 
       }
@@ -2244,21 +3423,30 @@
 
 
   document
-    .getElementById("clearSearch")
+    .getElementById(
+      "clearSearch"
+    )
     .addEventListener(
       "click",
       () => {
 
         searchValue = "";
 
+
         document
-          .getElementById("taskSearch")
+          .getElementById(
+            "taskSearch"
+          )
           .value = "";
+
 
         renderTasks();
 
+
         document
-          .getElementById("taskSearch")
+          .getElementById(
+            "taskSearch"
+          )
           .focus();
 
       }
@@ -2266,63 +3454,82 @@
 
 
   /* ==========================================================
-     TASK MODAL
+     MODAL
   ========================================================== */
 
   const taskModal =
-    document.getElementById("taskModal");
+    document.getElementById(
+      "taskModal"
+    );
 
 
-  function openTaskModal(task) {
+  function openTaskModal(
+    task
+  ) {
 
-    selectedTask = task;
+    selectedTask =
+      task;
 
 
     document
-      .getElementById("modalTaskTitle")
+      .getElementById(
+        "modalTaskTitle"
+      )
       .textContent =
         `Задание ${taskNumber(task)}`;
 
 
     document
-      .getElementById("modalTaskCode")
+      .getElementById(
+        "modalTaskCode"
+      )
       .textContent =
         `Код: ${taskCode(task)}`;
 
 
     document
-      .getElementById("reasonBlock")
-      .classList.add("hidden");
+      .getElementById(
+        "reasonBlock"
+      )
+      .classList.add(
+        "hidden"
+      );
 
 
     document
-      .getElementById("wrongReason")
+      .getElementById(
+        "wrongReason"
+      )
       .value = "";
 
 
     renderTaskHistory();
 
 
-    taskModal.classList.remove(
-      "hidden"
-    );
+    taskModal
+      .classList
+      .remove("hidden");
 
   }
 
 
   function closeTaskModal() {
 
-    selectedTask = null;
+    selectedTask =
+      null;
 
-    taskModal.classList.add(
-      "hidden"
-    );
+
+    taskModal
+      .classList
+      .add("hidden");
 
   }
 
 
   document
-    .getElementById("closeModal")
+    .getElementById(
+      "closeModal"
+    )
     .addEventListener(
       "click",
       closeTaskModal
@@ -2334,9 +3541,12 @@
     event => {
 
       if (
-        event.target === taskModal
+        event.target ===
+        taskModal
       ) {
+
         closeTaskModal();
+
       }
 
     }
@@ -2348,7 +3558,9 @@
   ========================================================== */
 
   document
-    .getElementById("markCorrectBtn")
+    .getElementById(
+      "markCorrectBtn"
+    )
     .addEventListener(
       "click",
       async () => {
@@ -2366,7 +3578,9 @@
 
 
         if (success) {
+
           renderTaskHistory();
+
         }
 
       }
@@ -2378,18 +3592,26 @@
   ========================================================== */
 
   document
-    .getElementById("markWrongBtn")
+    .getElementById(
+      "markWrongBtn"
+    )
     .addEventListener(
       "click",
       () => {
 
         document
-          .getElementById("reasonBlock")
-          .classList.remove("hidden");
+          .getElementById(
+            "reasonBlock"
+          )
+          .classList.remove(
+            "hidden"
+          );
 
 
         document
-          .getElementById("wrongReason")
+          .getElementById(
+            "wrongReason"
+          )
           .focus();
 
       }
@@ -2397,7 +3619,9 @@
 
 
   document
-    .getElementById("saveWrongBtn")
+    .getElementById(
+      "saveWrongBtn"
+    )
     .addEventListener(
       "click",
       async () => {
@@ -2409,7 +3633,9 @@
 
         const reason =
           document
-            .getElementById("wrongReason")
+            .getElementById(
+              "wrongReason"
+            )
             .value
             .trim();
 
@@ -2421,6 +3647,7 @@
           );
 
           return;
+
         }
 
 
@@ -2435,12 +3662,20 @@
         if (success) {
 
           document
-            .getElementById("reasonBlock")
-            .classList.add("hidden");
+            .getElementById(
+              "reasonBlock"
+            )
+            .classList.add(
+              "hidden"
+            );
+
 
           document
-            .getElementById("wrongReason")
+            .getElementById(
+              "wrongReason"
+            )
             .value = "";
+
 
           renderTaskHistory();
 
@@ -2451,7 +3686,7 @@
 
 
   /* ==========================================================
-     TASK HISTORY
+     HISTORY
   ========================================================== */
 
   function renderTaskHistory() {
@@ -2468,7 +3703,9 @@
 
 
     const id =
-      taskId(selectedTask);
+      taskId(
+        selectedTask
+      );
 
 
     const attempts =
@@ -2490,72 +3727,74 @@
       `;
 
       return;
+
     }
 
 
     container.innerHTML =
-      attempts.map(
-        attempt => {
+      attempts
+        .map(
+          attempt => {
 
-          const correct =
-            attempt.result === "correct";
-
-
-          const date =
-            formatDate(
-              attempt.created_at
-            );
+            const correct =
+              attempt.result ===
+              "correct";
 
 
-          return `
-            <div
-              class="history-item ${
-                correct
-                  ? "correct"
-                  : "wrong"
-              }"
-            >
+            return `
+              <div
+                class="history-item ${
+                  correct
+                    ? "correct"
+                    : "wrong"
+                }"
+              >
 
-              <div class="history-main">
+                <div class="history-main">
 
-                <span>
-                  ${
-                    correct
-                      ? "✓ Верно"
-                      : "✕ Ошибка"
-                  }
-                </span>
+                  <span>
+                    ${
+                      correct
+                        ? "✓ Верно"
+                        : "✕ Ошибка"
+                    }
+                  </span>
 
-                <span class="history-date">
-                  ${date}
-                </span>
+                  <span class="history-date">
+                    ${formatDate(
+                      attempt.created_at
+                    )}
+                  </span>
+
+                </div>
+
+                ${
+                  !correct &&
+                  attempt.reason
+                    ? `
+                      <div class="history-reason">
+                        Причина:
+                        ${escapeHtml(
+                          attempt.reason
+                        )}
+                      </div>
+                    `
+                    : ""
+                }
 
               </div>
+            `;
 
-              ${
-                !correct && attempt.reason
-                  ? `
-                    <div class="history-reason">
-                      Причина:
-                      ${escapeHtml(
-                        attempt.reason
-                      )}
-                    </div>
-                  `
-                  : ""
-              }
-
-            </div>
-          `;
-
-        }
-      )
-      .join("");
+          }
+        )
+        .join("");
 
   }
 
 
-  function formatDate(dateString) {
+  function formatDate(
+    dateString
+  ) {
 
     if (!dateString) {
       return "";
@@ -2591,21 +3830,25 @@
     const correct =
       historyRows.filter(
         row =>
-          row.result === "correct"
+          row.result ===
+          "correct"
       ).length;
 
 
     const wrong =
       historyRows.filter(
         row =>
-          row.result === "wrong"
+          row.result ===
+          "wrong"
       ).length;
 
 
     const accuracy =
       total
         ? Math.round(
-            correct / total * 100
+            correct /
+            total *
+            100
           )
         : 0;
 
@@ -2627,39 +3870,51 @@
 
 
     document
-      .getElementById("statTotal")
+      .getElementById(
+        "statTotal"
+      )
       .textContent =
         stats.total;
 
 
     document
-      .getElementById("statCorrect")
+      .getElementById(
+        "statCorrect"
+      )
       .textContent =
         stats.correct;
 
 
     document
-      .getElementById("statWrong")
+      .getElementById(
+        "statWrong"
+      )
       .textContent =
         stats.wrong;
 
 
     document
-      .getElementById("statAccuracy")
+      .getElementById(
+        "statAccuracy"
+      )
       .textContent =
         stats.accuracy + "%";
 
 
-    renderProgressChart();
+    drawProgressLine();
 
   }
 
 
   /* ==========================================================
-     LINE CHART
+     NEW PROGRESS LINE
+     
+     ОДНА ЛИНИЯ:
+     X = выполненное задание
+     Y = текущий процент правильных
   ========================================================== */
 
-  function renderProgressChart() {
+  function drawProgressLine() {
 
     const svg =
       document.getElementById(
@@ -2672,52 +3927,70 @@
         .slice()
         .sort(
           (a, b) =>
-            new Date(a.created_at) -
-            new Date(b.created_at)
+            new Date(
+              a.created_at
+            ) -
+            new Date(
+              b.created_at
+            )
         );
+
+
+    /*
+      Для графика берём именно последовательность
+      выполненных заданий.
+
+      Если одно и то же задание решалось несколько раз,
+      каждая попытка всё равно учитывается,
+      потому что график показывает динамику результата.
+    */
 
 
     if (!attempts.length) {
 
       svg.innerHTML = `
         <text
-          x="450"
-          y="150"
+          x="500"
+          y="160"
           text-anchor="middle"
           fill="#888"
-          font-size="16"
+          font-size="17"
         >
           Выполни первое задание,
-          чтобы увидеть график
+          чтобы увидеть прогресс
         </text>
       `;
 
       return;
+
     }
 
 
-    const width = 900;
-    const height = 300;
+    const width = 1000;
+    const height = 320;
 
-    const left = 55;
+    const left = 65;
     const right = 25;
     const top = 25;
-    const bottom = 45;
+    const bottom = 50;
 
 
     const chartWidth =
-      width - left - right;
+      width -
+      left -
+      right;
+
 
     const chartHeight =
-      height - top - bottom;
+      height -
+      top -
+      bottom;
 
 
-    let correctCount = 0;
-    let wrongCount = 0;
+    let correct = 0;
 
 
-    const correctPoints = [];
-    const wrongPoints = [];
+    const points = [];
 
 
     attempts.forEach(
@@ -2727,208 +4000,301 @@
           attempt.result ===
           "correct"
         ) {
-          correctCount++;
-        } else {
-          wrongCount++;
+
+          correct++;
+
         }
+
+
+        const accuracy =
+          Math.round(
+            correct /
+            (index + 1) *
+            100
+          );
 
 
         const x =
           attempts.length === 1
-            ? left + chartWidth / 2
+
+            ? left +
+              chartWidth / 2
+
             : left +
               index /
-                (attempts.length - 1) *
-                chartWidth;
+              (attempts.length - 1) *
+              chartWidth;
 
 
-        const maxY =
-          Math.max(
-            correctCount,
-            wrongCount,
-            1
-          );
-
-
-        const yCorrect =
+        const y =
           top +
           chartHeight -
-          correctCount /
-            Math.max(
-              Math.max(
-                correctCount,
-                wrongCount
-              ),
-              1
-            ) *
-            chartHeight;
+          accuracy /
+          100 *
+          chartHeight;
 
 
-        const yWrong =
-          top +
-          chartHeight -
-          wrongCount /
-            Math.max(
-              Math.max(
-                correctCount,
-                wrongCount
-              ),
-              1
-            ) *
-            chartHeight;
-
-
-        correctPoints.push(
-          `${x},${yCorrect}`
-        );
-
-
-        wrongPoints.push(
-          `${x},${yWrong}`
-        );
+        points.push({
+          x,
+          y,
+          accuracy,
+          number:
+            index + 1
+        });
 
       }
     );
 
 
-    const maxValue =
-      Math.max(
-        correctCount,
-        wrongCount,
-        1
-      );
-
+    /* ======================
+       GRID
+    ====================== */
 
     let grid = "";
 
 
-    for (
-      let i = 0;
-      i <= 4;
-      i++
-    ) {
+    [0, 25, 50, 75, 100]
+      .forEach(
+        value => {
 
-      const y =
-        top +
-        chartHeight -
-        i / 4 *
-        chartHeight;
-
-
-      const value =
-        Math.round(
-          maxValue * i / 4
-        );
+          const y =
+            top +
+            chartHeight -
+            value /
+            100 *
+            chartHeight;
 
 
-      grid += `
-        <line
-          x1="${left}"
-          y1="${y}"
-          x2="${width - right}"
-          y2="${y}"
-          stroke="#eceaf1"
-          stroke-width="1"
-        />
+          grid += `
 
-        <text
-          x="${left - 10}"
-          y="${y + 4}"
-          text-anchor="end"
-          fill="#8b8795"
-          font-size="11"
-        >
-          ${value}
-        </text>
-      `;
+            <line
+              x1="${left}"
+              y1="${y}"
+              x2="${width - right}"
+              y2="${y}"
+              stroke="#e9e6f0"
+              stroke-width="1"
+            />
 
-    }
+            <text
+              x="${left - 12}"
+              y="${y + 4}"
+              text-anchor="end"
+              fill="#898493"
+              font-size="12"
+            >
+              ${value}%
+            </text>
+
+          `;
+
+        }
+      );
 
 
-    const xAxis = `
+    /* ======================
+       AXES
+    ====================== */
+
+    const axes = `
+
+      <line
+        x1="${left}"
+        y1="${top}"
+        x2="${left}"
+        y2="${top + chartHeight}"
+        stroke="#d8d4e2"
+        stroke-width="1"
+      />
+
       <line
         x1="${left}"
         y1="${top + chartHeight}"
         x2="${width - right}"
         y2="${top + chartHeight}"
-        stroke="#dcd9e5"
+        stroke="#d8d4e2"
+        stroke-width="1"
       />
+
     `;
 
 
-    const correctLine = `
+    /* ======================
+       LINE
+    ====================== */
+
+    const polyline =
+      points
+        .map(
+          point =>
+            `${point.x},${point.y}`
+        )
+        .join(" ");
+
+
+    let line = `
+
       <polyline
-        points="${correctPoints.join(" ")}"
+        points="${polyline}"
         fill="none"
-        stroke="#55bf7d"
-        stroke-width="3"
+        stroke="#7658ee"
+        stroke-width="5"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
+
     `;
 
 
-    const wrongLine = `
-      <polyline
-        points="${wrongPoints.join(" ")}"
-        fill="none"
-        stroke="#ef7187"
-        stroke-width="3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    `;
+    /* ======================
+       AREA UNDER LINE
+    ====================== */
+
+    if (points.length > 1) {
+
+      const areaPoints =
+        [
+          `${points[0].x},${top + chartHeight}`,
+
+          ...points.map(
+            point =>
+              `${point.x},${point.y}`
+          ),
+
+          `${points[points.length - 1].x},${top + chartHeight}`
+        ]
+        .join(" ");
 
 
-    let points = "";
+      line += `
+
+        <polygon
+          points="${areaPoints}"
+          fill="#7c5cff"
+          opacity="0.08"
+        />
+
+      `;
+
+    }
 
 
-    correctPoints.forEach(
+    /* ======================
+       POINTS
+    ====================== */
+
+    let dots = "";
+
+
+    points.forEach(
       point => {
 
-        const [x, y] =
-          point.split(",");
+        dots += `
 
-
-        points += `
           <circle
-            cx="${x}"
-            cy="${y}"
-            r="4"
-            fill="#55bf7d"
+            cx="${point.x}"
+            cy="${point.y}"
+            r="6"
+            fill="white"
+            stroke="#7658ee"
+            stroke-width="4"
           />
+
         `;
 
       }
     );
 
 
-    wrongPoints.forEach(
-      point => {
+    /* ======================
+       X LABELS
+    ====================== */
 
-        const [x, y] =
-          point.split(",");
+    let labels = "";
 
 
-        points += `
-          <circle
-            cx="${x}"
-            cy="${y}"
-            r="4"
-            fill="#ef7187"
-          />
+    const labelStep =
+      points.length <= 10
+        ? 1
+        : Math.ceil(
+            points.length / 10
+          );
+
+
+    points.forEach(
+      (point, index) => {
+
+        if (
+          index % labelStep !== 0 &&
+          index !==
+            points.length - 1
+        ) {
+
+          return;
+
+        }
+
+
+        labels += `
+
+          <text
+            x="${point.x}"
+            y="${height - 18}"
+            text-anchor="middle"
+            fill="#898493"
+            font-size="11"
+          >
+            ${point.number}
+          </text>
+
         `;
 
       }
     );
+
+
+    /* ======================
+       LAST VALUE
+    ====================== */
+
+    const last =
+      points[
+        points.length - 1
+      ];
+
+
+    const lastLabel = `
+
+      <rect
+        x="${last.x - 31}"
+        y="${last.y - 35}"
+        width="62"
+        height="25"
+        rx="8"
+        fill="#7658ee"
+      />
+
+      <text
+        x="${last.x}"
+        y="${last.y - 18}"
+        text-anchor="middle"
+        fill="white"
+        font-size="12"
+        font-weight="700"
+      >
+        ${last.accuracy}%
+      </text>
+
+    `;
 
 
     svg.innerHTML =
       grid +
-      xAxis +
-      correctLine +
-      wrongLine +
-      points;
+      axes +
+      line +
+      dots +
+      labels +
+      lastLabel;
 
   }
 
@@ -2949,7 +4315,8 @@
       historyRows
         .filter(
           row =>
-            row.result === "wrong"
+            row.result ===
+            "wrong"
         )
         .slice()
         .reverse();
@@ -2958,80 +4325,100 @@
     if (!errors.length) {
 
       container.innerHTML = `
+
         <div class="no-errors">
           ✓ Ошибок пока нет. Отличная работа!
         </div>
+
       `;
 
       return;
+
     }
 
 
     container.innerHTML = `
+
       <div class="error-list">
 
         ${
-          errors.map(
-            error => {
+          errors
+            .map(
+              error => {
 
-              const task =
-                getTasks().find(
-                  item =>
-                    taskId(item) ===
-                    error.task_id
-                );
-
-
-              const number =
-                task
-                  ? taskNumber(task)
-                  : error.task_id;
+                const task =
+                  getTasks().find(
+                    item =>
+                      taskId(item) ===
+                      error.task_id
+                  );
 
 
-              const code =
-                task
-                  ? taskCode(task)
-                  : error.task_id;
+                const number =
+                  task
+                    ? taskNumber(task)
+                    : error.task_id;
 
 
-              return `
-                <div class="error-item">
+                const code =
+                  task
+                    ? taskCode(task)
+                    : error.task_id;
 
-                  <div class="error-top">
 
-                    <div class="error-task">
-                      Задание ${escapeHtml(
-                        String(number)
-                      )}
-                      ·
-                      ${escapeHtml(code)}
+                return `
+
+                  <div class="error-item">
+
+                    <div class="error-top">
+
+                      <div class="error-task">
+
+                        Задание
+                        ${escapeHtml(
+                          String(number)
+                        )}
+
+                        ·
+
+                        ${escapeHtml(code)}
+
+                      </div>
+
+
+                      <div class="error-date">
+
+                        ${formatDate(
+                          error.created_at
+                        )}
+
+                      </div>
+
                     </div>
 
-                    <div class="error-date">
-                      ${formatDate(
-                        error.created_at
-                      )}
+
+                    <div class="error-reason">
+
+                      ${
+                        escapeHtml(
+                          error.reason ||
+                          "Причина не указана."
+                        )
+                      }
+
                     </div>
 
                   </div>
 
-                  <div class="error-reason">
-                    ${
-                      escapeHtml(
-                        error.reason ||
-                        "Причина не указана."
-                      )
-                    }
-                  </div>
+                `;
 
-                </div>
-              `;
-
-            }
-          ).join("")
+              }
+            )
+            .join("")
         }
 
       </div>
+
     `;
 
   }
@@ -3050,19 +4437,27 @@
 
     const nickname =
       currentProfile?.nickname ||
-      currentUser.user_metadata?.username ||
-      currentUser.email?.split("@")[0] ||
+      currentUser
+        .user_metadata
+        ?.username ||
+      currentUser
+        .email
+        ?.split("@")[0] ||
       "Пользователь";
 
 
     document
-      .getElementById("topNickname")
+      .getElementById(
+        "topNickname"
+      )
       .textContent =
         nickname;
 
 
     document
-      .getElementById("topAvatar")
+      .getElementById(
+        "topAvatar"
+      )
       .textContent =
         nickname
           .charAt(0)
@@ -3070,25 +4465,34 @@
 
 
     document
-      .getElementById("profileNickname")
+      .getElementById(
+        "profileNickname"
+      )
       .textContent =
         nickname;
 
 
     document
-      .getElementById("profileNicknameInput")
+      .getElementById(
+        "profileNicknameInput"
+      )
       .value =
         nickname;
 
 
     document
-      .getElementById("profileEmail")
+      .getElementById(
+        "profileEmail"
+      )
       .textContent =
-        currentUser.email || "";
+        currentUser.email ||
+        "";
 
 
     document
-      .getElementById("profileAvatar")
+      .getElementById(
+        "profileAvatar"
+      )
       .textContent =
         nickname
           .charAt(0)
@@ -3102,7 +4506,9 @@
   ========================================================== */
 
   document
-    .getElementById("saveProfileBtn")
+    .getElementById(
+      "saveProfileBtn"
+    )
     .addEventListener(
       "click",
       async () => {
@@ -3121,56 +4527,66 @@
             .trim();
 
 
+        const message =
+          document
+            .getElementById(
+              "profileMessage"
+            );
+
+
         if (!nickname) {
 
           showMessage(
-            document.getElementById(
-              "profileMessage"
-            ),
+            message,
             "Никнейм не может быть пустым.",
             "error"
           );
 
           return;
+
         }
 
 
         const {
           data,
           error
-        } = await sb
-          .from("profiles")
-          .update({
-            nickname
-          })
-          .eq("id", currentUser.id)
-          .select()
-          .single();
+        } =
+          await sb
+            .from("profiles")
+            .update({
+              nickname
+            })
+            .eq(
+              "id",
+              currentUser.id
+            )
+            .select()
+            .single();
 
 
         if (error) {
 
           showMessage(
-            document.getElementById(
-              "profileMessage"
-            ),
+            message,
             error.message,
             "error"
           );
 
           return;
+
         }
 
 
-        currentProfile = data;
+        currentProfile =
+          data;
+
 
         renderProfile();
+        renderHome();
 
 
         showMessage(
-          document.getElementById(
-            "profileMessage"
-          ),
+          message,
           "Никнейм сохранён.",
           "success"
         );
@@ -3184,7 +4600,9 @@
   ========================================================== */
 
   document
-    .getElementById("changePasswordBtn")
+    .getElementById(
+      "changePasswordBtn"
+    )
     .addEventListener(
       "click",
       async () => {
@@ -3200,21 +4618,25 @@
         }
 
 
-        if (password.length < 6) {
+        if (
+          password.length < 6
+        ) {
 
           alert(
             "Пароль должен содержать минимум 6 символов."
           );
 
           return;
+
         }
 
 
         const {
           error
-        } = await sb.auth.updateUser({
-          password
-        });
+        } =
+          await sb.auth.updateUser({
+            password
+          });
 
 
         if (error) {
@@ -3224,6 +4646,7 @@
           );
 
           return;
+
         }
 
 
@@ -3239,81 +4662,120 @@
      NAVIGATION
   ========================================================== */
 
-  document
-    .querySelectorAll(".nav-btn")
-    .forEach(button => {
+  function activateSection(
+    section
+  ) {
 
-      button.addEventListener(
-        "click",
-        () => {
+    document
+      .querySelectorAll(
+        ".nav-btn"
+      )
+      .forEach(
+        button => {
 
-          const section =
-            button.dataset.section;
-
-
-          document
-            .querySelectorAll(".nav-btn")
-            .forEach(
-              item =>
-                item.classList.remove(
-                  "active"
-                )
-            );
-
-
-          button.classList.add(
-            "active"
+          button.classList.toggle(
+            "active",
+            button.dataset.section ===
+              section
           );
-
-
-          document
-            .querySelectorAll(
-              "[id^='section-']"
-            )
-            .forEach(
-              item =>
-                item.classList.add(
-                  "hidden"
-                )
-            );
-
-
-          document
-            .getElementById(
-              "section-" + section
-            )
-            .classList.remove(
-              "hidden"
-            );
-
-
-          if (
-            section ===
-            "statistics"
-          ) {
-            renderStatistics();
-          }
-
-
-          if (
-            section ===
-            "errors"
-          ) {
-            renderErrors();
-          }
-
-
-          if (
-            section ===
-            "profile"
-          ) {
-            renderProfile();
-          }
 
         }
       );
 
-    });
+
+    document
+      .querySelectorAll(
+        "[id^='section-']"
+      )
+      .forEach(
+        item => {
+
+          item.classList.add(
+            "hidden"
+          );
+
+        }
+      );
+
+
+    const target =
+      document.getElementById(
+        "section-" +
+        section
+      );
+
+
+    if (target) {
+
+      target.classList.remove(
+        "hidden"
+      );
+
+    }
+
+
+    if (
+      section ===
+      "home"
+    ) {
+
+      renderHome();
+
+    }
+
+
+    if (
+      section ===
+      "statistics"
+    ) {
+
+      renderStatistics();
+
+    }
+
+
+    if (
+      section ===
+      "errors"
+    ) {
+
+      renderErrors();
+
+    }
+
+
+    if (
+      section ===
+      "profile"
+    ) {
+
+      renderProfile();
+
+    }
+
+  }
+
+
+  document
+    .querySelectorAll(
+      ".nav-btn"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            activateSection(
+              button.dataset.section
+            );
+
+          }
+        );
+
+      }
+    );
 
 
   /* ==========================================================
@@ -3321,29 +4783,46 @@
   ========================================================== */
 
   document
-    .getElementById("logoutBtn")
+    .getElementById(
+      "logoutBtn"
+    )
     .addEventListener(
       "click",
       async () => {
 
         await sb.auth.signOut();
 
+
         currentUser = null;
         currentProfile = null;
+
         progressRows = [];
         historyRows = [];
+
         progressMap = {};
 
-        appScreen.classList.add(
-          "hidden"
-        );
 
-        authScreen.classList.remove(
-          "hidden"
-        );
+        document
+          .getElementById(
+            "appScreen"
+          )
+          .classList.add(
+            "hidden"
+          );
+
+
+        document
+          .getElementById(
+            "authScreen"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
 
         loginForm.reset();
         registerForm.reset();
+
 
         loginTab.click();
 
@@ -3369,34 +4848,54 @@
     await loadCloudData();
 
 
-    authScreen.classList.add(
-      "hidden"
-    );
+    document
+      .getElementById(
+        "authScreen"
+      )
+      .classList.add(
+        "hidden"
+      );
 
-    appScreen.classList.remove(
-      "hidden"
-    );
+
+    document
+      .getElementById(
+        "appScreen"
+      )
+      .classList.remove(
+        "hidden"
+      );
 
 
     renderProfile();
+
+    renderHome();
+
+
+    activateSection(
+      "home"
+    );
 
   }
 
 
   /* ==========================================================
-     PRINT / PDF REPORT
+     PRINT REPORT
   ========================================================== */
 
   document
-    .getElementById("printReportBtn")
+    .getElementById(
+      "printReportBtn"
+    )
     .addEventListener(
       "click",
       () => {
 
         createPrintReport();
 
+
         setTimeout(
-          () => window.print(),
+          () =>
+            window.print(),
           100
         );
 
@@ -3411,7 +4910,9 @@
 
 
     document
-      .getElementById("printNickname")
+      .getElementById(
+        "printNickname"
+      )
       .textContent =
         currentProfile?.nickname ||
         currentUser?.email ||
@@ -3419,43 +4920,56 @@
 
 
     document
-      .getElementById("printDate")
+      .getElementById(
+        "printDate"
+      )
       .textContent =
         "Отчёт сформирован: " +
-        new Date().toLocaleString(
-          "ru-RU"
-        );
+        new Date()
+          .toLocaleString(
+            "ru-RU"
+          );
 
 
     document
-      .getElementById("printTotal")
+      .getElementById(
+        "printTotal"
+      )
       .textContent =
         stats.total;
 
 
     document
-      .getElementById("printCorrect")
+      .getElementById(
+        "printCorrect"
+      )
       .textContent =
         stats.correct;
 
 
     document
-      .getElementById("printWrong")
+      .getElementById(
+        "printWrong"
+      )
       .textContent =
         stats.wrong;
 
 
     document
-      .getElementById("printAccuracy")
+      .getElementById(
+        "printAccuracy"
+      )
       .textContent =
-        stats.accuracy + "%";
+        stats.accuracy +
+        "%";
 
 
     const errors =
       historyRows
         .filter(
           row =>
-            row.result === "wrong"
+            row.result ===
+            "wrong"
         )
         .slice()
         .reverse();
@@ -3473,76 +4987,93 @@
         "<p>Ошибок нет.</p>";
 
       return;
+
     }
 
 
     container.innerHTML =
-      errors.map(
-        error => {
+      errors
+        .map(
+          error => {
 
-          const task =
-            getTasks().find(
-              item =>
-                taskId(item) ===
-                error.task_id
-            );
-
-
-          const number =
-            task
-              ? taskNumber(task)
-              : error.task_id;
+            const task =
+              getTasks().find(
+                item =>
+                  taskId(item) ===
+                  error.task_id
+              );
 
 
-          const code =
-            task
-              ? taskCode(task)
-              : error.task_id;
+            const number =
+              task
+                ? taskNumber(task)
+                : error.task_id;
 
 
-          return `
-            <div class="print-error">
+            const code =
+              task
+                ? taskCode(task)
+                : error.task_id;
 
-              <strong>
-                Задание ${escapeHtml(
-                  String(number)
-                )}
-                ·
-                ${escapeHtml(code)}
-              </strong>
 
-              <div>
-                Причина:
-                ${escapeHtml(
-                  error.reason ||
-                  "Не указана"
-                )}
+            return `
+
+              <div class="print-error">
+
+                <strong>
+
+                  Задание
+                  ${escapeHtml(
+                    String(number)
+                  )}
+
+                  ·
+
+                  ${escapeHtml(code)}
+
+                </strong>
+
+
+                <div>
+
+                  Причина:
+                  ${escapeHtml(
+                    error.reason ||
+                    "Не указана"
+                  )}
+
+                </div>
+
+
+                <small>
+
+                  ${formatDate(
+                    error.created_at
+                  )}
+
+                </small>
+
               </div>
 
-              <small>
-                ${formatDate(
-                  error.created_at
-                )}
-              </small>
+            `;
 
-            </div>
-          `;
-
-        }
-      ).join("");
+          }
+        )
+        .join("");
 
   }
 
 
   /* ==========================================================
-     SUPABASE SESSION
+     SESSION
   ========================================================== */
 
   async function init() {
 
     const {
       data
-    } = await sb.auth.getSession();
+    } =
+      await sb.auth.getSession();
 
 
     if (
@@ -3554,17 +5085,27 @@
       currentUser =
         data.session.user;
 
+
       await openApp();
 
     } else {
 
-      authScreen.classList.remove(
-        "hidden"
-      );
+      document
+        .getElementById(
+          "authScreen"
+        )
+        .classList.remove(
+          "hidden"
+        );
 
-      appScreen.classList.add(
-        "hidden"
-      );
+
+      document
+        .getElementById(
+          "appScreen"
+        )
+        .classList.add(
+          "hidden"
+        );
 
     }
 
@@ -3572,7 +5113,7 @@
 
 
   sb.auth.onAuthStateChange(
-    async (
+    (
       event,
       session
     ) => {
@@ -3587,7 +5128,8 @@
 
       } else {
 
-        currentUser = null;
+        currentUser =
+          null;
 
       }
 
