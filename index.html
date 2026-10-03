@@ -18,6 +18,7 @@
       --purple: #7c5cff;
       --purple-dark: #6344e8;
       --purple-light: #f0ecff;
+      --purple-soft: #f7f4ff;
 
       --bg: #f7f6fb;
       --card: #ffffff;
@@ -33,7 +34,14 @@
       --red-border: #ff9aaa;
       --red-text: #a52943;
 
+      --blue-bg: #eaf2ff;
+      --blue-text: #3768b5;
+
       --shadow: 0 8px 30px rgba(53, 39, 100, 0.08);
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -57,9 +65,9 @@
       display: none !important;
     }
 
-    /* =========================
+    /* =========================================================
        AUTH
-    ========================= */
+    ========================================================= */
 
     #authScreen {
       min-height: 100vh;
@@ -69,16 +77,8 @@
       padding: 24px;
 
       background:
-        radial-gradient(
-          circle at top left,
-          #e8e0ff 0,
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at bottom right,
-          #eee8ff 0,
-          transparent 35%
-        ),
+        radial-gradient(circle at top left, #e8e0ff 0, transparent 35%),
+        radial-gradient(circle at bottom right, #eee8ff 0, transparent 35%),
         var(--bg);
     }
 
@@ -95,11 +95,8 @@
       width: 58px;
       height: 58px;
       border-radius: 18px;
-      background: linear-gradient(
-        135deg,
-        #8e74ff,
-        #6748e8
-      );
+
+      background: linear-gradient(135deg, #8e74ff, #6748e8);
 
       color: white;
 
@@ -162,11 +159,16 @@
     .field input,
     .field textarea {
       width: 100%;
+
       border: 1px solid var(--border);
       background: #faf9fd;
+
       border-radius: 13px;
+
       padding: 13px 14px;
+
       outline: none;
+
       transition: .2s;
     }
 
@@ -174,58 +176,83 @@
     .field textarea:focus {
       border-color: var(--purple);
       background: white;
+
       box-shadow:
         0 0 0 3px rgba(124,92,255,.1);
     }
 
     .primary-btn {
-      width: 100%;
       border: 0;
       border-radius: 13px;
-      padding: 14px;
+      padding: 14px 18px;
+
       color: white;
 
       background:
-        linear-gradient(
-          135deg,
-          #8368ff,
-          #6949e9
-        );
+        linear-gradient(135deg, #8368ff, #6949e9);
 
       font-weight: 700;
+
+      transition: .2s;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 18px rgba(105,73,233,.2);
+    }
+
+    .auth-card .primary-btn {
+      width: 100%;
     }
 
     .secondary-btn {
       border: 1px solid var(--border);
       background: white;
       color: var(--text);
+
       border-radius: 12px;
+
       padding: 11px 15px;
+    }
+
+    .secondary-btn:hover {
+      background: #faf9fd;
     }
 
     .danger-btn {
       border: 0;
       background: #fff0f2;
       color: #b02b48;
+
       border-radius: 12px;
+
       padding: 11px 15px;
+
       font-weight: 700;
     }
 
     .auth-link {
       display: block;
+
       border: 0;
       background: transparent;
+
       color: var(--purple);
+
       margin: 15px auto 0;
+
       font-size: 14px;
     }
 
     .message {
       margin-top: 14px;
+
       padding: 11px 13px;
+
       border-radius: 12px;
+
       font-size: 14px;
+
       display: none;
     }
 
@@ -243,9 +270,9 @@
       color: #14733a;
     }
 
-    /* =========================
+    /* =========================================================
        APP
-    ========================= */
+    ========================================================= */
 
     #appScreen {
       min-height: 100vh;
@@ -256,7 +283,8 @@
       top: 0;
       z-index: 20;
 
-      background: rgba(255,255,255,.93);
+      background: rgba(255,255,255,.94);
+
       backdrop-filter: blur(15px);
 
       border-bottom: 1px solid var(--border);
@@ -279,6 +307,7 @@
       display: flex;
       align-items: center;
       gap: 11px;
+
       font-weight: 800;
     }
 
@@ -335,6 +364,7 @@
       padding: 5px;
 
       background: white;
+
       border: 1px solid var(--border);
       border-radius: 16px;
 
@@ -376,9 +406,9 @@
       color: var(--muted);
     }
 
-    /* =========================
+    /* =========================================================
        HOME
-    ========================= */
+    ========================================================= */
 
     .home-hero {
       background:
@@ -403,6 +433,7 @@
 
     .home-hero::after {
       content: "";
+
       position: absolute;
 
       width: 180px;
@@ -419,13 +450,16 @@
     .home-hello {
       color: var(--purple);
       font-weight: 700;
+
       margin-bottom: 7px;
     }
 
     .home-hero h1 {
       margin: 0 0 12px;
+
       font-size: 31px;
       line-height: 1.15;
+
       position: relative;
       z-index: 1;
     }
@@ -445,15 +479,18 @@
     }
 
     .home-action {
-      width: auto;
       min-width: 190px;
+
       position: relative;
       z-index: 1;
     }
 
     .home-stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
       gap: 13px;
 
       margin-bottom: 18px;
@@ -471,6 +508,7 @@
     .home-stat-label {
       color: var(--muted);
       font-size: 13px;
+
       margin-bottom: 7px;
     }
 
@@ -490,14 +528,11 @@
 
     .home-progress-head {
       display: flex;
+
       justify-content: space-between;
       align-items: center;
 
       margin-bottom: 12px;
-    }
-
-    .home-progress-head strong {
-      font-size: 16px;
     }
 
     .home-progress-percent {
@@ -506,7 +541,7 @@
     }
 
     .progress-track {
-      height: 13px;
+      height: 16px;
 
       border-radius: 999px;
 
@@ -525,23 +560,155 @@
       background:
         linear-gradient(
           90deg,
-          #9b86ff,
+          #b19cff,
           #704ff0
         );
 
-      transition: width .5s ease;
+      transition: width .7s ease;
     }
 
     .home-progress-text {
       margin-top: 9px;
 
       color: var(--muted);
+
       font-size: 13px;
     }
 
-    /* =========================
+    /* =========================================================
+       TASK NUMBER SELECTOR
+    ========================================================= */
+
+    .task-number-selector {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 14px;
+
+      margin-bottom: 25px;
+    }
+
+    .task-group-card {
+      border: 1px solid var(--border);
+
+      background: white;
+
+      border-radius: 20px;
+
+      padding: 20px;
+
+      min-height: 125px;
+
+      text-align: left;
+
+      transition: .2s;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+    .task-group-card:hover {
+      transform: translateY(-2px);
+
+      box-shadow:
+        0 9px 25px rgba(53,39,100,.09);
+    }
+
+    .task-group-card.available {
+      border-color: #d9cffd;
+      background:
+        linear-gradient(
+          145deg,
+          #ffffff,
+          #f7f3ff
+        );
+    }
+
+    .task-group-card.disabled {
+      cursor: default;
+      opacity: .72;
+    }
+
+    .task-group-number {
+      font-size: 22px;
+      font-weight: 800;
+
+      margin-bottom: 8px;
+    }
+
+    .task-group-description {
+      color: var(--muted);
+
+      font-size: 13px;
+
+      line-height: 1.4;
+    }
+
+    .task-group-badge {
+      display: inline-block;
+
+      margin-top: 11px;
+
+      padding: 5px 9px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+      font-weight: 700;
+
+      background: var(--purple-light);
+      color: var(--purple-dark);
+    }
+
+    .task-group-badge.soon {
+      background: #f1eff5;
+      color: #888391;
+    }
+
+    .tasks-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      border: 0;
+      background: transparent;
+
+      color: var(--purple-dark);
+
+      padding: 0;
+
+      margin-bottom: 18px;
+
+      font-weight: 700;
+    }
+
+    .selected-group-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+
+      margin-bottom: 18px;
+    }
+
+    .selected-group-title h3 {
+      margin: 0 0 4px;
+      font-size: 22px;
+    }
+
+    .selected-group-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =========================================================
        TASKS
-    ========================= */
+    ========================================================= */
 
     .task-toolbar {
       display: flex;
@@ -609,6 +776,7 @@
 
     .tasks-grid {
       display: grid;
+
       grid-template-columns:
         repeat(5, minmax(0, 1fr));
 
@@ -671,14 +839,18 @@
     .task-number {
       font-size: 24px;
       font-weight: 800;
+
       margin-bottom: 8px;
     }
 
     .task-code {
       font-family: monospace;
+
       font-size: 13px;
       font-weight: 700;
+
       letter-spacing: .5px;
+
       opacity: .75;
     }
 
@@ -715,9 +887,9 @@
       border: 1px solid var(--border);
     }
 
-    /* =========================
+    /* =========================================================
        STATISTICS
-    ========================= */
+    ========================================================= */
 
     .stats-grid {
       display: grid;
@@ -742,7 +914,9 @@
 
     .stat-label {
       color: var(--muted);
+
       font-size: 13px;
+
       margin-bottom: 8px;
     }
 
@@ -751,7 +925,7 @@
       font-weight: 800;
     }
 
-    .chart-card {
+    .scale-card {
       background: white;
 
       border: 1px solid var(--border);
@@ -760,56 +934,132 @@
 
       padding: 22px;
 
-      margin-bottom: 22px;
+      margin-bottom: 15px;
     }
 
-    .chart-header {
-      margin-bottom: 18px;
+    .scale-head {
+      display: flex;
+
+      justify-content: space-between;
+      align-items: center;
+
+      gap: 15px;
+
+      margin-bottom: 11px;
     }
 
-    .chart-header h3 {
-      margin: 0 0 6px;
+    .scale-title {
+      font-weight: 800;
     }
 
-    .chart-header p {
-      margin: 0;
+    .scale-value {
+      color: var(--purple);
 
-      color: var(--muted);
-      font-size: 13px;
+      font-weight: 800;
+
+      white-space: nowrap;
     }
 
-    .progress-chart-wrap {
-      position: relative;
+    .scale-track {
+      height: 18px;
 
-      height: 320px;
+      width: 100%;
 
-      border-radius: 15px;
+      background: #eeebf5;
 
-      background:
-        linear-gradient(
-          to bottom,
-          #faf9fd,
-          #ffffff
-        );
-
-      border: 1px solid #eeeaf5;
+      border-radius: 999px;
 
       overflow: hidden;
     }
 
-    #progressChart {
-      width: 100%;
+    .scale-fill {
+      width: 0%;
+
       height: 100%;
-      display: block;
+
+      border-radius: 999px;
+
+      transition: width .7s ease;
     }
 
-    /* =========================
+    .scale-fill.purple {
+      background:
+        linear-gradient(
+          90deg,
+          #b29eff,
+          #7658ee
+        );
+    }
+
+    .scale-fill.red {
+      background:
+        linear-gradient(
+          90deg,
+          #ffabb8,
+          #ee627b
+        );
+    }
+
+    .scale-fill.green {
+      background:
+        linear-gradient(
+          90deg,
+          #8fe2aa,
+          #4fc879
+        );
+    }
+
+    .scale-description {
+      color: var(--muted);
+
+      font-size: 12px;
+
+      margin-top: 8px;
+    }
+
+    .overall-progress-card {
+      background:
+        linear-gradient(
+          135deg,
+          #f0ecff,
+          #ffffff
+        );
+
+      border: 1px solid #ded5ff;
+
+      border-radius: 20px;
+
+      padding: 22px;
+
+      margin-bottom: 22px;
+    }
+
+    .overall-progress-card h3 {
+      margin: 0 0 6px;
+    }
+
+    .overall-progress-card p {
+      color: var(--muted);
+
+      margin: 0 0 15px;
+
+      font-size: 13px;
+    }
+
+    .report-button {
+      margin-top: 7px;
+      min-width: 240px;
+    }
+
+    /* =========================================================
        ERRORS
-    ========================= */
+    ========================================================= */
 
     .error-list {
       display: flex;
+
       flex-direction: column;
+
       gap: 12px;
     }
 
@@ -817,6 +1067,7 @@
       background: white;
 
       border: 1px solid var(--border);
+
       border-left: 5px solid #ff8b9d;
 
       border-radius: 16px;
@@ -826,6 +1077,7 @@
 
     .error-top {
       display: flex;
+
       justify-content: space-between;
 
       gap: 15px;
@@ -839,11 +1091,13 @@
 
     .error-date {
       color: var(--muted);
+
       font-size: 12px;
     }
 
     .error-reason {
       color: #55505f;
+
       line-height: 1.45;
     }
 
@@ -857,9 +1111,9 @@
       padding: 20px;
     }
 
-    /* =========================
+    /* =========================================================
        PROFILE
-    ========================= */
+    ========================================================= */
 
     .profile-card {
       max-width: 650px;
@@ -875,6 +1129,7 @@
 
     .profile-head {
       display: flex;
+
       align-items: center;
 
       gap: 15px;
@@ -889,9 +1144,11 @@
       border-radius: 50%;
 
       background: var(--purple-light);
+
       color: var(--purple);
 
       display: flex;
+
       align-items: center;
       justify-content: center;
 
@@ -901,13 +1158,15 @@
 
     .profile-email {
       color: var(--muted);
+
       font-size: 14px;
+
       margin-top: 4px;
     }
 
-    /* =========================
+    /* =========================================================
        MODAL
-    ========================= */
+    ========================================================= */
 
     .modal-overlay {
       position: fixed;
@@ -947,6 +1206,7 @@
 
     .modal-head {
       display: flex;
+
       justify-content: space-between;
 
       gap: 15px;
@@ -958,6 +1218,7 @@
 
     .modal-head h3 {
       margin: 0 0 5px;
+
       font-size: 23px;
     }
 
@@ -1008,6 +1269,7 @@
 
     .history-title {
       margin: 23px 0 10px;
+
       font-size: 16px;
     }
 
@@ -1043,7 +1305,9 @@
 
     .history-date {
       color: var(--muted);
+
       font-size: 12px;
+
       margin-top: 5px;
     }
 
@@ -1055,12 +1319,26 @@
       color: #5c5767;
     }
 
-    /* =========================
+    /* =========================================================
        PRINT
-    ========================= */
+    ========================================================= */
 
     #printReport {
       display: none;
+    }
+
+    @media (max-width: 1000px) {
+
+      .task-number-selector {
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+      .tasks-grid {
+        grid-template-columns:
+          repeat(4, 1fr);
+      }
+
     }
 
     @media (max-width: 900px) {
@@ -1087,6 +1365,11 @@
       .layout {
         padding:
           18px 13px 80px;
+      }
+
+      .task-number-selector {
+        grid-template-columns:
+          repeat(2, 1fr);
       }
 
       .tasks-grid {
@@ -1121,6 +1404,15 @@
         font-size: 16px;
       }
 
+      .selected-group-title {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .report-button {
+        width: 100%;
+      }
+
     }
 
     @media print {
@@ -1137,18 +1429,23 @@
 
       #printReport {
         display: block !important;
+
         padding: 30px;
+
         color: black;
       }
 
       .print-title {
         font-size: 26px;
+
         font-weight: 800;
+
         margin-bottom: 5px;
       }
 
       .print-date {
         color: #555;
+
         margin-bottom: 25px;
       }
 
@@ -1165,6 +1462,7 @@
 
       .print-stat {
         border: 1px solid #ddd;
+
         padding: 15px;
       }
 
@@ -1182,6 +1480,7 @@
 
       .print-error {
         border-bottom: 1px solid #ddd;
+
         padding: 10px 0;
       }
 
@@ -1191,10 +1490,9 @@
 
 <body>
 
-
-<!-- ==========================================================
+<!-- =========================================================
      AUTH
-========================================================== -->
+========================================================= -->
 
 <div id="authScreen">
 
@@ -1212,12 +1510,12 @@
       Отслеживай задания, ошибки и свой прогресс подготовки.
     </p>
 
-
     <div class="auth-tabs">
 
       <button
         class="auth-tab active"
         id="loginTab"
+        type="button"
       >
         Войти
       </button>
@@ -1225,44 +1523,34 @@
       <button
         class="auth-tab"
         id="registerTab"
+        type="button"
       >
         Регистрация
       </button>
 
     </div>
 
-
     <form id="loginForm">
 
       <div class="field">
-
-        <label>
-          Email
-        </label>
+        <label>Email</label>
 
         <input
           id="loginEmail"
           type="email"
           required
         >
-
       </div>
 
-
       <div class="field">
-
-        <label>
-          Пароль
-        </label>
+        <label>Пароль</label>
 
         <input
           id="loginPassword"
           type="password"
           required
         >
-
       </div>
-
 
       <button
         class="primary-btn"
@@ -1270,7 +1558,6 @@
       >
         Войти
       </button>
-
 
       <button
         class="auth-link"
@@ -1282,47 +1569,33 @@
 
     </form>
 
-
     <form
       id="registerForm"
       class="hidden"
     >
 
       <div class="field">
-
-        <label>
-          Никнейм
-        </label>
+        <label>Никнейм</label>
 
         <input
           id="registerNickname"
           type="text"
           required
         >
-
       </div>
 
-
       <div class="field">
-
-        <label>
-          Email
-        </label>
+        <label>Email</label>
 
         <input
           id="registerEmail"
           type="email"
           required
         >
-
       </div>
 
-
       <div class="field">
-
-        <label>
-          Пароль
-        </label>
+        <label>Пароль</label>
 
         <input
           id="registerPassword"
@@ -1330,15 +1603,10 @@
           minlength="6"
           required
         >
-
       </div>
 
-
       <div class="field">
-
-        <label>
-          Повторите пароль
-        </label>
+        <label>Повторите пароль</label>
 
         <input
           id="registerPassword2"
@@ -1346,9 +1614,7 @@
           minlength="6"
           required
         >
-
       </div>
-
 
       <button
         class="primary-btn"
@@ -1359,6 +1625,41 @@
 
     </form>
 
+    <form
+      id="resetForm"
+      class="hidden"
+    >
+
+      <div class="field">
+        <label>Новый пароль</label>
+
+        <input
+          id="resetPassword"
+          type="password"
+          minlength="6"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label>Повторите пароль</label>
+
+        <input
+          id="resetPassword2"
+          type="password"
+          minlength="6"
+          required
+        >
+      </div>
+
+      <button
+        class="primary-btn"
+        type="submit"
+      >
+        Сохранить новый пароль
+      </button>
+
+    </form>
 
     <div
       id="authMessage"
@@ -1370,9 +1671,9 @@
 </div>
 
 
-<!-- ==========================================================
+<!-- =========================================================
      APP
-========================================================== -->
+========================================================= -->
 
 <div
   id="appScreen"
@@ -1395,7 +1696,6 @@
 
       </div>
 
-
       <div class="user-mini">
 
         <span id="topNickname"></span>
@@ -1416,14 +1716,12 @@
 
   <main class="layout">
 
-
-    <!-- NAVIGATION -->
-
     <nav class="nav">
 
       <button
         class="nav-btn active"
         data-section="home"
+        type="button"
       >
         Главная
       </button>
@@ -1431,6 +1729,7 @@
       <button
         class="nav-btn"
         data-section="tasks"
+        type="button"
       >
         Задания
       </button>
@@ -1438,6 +1737,7 @@
       <button
         class="nav-btn"
         data-section="statistics"
+        type="button"
       >
         Статистика
       </button>
@@ -1445,6 +1745,7 @@
       <button
         class="nav-btn"
         data-section="errors"
+        type="button"
       >
         Ошибки
       </button>
@@ -1452,6 +1753,7 @@
       <button
         class="nav-btn"
         data-section="profile"
+        type="button"
       >
         Профиль
       </button>
@@ -1459,9 +1761,9 @@
     </nav>
 
 
-    <!-- ======================================================
+    <!-- =======================================================
          HOME
-    ====================================================== -->
+    ======================================================= -->
 
     <section id="section-home">
 
@@ -1481,12 +1783,12 @@
         <p
           class="motivation"
           id="motivationText"
-        >
-        </p>
+        ></p>
 
         <button
           class="primary-btn home-action"
           id="goToTasksBtn"
+          type="button"
         >
           Перейти к заданиям →
         </button>
@@ -1531,7 +1833,7 @@
         <div class="home-stat">
 
           <div class="home-stat-label">
-            Верных ответов
+            Верных попыток
           </div>
 
           <div
@@ -1579,7 +1881,6 @@
 
         </div>
 
-
         <div class="progress-track">
 
           <div
@@ -1589,12 +1890,11 @@
 
         </div>
 
-
         <div
           class="home-progress-text"
           id="homeProgressText"
         >
-          Выполнено 0 из 0 заданий
+          Выполнено 0 из 95 заданий
         </div>
 
       </div>
@@ -1602,9 +1902,9 @@
     </section>
 
 
-    <!-- ======================================================
+    <!-- =======================================================
          TASKS
-    ====================================================== -->
+    ======================================================= -->
 
     <section
       id="section-tasks"
@@ -1617,50 +1917,296 @@
           Задания
         </h2>
 
-        <p>
-          Выбирай задание и отмечай результат каждой попытки.
+        <p id="tasksSubtitle">
+          Сначала выбери номер задания.
         </p>
 
       </div>
 
 
-      <div class="task-toolbar">
+      <!-- SELECTOR -->
 
-        <div class="search-wrap">
+      <div id="taskGroupsView">
 
-          <span class="search-icon">
-            ⌕
-          </span>
+        <div class="task-number-selector">
 
-          <input
-            id="taskSearch"
-            type="search"
-            placeholder="Поиск задания по коду, например 42BF66"
-            autocomplete="off"
+          <button
+            class="task-group-card available"
+            data-task-group="1-5"
+            type="button"
           >
 
+            <div class="task-group-number">
+              № 1–5
+            </div>
+
+            <div class="task-group-description">
+              Аудирование и задания этого блока
+            </div>
+
+            <span class="task-group-badge">
+              95 заданий
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 6–11
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 12
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 13
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 14
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 15
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 16
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 17
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 18
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
+
+          <button
+            class="task-group-card disabled"
+            type="button"
+          >
+
+            <div class="task-group-number">
+              № 19
+            </div>
+
+            <div class="task-group-description">
+              Задания этого блока появятся позже
+            </div>
+
+            <span class="task-group-badge soon">
+              Скоро
+            </span>
+
+          </button>
+
         </div>
-
-
-        <button
-          id="clearSearch"
-          class="secondary-btn"
-          type="button"
-        >
-          Сбросить
-        </button>
 
       </div>
 
 
-      <div id="tasksContainer"></div>
+      <!-- SELECTED GROUP -->
+
+      <div
+        id="selectedTasksView"
+        class="hidden"
+      >
+
+        <button
+          class="tasks-back"
+          id="backToTaskGroups"
+          type="button"
+        >
+          ← Все номера заданий
+        </button>
+
+
+        <div class="selected-group-title">
+
+          <div>
+
+            <h3>
+              № 1–5
+            </h3>
+
+            <p>
+              95 заданий · 19 вариантов по 5 заданий
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="task-toolbar">
+
+          <div class="search-wrap">
+
+            <span class="search-icon">
+              ⌕
+            </span>
+
+            <input
+              id="taskSearch"
+              type="search"
+              placeholder="Поиск по коду, например 42BF66"
+              autocomplete="off"
+            >
+
+          </div>
+
+
+          <button
+            id="clearSearch"
+            class="secondary-btn"
+            type="button"
+          >
+            Сбросить
+          </button>
+
+        </div>
+
+
+        <div id="tasksContainer"></div>
+
+      </div>
 
     </section>
 
 
-    <!-- ======================================================
+    <!-- =======================================================
          STATISTICS
-    ====================================================== -->
+    ======================================================= -->
 
     <section
       id="section-statistics"
@@ -1674,7 +2220,7 @@
         </h2>
 
         <p>
-          Здесь видно, как меняется результат по мере выполнения заданий.
+          Здесь видно, сколько заданий ты уже прошла и где чаще всего ошибаешься.
         </p>
 
       </div>
@@ -1701,12 +2247,28 @@
         <div class="stat-card">
 
           <div class="stat-label">
-            Верных
+            Сделано заданий
           </div>
 
           <div
             class="stat-value"
-            id="statCorrect"
+            id="statCompleted"
+          >
+            0
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-label">
+            Верных заданий
+          </div>
+
+          <div
+            class="stat-value"
+            id="statCorrectTasks"
           >
             0
           </div>
@@ -1729,57 +2291,158 @@
 
         </div>
 
+      </div>
 
-        <div class="stat-card">
 
-          <div class="stat-label">
-            Точность
-          </div>
+      <!-- SCALE 1 -->
+
+      <div class="scale-card">
+
+        <div class="scale-head">
+
+          <span class="scale-title">
+            Ошибки
+          </span>
+
+          <span
+            class="scale-value"
+            id="errorsScaleValue"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="scale-track">
 
           <div
-            class="stat-value"
-            id="statAccuracy"
-          >
-            0%
-          </div>
+            class="scale-fill red"
+            id="errorsScaleFill"
+          ></div>
 
+        </div>
+
+        <div
+          class="scale-description"
+          id="errorsScaleDescription"
+        >
+          0 ошибок из 0 попыток
         </div>
 
       </div>
 
 
-      <div class="chart-card">
+      <!-- SCALE 2 -->
 
-        <div class="chart-header">
+      <div class="scale-card">
 
-          <h3>
-            Линия прогресса
-          </h3>
+        <div class="scale-head">
 
-          <p>
-            После каждого нового выполненного задания линия показывает текущий процент правильных ответов.
-          </p>
+          <span class="scale-title">
+            Всего сделано заданий
+          </span>
+
+          <span
+            class="scale-value"
+            id="completedScaleValue"
+          >
+            0 / 95
+          </span>
 
         </div>
 
+        <div class="scale-track">
 
-        <div class="progress-chart-wrap">
+          <div
+            class="scale-fill purple"
+            id="completedScaleFill"
+          ></div>
 
-          <svg
-            id="progressChart"
-            viewBox="0 0 1000 320"
-            preserveAspectRatio="none"
-          ></svg>
+        </div>
 
+        <div
+          class="scale-description"
+          id="completedScaleDescription"
+        >
+          Выполнено 0 из 95 заданий
+        </div>
+
+      </div>
+
+
+      <!-- SCALE 3 -->
+
+      <div class="scale-card">
+
+        <div class="scale-head">
+
+          <span class="scale-title">
+            Верные задания
+          </span>
+
+          <span
+            class="scale-value"
+            id="correctScaleValue"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div class="scale-track">
+
+          <div
+            class="scale-fill green"
+            id="correctScaleFill"
+          ></div>
+
+        </div>
+
+        <div
+          class="scale-description"
+          id="correctScaleDescription"
+        >
+          0 верных из 0 выполненных заданий
+        </div>
+
+      </div>
+
+
+      <!-- OVERALL -->
+
+      <div class="overall-progress-card">
+
+        <h3>
+          Общий прогресс
+        </h3>
+
+        <p>
+          Эта шкала показывает, какую часть из 95 доступных заданий № 1–5 ты уже выполнила.
+        </p>
+
+        <div class="progress-track">
+
+          <div
+            class="progress-fill"
+            id="statisticsProgressFill"
+          ></div>
+
+        </div>
+
+        <div
+          class="home-progress-text"
+          id="statisticsProgressText"
+        >
+          Выполнено 0 из 95 заданий
         </div>
 
       </div>
 
 
       <button
-        class="primary-btn"
+        class="primary-btn report-button"
         id="printReportBtn"
-        style="max-width:260px"
+        type="button"
       >
         Сформировать PDF-отчёт
       </button>
@@ -1787,9 +2450,9 @@
     </section>
 
 
-    <!-- ======================================================
+    <!-- =======================================================
          ERRORS
-    ====================================================== -->
+    ======================================================= -->
 
     <section
       id="section-errors"
@@ -1814,9 +2477,9 @@
     </section>
 
 
-    <!-- ======================================================
+    <!-- =======================================================
          PROFILE
-    ====================================================== -->
+    ======================================================= -->
 
     <section
       id="section-profile"
@@ -1850,9 +2513,7 @@
 
           <div>
 
-            <strong
-              id="profileNickname"
-            ></strong>
+            <strong id="profileNickname"></strong>
 
             <div
               class="profile-email"
@@ -1881,6 +2542,8 @@
         <button
           class="primary-btn"
           id="saveProfileBtn"
+          type="button"
+          style="width:100%"
         >
           Сохранить никнейм
         </button>
@@ -1889,10 +2552,8 @@
         <button
           class="secondary-btn"
           id="changePasswordBtn"
-          style="
-            width:100%;
-            margin-top:12px
-          "
+          type="button"
+          style="width:100%; margin-top:12px"
         >
           Изменить пароль
         </button>
@@ -1901,10 +2562,8 @@
         <button
           class="danger-btn"
           id="logoutBtn"
-          style="
-            width:100%;
-            margin-top:12px
-          "
+          type="button"
+          style="width:100%; margin-top:12px"
         >
           Выйти из аккаунта
         </button>
@@ -1924,9 +2583,9 @@
 </div>
 
 
-<!-- ==========================================================
+<!-- =========================================================
      TASK MODAL
-========================================================== -->
+========================================================= -->
 
 <div
   id="taskModal"
@@ -1954,6 +2613,7 @@
       <button
         class="close-btn"
         id="closeModal"
+        type="button"
       >
         ×
       </button>
@@ -1971,6 +2631,7 @@
       "
     >
       После выполнения задания отметь результат своей попытки.
+      Каждая попытка сохраняется отдельно.
     </div>
 
 
@@ -1979,6 +2640,7 @@
       <button
         class="correct-btn"
         id="markCorrectBtn"
+        type="button"
       >
         ✓ Выполнено верно
       </button>
@@ -1987,6 +2649,7 @@
       <button
         class="wrong-btn"
         id="markWrongBtn"
+        type="button"
       >
         ✕ Выполнено с ошибкой
       </button>
@@ -2017,6 +2680,7 @@
       <button
         class="wrong-btn"
         id="saveWrongBtn"
+        type="button"
         style="width:100%"
       >
         Сохранить ошибку
@@ -2037,9 +2701,9 @@
 </div>
 
 
-<!-- ==========================================================
-     PRINT REPORT
-========================================================== -->
+<!-- =========================================================
+     PRINT
+========================================================= -->
 
 <div id="printReport">
 
@@ -2052,48 +2716,31 @@
     id="printDate"
   ></div>
 
-
   <div>
     Ученик:
     <strong id="printNickname"></strong>
   </div>
 
-
   <div class="print-stats">
 
     <div class="print-stat">
       Всего попыток
-
-      <strong id="printTotal">
-        0
-      </strong>
+      <strong id="printTotal">0</strong>
     </div>
-
 
     <div class="print-stat">
-      Верно
-
-      <strong id="printCorrect">
-        0
-      </strong>
+      Сделано заданий
+      <strong id="printCompleted">0</strong>
     </div>
 
+    <div class="print-stat">
+      Верных заданий
+      <strong id="printCorrect">0</strong>
+    </div>
 
     <div class="print-stat">
       Ошибки
-
-      <strong id="printWrong">
-        0
-      </strong>
-    </div>
-
-
-    <div class="print-stat">
-      Точность
-
-      <strong id="printAccuracy">
-        0%
-      </strong>
+      <strong id="printWrong">0</strong>
     </div>
 
   </div>
@@ -2112,18 +2759,18 @@
 </div>
 
 
-<!-- ==========================================================
-     TASKS
-========================================================== -->
+<!-- =========================================================
+     TASK DATA
+========================================================= -->
 
 <script src="./data/tasks.js"></script>
 
 
 <script>
 
-  /* ==========================================================
+  /* =========================================================
      SUPABASE
-  ========================================================== */
+  ========================================================= */
 
   const SUPABASE_URL =
     "https://rbffkodkjrmvltnlqzkn.supabase.co";
@@ -2149,9 +2796,9 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
      STATE
-  ========================================================== */
+  ========================================================= */
 
   let currentUser = null;
   let currentProfile = null;
@@ -2165,78 +2812,96 @@
 
   let searchValue = "";
 
+  let selectedTaskGroup = null;
 
-  /* ==========================================================
+
+  /* =========================================================
      MOTIVATIONS
-  ========================================================== */
+  ========================================================= */
 
   const motivations = [
 
-    "Каждое выполненное задание — ещё один шаг к результату, которым ты будешь гордиться.",
+    "Ты уже начала. Теперь просто продолжай.",
 
-    "Не нужно сделать всё сразу. Сегодня достаточно стать немного лучше, чем вчера.",
+    "Один шаг сегодня — меньше стресса перед экзаменом.",
 
-    "Ошибки здесь не провал — они показывают, что именно стоит повторить.",
+    "Не нужно идеально. Нужно регулярно.",
 
-    "Даже одно выполненное задание сегодня лучше, чем ноль заданий завтра.",
+    "Каждое выполненное задание — плюс один шаг к уверенности.",
 
-    "Ты уже начала подготовку. Теперь главное — продолжать.",
+    "Ошибки здесь нужны, чтобы не повторять их на экзамене.",
 
-    "Стабильность важнее идеального результата с первой попытки.",
+    "Ты не обязана знать всё сразу. Разберёшься по шагам.",
 
-    "Каждая ошибка сейчас экономит тебе одну ошибку на экзамене.",
+    "Сегодняшние 20 минут работают на твою уверенность завтра.",
 
-    "Маленький прогресс каждый день складывается в большой результат.",
+    "Маленький прогресс — тоже прогресс.",
 
-    "Не сравнивай свой прогресс с чужим. Сравнивай его со своим вчерашним.",
+    "Продолжай. Ты уже дальше, чем была вчера.",
 
-    "Ты не обязана знать всё сразу. Твоя задача — постепенно разобраться.",
+    "Сделай ещё одно задание. Потом ещё одно.",
 
-    "Ещё одно задание — и ты станешь чуть ближе к своей цели.",
+    "Не страшно ошибаться во время подготовки.",
 
-    "Ошиблась? Отлично. Теперь ты знаешь, что нужно потренировать.",
+    "Каждая разобранная ошибка делает следующую попытку сильнее.",
 
-    "Подготовка становится легче, когда видишь собственный прогресс.",
+    "Главное — не скорость, а то, что ты продолжаешь.",
 
-    "Главное — не идеальность, а движение вперёд.",
+    "Подготовка становится проще, когда видишь свой прогресс.",
 
-    "Ты можешь больше, чем кажется после одной сложной ошибки."
+    "Одно задание за раз — и постепенно получится весь вариант."
 
   ];
 
 
   function getRandomMotivation() {
 
-    return motivations[
+    const last =
+      Number(
+        sessionStorage.getItem(
+          "lastMotivationIndex"
+        )
+      );
+
+    let index =
       Math.floor(
         Math.random() *
         motivations.length
-      )
-    ];
+      );
+
+    if (
+      motivations.length > 1 &&
+      index === last
+    ) {
+
+      index =
+        (index + 1) %
+        motivations.length;
+
+    }
+
+    sessionStorage.setItem(
+      "lastMotivationIndex",
+      String(index)
+    );
+
+    return motivations[index];
 
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      TASK HELPERS
-  ========================================================== */
+  ========================================================= */
 
   function getTasks() {
 
-    if (
+    return (
       typeof TASKS !== "undefined" &&
       Array.isArray(TASKS)
-    ) {
-      return TASKS;
-    }
-
-    if (
-      Array.isArray(window.TASKS)
-    ) {
-      return window.TASKS;
-    }
-
-    return [];
+    )
+      ? TASKS
+      : [];
 
   }
 
@@ -2292,22 +2957,44 @@
 
     return String(value)
 
-      .replaceAll("&", "&amp;")
+      .replaceAll(
+        "&",
+        "&amp;"
+      )
 
-      .replaceAll("<", "&lt;")
+      .replaceAll(
+        "<",
+        "&lt;"
+      )
 
-      .replaceAll(">", "&gt;")
+      .replaceAll(
+        ">",
+        "&gt;"
+      )
 
-      .replaceAll('"', "&quot;")
+      .replaceAll(
+        '"',
+        "&quot;"
+      )
 
-      .replaceAll("'", "&#039;");
+      .replaceAll(
+        "'",
+        "&#039;"
+      );
 
   }
 
 
-  /* ==========================================================
+  function getAvailableTasks() {
+
+    return getTasks();
+
+  }
+
+
+  /* =========================================================
      MESSAGES
-  ========================================================== */
+  ========================================================= */
 
   function showMessage(
     element,
@@ -2318,7 +3005,8 @@
     element.textContent = text;
 
     element.className =
-      "message show " + type;
+      "message show " +
+      type;
 
   }
 
@@ -2333,9 +3021,9 @@
   }
 
 
-  /* ==========================================================
-     AUTH TABS
-  ========================================================== */
+  /* =========================================================
+     AUTH UI
+  ========================================================= */
 
   const loginTab =
     document.getElementById(
@@ -2357,26 +3045,67 @@
       "registerForm"
     );
 
+  const resetForm =
+    document.getElementById(
+      "resetForm"
+    );
+
+
+  function showLoginForm() {
+
+    loginTab.classList.add(
+      "active"
+    );
+
+    registerTab.classList.remove(
+      "active"
+    );
+
+    loginForm.classList.remove(
+      "hidden"
+    );
+
+    registerForm.classList.add(
+      "hidden"
+    );
+
+    resetForm.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  function showRegisterForm() {
+
+    registerTab.classList.add(
+      "active"
+    );
+
+    loginTab.classList.remove(
+      "active"
+    );
+
+    registerForm.classList.remove(
+      "hidden"
+    );
+
+    loginForm.classList.add(
+      "hidden"
+    );
+
+    resetForm.classList.add(
+      "hidden"
+    );
+
+  }
+
 
   loginTab.addEventListener(
     "click",
     () => {
 
-      loginTab.classList.add(
-        "active"
-      );
-
-      registerTab.classList.remove(
-        "active"
-      );
-
-      loginForm.classList.remove(
-        "hidden"
-      );
-
-      registerForm.classList.add(
-        "hidden"
-      );
+      showLoginForm();
 
       hideMessage(
         document.getElementById(
@@ -2392,21 +3121,7 @@
     "click",
     () => {
 
-      registerTab.classList.add(
-        "active"
-      );
-
-      loginTab.classList.remove(
-        "active"
-      );
-
-      registerForm.classList.remove(
-        "hidden"
-      );
-
-      loginForm.classList.add(
-        "hidden"
-      );
+      showRegisterForm();
 
       hideMessage(
         document.getElementById(
@@ -2418,9 +3133,9 @@
   );
 
 
-  /* ==========================================================
+  /* =========================================================
      REGISTER
-  ========================================================== */
+  ========================================================= */
 
   registerForm.addEventListener(
     "submit",
@@ -2428,12 +3143,10 @@
 
       event.preventDefault();
 
-
       const authMessage =
         document.getElementById(
           "authMessage"
         );
-
 
       hideMessage(authMessage);
 
@@ -2473,7 +3186,8 @@
 
 
       if (
-        password !== password2
+        password !==
+        password2
       ) {
 
         showMessage(
@@ -2539,7 +3253,10 @@
       }
 
 
-      if (data.user) {
+      if (
+        data &&
+        data.user
+      ) {
 
         currentUser =
           data.user;
@@ -2550,17 +3267,25 @@
         );
 
 
-        showMessage(
-          authMessage,
-          "Аккаунт создан. Выполняем вход...",
-          "success"
-        );
+        if (data.session) {
 
+          showMessage(
+            authMessage,
+            "Аккаунт создан. Выполняем вход...",
+            "success"
+          );
 
-        setTimeout(
-          () => openApp(),
-          500
-        );
+          await openApp();
+
+        } else {
+
+          showMessage(
+            authMessage,
+            "Аккаунт создан. Проверь email для подтверждения.",
+            "success"
+          );
+
+        }
 
       }
 
@@ -2568,9 +3293,9 @@
   );
 
 
-  /* ==========================================================
+  /* =========================================================
      LOGIN
-  ========================================================== */
+  ========================================================= */
 
   loginForm.addEventListener(
     "submit",
@@ -2612,6 +3337,7 @@
         await sb.auth.signInWithPassword({
 
           email,
+
           password
 
         });
@@ -2636,15 +3362,15 @@
 
       await ensureProfile();
 
-      openApp();
+      await openApp();
 
     }
   );
 
 
-  /* ==========================================================
+  /* =========================================================
      FORGOT PASSWORD
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -2688,7 +3414,8 @@
           await sb.auth.resetPasswordForEmail(
             email,
             {
-              redirectTo: REDIRECT
+              redirectTo:
+                REDIRECT
             }
           );
 
@@ -2716,9 +3443,107 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
+     RESET PASSWORD
+  ========================================================= */
+
+  resetForm.addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+
+      const password =
+        document
+          .getElementById(
+            "resetPassword"
+          )
+          .value;
+
+
+      const password2 =
+        document
+          .getElementById(
+            "resetPassword2"
+          )
+          .value;
+
+
+      const authMessage =
+        document.getElementById(
+          "authMessage"
+        );
+
+
+      if (
+        password !==
+        password2
+      ) {
+
+        showMessage(
+          authMessage,
+          "Пароли не совпадают.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        password.length < 6
+      ) {
+
+        showMessage(
+          authMessage,
+          "Пароль должен содержать минимум 6 символов.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const {
+        error
+      } =
+        await sb.auth.updateUser({
+          password
+        });
+
+
+      if (error) {
+
+        showMessage(
+          authMessage,
+          error.message,
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      showLoginForm();
+
+
+      showMessage(
+        authMessage,
+        "Пароль изменён. Теперь можно войти.",
+        "success"
+      );
+
+    }
+  );
+
+
+  /* =========================================================
      PROFILE
-  ========================================================== */
+  ========================================================= */
 
   async function ensureProfile(
     nickname = null
@@ -2827,9 +3652,9 @@
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      CLOUD DATA
-  ========================================================== */
+  ========================================================= */
 
   async function loadCloudData() {
 
@@ -2838,9 +3663,7 @@
     }
 
 
-    const {
-      data: progress
-    } =
+    const progressResult =
       await sb
         .from("progress")
         .select("*")
@@ -2850,9 +3673,7 @@
         );
 
 
-    const {
-      data: history
-    } =
+    const historyResult =
       await sb
         .from("attempt_history")
         .select("*")
@@ -2869,11 +3690,11 @@
 
 
     progressRows =
-      progress || [];
+      progressResult.data || [];
 
 
     historyRows =
-      history || [];
+      historyResult.data || [];
 
 
     progressMap = {};
@@ -2900,9 +3721,9 @@
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      SAVE ATTEMPT
-  ========================================================== */
+  ========================================================= */
 
   async function saveAttempt(
     task,
@@ -2923,9 +3744,7 @@
       error: historyError
     } =
       await sb
-        .from(
-          "attempt_history"
-        )
+        .from("attempt_history")
         .insert({
 
           user_id:
@@ -2962,6 +3781,7 @@
       await sb
         .from("progress")
         .upsert(
+
           {
 
             user_id:
@@ -2978,10 +3798,12 @@
                 .toISOString()
 
           },
+
           {
             onConflict:
               "user_id,task_id"
           }
+
         );
 
 
@@ -3003,31 +3825,72 @@
   }
 
 
-  /* ==========================================================
-     HOME
-  ========================================================== */
+  /* =========================================================
+     STATISTICS DATA
+  ========================================================= */
 
-  function renderHome() {
+  function getStatistics() {
 
-    const tasks =
-      getTasks();
+    const allTasks =
+      getAvailableTasks();
 
 
-    const totalTasks =
-      tasks.length;
+    const taskIds =
+      new Set(
+        allTasks.map(
+          task =>
+            taskId(task)
+        )
+      );
+
+
+    const completedRows =
+      progressRows.filter(
+        row =>
+          taskIds.has(
+            row.task_id
+          )
+      );
 
 
     const completed =
-      progressRows.length;
+      completedRows.length;
+
+
+    const correctTasks =
+      completedRows.filter(
+        row =>
+          row.status ===
+          "correct"
+      ).length;
 
 
     const totalAttempts =
-      historyRows.length;
-
-
-    const correct =
       historyRows.filter(
         row =>
+          taskIds.has(
+            row.task_id
+          )
+      ).length;
+
+
+    const wrongAttempts =
+      historyRows.filter(
+        row =>
+          taskIds.has(
+            row.task_id
+          ) &&
+          row.result ===
+          "wrong"
+      ).length;
+
+
+    const correctAttempts =
+      historyRows.filter(
+        row =>
+          taskIds.has(
+            row.task_id
+          ) &&
           row.result ===
           "correct"
       ).length;
@@ -3036,21 +3899,43 @@
     const accuracy =
       totalAttempts
         ? Math.round(
-            correct /
+            correctAttempts /
             totalAttempts *
             100
           )
         : 0;
 
 
-    const progress =
-      totalTasks
-        ? Math.round(
-            completed /
-            totalTasks *
-            100
-          )
-        : 0;
+    return {
+
+      totalTasks:
+        allTasks.length,
+
+      completed,
+
+      correctTasks,
+
+      totalAttempts,
+
+      wrongAttempts,
+
+      correctAttempts,
+
+      accuracy
+
+    };
+
+  }
+
+
+  /* =========================================================
+     HOME
+  ========================================================= */
+
+  function renderHome() {
+
+    const stats =
+      getStatistics();
 
 
     const nickname =
@@ -3059,6 +3944,16 @@
         ?.email
         ?.split("@")[0] ||
       "Пользователь";
+
+
+    const progress =
+      stats.totalTasks
+        ? Math.round(
+            stats.completed /
+            stats.totalTasks *
+            100
+          )
+        : 0;
 
 
     document
@@ -3074,10 +3969,11 @@
         "homeTitle"
       )
       .textContent =
-        completed === 0
+        stats.completed === 0
           ? "Начнём подготовку?"
-          : completed < totalTasks
-            ? "Продолжаем двигаться к цели?"
+          : stats.completed <
+            stats.totalTasks
+            ? "Продолжаем подготовку?"
             : "Ты прошла все задания!";
 
 
@@ -3094,7 +3990,7 @@
         "homeCompleted"
       )
       .textContent =
-        completed;
+        stats.completed;
 
 
     document
@@ -3102,7 +3998,7 @@
         "homeAttempts"
       )
       .textContent =
-        totalAttempts;
+        stats.totalAttempts;
 
 
     document
@@ -3110,7 +4006,7 @@
         "homeCorrect"
       )
       .textContent =
-        correct;
+        stats.correctAttempts;
 
 
     document
@@ -3118,7 +4014,8 @@
         "homeAccuracy"
       )
       .textContent =
-        accuracy + "%";
+        stats.accuracy +
+        "%";
 
 
     document
@@ -3126,7 +4023,8 @@
         "homeProgressPercent"
       )
       .textContent =
-        progress + "%";
+        progress +
+        "%";
 
 
     document
@@ -3134,7 +4032,8 @@
         "homeProgressFill"
       )
       .style.width =
-        progress + "%";
+        progress +
+        "%";
 
 
     document
@@ -3142,14 +4041,14 @@
         "homeProgressText"
       )
       .textContent =
-        `Выполнено ${completed} из ${totalTasks} заданий`;
+        `Выполнено ${stats.completed} из ${stats.totalTasks} заданий`;
 
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      GO TO TASKS
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -3167,9 +4066,129 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
+     TASK GROUPS
+  ========================================================= */
+
+  document
+    .querySelector(
+      '[data-task-group="1-5"]'
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        openTaskGroup(
+          "1-5"
+        );
+
+      }
+    );
+
+
+  function openTaskGroup(
+    group
+  ) {
+
+    selectedTaskGroup =
+      group;
+
+
+    document
+      .getElementById(
+        "taskGroupsView"
+      )
+      .classList.add(
+        "hidden"
+      );
+
+
+    document
+      .getElementById(
+        "selectedTasksView"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+
+    document
+      .getElementById(
+        "tasksSubtitle"
+      )
+      .textContent =
+        "Выбери вариант и нужное задание.";
+
+
+    searchValue = "";
+
+
+    document
+      .getElementById(
+        "taskSearch"
+      )
+      .value = "";
+
+
+    renderTasks();
+
+  }
+
+
+  document
+    .getElementById(
+      "backToTaskGroups"
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        selectedTaskGroup =
+          null;
+
+
+        searchValue = "";
+
+
+        document
+          .getElementById(
+            "taskSearch"
+          )
+          .value = "";
+
+
+        document
+          .getElementById(
+            "selectedTasksView"
+          )
+          .classList.add(
+            "hidden"
+          );
+
+
+        document
+          .getElementById(
+            "taskGroupsView"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+
+        document
+          .getElementById(
+            "tasksSubtitle"
+          )
+          .textContent =
+            "Сначала выбери номер задания.";
+
+      }
+    );
+
+
+  /* =========================================================
      TASKS
-  ========================================================== */
+  ========================================================= */
 
   function renderTasks() {
 
@@ -3179,16 +4198,28 @@
       );
 
 
+    if (
+      selectedTaskGroup !==
+      "1-5"
+    ) {
+
+      return;
+
+    }
+
+
     const tasks =
-      getTasks();
+      getAvailableTasks();
 
 
     if (!tasks.length) {
 
       container.innerHTML = `
+
         <div class="empty-state">
           Задания пока не загружены.
         </div>
+
       `;
 
       return;
@@ -3218,7 +4249,9 @@
     if (!filtered.length) {
 
       container.innerHTML = `
+
         <div class="empty-state">
+
           <strong>
             Задания не найдены
           </strong>
@@ -3228,7 +4261,9 @@
           <span>
             Проверь код задания.
           </span>
+
         </div>
+
       `;
 
       return;
@@ -3271,12 +4306,15 @@
 
 
         html += `
+
           <div class="variant-block">
 
             <div class="variant-title">
 
               <h3>
-                Вариант ${variant}
+                Вариант ${escapeHtml(
+                  String(variant)
+                )}
               </h3>
 
               <span class="variant-count">
@@ -3286,6 +4324,7 @@
             </div>
 
             <div class="tasks-grid">
+
         `;
 
 
@@ -3318,31 +4357,41 @@
 
 
             html += `
+
               <div
                 class="task-card ${statusClass}"
                 data-task-id="${escapeHtml(id)}"
               >
 
                 <div class="task-number">
+
                   Задание
                   ${escapeHtml(
                     String(
                       taskNumber(task)
                     )
                   )}
+
                 </div>
 
+
                 <div class="task-code">
+
                   ${escapeHtml(
                     taskCode(task)
                   )}
+
                 </div>
 
+
                 <div class="task-status">
+
                   ${statusText}
+
                 </div>
 
               </div>
+
             `;
 
           }
@@ -3350,8 +4399,11 @@
 
 
         html += `
+
             </div>
+
           </div>
+
         `;
 
       }
@@ -3398,9 +4450,9 @@
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      SEARCH
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -3453,9 +4505,9 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
      MODAL
-  ========================================================== */
+  ========================================================= */
 
   const taskModal =
     document.getElementById(
@@ -3508,7 +4560,9 @@
 
     taskModal
       .classList
-      .remove("hidden");
+      .remove(
+        "hidden"
+      );
 
   }
 
@@ -3521,7 +4575,9 @@
 
     taskModal
       .classList
-      .add("hidden");
+      .add(
+        "hidden"
+      );
 
   }
 
@@ -3553,9 +4609,9 @@
   );
 
 
-  /* ==========================================================
+  /* =========================================================
      CORRECT
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -3570,9 +4626,13 @@
         }
 
 
+        const task =
+          selectedTask;
+
+
         const success =
           await saveAttempt(
-            selectedTask,
+            task,
             "correct"
           );
 
@@ -3587,9 +4647,9 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
      WRONG
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -3651,9 +4711,13 @@
         }
 
 
+        const task =
+          selectedTask;
+
+
         const success =
           await saveAttempt(
-            selectedTask,
+            task,
             "wrong",
             reason
           );
@@ -3685,9 +4749,9 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
      HISTORY
-  ========================================================== */
+  ========================================================= */
 
   function renderTaskHistory() {
 
@@ -3721,9 +4785,11 @@
     if (!attempts.length) {
 
       container.innerHTML = `
+
         <div class="empty-state">
           Попыток пока нет.
         </div>
+
       `;
 
       return;
@@ -3742,6 +4808,7 @@
 
 
             return `
+
               <div
                 class="history-item ${
                   correct
@@ -3772,17 +4839,22 @@
                   !correct &&
                   attempt.reason
                     ? `
+
                       <div class="history-reason">
+
                         Причина:
                         ${escapeHtml(
                           attempt.reason
                         )}
+
                       </div>
+
                     `
                     : ""
                 }
 
               </div>
+
             `;
 
           }
@@ -3817,51 +4889,9 @@
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      STATISTICS
-  ========================================================== */
-
-  function getStatistics() {
-
-    const total =
-      historyRows.length;
-
-
-    const correct =
-      historyRows.filter(
-        row =>
-          row.result ===
-          "correct"
-      ).length;
-
-
-    const wrong =
-      historyRows.filter(
-        row =>
-          row.result ===
-          "wrong"
-      ).length;
-
-
-    const accuracy =
-      total
-        ? Math.round(
-            correct /
-            total *
-            100
-          )
-        : 0;
-
-
-    return {
-      total,
-      correct,
-      wrong,
-      accuracy
-    };
-
-  }
-
+  ========================================================= */
 
   function renderStatistics() {
 
@@ -3869,20 +4899,32 @@
       getStatistics();
 
 
+    /*
+      Верхние числа
+    */
+
     document
       .getElementById(
         "statTotal"
       )
       .textContent =
-        stats.total;
+        stats.totalAttempts;
 
 
     document
       .getElementById(
-        "statCorrect"
+        "statCompleted"
       )
       .textContent =
-        stats.correct;
+        stats.completed;
+
+
+    document
+      .getElementById(
+        "statCorrectTasks"
+      )
+      .textContent =
+        stats.correctTasks;
 
 
     document
@@ -3890,418 +4932,162 @@
         "statWrong"
       )
       .textContent =
-        stats.wrong;
+        stats.wrongAttempts;
+
+
+    /*
+      ШКАЛА 1 — ОШИБКИ
+
+      Процент ошибок считается
+      от общего количества попыток.
+    */
+
+    const errorsPercent =
+      stats.totalAttempts
+        ? Math.round(
+            stats.wrongAttempts /
+            stats.totalAttempts *
+            100
+          )
+        : 0;
 
 
     document
       .getElementById(
-        "statAccuracy"
+        "errorsScaleValue"
       )
       .textContent =
-        stats.accuracy + "%";
+        `${stats.wrongAttempts} · ${errorsPercent}%`;
 
 
-    drawProgressLine();
-
-  }
-
-
-  /* ==========================================================
-     NEW PROGRESS LINE
-     
-     ОДНА ЛИНИЯ:
-     X = выполненное задание
-     Y = текущий процент правильных
-  ========================================================== */
-
-  function drawProgressLine() {
-
-    const svg =
-      document.getElementById(
-        "progressChart"
-      );
+    document
+      .getElementById(
+        "errorsScaleFill"
+      )
+      .style.width =
+        errorsPercent +
+        "%";
 
 
-    const attempts =
-      historyRows
-        .slice()
-        .sort(
-          (a, b) =>
-            new Date(
-              a.created_at
-            ) -
-            new Date(
-              b.created_at
-            )
-        );
+    document
+      .getElementById(
+        "errorsScaleDescription"
+      )
+      .textContent =
+        `${stats.wrongAttempts} ошибок из ${stats.totalAttempts} попыток`;
 
 
     /*
-      Для графика берём именно последовательность
-      выполненных заданий.
+      ШКАЛА 2 — ВСЕГО СДЕЛАННЫХ
 
-      Если одно и то же задание решалось несколько раз,
-      каждая попытка всё равно учитывается,
-      потому что график показывает динамику результата.
+      Процент считается от всех
+      95 заданий № 1–5.
     */
 
-
-    if (!attempts.length) {
-
-      svg.innerHTML = `
-        <text
-          x="500"
-          y="160"
-          text-anchor="middle"
-          fill="#888"
-          font-size="17"
-        >
-          Выполни первое задание,
-          чтобы увидеть прогресс
-        </text>
-      `;
-
-      return;
-
-    }
-
-
-    const width = 1000;
-    const height = 320;
-
-    const left = 65;
-    const right = 25;
-    const top = 25;
-    const bottom = 50;
-
-
-    const chartWidth =
-      width -
-      left -
-      right;
-
-
-    const chartHeight =
-      height -
-      top -
-      bottom;
-
-
-    let correct = 0;
-
-
-    const points = [];
-
-
-    attempts.forEach(
-      (attempt, index) => {
-
-        if (
-          attempt.result ===
-          "correct"
-        ) {
-
-          correct++;
-
-        }
-
-
-        const accuracy =
-          Math.round(
-            correct /
-            (index + 1) *
+    const completedPercent =
+      stats.totalTasks
+        ? Math.round(
+            stats.completed /
+            stats.totalTasks *
             100
-          );
-
-
-        const x =
-          attempts.length === 1
-
-            ? left +
-              chartWidth / 2
-
-            : left +
-              index /
-              (attempts.length - 1) *
-              chartWidth;
-
-
-        const y =
-          top +
-          chartHeight -
-          accuracy /
-          100 *
-          chartHeight;
-
-
-        points.push({
-          x,
-          y,
-          accuracy,
-          number:
-            index + 1
-        });
-
-      }
-    );
-
-
-    /* ======================
-       GRID
-    ====================== */
-
-    let grid = "";
-
-
-    [0, 25, 50, 75, 100]
-      .forEach(
-        value => {
-
-          const y =
-            top +
-            chartHeight -
-            value /
-            100 *
-            chartHeight;
-
-
-          grid += `
-
-            <line
-              x1="${left}"
-              y1="${y}"
-              x2="${width - right}"
-              y2="${y}"
-              stroke="#e9e6f0"
-              stroke-width="1"
-            />
-
-            <text
-              x="${left - 12}"
-              y="${y + 4}"
-              text-anchor="end"
-              fill="#898493"
-              font-size="12"
-            >
-              ${value}%
-            </text>
-
-          `;
-
-        }
-      );
-
-
-    /* ======================
-       AXES
-    ====================== */
-
-    const axes = `
-
-      <line
-        x1="${left}"
-        y1="${top}"
-        x2="${left}"
-        y2="${top + chartHeight}"
-        stroke="#d8d4e2"
-        stroke-width="1"
-      />
-
-      <line
-        x1="${left}"
-        y1="${top + chartHeight}"
-        x2="${width - right}"
-        y2="${top + chartHeight}"
-        stroke="#d8d4e2"
-        stroke-width="1"
-      />
-
-    `;
-
-
-    /* ======================
-       LINE
-    ====================== */
-
-    const polyline =
-      points
-        .map(
-          point =>
-            `${point.x},${point.y}`
-        )
-        .join(" ");
-
-
-    let line = `
-
-      <polyline
-        points="${polyline}"
-        fill="none"
-        stroke="#7658ee"
-        stroke-width="5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-
-    `;
-
-
-    /* ======================
-       AREA UNDER LINE
-    ====================== */
-
-    if (points.length > 1) {
-
-      const areaPoints =
-        [
-          `${points[0].x},${top + chartHeight}`,
-
-          ...points.map(
-            point =>
-              `${point.x},${point.y}`
-          ),
-
-          `${points[points.length - 1].x},${top + chartHeight}`
-        ]
-        .join(" ");
-
-
-      line += `
-
-        <polygon
-          points="${areaPoints}"
-          fill="#7c5cff"
-          opacity="0.08"
-        />
-
-      `;
-
-    }
-
-
-    /* ======================
-       POINTS
-    ====================== */
-
-    let dots = "";
-
-
-    points.forEach(
-      point => {
-
-        dots += `
-
-          <circle
-            cx="${point.x}"
-            cy="${point.y}"
-            r="6"
-            fill="white"
-            stroke="#7658ee"
-            stroke-width="4"
-          />
-
-        `;
-
-      }
-    );
-
-
-    /* ======================
-       X LABELS
-    ====================== */
-
-    let labels = "";
-
-
-    const labelStep =
-      points.length <= 10
-        ? 1
-        : Math.ceil(
-            points.length / 10
-          );
-
-
-    points.forEach(
-      (point, index) => {
-
-        if (
-          index % labelStep !== 0 &&
-          index !==
-            points.length - 1
-        ) {
-
-          return;
-
-        }
-
-
-        labels += `
-
-          <text
-            x="${point.x}"
-            y="${height - 18}"
-            text-anchor="middle"
-            fill="#898493"
-            font-size="11"
-          >
-            ${point.number}
-          </text>
-
-        `;
-
-      }
-    );
-
-
-    /* ======================
-       LAST VALUE
-    ====================== */
-
-    const last =
-      points[
-        points.length - 1
-      ];
-
-
-    const lastLabel = `
-
-      <rect
-        x="${last.x - 31}"
-        y="${last.y - 35}"
-        width="62"
-        height="25"
-        rx="8"
-        fill="#7658ee"
-      />
-
-      <text
-        x="${last.x}"
-        y="${last.y - 18}"
-        text-anchor="middle"
-        fill="white"
-        font-size="12"
-        font-weight="700"
-      >
-        ${last.accuracy}%
-      </text>
-
-    `;
-
-
-    svg.innerHTML =
-      grid +
-      axes +
-      line +
-      dots +
-      labels +
-      lastLabel;
+          )
+        : 0;
+
+
+    document
+      .getElementById(
+        "completedScaleValue"
+      )
+      .textContent =
+        `${stats.completed} / ${stats.totalTasks}`;
+
+
+    document
+      .getElementById(
+        "completedScaleFill"
+      )
+      .style.width =
+        completedPercent +
+        "%";
+
+
+    document
+      .getElementById(
+        "completedScaleDescription"
+      )
+      .textContent =
+        `Выполнено ${stats.completed} из ${stats.totalTasks} заданий`;
+
+
+    /*
+      ШКАЛА 3 — ВЕРНЫЕ ЗАДАНИЯ
+
+      Здесь считаются именно уникальные
+      задания, у которых последний статус
+      "correct".
+    */
+
+    const correctPercent =
+      stats.completed
+        ? Math.round(
+            stats.correctTasks /
+            stats.completed *
+            100
+          )
+        : 0;
+
+
+    document
+      .getElementById(
+        "correctScaleValue"
+      )
+      .textContent =
+        `${stats.correctTasks} · ${correctPercent}%`;
+
+
+    document
+      .getElementById(
+        "correctScaleFill"
+      )
+      .style.width =
+        correctPercent +
+        "%";
+
+
+    document
+      .getElementById(
+        "correctScaleDescription"
+      )
+      .textContent =
+        `${stats.correctTasks} верных из ${stats.completed} выполненных заданий`;
+
+
+    /*
+      ОБЩИЙ ПРОГРЕСС
+    */
+
+    document
+      .getElementById(
+        "statisticsProgressFill"
+      )
+      .style.width =
+        completedPercent +
+        "%";
+
+
+    document
+      .getElementById(
+        "statisticsProgressText"
+      )
+      .textContent =
+        `Выполнено ${stats.completed} из ${stats.totalTasks} заданий`;
 
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      ERRORS
-  ========================================================== */
+  ========================================================= */
 
   function renderErrors() {
 
@@ -4327,7 +5113,9 @@
       container.innerHTML = `
 
         <div class="no-errors">
+
           ✓ Ошибок пока нет. Отличная работа!
+
         </div>
 
       `;
@@ -4381,7 +5169,9 @@
 
                         ·
 
-                        ${escapeHtml(code)}
+                        ${escapeHtml(
+                          code
+                        )}
 
                       </div>
 
@@ -4424,9 +5214,9 @@
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      PROFILE UI
-  ========================================================== */
+  ========================================================= */
 
   function renderProfile() {
 
@@ -4501,9 +5291,9 @@
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      SAVE PROFILE
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -4595,9 +5385,9 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
      CHANGE PASSWORD
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -4658,9 +5448,9 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
      NAVIGATION
-  ========================================================== */
+  ========================================================= */
 
   function activateSection(
     section
@@ -4726,6 +5516,23 @@
 
     if (
       section ===
+      "tasks"
+    ) {
+
+      if (
+        selectedTaskGroup ===
+        "1-5"
+      ) {
+
+        renderTasks();
+
+      }
+
+    }
+
+
+    if (
+      section ===
       "statistics"
     ) {
 
@@ -4778,9 +5585,9 @@
     );
 
 
-  /* ==========================================================
+  /* =========================================================
      LOGOUT
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -4800,6 +5607,9 @@
         historyRows = [];
 
         progressMap = {};
+
+        selectedTask = null;
+        selectedTaskGroup = null;
 
 
         document
@@ -4824,15 +5634,15 @@
         registerForm.reset();
 
 
-        loginTab.click();
+        showLoginForm();
 
       }
     );
 
 
-  /* ==========================================================
+  /* =========================================================
      OPEN APP
-  ========================================================== */
+  ========================================================= */
 
   async function openApp() {
 
@@ -4866,9 +5676,28 @@
       );
 
 
-    renderProfile();
+    selectedTaskGroup = null;
 
-    renderHome();
+
+    document
+      .getElementById(
+        "taskGroupsView"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+
+    document
+      .getElementById(
+        "selectedTasksView"
+      )
+      .classList.add(
+        "hidden"
+      );
+
+
+    renderProfile();
 
 
     activateSection(
@@ -4878,9 +5707,9 @@
   }
 
 
-  /* ==========================================================
+  /* =========================================================
      PRINT REPORT
-  ========================================================== */
+  ========================================================= */
 
   document
     .getElementById(
@@ -4894,8 +5723,9 @@
 
 
         setTimeout(
-          () =>
-            window.print(),
+          () => {
+            window.print();
+          },
           100
         );
 
@@ -4936,7 +5766,15 @@
         "printTotal"
       )
       .textContent =
-        stats.total;
+        stats.totalAttempts;
+
+
+    document
+      .getElementById(
+        "printCompleted"
+      )
+      .textContent =
+        stats.completed;
 
 
     document
@@ -4944,7 +5782,7 @@
         "printCorrect"
       )
       .textContent =
-        stats.correct;
+        stats.correctTasks;
 
 
     document
@@ -4952,16 +5790,7 @@
         "printWrong"
       )
       .textContent =
-        stats.wrong;
-
-
-    document
-      .getElementById(
-        "printAccuracy"
-      )
-      .textContent =
-        stats.accuracy +
-        "%";
+        stats.wrongAttempts;
 
 
     const errors =
@@ -5029,7 +5858,9 @@
 
                   ·
 
-                  ${escapeHtml(code)}
+                  ${escapeHtml(
+                    code
+                  )}
 
                 </strong>
 
@@ -5064,9 +5895,38 @@
   }
 
 
-  /* ==========================================================
-     SESSION
-  ========================================================== */
+  /* =========================================================
+     AUTH STATE
+  ========================================================= */
+
+  sb.auth.onAuthStateChange(
+    (
+      event,
+      session
+    ) => {
+
+      if (
+        session &&
+        session.user
+      ) {
+
+        currentUser =
+          session.user;
+
+      } else {
+
+        currentUser =
+          null;
+
+      }
+
+    }
+  );
+
+
+  /* =========================================================
+     INIT
+  ========================================================= */
 
   async function init() {
 
@@ -5074,6 +5934,53 @@
       data
     } =
       await sb.auth.getSession();
+
+
+    /*
+      Если Supabase открыл страницу
+      после восстановления пароля,
+      показываем форму нового пароля.
+    */
+
+    const hash =
+      window.location.hash;
+
+
+    const isRecovery =
+      hash.includes(
+        "type=recovery"
+      );
+
+
+    if (isRecovery) {
+
+      document
+        .getElementById(
+          "loginForm"
+        )
+        .classList.add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "registerForm"
+        )
+        .classList.add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "resetForm"
+        )
+        .classList.remove(
+          "hidden"
+        );
+
+    }
 
 
     if (
@@ -5112,34 +6019,9 @@
   }
 
 
-  sb.auth.onAuthStateChange(
-    (
-      event,
-      session
-    ) => {
-
-      if (
-        session &&
-        session.user
-      ) {
-
-        currentUser =
-          session.user;
-
-      } else {
-
-        currentUser =
-          null;
-
-      }
-
-    }
-  );
-
-
-  /* ==========================================================
+  /* =========================================================
      START
-  ========================================================== */
+  ========================================================= */
 
   init();
 
