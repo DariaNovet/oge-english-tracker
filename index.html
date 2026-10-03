@@ -2123,11 +2123,10 @@ const supabaseClient =
     SUPABASE_KEY,
     {
       auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-        flowType: "pkce"
-      }
+  persistSession: true,
+  autoRefreshToken: true,
+  detectSessionInUrl: true
+}
     }
   );
 
