@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ОГЭ Английский — подготовка</title>
+    <title>ОГЭ English — подготовка</title>
 
-    <!-- Supabase -->
+    <!-- SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/vfs_fonts.js"></script>
 
-    <!-- Задания -->
+    <!-- TASKS -->
     <script src="./data/tasks.js"></script>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -50,9 +51,9 @@
             display: none !important;
         }
 
-        /* =========================
+        /* =====================================
            AUTH
-        ========================= */
+        ===================================== */
 
         #authScreen {
             min-height: 100vh;
@@ -69,7 +70,7 @@
             border: 1px solid #e8defc;
             border-radius: 28px;
             padding: 34px;
-            box-shadow: 0 20px 60px rgba(102, 73, 170, .12);
+            box-shadow: 0 20px 60px rgba(102,73,170,.12);
         }
 
         .auth-logo {
@@ -80,7 +81,7 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 18px;
-            background: linear-gradient(135deg, #8b6cff, #6847dc);
+            background: linear-gradient(135deg,#8b6cff,#6847dc);
             color: white;
             font-size: 28px;
             font-weight: 800;
@@ -149,7 +150,7 @@
         }
 
         .primary-btn {
-            background: linear-gradient(135deg, #8565ee, #6846db);
+            background: linear-gradient(135deg,#8565ee,#6846db);
             color: white;
             box-shadow: 0 8px 20px rgba(112,77,219,.18);
         }
@@ -198,9 +199,9 @@
             color: #bd4d68;
         }
 
-        /* =========================
+        /* =====================================
            APP
-        ========================= */
+        ===================================== */
 
         #app {
             min-height: 100vh;
@@ -241,7 +242,7 @@
             align-items: center;
             justify-content: center;
             color: white;
-            background: linear-gradient(135deg, #896af3, #6948da);
+            background: linear-gradient(135deg,#896af3,#6948da);
         }
 
         .brand-text {
@@ -286,7 +287,7 @@
             margin: 0 auto;
             padding: 22px;
             display: grid;
-            grid-template-columns: 220px minmax(0, 1fr);
+            grid-template-columns: 220px minmax(0,1fr);
             gap: 22px;
         }
 
@@ -353,12 +354,12 @@
             line-height: 1.5;
         }
 
-        /* =========================
+        /* =====================================
            HOME
-        ========================= */
+        ===================================== */
 
         .welcome-card {
-            background: linear-gradient(135deg, #8d70f5, #6848da);
+            background: linear-gradient(135deg,#8d70f5,#6848da);
             color: white;
             border-radius: 26px;
             padding: 30px;
@@ -402,7 +403,7 @@
 
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4,1fr);
             gap: 14px;
             margin-bottom: 20px;
         }
@@ -462,7 +463,7 @@
         .progress-fill {
             height: 100%;
             border-radius: inherit;
-            background: linear-gradient(90deg, #9577fa, #6848dc);
+            background: linear-gradient(90deg,#9577fa,#6848dc);
             transition: width .3s ease;
         }
 
@@ -471,9 +472,9 @@
             gap: 10px;
         }
 
-        /* =========================
+        /* =====================================
            TASKS
-        ========================= */
+        ===================================== */
 
         .task-toolbar {
             background: white;
@@ -485,7 +486,7 @@
 
         .task-groups {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(6,1fr);
             gap: 8px;
             margin-bottom: 12px;
         }
@@ -513,20 +514,26 @@
             background: #faf9fd;
         }
 
+        /* ВАЖНО:
+           Каждый вариант выводится отдельным блоком.
+           Вариант 1, Вариант 2 ... Вариант 19.
+        */
+
         .variant-block {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .variant-title {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 800;
             color: #504267;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            padding-left: 2px;
         }
 
         .tasks-grid {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(5,minmax(0,1fr));
             gap: 10px;
         }
 
@@ -547,12 +554,12 @@
         }
 
         .task-card.correct {
-            background: linear-gradient(145deg, #effcf4, #e1f8eb);
+            background: linear-gradient(145deg,#effcf4,#e1f8eb);
             border-color: #bde9ce;
         }
 
         .task-card.wrong {
-            background: linear-gradient(145deg, #fff3f6, #ffe6ec);
+            background: linear-gradient(145deg,#fff3f6,#ffe6ec);
             border-color: #f0c0ce;
         }
 
@@ -597,9 +604,9 @@
             text-align: center;
         }
 
-        /* =========================
+        /* =====================================
            STATS
-        ========================= */
+        ===================================== */
 
         .stats-actions {
             display: flex;
@@ -695,7 +702,6 @@
             color: #a04f68;
         }
 
-        /* ЯРКИЙ РЕЗУЛЬТАТ В ИСТОРИИ */
         .attempt-result-correct {
             color: #00a83b;
             font-weight: 800;
@@ -706,9 +712,9 @@
             font-weight: 800;
         }
 
-        /* =========================
+        /* =====================================
            ERRORS
-        ========================= */
+        ===================================== */
 
         .error-card {
             background: white;
@@ -739,9 +745,9 @@
             line-height: 1.45;
         }
 
-        /* =========================
+        /* =====================================
            PROFILE
-        ========================= */
+        ===================================== */
 
         .profile-card {
             max-width: 650px;
@@ -755,9 +761,9 @@
             margin-top: 0;
         }
 
-        /* =========================
+        /* =====================================
            MODAL
-        ========================= */
+        ===================================== */
 
         .modal {
             position: fixed;
@@ -858,9 +864,9 @@
             resize: vertical;
         }
 
-        /* =========================
+        /* =====================================
            TOAST
-        ========================= */
+        ===================================== */
 
         #toast {
             position: fixed;
@@ -884,11 +890,11 @@
             transform: translateY(0);
         }
 
-        /* =========================
+        /* =====================================
            RESPONSIVE
-        ========================= */
+        ===================================== */
 
-        @media (max-width: 1000px) {
+        @media (max-width:1000px) {
 
             .app-layout {
                 grid-template-columns: 1fr;
@@ -897,7 +903,7 @@
             .sidebar {
                 position: static;
                 display: grid;
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(5,1fr);
                 gap: 5px;
             }
 
@@ -908,19 +914,19 @@
             }
 
             .tasks-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(3,1fr);
             }
 
         }
 
-        @media (max-width: 750px) {
+        @media (max-width:750px) {
 
             .summary-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2,1fr);
             }
 
             .task-groups {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(3,1fr);
             }
 
             .header-inner {
@@ -937,14 +943,14 @@
 
         }
 
-        @media (max-width: 520px) {
+        @media (max-width:520px) {
 
             .auth-card {
                 padding: 23px;
             }
 
             .sidebar {
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(5,1fr);
             }
 
             .nav-btn {
@@ -952,7 +958,7 @@
             }
 
             .tasks-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2,1fr);
             }
 
             .page-header h1 {
@@ -982,9 +988,9 @@
 
 <body>
 
-<!-- =========================================================
-     AUTH SCREEN
-========================================================= -->
+<!-- =====================================================
+     AUTH
+===================================================== -->
 
 <div id="authScreen">
 
@@ -1248,7 +1254,7 @@
         </div>
 
 
-        <!-- RESET PASSWORD -->
+        <!-- RESET -->
 
         <div
             id="resetForm"
@@ -1317,9 +1323,9 @@
 </div>
 
 
-<!-- =========================================================
-     MAIN APP
-========================================================= -->
+<!-- =====================================================
+     APP
+===================================================== -->
 
 <div
     id="app"
@@ -1417,7 +1423,7 @@
 
         <main class="content">
 
-            <!-- ================= HOME ================= -->
+            <!-- HOME -->
 
             <section
                 id="page-home"
@@ -1561,7 +1567,7 @@
             </section>
 
 
-            <!-- ================= TASKS ================= -->
+            <!-- TASKS -->
 
             <section
                 id="page-tasks"
@@ -1645,7 +1651,7 @@
             </section>
 
 
-            <!-- ================= STATS ================= -->
+            <!-- STATS -->
 
             <section
                 id="page-stats"
@@ -1777,7 +1783,7 @@
             </section>
 
 
-            <!-- ================= ERRORS ================= -->
+            <!-- ERRORS -->
 
             <section
                 id="page-errors"
@@ -1802,7 +1808,7 @@
             </section>
 
 
-            <!-- ================= PROFILE ================= -->
+            <!-- PROFILE -->
 
             <section
                 id="page-profile"
@@ -1869,9 +1875,9 @@
 </div>
 
 
-<!-- =========================================================
+<!-- =====================================================
      TASK MODAL
-========================================================= -->
+===================================================== -->
 
 <div
     id="taskModal"
@@ -1985,9 +1991,9 @@
 "use strict";
 
 
-/* =========================================================
+/* =====================================================
    SUPABASE
-========================================================= */
+===================================================== */
 
 const SUPABASE_URL =
     "https://rbffkodkjrmvltnlqzkn.supabase.co";
@@ -1997,6 +2003,7 @@ const SUPABASE_KEY =
 
 const REDIRECT =
     "https://darianovet.github.io/oge-english-tracker/";
+
 
 const sb =
     window.supabase.createClient(
@@ -2012,9 +2019,9 @@ const sb =
     );
 
 
-/* =========================================================
+/* =====================================================
    DOM
-========================================================= */
+===================================================== */
 
 const authScreen =
     document.getElementById(
@@ -2037,9 +2044,9 @@ const toast =
     );
 
 
-/* =========================================================
+/* =====================================================
    STATE
-========================================================= */
+===================================================== */
 
 let currentUser = null;
 let currentProfile = null;
@@ -2056,15 +2063,19 @@ let progressMap = {};
 let attemptHistory = [];
 
 
-/* =========================================================
-   TASKS
-========================================================= */
+/* =====================================================
+   TASK FUNCTIONS
+===================================================== */
 
 const getTasks = () => (
+
     typeof TASKS !== "undefined" &&
     Array.isArray(TASKS)
+
         ? TASKS
+
         : []
+
 );
 
 
@@ -2104,41 +2115,103 @@ function getVariant(task) {
 }
 
 
-/* =========================================================
-   TASK GROUPS
-========================================================= */
+/* =====================================================
+   GROUPS
+===================================================== */
 
 const TASK_GROUPS = {
 
-    "1-5": task =>
-        Number(getNumber(task)) >= 1 &&
-        Number(getNumber(task)) <= 5,
+    "1-5": task => {
 
-    "6-11": task =>
-        Number(getNumber(task)) >= 6 &&
-        Number(getNumber(task)) <= 11,
+        const number =
+            Number(
+                getNumber(task)
+            );
 
-    "12": task =>
-        Number(getNumber(task)) === 12,
+        return (
+            number >= 1 &&
+            number <= 5
+        );
 
-    "13-19": task =>
-        Number(getNumber(task)) >= 13 &&
-        Number(getNumber(task)) <= 19,
+    },
 
-    "20-28": task =>
-        Number(getNumber(task)) >= 20 &&
-        Number(getNumber(task)) <= 28,
 
-    "29-34": task =>
-        Number(getNumber(task)) >= 29 &&
-        Number(getNumber(task)) <= 34
+    "6-11": task => {
+
+        const number =
+            Number(
+                getNumber(task)
+            );
+
+        return (
+            number >= 6 &&
+            number <= 11
+        );
+
+    },
+
+
+    "12": task => {
+
+        return (
+            Number(
+                getNumber(task)
+            ) === 12
+        );
+
+    },
+
+
+    "13-19": task => {
+
+        const number =
+            Number(
+                getNumber(task)
+            );
+
+        return (
+            number >= 13 &&
+            number <= 19
+        );
+
+    },
+
+
+    "20-28": task => {
+
+        const number =
+            Number(
+                getNumber(task)
+            );
+
+        return (
+            number >= 20 &&
+            number <= 28
+        );
+
+    },
+
+
+    "29-34": task => {
+
+        const number =
+            Number(
+                getNumber(task)
+            );
+
+        return (
+            number >= 29 &&
+            number <= 34
+        );
+
+    }
 
 };
 
 
-/* =========================================================
-   MOTIVATION
-========================================================= */
+/* =====================================================
+   QUOTES
+===================================================== */
 
 const QUOTES = [
 
@@ -2188,14 +2261,18 @@ function getRandomQuote() {
             "lastQuote"
         );
 
+
     let available =
         QUOTES.filter(
-            quote => quote !== last
+            quote =>
+                quote !== last
         );
+
 
     if (!available.length) {
         available = QUOTES;
     }
+
 
     const quote =
         available[
@@ -2205,28 +2282,45 @@ function getRandomQuote() {
             )
         ];
 
+
     sessionStorage.setItem(
         "lastQuote",
         quote
     );
+
 
     return quote;
 
 }
 
 
-/* =========================================================
+/* =====================================================
    UTILITIES
-========================================================= */
+===================================================== */
 
 function escapeHtml(value) {
 
     return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
@@ -2237,8 +2331,12 @@ function formatDate(dateValue) {
         return "Дата неизвестна";
     }
 
+
     const date =
-        new Date(dateValue);
+        new Date(
+            dateValue
+        );
+
 
     if (
         Number.isNaN(
@@ -2247,6 +2345,7 @@ function formatDate(dateValue) {
     ) {
         return "Дата неизвестна";
     }
+
 
     return date.toLocaleString(
         "ru-RU",
@@ -2267,15 +2366,19 @@ function showToast(message) {
     toast.textContent =
         message;
 
+
     toast.classList.add(
         "show"
     );
 
+
     setTimeout(
         () => {
+
             toast.classList.remove(
                 "show"
             );
+
         },
         2800
     );
@@ -2295,7 +2398,7 @@ function getAttemptsForTask(taskId) {
         )
         .slice()
         .sort(
-            (a, b) =>
+            (a,b) =>
                 new Date(
                     a.created_at
                 ) -
@@ -2307,9 +2410,9 @@ function getAttemptsForTask(taskId) {
 }
 
 
-/* =========================================================
-   AUTH FORMS
-========================================================= */
+/* =====================================================
+   AUTH UI
+===================================================== */
 
 function showAuthForm(name) {
 
@@ -2322,6 +2425,7 @@ function showAuthForm(name) {
             name !== "login"
         );
 
+
     document
         .getElementById(
             "registerForm"
@@ -2331,6 +2435,7 @@ function showAuthForm(name) {
             name !== "register"
         );
 
+
     document
         .getElementById(
             "forgotForm"
@@ -2339,6 +2444,7 @@ function showAuthForm(name) {
             "hidden",
             name !== "forgot"
         );
+
 
     document
         .getElementById(
@@ -2359,25 +2465,29 @@ function clearAuthMessages() {
         "registerMessage",
         "forgotMessage",
         "resetMessage"
-    ].forEach(id => {
+    ]
+    .forEach(
+        id => {
 
-        const element =
-            document.getElementById(
-                id
-            );
+            const element =
+                document.getElementById(
+                    id
+                );
 
-        if (element) {
-            element.textContent = "";
+
+            if (element) {
+                element.textContent = "";
+            }
+
         }
-
-    });
+    );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    PROFILE
-========================================================= */
+===================================================== */
 
 async function ensureProfile() {
 
@@ -2389,12 +2499,14 @@ async function ensureProfile() {
     } =
         await sb.auth.getUser();
 
+
     if (
         error ||
         !user
     ) {
         return null;
     }
+
 
     const nickname =
         user.user_metadata?.username ||
@@ -2409,7 +2521,10 @@ async function ensureProfile() {
         await sb
             .from("profiles")
             .select("id,nickname")
-            .eq("id", user.id)
+            .eq(
+                "id",
+                user.id
+            )
             .maybeSingle();
 
 
@@ -2437,6 +2552,7 @@ async function ensureProfile() {
         if (insertError) {
             throw insertError;
         }
+
 
         return data;
 
@@ -2466,6 +2582,7 @@ async function ensureProfile() {
             throw updateError;
         }
 
+
         return data;
 
     }
@@ -2476,9 +2593,9 @@ async function ensureProfile() {
 }
 
 
-/* =========================================================
+/* =====================================================
    LOAD DATA
-========================================================= */
+===================================================== */
 
 async function loadData() {
 
@@ -2509,16 +2626,18 @@ async function loadData() {
 
 
     (progress || [])
-        .forEach(row => {
+        .forEach(
+            row => {
 
-            progressMap[
-                String(
-                    row.task_id
-                )
-            ] =
-                row.status;
+                progressMap[
+                    String(
+                        row.task_id
+                    )
+                ] =
+                    row.status;
 
-        });
+            }
+        );
 
 
     const {
@@ -2551,9 +2670,9 @@ async function loadData() {
 }
 
 
-/* =========================================================
+/* =====================================================
    ENTER APP
-========================================================= */
+===================================================== */
 
 async function enterApp(session) {
 
@@ -2602,6 +2721,7 @@ async function enterApp(session) {
         authScreen.classList.add(
             "hidden"
         );
+
 
         app.classList.remove(
             "hidden"
@@ -2664,6 +2784,7 @@ function showAuthScreen() {
         "hidden"
     );
 
+
     authScreen.classList.remove(
         "hidden"
     );
@@ -2676,9 +2797,9 @@ function showAuthScreen() {
 }
 
 
-/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
 function showPage(pageName) {
 
@@ -2690,30 +2811,34 @@ function showPage(pageName) {
         .querySelectorAll(
             ".page"
         )
-        .forEach(page => {
+        .forEach(
+            page => {
 
-            page.classList.toggle(
-                "hidden",
-                page.id !==
-                `page-${pageName}`
-            );
+                page.classList.toggle(
+                    "hidden",
+                    page.id !==
+                    `page-${pageName}`
+                );
 
-        });
+            }
+        );
 
 
     document
         .querySelectorAll(
             ".nav-btn"
         )
-        .forEach(button => {
+        .forEach(
+            button => {
 
-            button.classList.toggle(
-                "active",
-                button.dataset.page ===
-                pageName
-            );
+                button.classList.toggle(
+                    "active",
+                    button.dataset.page ===
+                    pageName
+                );
 
-        });
+            }
+        );
 
 
     if (
@@ -2782,9 +2907,9 @@ function showPage(pageName) {
 }
 
 
-/* =========================================================
-   HOME
-========================================================= */
+/* =====================================================
+   STATISTICS CALCULATION
+===================================================== */
 
 function calculateStats() {
 
@@ -2804,16 +2929,16 @@ function calculateStats() {
 
     const correct =
         attemptHistory.filter(
-            a =>
-                a.result ===
+            attempt =>
+                attempt.result ===
                 "correct"
         ).length;
 
 
     const wrong =
         attemptHistory.filter(
-            a =>
-                a.result ===
+            attempt =>
+                attempt.result ===
                 "wrong"
         ).length;
 
@@ -2851,6 +2976,10 @@ function calculateStats() {
 
 }
 
+
+/* =====================================================
+   HOME
+===================================================== */
 
 function renderHome() {
 
@@ -2921,15 +3050,11 @@ function renderHome() {
 }
 
 
-/* =========================================================
-   TASKS
-========================================================= */
+/* =====================================================
+   TASK LIST
+===================================================== */
 
 function getTasksForCurrentGroup() {
-
-    const allTasks =
-        getTasks();
-
 
     const filter =
         TASK_GROUPS[
@@ -2942,16 +3067,17 @@ function getTasksForCurrentGroup() {
     }
 
 
-    return allTasks
+    return getTasks()
         .filter(filter)
         .slice()
         .sort(
-            (a, b) => {
+            (a,b) => {
 
                 const variantA =
                     Number(
                         getVariant(a)
                     ) || 0;
+
 
                 const variantB =
                     Number(
@@ -2987,6 +3113,25 @@ function getTasksForCurrentGroup() {
 }
 
 
+/*
+    ГЛАВНАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ.
+
+    Она специально группирует задания сначала по variant.
+
+    Получается:
+
+    Вариант 1
+       1  2  3  4  5
+
+    Вариант 2
+       1  2  3  4  5
+
+    ...
+
+    Вариант 19
+       1  2  3  4  5
+*/
+
 function renderTasks() {
 
     const container =
@@ -2995,19 +3140,30 @@ function renderTasks() {
         );
 
 
+    const searchElement =
+        document.getElementById(
+            "taskSearch"
+        );
+
+
     const query =
-        document
-            .getElementById(
-                "taskSearch"
-            )
-            .value
-            .trim()
-            .toLowerCase();
+        searchElement
+            ? searchElement.value
+                .trim()
+                .toLowerCase()
+            : "";
 
 
     let tasks =
         getTasksForCurrentGroup();
 
+
+    /*
+        Поиск по коду.
+        Если пользователь что-то ищет,
+        показываем только подходящие карточки,
+        но всё равно группируем их по вариантам.
+    */
 
     if (query) {
 
@@ -3026,33 +3182,11 @@ function renderTasks() {
 
         container.innerHTML = `
             <div class="empty-box">
-                Задания не найдены.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    if (query) {
-
-        container.innerHTML = `
-            <div class="variant-block">
-
-                <div class="variant-title">
-                    Результаты поиска
-                </div>
-
-                <div class="tasks-grid">
-
-                    ${tasks
-                        .map(
-                            renderTaskCard
-                        )
-                        .join("")}
-
-                </div>
-
+                ${
+                    query
+                        ? "По этому запросу задания не найдены."
+                        : "В этой группе пока нет заданий."
+                }
             </div>
         `;
 
@@ -3060,6 +3194,10 @@ function renderTasks() {
 
     }
 
+
+    /*
+        Группируем задания по variant.
+    */
 
     const variants = {};
 
@@ -3069,15 +3207,16 @@ function renderTasks() {
 
             const variant =
                 String(
-                    getVariant(task) ||
-                    "Без варианта"
+                    getVariant(task)
                 );
 
 
             if (
                 !variants[variant]
             ) {
+
                 variants[variant] = [];
+
             }
 
 
@@ -3088,16 +3227,25 @@ function renderTasks() {
     );
 
 
+    /*
+        Сортируем варианты:
+        1, 2, 3 ... 19
+    */
+
     const sortedVariants =
         Object.keys(
             variants
         )
         .sort(
-            (a, b) =>
+            (a,b) =>
                 Number(a) -
                 Number(b)
         );
 
+
+    /*
+        Каждый вариант — отдельный блок.
+    */
 
     container.innerHTML =
         sortedVariants
@@ -3108,8 +3256,9 @@ function renderTasks() {
                         variants[
                             variant
                         ]
+                        .slice()
                         .sort(
-                            (a, b) =>
+                            (a,b) =>
                                 Number(
                                     getNumber(a)
                                 ) -
@@ -3120,6 +3269,7 @@ function renderTasks() {
 
 
                     return `
+
                         <div class="variant-block">
 
                             <div class="variant-title">
@@ -3128,15 +3278,18 @@ function renderTasks() {
 
                             <div class="tasks-grid">
 
-                                ${variantTasks
-                                    .map(
-                                        renderTaskCard
-                                    )
-                                    .join("")}
+                                ${
+                                    variantTasks
+                                        .map(
+                                            renderTaskCard
+                                        )
+                                        .join("")
+                                }
 
                             </div>
 
                         </div>
+
                     `;
 
                 }
@@ -3146,16 +3299,23 @@ function renderTasks() {
 }
 
 
+/* =====================================================
+   TASK CARD
+===================================================== */
+
 function renderTaskCard(task) {
 
     const id =
         getId(task);
 
+
     const number =
         getNumber(task);
 
+
     const code =
         getCode(task);
+
 
     const status =
         progressMap[id] || "";
@@ -3163,6 +3323,7 @@ function renderTaskCard(task) {
 
     let statusText =
         "";
+
 
     let statusClass =
         "";
@@ -3176,16 +3337,21 @@ function renderTaskCard(task) {
         statusText =
             "✓ Верно";
 
+
         statusClass =
             "correct-text";
 
-    } else if (
+    }
+
+
+    if (
         status ===
         "wrong"
     ) {
 
         statusText =
             "✕ Неверно";
+
 
         statusClass =
             "wrong-text";
@@ -3194,6 +3360,7 @@ function renderTaskCard(task) {
 
 
     return `
+
         <button
             class="task-card ${escapeHtml(status)}"
             onclick="openTask('${escapeHtml(id)}')"
@@ -3209,27 +3376,36 @@ function renderTaskCard(task) {
 
             ${
                 statusText
+
                     ? `
-                        <div class="task-status ${statusClass}">
+
+                        <div
+                            class="task-status ${statusClass}"
+                        >
                             ${statusText}
                         </div>
+
                     `
+
                     : `
+
                         <div class="task-status">
                             Не выполнено
                         </div>
+
                     `
             }
 
         </button>
+
     `;
 
 }
 
 
-/* =========================================================
-   TASK MODAL
-========================================================= */
+/* =====================================================
+   FIND TASK
+===================================================== */
 
 function findTaskById(taskId) {
 
@@ -3244,6 +3420,10 @@ function findTaskById(taskId) {
 
 }
 
+
+/* =====================================================
+   OPEN TASK
+===================================================== */
 
 function openTask(taskId) {
 
@@ -3275,7 +3455,8 @@ function openTask(taskId) {
         .getElementById(
             "wrongReason"
         )
-        .value = "";
+        .value =
+            "";
 
 
     renderTaskModal();
@@ -3287,6 +3468,10 @@ function openTask(taskId) {
 
 }
 
+
+/* =====================================================
+   TASK MODAL
+===================================================== */
 
 function renderTaskModal() {
 
@@ -3332,9 +3517,11 @@ function renderTaskModal() {
     if (!attempts.length) {
 
         history.innerHTML = `
+
             <div class="empty-box">
                 Это задание ещё не выполнялось.
             </div>
+
         `;
 
         return;
@@ -3345,7 +3532,7 @@ function renderTaskModal() {
     history.innerHTML =
         attempts
             .map(
-                (attempt, index) => {
+                attempt => {
 
                     const correct =
                         attempt.result ===
@@ -3353,15 +3540,28 @@ function renderTaskModal() {
 
 
                     return `
-                        <div class="modal-attempt ${correct ? "correct" : "wrong"}">
 
-                            <strong class="${
+                        <div
+                            class="modal-attempt ${
                                 correct
-                                    ? "modal-attempt-result-correct"
-                                    : "modal-attempt-result-wrong"
-                            }">
+                                    ? "correct"
+                                    : "wrong"
+                            }"
+                        >
 
-                                ${correct ? "✓ Верно" : "✕ Неверно"}
+                            <strong
+                                class="${
+                                    correct
+                                        ? "modal-attempt-result-correct"
+                                        : "modal-attempt-result-wrong"
+                                }"
+                            >
+
+                                ${
+                                    correct
+                                        ? "✓ Верно"
+                                        : "✕ Неверно"
+                                }
 
                             </strong>
 
@@ -3372,17 +3572,24 @@ function renderTaskModal() {
                                     font-size:12px;
                                 "
                             >
+
                                 ${escapeHtml(
                                     formatDate(
                                         attempt.created_at
                                     )
                                 )}
+
                             </div>
+
 
                             ${
                                 !correct
+
                                     ? `
-                                        <div style="margin-top:7px;">
+
+                                        <div
+                                            style="margin-top:7px;"
+                                        >
 
                                             <strong>
                                                 Причина:
@@ -3394,11 +3601,14 @@ function renderTaskModal() {
                                             )}
 
                                         </div>
+
                                     `
+
                                     : ""
                             }
 
                         </div>
+
                     `;
 
                 }
@@ -3408,17 +3618,26 @@ function renderTaskModal() {
 }
 
 
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
 function closeTaskModal() {
 
     taskModal.classList.add(
         "hidden"
     );
 
+
     currentTaskId =
         null;
 
 }
 
+
+/* =====================================================
+   SAVE ATTEMPT
+===================================================== */
 
 async function saveAttempt(
     result,
@@ -3443,20 +3662,24 @@ async function saveAttempt(
         );
 
         return;
+
     }
 
 
     try {
+
+        /*
+            Сохраняем каждую попытку.
+        */
 
         const {
             data: attempt,
             error: attemptError
         } =
             await sb
-                .from(
-                    "attempt_history"
-                )
+                .from("attempt_history")
                 .insert({
+
                     user_id:
                         currentUser.id,
 
@@ -3466,8 +3689,7 @@ async function saveAttempt(
                     result,
 
                     reason:
-                        result ===
-                        "wrong"
+                        result === "wrong"
                             ? reason.trim()
                             : null
 
@@ -3481,15 +3703,19 @@ async function saveAttempt(
         }
 
 
+        /*
+            Сохраняем последний результат задания.
+        */
+
         const {
             error: progressError
         } =
             await sb
-                .from(
-                    "progress"
-                )
+                .from("progress")
                 .upsert(
+
                     {
+
                         user_id:
                             currentUser.id,
 
@@ -3504,10 +3730,12 @@ async function saveAttempt(
                                 .toISOString()
 
                     },
+
                     {
                         onConflict:
                             "user_id,task_id"
                     }
+
                 );
 
 
@@ -3528,9 +3756,13 @@ async function saveAttempt(
 
 
         renderTasks();
+
         renderHome();
+
         renderStats();
+
         renderErrors();
+
         renderTaskModal();
 
 
@@ -3547,19 +3779,25 @@ async function saveAttempt(
             .getElementById(
                 "wrongReason"
             )
-            .value = "";
+            .value =
+                "";
 
 
         showToast(
+
             result === "correct"
+
                 ? "Попытка сохранена как верная."
+
                 : "Ошибка сохранена."
+
         );
 
 
     } catch (error) {
 
         console.error(error);
+
 
         showToast(
             "Не удалось сохранить результат."
@@ -3570,9 +3808,9 @@ async function saveAttempt(
 }
 
 
-/* =========================================================
+/* =====================================================
    STATS
-========================================================= */
+===================================================== */
 
 function renderStats() {
 
@@ -3638,7 +3876,7 @@ function renderStats() {
         getTasks()
             .slice()
             .sort(
-                (a, b) => {
+                (a,b) => {
 
                     const variantDifference =
                         Number(
@@ -3675,9 +3913,11 @@ function renderStats() {
     if (!tasks.length) {
 
         container.innerHTML = `
+
             <div class="empty-box">
                 В базе пока нет заданий.
             </div>
+
         `;
 
         return;
@@ -3712,9 +3952,13 @@ function renderStats() {
                     if (!latest) {
 
                         statusHtml = `
-                            <span class="status-pill none">
+
+                            <span
+                                class="status-pill none"
+                            >
                                 Не выполнялось
                             </span>
+
                         `;
 
                     } else if (
@@ -3723,36 +3967,57 @@ function renderStats() {
                     ) {
 
                         statusHtml = `
-                            <span class="status-pill correct">
+
+                            <span
+                                class="status-pill correct"
+                            >
                                 ✓ Верно
                             </span>
+
                         `;
 
                     } else {
 
                         statusHtml = `
-                            <span class="status-pill wrong">
+
+                            <span
+                                class="status-pill wrong"
+                            >
                                 ✕ Неверно
                             </span>
+
                         `;
 
                     }
 
 
                     return `
+
                         <div class="stats-task">
 
-                            <div class="stats-task-header">
+                            <div
+                                class="stats-task-header"
+                            >
 
                                 <div>
 
-                                    <div class="stats-task-title">
-                                        Задание ${escapeHtml(
+                                    <div
+                                        class="stats-task-title"
+                                    >
+                                        Вариант
+                                        ${escapeHtml(
+                                            getVariant(task)
+                                        )}
+                                        ·
+                                        Задание
+                                        ${escapeHtml(
                                             getNumber(task)
                                         )}
                                     </div>
 
-                                    <div class="stats-task-code">
+                                    <div
+                                        class="stats-task-code"
+                                    >
                                         ${escapeHtml(
                                             getCode(task)
                                         )}
@@ -3790,77 +4055,100 @@ function renderStats() {
 
                             ${
                                 attempts.length
+
                                     ? `
-                                        <div class="attempt-list">
 
-                                            ${attempts
-                                                .map(
-                                                    (
-                                                        attempt,
-                                                        index
-                                                    ) => {
+                                        <div
+                                            class="attempt-list"
+                                        >
 
-                                                        const isCorrect =
-                                                            attempt.result ===
-                                                            "correct";
+                                            ${
+                                                attempts
+                                                    .map(
+                                                        (
+                                                            attempt,
+                                                            index
+                                                        ) => {
+
+                                                            const isCorrect =
+                                                                attempt.result ===
+                                                                "correct";
 
 
-                                                        return `
-                                                            <div class="attempt-row">
+                                                            return `
 
-                                                                <strong>
-                                                                    Попытка ${index + 1}:
-                                                                </strong>
+                                                                <div
+                                                                    class="attempt-row"
+                                                                >
 
-                                                                <span class="${
-                                                                    isCorrect
-                                                                        ? "attempt-result-correct"
-                                                                        : "attempt-result-wrong"
-                                                                }">
+                                                                    <strong>
+                                                                        Попытка
+                                                                        ${index + 1}:
+                                                                    </strong>
+
+                                                                    <span
+                                                                        class="${
+                                                                            isCorrect
+                                                                                ? "attempt-result-correct"
+                                                                                : "attempt-result-wrong"
+                                                                        }"
+                                                                    >
+
+                                                                        ${
+                                                                            isCorrect
+                                                                                ? "✓ Верно"
+                                                                                : "✕ Неверно"
+                                                                        }
+
+                                                                    </span>
+
+                                                                    ·
+
+                                                                    ${escapeHtml(
+                                                                        formatDate(
+                                                                            attempt.created_at
+                                                                        )
+                                                                    )}
+
 
                                                                     ${
-                                                                        isCorrect
-                                                                            ? "✓ Верно"
-                                                                            : "✕ Неверно"
+                                                                        attempt.result ===
+                                                                        "wrong"
+
+                                                                            ? `
+
+                                                                                <div
+                                                                                    class="attempt-reason"
+                                                                                >
+
+                                                                                    Причина:
+                                                                                    ${escapeHtml(
+                                                                                        attempt.reason ||
+                                                                                        "Причина не указана"
+                                                                                    )}
+
+                                                                                </div>
+
+                                                                            `
+
+                                                                            : ""
                                                                     }
 
-                                                                </span>
+                                                                </div>
 
-                                                                ·
+                                                            `;
 
-                                                                ${escapeHtml(
-                                                                    formatDate(
-                                                                        attempt.created_at
-                                                                    )
-                                                                )}
-
-                                                                ${
-                                                                    attempt.result ===
-                                                                    "wrong"
-                                                                        ? `
-                                                                            <div class="attempt-reason">
-
-                                                                                Причина:
-                                                                                ${escapeHtml(
-                                                                                    attempt.reason ||
-                                                                                    "Причина не указана"
-                                                                                )}
-
-                                                                            </div>
-                                                                        `
-                                                                        : ""
-                                                                }
-
-                                                            </div>
-                                                        `;
-
-                                                    }
-                                                )
-                                                .join("")}
+                                                        }
+                                                    )
+                                                    .join("")
+                                            }
 
                                         </div>
+
                                     `
+
                                     : `
+
                                         <div
                                             style="
                                                 margin-top:14px;
@@ -3870,10 +4158,12 @@ function renderStats() {
                                         >
                                             Задание ещё не выполнялось.
                                         </div>
+
                                     `
                             }
 
                         </div>
+
                     `;
 
                 }
@@ -3883,9 +4173,9 @@ function renderStats() {
 }
 
 
-/* =========================================================
+/* =====================================================
    ERRORS
-========================================================= */
+===================================================== */
 
 function renderErrors() {
 
@@ -3904,7 +4194,7 @@ function renderErrors() {
             )
             .slice()
             .sort(
-                (a, b) =>
+                (a,b) =>
                     new Date(
                         b.created_at
                     ) -
@@ -3917,9 +4207,11 @@ function renderErrors() {
     if (!errors.length) {
 
         container.innerHTML = `
+
             <div class="empty-box">
                 Ошибок пока нет. Отличная работа!
             </div>
+
         `;
 
         return;
@@ -3939,16 +4231,36 @@ function renderErrors() {
 
 
                     return `
-                        <div class="error-card">
 
-                            <div class="error-title">
+                        <div
+                            class="error-card"
+                        >
+
+                            <div
+                                class="error-title"
+                            >
+
+                                Вариант
+                                ${
+                                    task
+                                        ? escapeHtml(
+                                            getVariant(task)
+                                        )
+                                        : ""
+                                }
+
+                                ·
 
                                 Задание
-                                ${escapeHtml(
+                                ${
                                     task
-                                        ? getNumber(task)
-                                        : attempt.task_id
-                                )}
+                                        ? escapeHtml(
+                                            getNumber(task)
+                                        )
+                                        : escapeHtml(
+                                            attempt.task_id
+                                        )
+                                }
 
                                 ·
 
@@ -3960,7 +4272,10 @@ function renderErrors() {
 
                             </div>
 
-                            <div class="error-date">
+
+                            <div
+                                class="error-date"
+                            >
 
                                 ${escapeHtml(
                                     formatDate(
@@ -3970,7 +4285,10 @@ function renderErrors() {
 
                             </div>
 
-                            <div class="error-reason">
+
+                            <div
+                                class="error-reason"
+                            >
 
                                 <strong>
                                     Причина:
@@ -3984,6 +4302,7 @@ function renderErrors() {
                             </div>
 
                         </div>
+
                     `;
 
                 }
@@ -3993,9 +4312,9 @@ function renderErrors() {
 }
 
 
-/* =========================================================
+/* =====================================================
    PDF
-========================================================= */
+===================================================== */
 
 function downloadStatisticsPdf() {
 
@@ -4014,7 +4333,7 @@ function downloadStatisticsPdf() {
         getTasks()
             .slice()
             .sort(
-                (a, b) => {
+                (a,b) => {
 
                     const variantDifference =
                         Number(
@@ -4048,23 +4367,12 @@ function downloadStatisticsPdf() {
             );
 
 
-    /*
-        Только задания,
-        у которых есть хотя бы одна попытка.
-    */
-
     const attemptedTasks =
         allTasks.filter(
-            task => {
-
-                const attempts =
-                    getAttemptsForTask(
-                        getId(task)
-                    );
-
-                return attempts.length > 0;
-
-            }
+            task =>
+                getAttemptsForTask(
+                    getId(task)
+                ).length > 0
         );
 
 
@@ -4135,7 +4443,7 @@ function downloadStatisticsPdf() {
             "title",
 
         margin:
-            [0, 0, 0, 8]
+            [0,0,0,8]
 
     });
 
@@ -4160,7 +4468,7 @@ function downloadStatisticsPdf() {
             "meta",
 
         margin:
-            [0, 0, 0, 14]
+            [0,0,0,14]
 
     });
 
@@ -4170,7 +4478,7 @@ function downloadStatisticsPdf() {
         table: {
 
             widths:
-                ["*", "*", "*", "*"],
+                ["*","*","*","*"],
 
             body: [
 
@@ -4238,7 +4546,7 @@ function downloadStatisticsPdf() {
             "lightHorizontalLines",
 
         margin:
-            [0, 0, 0, 12]
+            [0,0,0,12]
 
     });
 
@@ -4263,7 +4571,7 @@ function downloadStatisticsPdf() {
             "summary",
 
         margin:
-            [0, 0, 0, 15]
+            [0,0,0,15]
 
     });
 
@@ -4277,7 +4585,7 @@ function downloadStatisticsPdf() {
             "sectionTitle",
 
         margin:
-            [0, 0, 0, 10]
+            [0,0,0,10]
 
     });
 
@@ -4315,7 +4623,7 @@ function downloadStatisticsPdf() {
             content.push({
 
                 text:
-                    `Задание ${getNumber(task)} · ${getCode(task)}`,
+                    `Вариант ${getVariant(task)} · Задание ${getNumber(task)} · ${getCode(task)}`,
 
                 style:
                     "taskTitle",
@@ -4367,7 +4675,7 @@ function downloadStatisticsPdf() {
                     "small",
 
                 margin:
-                    [0, 0, 0, 5]
+                    [0,0,0,5]
 
             });
 
@@ -4414,7 +4722,7 @@ function downloadStatisticsPdf() {
 
 
             attempts.forEach(
-                (attempt, index) => {
+                (attempt,index) => {
 
                     body.push([
 
@@ -4471,7 +4779,7 @@ function downloadStatisticsPdf() {
                     8,
 
                 margin:
-                    [0, 0, 0, 5]
+                    [0,0,0,5]
 
             });
 
@@ -4499,7 +4807,7 @@ function downloadStatisticsPdf() {
                 "A4",
 
             pageMargins:
-                [28, 32, 28, 32],
+                [28,32,28,32],
 
             content,
 
@@ -4537,7 +4845,7 @@ function downloadStatisticsPdf() {
                         "#666666",
 
                     margin:
-                        [0, 0, 0, 3]
+                        [0,0,0,3]
 
                 },
 
@@ -4570,7 +4878,7 @@ function downloadStatisticsPdf() {
                         true,
 
                     margin:
-                        [0, 2, 0, 2]
+                        [0,2,0,2]
 
                 },
 
@@ -4619,9 +4927,9 @@ function downloadStatisticsPdf() {
 }
 
 
-/* =========================================================
+/* =====================================================
    PROFILE SAVE
-========================================================= */
+===================================================== */
 
 async function saveProfile() {
 
@@ -4639,14 +4947,17 @@ async function saveProfile() {
             .trim();
 
 
-    if (!nickname) {
-
+    const message =
         document
             .getElementById(
                 "profileMessage"
-            )
-            .textContent =
-                "Никнейм не может быть пустым.";
+            );
+
+
+    if (!nickname) {
+
+        message.textContent =
+            "Никнейм не может быть пустым.";
 
         return;
 
@@ -4660,9 +4971,7 @@ async function saveProfile() {
             error
         } =
             await sb
-                .from(
-                    "profiles"
-                )
+                .from("profiles")
                 .update({
                     nickname
                 })
@@ -4691,12 +5000,8 @@ async function saveProfile() {
                 nickname;
 
 
-        document
-            .getElementById(
-                "profileMessage"
-            )
-            .textContent =
-                "Изменения сохранены.";
+        message.textContent =
+            "Изменения сохранены.";
 
 
         renderHome();
@@ -4712,24 +5017,20 @@ async function saveProfile() {
         console.error(error);
 
 
-        document
-            .getElementById(
-                "profileMessage"
-            )
-            .textContent =
-                "Не удалось сохранить изменения.";
+        message.textContent =
+            "Не удалось сохранить изменения.";
 
     }
 
 }
 
 
-/* =========================================================
-   EVENT LISTENERS
-========================================================= */
+/* =====================================================
+   EVENTS
+===================================================== */
 
 
-/* Auth navigation */
+/* REGISTER */
 
 document
     .getElementById(
@@ -4749,6 +5050,8 @@ document
     );
 
 
+/* LOGIN */
+
 document
     .getElementById(
         "showLoginBtn"
@@ -4766,6 +5069,8 @@ document
         }
     );
 
+
+/* FORGOT */
 
 document
     .getElementById(
@@ -4785,6 +5090,8 @@ document
     );
 
 
+/* BACK TO LOGIN */
+
 document
     .getElementById(
         "backToLoginBtn"
@@ -4803,7 +5110,7 @@ document
     );
 
 
-/* Login */
+/* LOGIN FORM */
 
 document
     .getElementById(
@@ -4834,9 +5141,10 @@ document
 
 
             const message =
-                document.getElementById(
-                    "loginMessage"
-                );
+                document
+                    .getElementById(
+                        "loginMessage"
+                    );
 
 
             message.textContent =
@@ -4880,7 +5188,7 @@ document
     );
 
 
-/* Register */
+/* REGISTER FORM */
 
 document
     .getElementById(
@@ -4928,9 +5236,10 @@ document
 
 
             const message =
-                document.getElementById(
-                    "registerMessage"
-                );
+                document
+                    .getElementById(
+                        "registerMessage"
+                    );
 
 
             if (
@@ -5007,7 +5316,7 @@ document
     );
 
 
-/* Forgot password */
+/* FORGOT FORM */
 
 document
     .getElementById(
@@ -5030,9 +5339,10 @@ document
 
 
             const message =
-                document.getElementById(
-                    "forgotMessage"
-                );
+                document
+                    .getElementById(
+                        "forgotMessage"
+                    );
 
 
             message.textContent =
@@ -5073,7 +5383,7 @@ document
     );
 
 
-/* Reset password */
+/* RESET FORM */
 
 document
     .getElementById(
@@ -5103,9 +5413,10 @@ document
 
 
             const message =
-                document.getElementById(
-                    "resetMessage"
-                );
+                document
+                    .getElementById(
+                        "resetMessage"
+                    );
 
 
             if (
@@ -5163,7 +5474,7 @@ document
     );
 
 
-/* Navigation */
+/* NAVIGATION */
 
 document
     .querySelectorAll(
@@ -5187,7 +5498,7 @@ document
     );
 
 
-/* Go to tasks */
+/* GO TO TASKS */
 
 document
     .getElementById(
@@ -5205,7 +5516,7 @@ document
     );
 
 
-/* Task groups */
+/* GROUP BUTTONS */
 
 document
     .querySelectorAll(
@@ -5243,7 +5554,8 @@ document
                         .getElementById(
                             "taskSearch"
                         )
-                        .value = "";
+                        .value =
+                            "";
 
 
                     renderTasks();
@@ -5255,7 +5567,7 @@ document
     );
 
 
-/* Search */
+/* SEARCH */
 
 document
     .getElementById(
@@ -5267,7 +5579,7 @@ document
     );
 
 
-/* Modal */
+/* CLOSE MODAL */
 
 document
     .getElementById(
@@ -5296,7 +5608,7 @@ taskModal.addEventListener(
 );
 
 
-/* Correct */
+/* CORRECT */
 
 document
     .getElementById(
@@ -5306,13 +5618,12 @@ document
         "click",
         () =>
             saveAttempt(
-                "correct",
-                ""
+                "correct"
             )
     );
 
 
-/* Wrong */
+/* WRONG */
 
 document
     .getElementById(
@@ -5341,7 +5652,7 @@ document
     );
 
 
-/* Save wrong */
+/* SAVE WRONG */
 
 document
     .getElementById(
@@ -5381,7 +5692,7 @@ document
     );
 
 
-/* Profile */
+/* PROFILE */
 
 document
     .getElementById(
@@ -5393,7 +5704,7 @@ document
     );
 
 
-/* Logout */
+/* LOGOUT */
 
 document
     .getElementById(
@@ -5406,7 +5717,8 @@ document
             const {
                 error
             } =
-                await sb.auth.signOut();
+                await sb.auth
+                    .signOut();
 
 
             if (error) {
@@ -5432,15 +5744,14 @@ document
     );
 
 
-/* Escape closes modal */
+/* ESCAPE */
 
 document.addEventListener(
     "keydown",
     event => {
 
         if (
-            event.key ===
-            "Escape" &&
+            event.key === "Escape" &&
             !taskModal
                 .classList
                 .contains("hidden")
@@ -5454,9 +5765,9 @@ document.addEventListener(
 );
 
 
-/* =========================================================
+/* =====================================================
    AUTH STATE
-========================================================= */
+===================================================== */
 
 sb.auth.onAuthStateChange(
     (
@@ -5473,13 +5784,16 @@ sb.auth.onAuthStateChange(
                 "hidden"
             );
 
+
             app.classList.add(
                 "hidden"
             );
 
+
             showAuthForm(
                 "reset"
             );
+
 
             return;
 
@@ -5511,9 +5825,9 @@ sb.auth.onAuthStateChange(
 );
 
 
-/* =========================================================
-   INITIAL SESSION
-========================================================= */
+/* =====================================================
+   INITIALIZATION
+===================================================== */
 
 (async function init() {
 
@@ -5547,6 +5861,7 @@ sb.auth.onAuthStateChange(
         console.error(
             error
         );
+
 
         showAuthScreen();
 
