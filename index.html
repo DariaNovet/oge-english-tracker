@@ -779,6 +779,7 @@
         ========================= */
 
         @media (max-width: 1100px) {
+
             .tasks-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -789,6 +790,7 @@
         }
 
         @media (max-width: 800px) {
+
             .sidebar {
                 width: 210px;
             }
@@ -805,6 +807,7 @@
         }
 
         @media (max-width: 620px) {
+
             .sidebar {
                 position: static;
                 width: 100%;
@@ -871,13 +874,21 @@
 
 <body>
 
+<!-- ============================================================
+     AUTH
+============================================================ -->
+
 <div id="authScreen">
 
     <div class="auth-card">
 
-        <div class="auth-logo">OGE</div>
+        <div class="auth-logo">
+            OGE
+        </div>
 
-        <div class="auth-title">English Tracker</div>
+        <div class="auth-title">
+            English Tracker
+        </div>
 
         <div class="auth-subtitle">
             Подготовка к ОГЭ по английскому языку —
@@ -885,73 +896,129 @@
         </div>
 
         <div id="authError" class="auth-error hidden"></div>
+
         <div id="authSuccess" class="auth-success hidden"></div>
+
+
+        <!-- LOGIN -->
 
         <form id="loginForm">
 
             <div class="field">
-                <label for="loginEmail">Email</label>
+
+                <label for="loginEmail">
+                    Email
+                </label>
+
                 <input
                     id="loginEmail"
                     type="email"
                     autocomplete="email"
                     required
                 >
+
             </div>
 
+
             <div class="field">
-                <label for="loginPassword">Пароль</label>
+
+                <label for="loginPassword">
+                    Пароль
+                </label>
+
                 <input
                     id="loginPassword"
                     type="password"
                     autocomplete="current-password"
                     required
                 >
+
             </div>
 
-            <button class="primary-btn" type="submit">
+
+            <button
+                class="primary-btn"
+                type="submit"
+            >
                 Войти
             </button>
 
-            <div class="auth-switch">
-                Нет аккаунта?
-                <button type="button" class="auth-link" id="showRegister">
-                    Зарегистрироваться
-                </button>
-            </div>
 
             <div class="auth-switch">
-                <button type="button" class="auth-link" id="showForgot">
+
+                Нет аккаунта?
+
+                <button
+                    type="button"
+                    class="auth-link"
+                    id="showRegister"
+                >
+                    Зарегистрироваться
+                </button>
+
+            </div>
+
+
+            <div class="auth-switch">
+
+                <button
+                    type="button"
+                    class="auth-link"
+                    id="showForgot"
+                >
                     Забыли пароль?
                 </button>
+
             </div>
 
         </form>
 
-        <form id="registerForm" class="hidden">
+
+        <!-- REGISTER -->
+
+        <form
+            id="registerForm"
+            class="hidden"
+        >
 
             <div class="field">
-                <label for="registerNickname">Имя / никнейм</label>
+
+                <label for="registerNickname">
+                    Имя / никнейм
+                </label>
+
                 <input
                     id="registerNickname"
                     type="text"
                     autocomplete="nickname"
                     required
                 >
+
             </div>
 
+
             <div class="field">
-                <label for="registerEmail">Email</label>
+
+                <label for="registerEmail">
+                    Email
+                </label>
+
                 <input
                     id="registerEmail"
                     type="email"
                     autocomplete="email"
                     required
                 >
+
             </div>
 
+
             <div class="field">
-                <label for="registerPassword">Пароль</label>
+
+                <label for="registerPassword">
+                    Пароль
+                </label>
+
                 <input
                     id="registerPassword"
                     type="password"
@@ -959,58 +1026,108 @@
                     minlength="6"
                     required
                 >
+
             </div>
 
-            <button class="primary-btn" type="submit">
+
+            <button
+                class="primary-btn"
+                type="submit"
+            >
                 Создать аккаунт
             </button>
 
+
             <div class="auth-switch">
+
                 Уже есть аккаунт?
-                <button type="button" class="auth-link" id="showLoginFromRegister">
+
+                <button
+                    type="button"
+                    class="auth-link"
+                    id="showLoginFromRegister"
+                >
                     Войти
                 </button>
+
             </div>
 
         </form>
 
-        <form id="forgotForm" class="hidden">
+
+        <!-- FORGOT -->
+
+        <form
+            id="forgotForm"
+            class="hidden"
+        >
 
             <div class="field">
-                <label for="forgotEmail">Email</label>
+
+                <label for="forgotEmail">
+                    Email
+                </label>
+
                 <input
                     id="forgotEmail"
                     type="email"
                     autocomplete="email"
                     required
                 >
+
             </div>
 
-            <button class="primary-btn" type="submit">
+
+            <button
+                class="primary-btn"
+                type="submit"
+            >
                 Отправить ссылку
             </button>
 
+
             <div class="auth-switch">
-                <button type="button" class="auth-link" id="showLoginFromForgot">
+
+                <button
+                    type="button"
+                    class="auth-link"
+                    id="showLoginFromForgot"
+                >
                     Вернуться ко входу
                 </button>
+
             </div>
 
         </form>
 
-        <form id="resetForm" class="hidden">
+
+        <!-- RESET -->
+
+        <form
+            id="resetForm"
+            class="hidden"
+        >
 
             <div class="field">
-                <label for="newPassword">Новый пароль</label>
+
+                <label for="newPassword">
+                    Новый пароль
+                </label>
+
                 <input
                     id="newPassword"
                     type="password"
                     minlength="6"
                     required
                 >
+
             </div>
 
-            <button class="primary-btn" type="submit">
+
+            <button
+                class="primary-btn"
+                type="submit"
+            >
                 Сохранить пароль
             </button>
 
@@ -1021,9 +1138,19 @@
 </div>
 
 
-<div id="appScreen" class="hidden">
+<!-- ============================================================
+     APP
+============================================================ -->
+
+<div
+    id="appScreen"
+    class="hidden"
+>
 
     <div class="app-layout">
+
+
+        <!-- SIDEBAR -->
 
         <aside class="sidebar">
 
@@ -1034,6 +1161,7 @@
                 </div>
 
                 <div>
+
                     <div class="brand-title">
                         OGE English
                     </div>
@@ -1041,33 +1169,51 @@
                     <div class="brand-subtitle">
                         tracker
                     </div>
+
                 </div>
 
             </div>
 
+
             <nav class="nav">
 
-                <button class="nav-btn active" data-page="home">
+                <button
+                    class="nav-btn active"
+                    data-page="home"
+                >
                     Главная
                 </button>
 
-                <button class="nav-btn" data-page="tasks">
+                <button
+                    class="nav-btn"
+                    data-page="tasks"
+                >
                     Задания
                 </button>
 
-                <button class="nav-btn" data-page="stats">
+                <button
+                    class="nav-btn"
+                    data-page="stats"
+                >
                     Статистика
                 </button>
 
-                <button class="nav-btn" data-page="errors">
+                <button
+                    class="nav-btn"
+                    data-page="errors"
+                >
                     Ошибки
                 </button>
 
-                <button class="nav-btn" data-page="profile">
+                <button
+                    class="nav-btn"
+                    data-page="profile"
+                >
                     Профиль
                 </button>
 
             </nav>
+
 
             <div class="sidebar-bottom">
 
@@ -1089,6 +1235,7 @@
 
                 </div>
 
+
                 <button
                     id="logoutBtn"
                     class="logout-btn"
@@ -1101,9 +1248,17 @@
         </aside>
 
 
+        <!-- MAIN -->
+
         <main class="main">
 
-            <section id="page-home" class="page active">
+
+            <!-- HOME -->
+
+            <section
+                id="page-home"
+                class="page active"
+            >
 
                 <div class="page-header">
 
@@ -1116,6 +1271,7 @@
                     </div>
 
                 </div>
+
 
                 <div class="welcome-card">
 
@@ -1130,6 +1286,7 @@
 
                 </div>
 
+
                 <div class="quote-card">
 
                     <div class="quote-label">
@@ -1143,42 +1300,70 @@
 
                 </div>
 
+
                 <div class="stats-grid">
 
                     <div class="stat-card">
+
                         <div class="stat-label">
                             Выполнено
                         </div>
-                        <div id="homeCompleted" class="stat-value">
+
+                        <div
+                            id="homeCompleted"
+                            class="stat-value"
+                        >
                             0
                         </div>
+
                     </div>
 
+
                     <div class="stat-card">
+
                         <div class="stat-label">
                             Попыток
                         </div>
-                        <div id="homeAttempts" class="stat-value">
+
+                        <div
+                            id="homeAttempts"
+                            class="stat-value"
+                        >
                             0
                         </div>
+
                     </div>
 
+
                     <div class="stat-card">
+
                         <div class="stat-label">
                             Верно
                         </div>
-                        <div id="homeCorrect" class="stat-value">
+
+                        <div
+                            id="homeCorrect"
+                            class="stat-value"
+                        >
                             0
                         </div>
+
                     </div>
 
+
                     <div class="stat-card">
+
                         <div class="stat-label">
                             Точность
                         </div>
-                        <div id="homeAccuracy" class="stat-value">
+
+                        <div
+                            id="homeAccuracy"
+                            class="stat-value"
+                        >
                             0%
                         </div>
+
                     </div>
 
                 </div>
@@ -1186,7 +1371,12 @@
             </section>
 
 
-            <section id="page-tasks" class="page">
+            <!-- TASKS -->
+
+            <section
+                id="page-tasks"
+                class="page"
+            >
 
                 <div class="page-header">
 
@@ -1200,6 +1390,7 @@
 
                 </div>
 
+
                 <div class="task-toolbar">
 
                     <input
@@ -1211,17 +1402,24 @@
 
                 </div>
 
+
                 <div
                     id="taskGroups"
                     class="task-groups"
                 ></div>
+
 
                 <div id="tasksContainer"></div>
 
             </section>
 
 
-            <section id="page-stats" class="page">
+            <!-- STATS -->
+
+            <section
+                id="page-stats"
+                class="page"
+            >
 
                 <div class="page-header">
 
@@ -1235,72 +1433,128 @@
 
                 </div>
 
+
                 <div class="stats-grid">
 
                     <div class="stat-card">
+
                         <div class="stat-label">
                             Выполнено заданий
                         </div>
-                        <div id="statsCompleted" class="stat-value">
+
+                        <div
+                            id="statsCompleted"
+                            class="stat-value"
+                        >
                             0
                         </div>
+
                     </div>
 
+
                     <div class="stat-card">
+
                         <div class="stat-label">
                             Всего попыток
                         </div>
-                        <div id="statsAttempts" class="stat-value">
+
+                        <div
+                            id="statsAttempts"
+                            class="stat-value"
+                        >
                             0
                         </div>
+
                     </div>
 
+
                     <div class="stat-card">
+
                         <div class="stat-label">
                             Верных
                         </div>
-                        <div id="statsCorrect" class="stat-value">
+
+                        <div
+                            id="statsCorrect"
+                            class="stat-value"
+                        >
                             0
                         </div>
+
                     </div>
 
+
                     <div class="stat-card">
+
                         <div class="stat-label">
                             Неверных
                         </div>
-                        <div id="statsWrong" class="stat-value">
+
+                        <div
+                            id="statsWrong"
+                            class="stat-value"
+                        >
                             0
                         </div>
+
                     </div>
 
                 </div>
 
-                <div class="panel" style="margin-top:18px;">
+
+                <div
+                    class="panel"
+                    style="margin-top:18px;"
+                >
 
                     <div class="panel-title">
                         Последние результаты
                     </div>
+
 
                     <div class="table-wrap">
 
                         <table>
 
                             <thead>
+
                                 <tr>
-                                    <th>Задание</th>
-                                    <th>Вариант</th>
-                                    <th>Результат</th>
-                                    <th>Дата</th>
+
+                                    <th>
+                                        Задание
+                                    </th>
+
+                                    <th>
+                                        Вариант
+                                    </th>
+
+                                    <th>
+                                        Код задания
+                                    </th>
+
+                                    <th>
+                                        Результат
+                                    </th>
+
+                                    <th>
+                                        Дата
+                                    </th>
+
                                 </tr>
+
                             </thead>
 
-                            <tbody id="statsTableBody"></tbody>
+
+                            <tbody
+                                id="statsTableBody"
+                            ></tbody>
 
                         </table>
 
                     </div>
 
                 </div>
+
 
                 <button
                     id="downloadPdfBtn"
@@ -1313,7 +1567,12 @@
             </section>
 
 
-            <section id="page-errors" class="page">
+            <!-- ERRORS -->
+
+            <section
+                id="page-errors"
+                class="page"
+            >
 
                 <div class="page-header">
 
@@ -1327,12 +1586,20 @@
 
                 </div>
 
-                <div id="errorsContainer"></div>
+
+                <div
+                    id="errorsContainer"
+                ></div>
 
             </section>
 
 
-            <section id="page-profile" class="page">
+            <!-- PROFILE -->
+
+            <section
+                id="page-profile"
+                class="page"
+            >
 
                 <div class="page-header">
 
@@ -1346,13 +1613,17 @@
 
                 </div>
 
-                <div class="panel profile-card">
+
+                <div
+                    class="panel profile-card"
+                >
 
                     <div class="profile-row">
 
                         <div class="profile-label">
                             Никнейм
                         </div>
+
 
                         <div class="nickname-edit">
 
@@ -1363,6 +1634,7 @@
                                 maxlength="40"
                                 placeholder="Твой никнейм"
                             >
+
 
                             <button
                                 id="saveNicknameBtn"
@@ -1376,10 +1648,12 @@
 
                     </div>
 
+
                     <div
                         id="nicknameMessage"
                         class="nickname-message"
                     ></div>
+
 
                     <div class="profile-row">
 
@@ -1396,6 +1670,7 @@
 
                     </div>
 
+
                     <div class="profile-row">
 
                         <div class="profile-label">
@@ -1410,6 +1685,7 @@
                         </div>
 
                     </div>
+
 
                     <div class="profile-row">
 
@@ -1437,6 +1713,10 @@
 </div>
 
 
+<!-- ============================================================
+     TASK MODAL
+============================================================ -->
+
 <div
     id="taskModal"
     class="modal-overlay hidden"
@@ -1447,13 +1727,16 @@
         <div class="modal-header">
 
             <div>
+
                 <div
                     id="modalTitle"
                     class="modal-title"
                 >
                     Задание
                 </div>
+
             </div>
+
 
             <button
                 id="closeModal"
@@ -1465,19 +1748,23 @@
 
         </div>
 
+
         <div
             id="modalTaskPreview"
             class="task-preview"
         ></div>
 
+
         <div class="panel-title">
             История попыток
         </div>
+
 
         <div
             id="attemptHistory"
             class="attempt-list"
         ></div>
+
 
         <div
             id="wrongReasonBlock"
@@ -1490,6 +1777,7 @@
                 placeholder="Напиши, почему возникла ошибка..."
             ></textarea>
 
+
             <button
                 id="saveWrongBtn"
                 class="wrong-btn"
@@ -1499,6 +1787,7 @@
             </button>
 
         </div>
+
 
         <div
             id="modalActions"
@@ -1512,6 +1801,7 @@
             >
                 ✓ Верно
             </button>
+
 
             <button
                 id="wrongBtn"
@@ -1667,57 +1957,84 @@
             return "—";
         }
 
-        return date.toLocaleString("ru-RU", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit"
-        });
+        return date.toLocaleString(
+            "ru-RU",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
     }
 
 
     function showAuthError(message) {
 
         const box =
-            document.getElementById("authError");
+            document.getElementById(
+                "authError"
+            );
 
         box.textContent =
             cleanVisibleText(message);
 
-        box.classList.remove("hidden");
+        box.classList.remove(
+            "hidden"
+        );
 
         document
-            .getElementById("authSuccess")
-            .classList.add("hidden");
+            .getElementById(
+                "authSuccess"
+            )
+            .classList.add(
+                "hidden"
+            );
     }
 
 
     function showAuthSuccess(message) {
 
         const box =
-            document.getElementById("authSuccess");
+            document.getElementById(
+                "authSuccess"
+            );
 
         box.textContent =
             cleanVisibleText(message);
 
-        box.classList.remove("hidden");
+        box.classList.remove(
+            "hidden"
+        );
 
         document
-            .getElementById("authError")
-            .classList.add("hidden");
+            .getElementById(
+                "authError"
+            )
+            .classList.add(
+                "hidden"
+            );
     }
 
 
     function clearAuthMessages() {
 
         document
-            .getElementById("authError")
-            .classList.add("hidden");
+            .getElementById(
+                "authError"
+            )
+            .classList.add(
+                "hidden"
+            );
 
         document
-            .getElementById("authSuccess")
-            .classList.add("hidden");
+            .getElementById(
+                "authSuccess"
+            )
+            .classList.add(
+                "hidden"
+            );
     }
 
 
@@ -1732,51 +2049,79 @@
             "registerForm",
             "forgotForm",
             "resetForm"
-        ].forEach(id => {
+        ].forEach(
+            id => {
 
-            document
-                .getElementById(id)
-                .classList.add("hidden");
+                document
+                    .getElementById(id)
+                    .classList.add(
+                        "hidden"
+                    );
 
-        });
+            }
+        );
+
 
         document
             .getElementById(name)
-            .classList.remove("hidden");
+            .classList.remove(
+                "hidden"
+            );
+
 
         clearAuthMessages();
     }
 
 
     document
-        .getElementById("showRegister")
+        .getElementById(
+            "showRegister"
+        )
         .addEventListener(
             "click",
-            () => showAuthForm("registerForm")
+            () =>
+                showAuthForm(
+                    "registerForm"
+                )
         );
 
 
     document
-        .getElementById("showLoginFromRegister")
+        .getElementById(
+            "showLoginFromRegister"
+        )
         .addEventListener(
             "click",
-            () => showAuthForm("loginForm")
+            () =>
+                showAuthForm(
+                    "loginForm"
+                )
         );
 
 
     document
-        .getElementById("showForgot")
+        .getElementById(
+            "showForgot"
+        )
         .addEventListener(
             "click",
-            () => showAuthForm("forgotForm")
+            () =>
+                showAuthForm(
+                    "forgotForm"
+                )
         );
 
 
     document
-        .getElementById("showLoginFromForgot")
+        .getElementById(
+            "showLoginFromForgot"
+        )
         .addEventListener(
             "click",
-            () => showAuthForm("loginForm")
+            () =>
+                showAuthForm(
+                    "loginForm"
+                )
         );
 
 
@@ -1785,7 +2130,9 @@
     ============================================================ */
 
     document
-        .getElementById("loginForm")
+        .getElementById(
+            "loginForm"
+        )
         .addEventListener(
             "submit",
             async event => {
@@ -1794,27 +2141,40 @@
 
                 clearAuthMessages();
 
+
                 const email =
                     document
-                        .getElementById("loginEmail")
+                        .getElementById(
+                            "loginEmail"
+                        )
                         .value
                         .trim();
 
+
                 const password =
                     document
-                        .getElementById("loginPassword")
+                        .getElementById(
+                            "loginPassword"
+                        )
                         .value;
+
 
                 const {
                     error
                 } =
-                    await sb.auth.signInWithPassword({
-                        email,
-                        password
-                    });
+                    await sb.auth
+                        .signInWithPassword({
+                            email,
+                            password
+                        });
+
 
                 if (error) {
-                    showAuthError(error.message);
+
+                    showAuthError(
+                        error.message
+                    );
+
                 }
 
             }
@@ -1826,7 +2186,9 @@
     ============================================================ */
 
     document
-        .getElementById("registerForm")
+        .getElementById(
+            "registerForm"
+        )
         .addEventListener(
             "submit",
             async event => {
@@ -1835,22 +2197,32 @@
 
                 clearAuthMessages();
 
+
                 const nickname =
                     document
-                        .getElementById("registerNickname")
+                        .getElementById(
+                            "registerNickname"
+                        )
                         .value
                         .trim();
+
 
                 const email =
                     document
-                        .getElementById("registerEmail")
+                        .getElementById(
+                            "registerEmail"
+                        )
                         .value
                         .trim();
 
+
                 const password =
                     document
-                        .getElementById("registerPassword")
+                        .getElementById(
+                            "registerPassword"
+                        )
                         .value;
+
 
                 const {
                     data,
@@ -1861,11 +2233,14 @@
                         password,
                         options: {
                             data: {
-                                username: nickname
+                                username:
+                                    nickname
                             },
-                            emailRedirectTo: REDIRECT
+                            emailRedirectTo:
+                                REDIRECT
                         }
                     });
+
 
                 if (error) {
 
@@ -1876,19 +2251,28 @@
                     return;
                 }
 
+
                 if (data.session) {
                     return;
                 }
+
 
                 showAuthSuccess(
                     "Аккаунт создан. Теперь войди в систему."
                 );
 
-                showAuthForm("loginForm");
+
+                showAuthForm(
+                    "loginForm"
+                );
+
 
                 document
-                    .getElementById("loginEmail")
-                    .value = email;
+                    .getElementById(
+                        "loginEmail"
+                    )
+                    .value =
+                        email;
 
             }
         );
@@ -1899,7 +2283,9 @@
     ============================================================ */
 
     document
-        .getElementById("forgotForm")
+        .getElementById(
+            "forgotForm"
+        )
         .addEventListener(
             "submit",
             async event => {
@@ -1908,21 +2294,28 @@
 
                 clearAuthMessages();
 
+
                 const email =
                     document
-                        .getElementById("forgotEmail")
+                        .getElementById(
+                            "forgotEmail"
+                        )
                         .value
                         .trim();
+
 
                 const {
                     error
                 } =
-                    await sb.auth.resetPasswordForEmail(
-                        email,
-                        {
-                            redirectTo: REDIRECT
-                        }
-                    );
+                    await sb.auth
+                        .resetPasswordForEmail(
+                            email,
+                            {
+                                redirectTo:
+                                    REDIRECT
+                            }
+                        );
+
 
                 if (error) {
 
@@ -1932,6 +2325,7 @@
 
                     return;
                 }
+
 
                 showAuthSuccess(
                     "Ссылка для восстановления пароля отправлена на email."
@@ -1946,24 +2340,32 @@
     ============================================================ */
 
     document
-        .getElementById("resetForm")
+        .getElementById(
+            "resetForm"
+        )
         .addEventListener(
             "submit",
             async event => {
 
                 event.preventDefault();
 
+
                 const password =
                     document
-                        .getElementById("newPassword")
+                        .getElementById(
+                            "newPassword"
+                        )
                         .value;
+
 
                 const {
                     error
                 } =
-                    await sb.auth.updateUser({
-                        password
-                    });
+                    await sb.auth
+                        .updateUser({
+                            password
+                        });
+
 
                 if (error) {
 
@@ -1974,11 +2376,15 @@
                     return;
                 }
 
+
                 showAuthSuccess(
                     "Пароль успешно изменён."
                 );
 
-                showAuthForm("loginForm");
+
+                showAuthForm(
+                    "loginForm"
+                );
 
             }
         );
@@ -1998,9 +2404,14 @@
         } =
             await sb.auth.getUser();
 
-        if (error || !user) {
+
+        if (
+            error ||
+            !user
+        ) {
             return null;
         }
+
 
         const nickname =
             user.user_metadata?.username ||
@@ -2014,8 +2425,13 @@
         } =
             await sb
                 .from("profiles")
-                .select("id,nickname")
-                .eq("id", user.id)
+                .select(
+                    "id,nickname"
+                )
+                .eq(
+                    "id",
+                    user.id
+                )
                 .maybeSingle();
 
 
@@ -2039,15 +2455,19 @@
                     .select()
                     .single();
 
+
             if (insertError) {
                 throw insertError;
             }
+
 
             return data;
         }
 
 
-        if (!existingProfile.nickname) {
+        if (
+            !existingProfile.nickname
+        ) {
 
             const {
                 data,
@@ -2058,13 +2478,18 @@
                     .update({
                         nickname
                     })
-                    .eq("id", user.id)
+                    .eq(
+                        "id",
+                        user.id
+                    )
                     .select()
                     .single();
+
 
             if (updateError) {
                 throw updateError;
             }
+
 
             return data;
         }
@@ -2075,7 +2500,7 @@
 
 
     /* ============================================================
-       СОХРАНЕНИЕ НОВОГО НИКНЕЙМА
+       SAVE NICKNAME
     ============================================================ */
 
     async function saveNickname() {
@@ -2089,6 +2514,7 @@
             document.getElementById(
                 "nicknameInput"
             );
+
 
         const message =
             document.getElementById(
@@ -2112,7 +2538,9 @@
         }
 
 
-        if (nickname.length > 40) {
+        if (
+            nickname.length > 40
+        ) {
 
             message.textContent =
                 "Никнейм не должен быть длиннее 40 символов.";
@@ -2133,7 +2561,10 @@
                 .update({
                     nickname
                 })
-                .eq("id", currentUser.id)
+                .eq(
+                    "id",
+                    currentUser.id
+                )
                 .select()
                 .single();
 
@@ -2160,7 +2591,8 @@
         } =
             await sb.auth.updateUser({
                 data: {
-                    username: nickname
+                    username:
+                        nickname
                 }
             });
 
@@ -2179,20 +2611,27 @@
         message.textContent =
             "Никнейм сохранён ✓";
 
+
         message.style.color =
             "#00a83b";
 
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            message.textContent = "";
+                message.textContent =
+                    "";
 
-        }, 2500);
+            },
+            2500
+        );
     }
 
 
     document
-        .getElementById("saveNicknameBtn")
+        .getElementById(
+            "saveNicknameBtn"
+        )
         .addEventListener(
             "click",
             saveNickname
@@ -2224,6 +2663,7 @@
 
 
         if (progressError) {
+
             console.error(
                 progressError
             );
@@ -2233,14 +2673,16 @@
         progressMap = {};
 
 
-        (progress || []).forEach(
-            item => {
+        (progress || [])
+            .forEach(
+                item => {
 
-                progressMap[item.task_id] =
-                    item;
+                    progressMap[
+                        item.task_id
+                    ] = item;
 
-            }
-        );
+                }
+            );
 
 
         const {
@@ -2263,6 +2705,7 @@
 
 
         if (historyError) {
+
             console.error(
                 historyError
             );
@@ -2300,14 +2743,23 @@
             error: historyError
         } =
             await sb
-                .from("attempt_history")
+                .from(
+                    "attempt_history"
+                )
                 .insert({
-                    user_id: currentUser.id,
-                    task_id: taskId,
+                    user_id:
+                        currentUser.id,
+
+                    task_id:
+                        taskId,
+
                     result,
+
                     reason:
                         result === "wrong"
-                            ? cleanVisibleText(reason)
+                            ? cleanVisibleText(
+                                reason
+                            )
                             : null
                 })
                 .select()
@@ -2333,11 +2785,18 @@
                 .from("progress")
                 .upsert(
                     {
-                        user_id: currentUser.id,
-                        task_id: taskId,
-                        status: result,
+                        user_id:
+                            currentUser.id,
+
+                        task_id:
+                            taskId,
+
+                        status:
+                            result,
+
                         updated_at:
-                            new Date().toISOString()
+                            new Date()
+                                .toISOString()
                     },
                     {
                         onConflict:
@@ -2363,6 +2822,7 @@
             insertedAttempt
         );
 
+
         progressMap[taskId] =
             savedProgress;
 
@@ -2376,18 +2836,29 @@
 
 
         document
-            .getElementById("wrongReason")
-            .value = "";
+            .getElementById(
+                "wrongReason"
+            )
+            .value =
+                "";
 
 
         document
-            .getElementById("wrongReasonBlock")
-            .classList.add("hidden");
+            .getElementById(
+                "wrongReasonBlock"
+            )
+            .classList.add(
+                "hidden"
+            );
 
 
         document
-            .getElementById("modalActions")
-            .classList.remove("hidden");
+            .getElementById(
+                "modalActions"
+            )
+            .classList.remove(
+                "hidden"
+            );
     }
 
 
@@ -2435,12 +2906,19 @@
 
 
         const ranges = {
+
             "1-5": [1, 5],
+
             "6-11": [6, 11],
+
             "12": [12, 12],
+
             "13-19": [13, 19],
+
             "20-28": [20, 28],
+
             "29-34": [29, 34]
+
         };
 
 
@@ -2461,6 +2939,7 @@
                         getNumber(task)
                     );
 
+
                 return (
                     number >= range[0] &&
                     number <= range[1]
@@ -2480,57 +2959,61 @@
 
 
         container.innerHTML =
-            TASK_GROUPS.map(
-                group => {
+            TASK_GROUPS
+                .map(
+                    group => {
 
-                    return `
-                        <button
-                            type="button"
-                            class="task-group-btn ${
-                                currentGroup ===
-                                group.id
-                                    ? "active"
-                                    : ""
-                            }"
-                            data-group="${escapeHtml(
-                                group.id
-                            )}"
-                        >
-                            Задания ${escapeHtml(
-                                group.title
-                            )}
-                        </button>
-                    `;
+                        return `
+                            <button
+                                type="button"
+                                class="task-group-btn ${
+                                    currentGroup ===
+                                    group.id
+                                        ? "active"
+                                        : ""
+                                }"
+                                data-group="${escapeHtml(
+                                    group.id
+                                )}"
+                            >
+                                Задания ${escapeHtml(
+                                    group.title
+                                )}
+                            </button>
+                        `;
 
-                }
-            ).join("");
+                    }
+                )
+                .join("");
 
 
         container
             .querySelectorAll(
                 ".task-group-btn"
             )
-            .forEach(button => {
+            .forEach(
+                button => {
 
-                button.addEventListener(
-                    "click",
-                    () => {
+                    button.addEventListener(
+                        "click",
+                        () => {
 
-                        currentGroup =
-                            button.dataset.group;
+                            currentGroup =
+                                button.dataset.group;
 
-                        renderTaskGroups();
-                        renderTasks();
+                            renderTaskGroups();
+                            renderTasks();
 
-                    }
-                );
+                        }
+                    );
 
-            });
+                }
+            );
     }
 
 
     /* ============================================================
-       TASKS
+       RENDER TASKS
     ============================================================ */
 
     function renderTasks() {
@@ -2599,32 +3082,45 @@
         const variants = {};
 
 
-        tasks.forEach(task => {
+        tasks.forEach(
+            task => {
 
-            const variant =
-                String(
-                    getVariant(task) ||
-                    "Без варианта"
-                );
+                const variant =
+                    String(
+                        getVariant(task) ||
+                        "Без варианта"
+                    );
 
 
-            if (!variants[variant]) {
-                variants[variant] = [];
+                if (
+                    !variants[
+                        variant
+                    ]
+                ) {
+
+                    variants[
+                        variant
+                    ] = [];
+
+                }
+
+
+                variants[
+                    variant
+                ].push(task);
+
             }
-
-
-            variants[variant].push(task);
-
-        });
+        );
 
 
         const sortedVariants =
-            Object.keys(variants)
-                .sort(
-                    (a, b) =>
-                        Number(a) -
-                        Number(b)
-                );
+            Object.keys(
+                variants
+            ).sort(
+                (a, b) =>
+                    Number(a) -
+                    Number(b)
+            );
 
 
         container.innerHTML =
@@ -2633,34 +3129,44 @@
                     variant => {
 
                         const variantTasks =
-                            variants[variant]
-                                .sort(
-                                    (a, b) =>
-                                        Number(
-                                            getNumber(a)
-                                        ) -
-                                        Number(
-                                            getNumber(b)
-                                        )
-                                );
+                            variants[
+                                variant
+                            ].sort(
+                                (a, b) =>
+                                    Number(
+                                        getNumber(a)
+                                    ) -
+                                    Number(
+                                        getNumber(b)
+                                    )
+                            );
 
 
                         return `
-                            <div class="variant-block">
+                            <div
+                                class="variant-block"
+                            >
 
-                                <div class="variant-title">
+                                <div
+                                    class="variant-title"
+                                >
                                     Вариант ${escapeHtml(
                                         variant
                                     )}
                                 </div>
 
-                                <div class="tasks-grid">
 
-                                    ${variantTasks
-                                        .map(
-                                            renderTaskCard
-                                        )
-                                        .join("")}
+                                <div
+                                    class="tasks-grid"
+                                >
+
+                                    ${
+                                        variantTasks
+                                            .map(
+                                                renderTaskCard
+                                            )
+                                            .join("")
+                                    }
 
                                 </div>
 
@@ -2676,43 +3182,46 @@
             .querySelectorAll(
                 ".task-card"
             )
-            .forEach(card => {
+            .forEach(
+                card => {
 
-                card.addEventListener(
-                    "click",
-                    () => {
+                    card.addEventListener(
+                        "click",
+                        () => {
 
-                        const task =
-                            TASKS.find(
-                                item =>
-                                    item.id ===
-                                    card.dataset.taskId
-                            );
+                            const task =
+                                TASKS.find(
+                                    item =>
+                                        item.id ===
+                                        card.dataset.taskId
+                                );
 
 
-                        if (task) {
-                            openTask(task);
+                            if (task) {
+                                openTask(task);
+                            }
+
                         }
+                    );
 
-                    }
-                );
-
-            });
+                }
+            );
     }
 
 
     function renderTaskCard(task) {
 
         const progress =
-            progressMap[task.id];
+            progressMap[
+                task.id
+            ];
 
 
-        let statusHtml =
-            `
-                <div class="task-status neutral">
-                    Ещё не выполнялось
-                </div>
-            `;
+        let statusHtml = `
+            <div class="task-status neutral">
+                Ещё не выполнялось
+            </div>
+        `;
 
 
         if (
@@ -2720,24 +3229,27 @@
             "correct"
         ) {
 
-            statusHtml =
-                `
-                    <div class="task-status correct-text">
-                        ✓ Верно
-                    </div>
-                `;
+            statusHtml = `
+                <div
+                    class="task-status correct-text"
+                >
+                    ✓ Верно
+                </div>
+            `;
 
         } else if (
             progress?.status ===
             "wrong"
         ) {
 
-            statusHtml =
-                `
-                    <div class="task-status wrong-text">
-                        ✕ Неверно
-                    </div>
-                `;
+            statusHtml = `
+                <div
+                    class="task-status wrong-text"
+                >
+                    ✕ Неверно
+                </div>
+            `;
+
         }
 
 
@@ -2749,17 +3261,23 @@
                 )}"
             >
 
-                <div class="task-number">
+                <div
+                    class="task-number"
+                >
                     Задание ${escapeHtml(
                         getNumber(task)
                     )}
                 </div>
 
-                <div class="task-code">
+
+                <div
+                    class="task-code"
+                >
                     Код: ${escapeHtml(
                         getCode(task)
                     )}
                 </div>
+
 
                 ${statusHtml}
 
@@ -2774,12 +3292,17 @@
 
     function openTask(task) {
 
-        currentTask = task;
+        currentTask =
+            task;
 
 
         document
-            .getElementById("taskModal")
-            .classList.remove("hidden");
+            .getElementById(
+                "taskModal"
+            )
+            .classList.remove(
+                "hidden"
+            );
 
 
         renderModal();
@@ -2788,36 +3311,50 @@
 
     function closeModal() {
 
-        currentTask = null;
+        currentTask =
+            null;
 
 
         document
-            .getElementById("taskModal")
-            .classList.add("hidden");
+            .getElementById(
+                "taskModal"
+            )
+            .classList.add(
+                "hidden"
+            );
 
 
         document
-            .getElementById("wrongReason")
-            .value = "";
+            .getElementById(
+                "wrongReason"
+            )
+            .value =
+                "";
 
 
         document
             .getElementById(
                 "wrongReasonBlock"
             )
-            .classList.add("hidden");
+            .classList.add(
+                "hidden"
+            );
 
 
         document
             .getElementById(
                 "modalActions"
             )
-            .classList.remove("hidden");
+            .classList.remove(
+                "hidden"
+            );
     }
 
 
     document
-        .getElementById("closeModal")
+        .getElementById(
+            "closeModal"
+        )
         .addEventListener(
             "click",
             closeModal
@@ -2825,7 +3362,9 @@
 
 
     document
-        .getElementById("taskModal")
+        .getElementById(
+            "taskModal"
+        )
         .addEventListener(
             "click",
             event => {
@@ -2834,7 +3373,9 @@
                     event.target.id ===
                     "taskModal"
                 ) {
+
                     closeModal();
+
                 }
 
             }
@@ -2849,7 +3390,9 @@
 
 
         document
-            .getElementById("modalTitle")
+            .getElementById(
+                "modalTitle"
+            )
             .textContent =
                 `Вариант ${getVariant(
                     currentTask
@@ -2866,7 +3409,9 @@
                 <div>
                     <strong>
                         Задание ${escapeHtml(
-                            getNumber(currentTask)
+                            getNumber(
+                                currentTask
+                            )
                         )}
                     </strong>
                 </div>
@@ -2879,7 +3424,9 @@
                     "
                 >
                     Код: ${escapeHtml(
-                        getCode(currentTask)
+                        getCode(
+                            currentTask
+                        )
                     )}
                 </div>
             `;
@@ -2923,15 +3470,21 @@
 
 
                             return `
-                                <div class="attempt-item">
+                                <div
+                                    class="attempt-item"
+                                >
 
-                                    <div class="attempt-top">
+                                    <div
+                                        class="attempt-top"
+                                    >
 
                                         <div>
                                             Попытка ${
-                                                index + 1
+                                                index +
+                                                1
                                             }
                                         </div>
+
 
                                         <span
                                             class="status-pill ${
@@ -2949,7 +3502,10 @@
 
                                     </div>
 
-                                    <div class="attempt-date">
+
+                                    <div
+                                        class="attempt-date"
+                                    >
                                         ${escapeHtml(
                                             formatDate(
                                                 attempt.created_at
@@ -2957,18 +3513,22 @@
                                         )}
                                     </div>
 
+
                                     ${
                                         attempt.reason
                                             ? `
                                                 <div class="reason">
+
                                                     <strong>
                                                         Причина:
                                                     </strong>
+
                                                     ${escapeHtml(
                                                         cleanVisibleText(
                                                             attempt.reason
                                                         )
                                                     )}
+
                                                 </div>
                                             `
                                             : ""
@@ -2985,7 +3545,9 @@
 
 
     document
-        .getElementById("correctBtn")
+        .getElementById(
+            "correctBtn"
+        )
         .addEventListener(
             "click",
             async () => {
@@ -3000,7 +3562,9 @@
 
 
     document
-        .getElementById("wrongBtn")
+        .getElementById(
+            "wrongBtn"
+        )
         .addEventListener(
             "click",
             () => {
@@ -3009,14 +3573,18 @@
                     .getElementById(
                         "modalActions"
                     )
-                    .classList.add("hidden");
+                    .classList.add(
+                        "hidden"
+                    );
 
 
                 document
                     .getElementById(
                         "wrongReasonBlock"
                     )
-                    .classList.remove("hidden");
+                    .classList.remove(
+                        "hidden"
+                    );
 
 
                 document
@@ -3030,7 +3598,9 @@
 
 
     document
-        .getElementById("saveWrongBtn")
+        .getElementById(
+            "saveWrongBtn"
+        )
         .addEventListener(
             "click",
             async () => {
@@ -3064,7 +3634,9 @@
 
 
     document
-        .getElementById("taskSearch")
+        .getElementById(
+            "taskSearch"
+        )
         .addEventListener(
             "input",
             renderTasks
@@ -3132,7 +3704,9 @@
 
         const nickname =
             profile?.nickname ||
-            currentUser?.email?.split("@")[0] ||
+            currentUser?.email?.split(
+                "@"
+            )[0] ||
             "Ученик";
 
 
@@ -3154,7 +3728,9 @@
                 "quoteText"
             )
             .textContent =
-                QUOTES[quoteIndex];
+                QUOTES[
+                    quoteIndex
+                ];
 
 
         document
@@ -3186,7 +3762,8 @@
                 "homeAccuracy"
             )
             .textContent =
-                getAccuracy() + "%";
+                getAccuracy() +
+                "%";
     }
 
 
@@ -3233,14 +3810,17 @@
         const recent =
             [...attemptHistory]
                 .reverse()
-                .slice(0, 30);
+                .slice(
+                    0,
+                    30
+                );
 
 
         if (!recent.length) {
 
             body.innerHTML = `
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         Пока нет попыток.
                     </td>
                 </tr>
@@ -3275,7 +3855,9 @@
                                     ${
                                         task
                                             ? `Задание ${escapeHtml(
-                                                getNumber(task)
+                                                getNumber(
+                                                    task
+                                                )
                                             )}`
                                             : escapeHtml(
                                                 attempt.task_id
@@ -3283,15 +3865,32 @@
                                     }
                                 </td>
 
+
                                 <td>
                                     ${
                                         task
                                             ? escapeHtml(
-                                                getVariant(task)
+                                                getVariant(
+                                                    task
+                                                )
                                             )
                                             : "—"
                                     }
                                 </td>
+
+
+                                <td>
+                                    ${
+                                        task
+                                            ? escapeHtml(
+                                                getCode(
+                                                    task
+                                                )
+                                            )
+                                            : "—"
+                                    }
+                                </td>
+
 
                                 <td>
                                     <span
@@ -3308,6 +3907,7 @@
                                         }
                                     </span>
                                 </td>
+
 
                                 <td>
                                     ${escapeHtml(
@@ -3348,7 +3948,9 @@
                 .reverse();
 
 
-        if (!wrongAttempts.length) {
+        if (
+            !wrongAttempts.length
+        ) {
 
             container.innerHTML = `
                 <div class="empty-box">
@@ -3403,15 +4005,20 @@
                                             ${
                                                 task
                                                     ? `Вариант ${escapeHtml(
-                                                        getVariant(task)
+                                                        getVariant(
+                                                            task
+                                                        )
                                                     )} · Задание ${escapeHtml(
-                                                        getNumber(task)
+                                                        getNumber(
+                                                            task
+                                                        )
                                                     )}`
                                                     : escapeHtml(
                                                         attempt.task_id
                                                     )
                                             }
                                         </div>
+
 
                                         <div
                                             style="
@@ -3422,7 +4029,9 @@
                                             ${
                                                 task
                                                     ? `Код: ${escapeHtml(
-                                                        getCode(task)
+                                                        getCode(
+                                                            task
+                                                        )
                                                     )}`
                                                     : ""
                                             }
@@ -3430,11 +4039,15 @@
 
                                     </div>
 
-                                    <span class="status-pill wrong">
+
+                                    <span
+                                        class="status-pill wrong"
+                                    >
                                         ✕ Неверно
                                     </span>
 
                                 </div>
+
 
                                 ${
                                     attempt.reason
@@ -3447,6 +4060,7 @@
                                                     line-height:1.5;
                                                 "
                                             >
+
                                                 <strong>
                                                     Причина:
                                                 </strong>
@@ -3456,6 +4070,7 @@
                                                         attempt.reason
                                                     )
                                                 )}
+
                                             </div>
                                         `
                                         : ""
@@ -3473,28 +4088,30 @@
             .querySelectorAll(
                 "[data-error-task]"
             )
-            .forEach(card => {
+            .forEach(
+                card => {
 
-                card.addEventListener(
-                    "click",
-                    () => {
+                    card.addEventListener(
+                        "click",
+                        () => {
 
-                        const task =
-                            TASKS.find(
-                                item =>
-                                    item.id ===
-                                    card.dataset.errorTask
-                            );
+                            const task =
+                                TASKS.find(
+                                    item =>
+                                        item.id ===
+                                        card.dataset.errorTask
+                                );
 
 
-                        if (task) {
-                            openTask(task);
+                            if (task) {
+                                openTask(task);
+                            }
+
                         }
+                    );
 
-                    }
-                );
-
-            });
+                }
+            );
     }
 
 
@@ -3506,7 +4123,9 @@
 
         const nickname =
             profile?.nickname ||
-            currentUser?.email?.split("@")[0] ||
+            currentUser?.email?.split(
+                "@"
+            )[0] ||
             "Ученик";
 
 
@@ -3525,6 +4144,7 @@
 
             nicknameInput.value =
                 nickname;
+
         }
 
 
@@ -3574,49 +4194,58 @@
     ============================================================ */
 
     document
-        .querySelectorAll(".nav-btn")
-        .forEach(button => {
+        .querySelectorAll(
+            ".nav-btn"
+        )
+        .forEach(
+            button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                    const page =
-                        button.dataset.page;
+                        const page =
+                            button.dataset.page;
 
 
-                    document
-                        .querySelectorAll(
-                            ".nav-btn"
-                        )
-                        .forEach(item => {
+                        document
+                            .querySelectorAll(
+                                ".nav-btn"
+                            )
+                            .forEach(
+                                item => {
 
-                            item.classList.toggle(
-                                "active",
-                                item === button
+                                    item.classList.toggle(
+                                        "active",
+                                        item ===
+                                            button
+                                    );
+
+                                }
                             );
 
-                        });
 
+                        document
+                            .querySelectorAll(
+                                ".page"
+                            )
+                            .forEach(
+                                section => {
 
-                    document
-                        .querySelectorAll(
-                            ".page"
-                        )
-                        .forEach(section => {
+                                    section.classList.toggle(
+                                        "active",
+                                        section.id ===
+                                            `page-${page}`
+                                    );
 
-                            section.classList.toggle(
-                                "active",
-                                section.id ===
-                                    `page-${page}`
+                                }
                             );
 
-                        });
+                    }
+                );
 
-                }
-            );
-
-        });
+            }
+        );
 
 
     /* ============================================================
@@ -3667,7 +4296,8 @@
             }
 
 
-            currentUser = user;
+            currentUser =
+                user;
 
 
             profile =
@@ -3702,10 +4332,11 @@
             renderErrors();
             renderProfile();
 
-
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                error
+            );
 
 
             document
@@ -3725,10 +4356,10 @@
                     "hidden"
                 );
 
-
         } finally {
 
-            entering = false;
+            entering =
+                false;
 
         }
     }
@@ -3749,11 +4380,17 @@
                 await sb.auth.signOut();
 
 
-                currentUser = null;
-                profile = null;
+                currentUser =
+                    null;
 
-                progressMap = {};
-                attemptHistory = [];
+                profile =
+                    null;
+
+                progressMap =
+                    {};
+
+                attemptHistory =
+                    [];
 
 
                 document
@@ -3824,7 +4461,9 @@
             }
 
 
-            if (session?.user) {
+            if (
+                session?.user
+            ) {
 
                 await enterApp();
 
@@ -3884,42 +4523,55 @@
 
         const nickname =
             profile?.nickname ||
-            currentUser?.email?.split("@")[0] ||
+            currentUser?.email?.split(
+                "@"
+            )[0] ||
             "Ученик";
 
 
         const generated =
-            new Date().toLocaleString(
-                "ru-RU"
-            );
+            new Date()
+                .toLocaleString(
+                    "ru-RU"
+                );
 
 
         const content = [];
 
 
         content.push({
-            text: "OGE English Tracker",
-            style: "title"
+            text:
+                "OGE English Tracker",
+            style:
+                "title"
         });
 
 
         content.push({
             text:
                 `Отчёт ученика: ${nickname}`,
-            style: "subtitle"
+            style:
+                "subtitle"
         });
 
 
         content.push({
             text:
                 `Дата формирования: ${generated}`,
-            margin: [0, 0, 0, 14]
+            margin: [
+                0,
+                0,
+                0,
+                14
+            ]
         });
 
 
         content.push({
-            text: "Общая статистика",
-            style: "heading"
+            text:
+                "Общая статистика",
+            style:
+                "heading"
         });
 
 
@@ -3931,13 +4583,20 @@
                 `Неверных ответов: ${getWrongCount()}`,
                 `Точность: ${getAccuracy()}%`
             ],
-            margin: [0, 0, 0, 16]
+            margin: [
+                0,
+                0,
+                0,
+                16
+            ]
         });
 
 
         content.push({
-            text: "История попыток",
-            style: "heading"
+            text:
+                "История попыток",
+            style:
+                "heading"
         });
 
 
@@ -3952,7 +4611,9 @@
             );
 
 
-        if (!attemptedTasks.length) {
+        if (
+            !attemptedTasks.length
+        ) {
 
             content.push({
                 text:
@@ -3974,8 +4635,15 @@
 
                     content.push({
                         text:
-                            `Вариант ${getVariant(task)} · Задание ${getNumber(task)} · Код ${getCode(task)}`,
-                        style: "taskHeading"
+                            `Вариант ${getVariant(
+                                task
+                            )} · Задание ${getNumber(
+                                task
+                            )} · Код ${getCode(
+                                task
+                            )}`,
+                        style:
+                            "taskHeading"
                     });
 
 
@@ -4008,6 +4676,7 @@
                                     `\nПричина: ${cleanVisibleText(
                                         attempt.reason
                                     )}`;
+
                             }
 
 
@@ -4031,17 +4700,19 @@
 
 
         const safeNickname =
-            String(nickname)
-                .replace(
-                    /[^a-zA-Zа-яА-Я0-9_-]/g,
-                    "_"
-                );
+            String(
+                nickname
+            ).replace(
+                /[^a-zA-Zа-яА-Я0-9_-]/g,
+                "_"
+            );
 
 
         pdfMake
             .createPdf({
 
-                pageSize: "A4",
+                pageSize:
+                    "A4",
 
                 pageMargins: [
                     28,
@@ -4053,16 +4724,21 @@
                 content,
 
                 defaultStyle: {
-                    font: "Roboto",
-                    fontSize: 9,
-                    lineHeight: 1.15
+                    font:
+                        "Roboto",
+                    fontSize:
+                        9,
+                    lineHeight:
+                        1.15
                 },
 
                 styles: {
 
                     title: {
-                        fontSize: 22,
-                        bold: true,
+                        fontSize:
+                            22,
+                        bold:
+                            true,
                         margin: [
                             0,
                             0,
@@ -4072,7 +4748,8 @@
                     },
 
                     subtitle: {
-                        fontSize: 12,
+                        fontSize:
+                            12,
                         margin: [
                             0,
                             0,
@@ -4082,8 +4759,10 @@
                     },
 
                     heading: {
-                        fontSize: 14,
-                        bold: true,
+                        fontSize:
+                            14,
+                        bold:
+                            true,
                         margin: [
                             0,
                             10,
@@ -4093,8 +4772,10 @@
                     },
 
                     taskHeading: {
-                        fontSize: 10,
-                        bold: true,
+                        fontSize:
+                            10,
+                        bold:
+                            true,
                         margin: [
                             0,
                             8,
@@ -4130,7 +4811,9 @@
                     "quoteText"
                 )
                 .textContent =
-                    QUOTES[quoteIndex];
+                    QUOTES[
+                        quoteIndex
+                    ];
 
 
             enterApp();
