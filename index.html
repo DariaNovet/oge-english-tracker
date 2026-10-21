@@ -1449,22 +1449,6 @@
                     <div class="stat-card">
 
                         <div class="stat-label">
-                            % решённых
-                        </div>
-
-                        <div
-                            id="homeProgress"
-                            class="stat-value"
-                        >
-                            0%
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-label">
                             Попыток
                         </div>
 
@@ -1590,22 +1574,6 @@
                             class="stat-value"
                         >
                             0
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-label">
-                            % решённых
-                        </div>
-
-                        <div
-                            id="statsProgress"
-                            class="stat-value"
-                        >
-                            0%
                         </div>
 
                     </div>
@@ -1788,22 +1756,6 @@
                             class="stat-value"
                         >
                             0
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-label">
-                            % решённых
-                        </div>
-
-                        <div
-                            id="demoHomeProgress"
-                            class="stat-value"
-                        >
-                            0%
                         </div>
 
                     </div>
@@ -2002,22 +1954,6 @@
                             class="profile-value"
                         >
                             0
-                        </div>
-
-                    </div>
-
-
-                    <div class="profile-row">
-
-                        <div class="profile-label">
-                            % решённых
-                        </div>
-
-                        <div
-                            id="profileProgress"
-                            class="profile-value"
-                        >
-                            0%
                         </div>
 
                     </div>
@@ -4240,12 +4176,6 @@
             .textContent =
                 formatCompletedLabel(homeCompleted, homeTotal);
 
-        const homeProgress = document.getElementById("homeProgress");
-        if (homeProgress) {
-            const p = getCompletionPercent();
-            homeProgress.textContent = p === null ? "—" : (p + "%");
-        }
-
         document
             .getElementById(
                 "homeAttempts"
@@ -4283,12 +4213,6 @@
             )
             .textContent =
                 formatCompletedLabel(statsCompleted, statsTotal);
-
-        const statsProgress = document.getElementById("statsProgress");
-        if (statsProgress) {
-            const p = getCompletionPercent();
-            statsProgress.textContent = p === null ? "—" : (p + "%");
-        }
 
         document
             .getElementById(
@@ -4649,12 +4573,6 @@
             )
             .textContent =
                 formatCompletedLabel(profileCompleted, profileTotal);
-
-        const profileProgress = document.getElementById("profileProgress");
-        if (profileProgress) {
-            const p = getCompletionPercent();
-            profileProgress.textContent = p === null ? "—" : (p + "%");
-        }
 
         document
             .getElementById(
@@ -5021,7 +4939,6 @@
         content.push({
             ul: [
                 `Выполнено заданий: ${formatCompletedLabel(getCompletedCount(), getTotalTasksCount())}`,
-                `% решённых: ${getCompletionPercent() === null ? "—" : getCompletionPercent() + "%"}`,
                 `Всего попыток: ${getAttemptsCount()}`,
                 `Верных ответов: ${getCorrectCount()}`,
                 `Неверных ответов: ${getWrongCount()}`,
@@ -5107,7 +5024,6 @@
         content.push({
             ul: [
                 `Выполнено заданий: ${formatCompletedLabel(getDemoCompletedCount(), 34)}`,
-                `% решённых: ${getDemoCompletionPercent()}%`,
                 `Всего попыток: ${getDemoAttemptsCount()}`,
                 `Верных ответов: ${getDemoCorrectCount()}`,
                 `Неверных ответов: ${getDemoWrongCount()}`,
@@ -5379,10 +5295,6 @@
 
         const demoCompleted = getDemoCompletedCount();
         completedEl.textContent = formatCompletedLabel(demoCompleted, 34);
-        const demoProgress = document.getElementById("demoHomeProgress");
-        if (demoProgress) {
-            demoProgress.textContent = getDemoCompletionPercent() + "%";
-        }
         document.getElementById("demoHomeAttempts").textContent = getDemoAttemptsCount();
         document.getElementById("demoHomeCorrect").textContent = getDemoCorrectCount();
         document.getElementById("demoHomeAccuracy").textContent = getDemoAccuracy() + "%";
