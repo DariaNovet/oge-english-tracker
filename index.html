@@ -1737,7 +1737,7 @@
                     </h1>
 
                     <div class="page-description">
-                        Задания 1–34. Результаты сохраняются в твоём аккаунте.
+                        Задания 1–34.
                     </div>
 
                 </div>
@@ -4094,27 +4094,6 @@
     }
 
 
-    function getTotalTasksCount() {
-        if (typeof TASKS !== "undefined" && Array.isArray(TASKS)) {
-            return TASKS.length;
-        }
-        return 0;
-    }
-
-
-    function getCompletionPercent() {
-        const total = getTotalTasksCount();
-        if (!total) {
-            return 0;
-        }
-        return Math.round(getCompletedCount() / total * 100);
-    }
-
-
-    function getDemoCompletionPercent() {
-        return Math.round(getDemoCompletedCount() / 34 * 100);
-    }
-
 
     function renderHome() {
 
@@ -5131,7 +5110,7 @@
                 <strong>Задание ${escapeHtml(String(num))}</strong>
             </div>
             <div style="margin-top:7px;color:#95889f;font-size:12px;">
-                Демоверсия · сохраняется в аккаунте
+                Демоверсия
             </div>
         `;
 
