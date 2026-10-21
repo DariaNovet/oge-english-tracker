@@ -1449,7 +1449,7 @@
                     <div class="stat-card">
 
                         <div class="stat-label">
-                            Решено
+                            % решённых
                         </div>
 
                         <div
@@ -1598,7 +1598,7 @@
                     <div class="stat-card">
 
                         <div class="stat-label">
-                            Решено
+                            % решённых
                         </div>
 
                         <div
@@ -1796,7 +1796,7 @@
                     <div class="stat-card">
 
                         <div class="stat-label">
-                            Решено
+                            % решённых
                         </div>
 
                         <div
@@ -2010,7 +2010,7 @@
                     <div class="profile-row">
 
                         <div class="profile-label">
-                            Решено
+                            % решённых
                         </div>
 
                         <div
@@ -4159,19 +4159,35 @@
 
 
     function getTotalTasksCount() {
-        if (typeof TASKS !== "undefined" && Array.isArray(TASKS)) {
-            return TASKS.length;
+        if (typeof TASKS === "undefined" || !Array.isArray(TASKS)) {
+            return 0;
         }
-        return 0;
+        // уникальные id заданий банка (без демо)
+        const ids = new Set();
+        TASKS.forEach(task => {
+            if (task && task.id && !isDemoTaskId(task.id)) {
+                ids.add(task.id);
+            }
+        });
+        return ids.size || TASKS.length;
+    }
+
+
+    function formatCompletedLabel(completed, total) {
+        if (total > 0) {
+            return completed + " из " + total;
+        }
+        return String(completed);
     }
 
 
     function getCompletionPercent() {
         const total = getTotalTasksCount();
+        const completed = getCompletedCount();
         if (!total) {
-            return 0;
+            return null; // неизвестно общее число
         }
-        return Math.round(getCompletedCount() / total * 100);
+        return Math.round(completed / total * 100);
     }
 
 
@@ -4214,16 +4230,20 @@
                 ];
 
 
+        const homeTotal = getTotalTasksCount();
+        const homeCompleted = getCompletedCount();
+
         document
             .getElementById(
                 "homeCompleted"
             )
             .textContent =
-                getCompletedCount();
+                formatCompletedLabel(homeCompleted, homeTotal);
 
         const homeProgress = document.getElementById("homeProgress");
         if (homeProgress) {
-            homeProgress.textContent = getCompletionPercent() + "%";
+            const p = getCompletionPercent();
+            homeProgress.textContent = p === null ? "—" : (p + "%");
         }
 
         document
@@ -4254,16 +4274,20 @@
 
     function renderStats() {
 
+        const statsTotal = getTotalTasksCount();
+        const statsCompleted = getCompletedCount();
+
         document
             .getElementById(
                 "statsCompleted"
             )
             .textContent =
-                getCompletedCount();
+                formatCompletedLabel(statsCompleted, statsTotal);
 
         const statsProgress = document.getElementById("statsProgress");
         if (statsProgress) {
-            statsProgress.textContent = getCompletionPercent() + "%";
+            const p = getCompletionPercent();
+            statsProgress.textContent = p === null ? "—" : (p + "%");
         }
 
         document
@@ -4616,16 +4640,20 @@
                 email;
 
 
+        const profileTotal = getTotalTasksCount();
+        const profileCompleted = getCompletedCount();
+
         document
             .getElementById(
                 "profileCompleted"
             )
             .textContent =
-                getCompletedCount();
+                formatCompletedLabel(profileCompleted, profileTotal);
 
         const profileProgress = document.getElementById("profileProgress");
         if (profileProgress) {
-            profileProgress.textContent = getCompletionPercent() + "%";
+            const p = getCompletionPercent();
+            profileProgress.textContent = p === null ? "—" : (p + "%");
         }
 
         document
@@ -4992,8 +5020,8 @@
         content.push({ text: "Общая статистика", style: "heading" });
         content.push({
             ul: [
-                `Выполнено заданий: ${getCompletedCount()}`,
-                `Решено: ${getCompletionPercent()}%`,
+                `Выполнено заданий: ${formatCompletedLabel(getCompletedCount(), getTotalTasksCount())}`,
+                `% решённых: ${getCompletionPercent() === null ? "—" : getCompletionPercent() + "%"}`,
                 `Всего попыток: ${getAttemptsCount()}`,
                 `Верных ответов: ${getCorrectCount()}`,
                 `Неверных ответов: ${getWrongCount()}`,
@@ -5078,8 +5106,8 @@
         content.push({ text: "Общая статистика (демо)", style: "heading" });
         content.push({
             ul: [
-                `Выполнено заданий: ${getDemoCompletedCount()}`,
-                `Решено: ${getDemoCompletionPercent()}%`,
+                `Выполнено заданий: ${formatCompletedLabel(getDemoCompletedCount(), 34)}`,
+                `% решённых: ${getDemoCompletionPercent()}%`,
                 `Всего попыток: ${getDemoAttemptsCount()}`,
                 `Верных ответов: ${getDemoCorrectCount()}`,
                 `Неверных ответов: ${getDemoWrongCount()}`,
@@ -5349,7 +5377,8 @@
         const completedEl = document.getElementById("demoHomeCompleted");
         if (!completedEl) return;
 
-        completedEl.textContent = getDemoCompletedCount();
+        const demoCompleted = getDemoCompletedCount();
+        completedEl.textContent = formatCompletedLabel(demoCompleted, 34);
         const demoProgress = document.getElementById("demoHomeProgress");
         if (demoProgress) {
             demoProgress.textContent = getDemoCompletionPercent() + "%";
