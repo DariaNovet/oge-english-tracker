@@ -875,29 +875,33 @@
         ========================= */
 
         .demo-banner {
-            background: linear-gradient(135deg, #4caf7a, #2e8b57);
-            color: white;
-            border-radius: 25px;
-            padding: 26px 30px;
+            background: white;
+            border: 1px solid #ece5f5;
+            border-radius: 20px;
+            padding: 22px;
             margin-bottom: 22px;
-            box-shadow: 0 18px 40px rgba(46, 139, 87, .18);
             cursor: pointer;
-            transition: .2s;
+            transition: .18s;
         }
 
         .demo-banner:hover {
             transform: translateY(-2px);
-            box-shadow: 0 22px 45px rgba(46, 139, 87, .25);
+            box-shadow: 0 9px 25px rgba(72, 52, 95, .08);
         }
 
-        .demo-banner h2 {
-            margin: 0 0 8px;
-            font-size: 24px;
+        .demo-banner .quote-label {
+            color: #947db2;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: 9px;
         }
 
-        .demo-banner p {
-            margin: 0;
-            opacity: .92;
+        .demo-banner .quote-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #564566;
             line-height: 1.5;
         }
 
@@ -1389,11 +1393,12 @@
 
 
                 <div class="demo-banner" id="demoBanner">
-                    <h2>Демоверсия</h2>
-                    <p>
-                        Попробуй задания 1–34 без регистрации.
-                        Нажми, чтобы открыть и отметить статус.
-                    </p>
+                    <div class="quote-label">
+                        Демоверсия
+                    </div>
+                    <div class="quote-text">
+                        Попробуй задания 1–34. Нажми, чтобы открыть и отметить результат.
+                    </div>
                 </div>
 
                 <div class="stats-grid">
@@ -1915,7 +1920,7 @@
 
 
 <!-- ============================================================
-     DEMO MODAL
+     DEMO MODAL (list 1–34)
 ============================================================ -->
 
 <div
@@ -1948,52 +1953,114 @@
 
 
         <p style="color:#8a7c99; margin:0 0 16px; line-height:1.45;">
-            Нажми на задание, чтобы отметить «Верно» или «Неверно».
+            Нажми на задание, чтобы открыть его и отметить результат.
             Данные сохраняются только в этом браузере (демо).
         </p>
 
 
         <div id="demoTasksGrid" class="demo-tasks-grid"></div>
 
+    </div>
 
-        <div
-            id="demoStatusPanel"
-            class="hidden"
-            style="margin-top:20px; padding-top:18px; border-top:1px solid #eee8f4;"
-        >
+</div>
 
-            <div style="font-weight:900; font-size:18px; color:#4b395b; margin-bottom:12px;" id="demoStatusTitle">
-                Задание
+
+<!-- ============================================================
+     DEMO TASK MODAL (status + reason + history)
+============================================================ -->
+
+<div
+    id="demoTaskModal"
+    class="modal-overlay hidden"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <div
+                    id="demoTaskModalTitle"
+                    class="modal-title"
+                >
+                    Задание
+                </div>
+
             </div>
 
-            <div class="modal-actions">
-
-                <button
-                    id="demoCorrectBtn"
-                    class="correct-btn"
-                    type="button"
-                >
-                    ✓ Верно
-                </button>
-
-
-                <button
-                    id="demoWrongBtn"
-                    class="wrong-btn"
-                    type="button"
-                >
-                    ✕ Неверно
-                </button>
-
-            </div>
 
             <button
-                id="demoClearStatusBtn"
-                class="secondary-btn"
+                id="closeDemoTaskModal"
+                class="close-btn"
                 type="button"
-                style="width:100%; margin-top:10px;"
             >
-                Сбросить статус
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            id="demoTaskPreview"
+            class="task-preview"
+        ></div>
+
+
+        <div class="panel-title">
+            История попыток
+        </div>
+
+
+        <div
+            id="demoAttemptHistory"
+            class="attempt-list"
+        ></div>
+
+
+        <div
+            id="demoWrongReasonBlock"
+            class="hidden"
+        >
+
+            <textarea
+                id="demoWrongReason"
+                class="wrong-reason"
+                placeholder="Напиши, почему возникла ошибка..."
+            ></textarea>
+
+
+            <button
+                id="demoSaveWrongBtn"
+                class="wrong-btn"
+                type="button"
+            >
+                Сохранить как неверно
+            </button>
+
+        </div>
+
+
+        <div
+            id="demoModalActions"
+            class="modal-actions"
+        >
+
+            <button
+                id="demoCorrectBtn"
+                class="correct-btn"
+                type="button"
+            >
+                ✓ Верно
+            </button>
+
+
+            <button
+                id="demoWrongBtn"
+                class="wrong-btn"
+                type="button"
+            >
+                ✕ Неверно
             </button>
 
         </div>
@@ -2001,6 +2068,7 @@
     </div>
 
 </div>
+
 
 <script>
 
@@ -4983,8 +5051,9 @@
     ============================================================ */
 
     const DEMO_STORAGE_KEY = "oge_demo_progress";
+    const DEMO_HISTORY_KEY = "oge_demo_history";
 
-    let demoCurrentTask = null;
+    let demoCurrentTaskNum = null;
 
     function getDemoProgress() {
         try {
@@ -4998,17 +5067,58 @@
         localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(map));
     }
 
+    function getDemoHistory() {
+        try {
+            return JSON.parse(localStorage.getItem(DEMO_HISTORY_KEY) || "[]");
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function setDemoHistory(list) {
+        localStorage.setItem(DEMO_HISTORY_KEY, JSON.stringify(list));
+    }
+
     function openDemoModal() {
         document.getElementById("demoModal").classList.remove("hidden");
-        document.getElementById("demoStatusPanel").classList.add("hidden");
-        demoCurrentTask = null;
         renderDemoTasks();
     }
 
     function closeDemoModal() {
         document.getElementById("demoModal").classList.add("hidden");
-        demoCurrentTask = null;
-        document.getElementById("demoStatusPanel").classList.add("hidden");
+    }
+
+    function openDemoTask(num) {
+        demoCurrentTaskNum = num;
+
+        document.getElementById("demoTaskModalTitle").textContent =
+            `Демо · Задание ${num}`;
+
+        document.getElementById("demoTaskPreview").innerHTML = `
+            <div>
+                <strong>Задание ${escapeHtml(String(num))}</strong>
+            </div>
+            <div style="margin-top:7px;color:#95889f;font-size:12px;">
+                Демоверсия · локальное сохранение
+            </div>
+        `;
+
+        document.getElementById("demoWrongReason").value = "";
+        document.getElementById("demoWrongReasonBlock").classList.add("hidden");
+        document.getElementById("demoModalActions").classList.remove("hidden");
+
+        renderDemoTaskHistory();
+
+        document.getElementById("demoTaskModal").classList.remove("hidden");
+    }
+
+    function closeDemoTaskModal() {
+        demoCurrentTaskNum = null;
+        document.getElementById("demoTaskModal").classList.add("hidden");
+        document.getElementById("demoWrongReason").value = "";
+        document.getElementById("demoWrongReasonBlock").classList.add("hidden");
+        document.getElementById("demoModalActions").classList.remove("hidden");
+        renderDemoTasks();
     }
 
     function renderDemoTasks() {
@@ -5037,41 +5147,109 @@
         grid.querySelectorAll(".demo-task-card").forEach(card => {
             card.addEventListener("click", () => {
                 const num = Number(card.dataset.demoNum);
-                demoCurrentTask = num;
-                document.getElementById("demoStatusTitle").textContent = `Задание ${num}`;
-                document.getElementById("demoStatusPanel").classList.remove("hidden");
+                openDemoTask(num);
             });
         });
     }
 
-    function setDemoStatus(result) {
-        if (demoCurrentTask === null) return;
-        const progress = getDemoProgress();
-        if (result === null) {
-            delete progress[String(demoCurrentTask)];
-        } else {
-            progress[String(demoCurrentTask)] = result;
+    function renderDemoTaskHistory() {
+        const container = document.getElementById("demoAttemptHistory");
+        const history = getDemoHistory().filter(
+            item => item.task_num === demoCurrentTaskNum
+        );
+
+        if (!history.length) {
+            container.innerHTML = `
+                <div class="empty-box">
+                    Попыток пока нет.
+                </div>
+            `;
+            return;
         }
+
+        container.innerHTML = history.map((attempt, index) => {
+            const correct = attempt.result === "correct";
+            return `
+                <div class="attempt-item">
+                    <div class="attempt-top">
+                        <div>Попытка ${index + 1}</div>
+                        <span class="status-pill ${correct ? "correct" : "wrong"}">
+                            ${correct ? "✓ Верно" : "✕ Неверно"}
+                        </span>
+                    </div>
+                    <div class="attempt-date">
+                        ${escapeHtml(formatDate(attempt.created_at))}
+                    </div>
+                    ${
+                        attempt.reason
+                            ? `<div class="reason"><strong>Причина:</strong> ${escapeHtml(cleanVisibleText(attempt.reason))}</div>`
+                            : ""
+                    }
+                </div>
+            `;
+        }).join("");
+    }
+
+    function saveDemoAttempt(result, reason = null) {
+        if (demoCurrentTaskNum === null) {
+            return;
+        }
+
+        const history = getDemoHistory();
+        history.push({
+            task_num: demoCurrentTaskNum,
+            result,
+            reason: result === "wrong" ? cleanVisibleText(reason) : null,
+            created_at: new Date().toISOString()
+        });
+        setDemoHistory(history);
+
+        const progress = getDemoProgress();
+        progress[String(demoCurrentTaskNum)] = result;
         setDemoProgress(progress);
+
+        document.getElementById("demoWrongReason").value = "";
+        document.getElementById("demoWrongReasonBlock").classList.add("hidden");
+        document.getElementById("demoModalActions").classList.remove("hidden");
+
+        renderDemoTaskHistory();
         renderDemoTasks();
-        // keep panel open with same task
-        document.getElementById("demoStatusTitle").textContent = `Задание ${demoCurrentTask}`;
-        document.getElementById("demoStatusPanel").classList.remove("hidden");
     }
 
     document.getElementById("demoBanner").addEventListener("click", openDemoModal);
-    document.getElementById("closeDemoModal").addEventListener("click", closeDemoModal);
 
+    document.getElementById("closeDemoModal").addEventListener("click", closeDemoModal);
     document.getElementById("demoModal").addEventListener("click", event => {
         if (event.target.id === "demoModal") {
             closeDemoModal();
         }
     });
 
-    document.getElementById("demoCorrectBtn").addEventListener("click", () => setDemoStatus("correct"));
-    document.getElementById("demoWrongBtn").addEventListener("click", () => setDemoStatus("wrong"));
-    document.getElementById("demoClearStatusBtn").addEventListener("click", () => setDemoStatus(null));
+    document.getElementById("closeDemoTaskModal").addEventListener("click", closeDemoTaskModal);
+    document.getElementById("demoTaskModal").addEventListener("click", event => {
+        if (event.target.id === "demoTaskModal") {
+            closeDemoTaskModal();
+        }
+    });
 
+    document.getElementById("demoCorrectBtn").addEventListener("click", () => {
+        saveDemoAttempt("correct", null);
+    });
+
+    document.getElementById("demoWrongBtn").addEventListener("click", () => {
+        document.getElementById("demoModalActions").classList.add("hidden");
+        document.getElementById("demoWrongReasonBlock").classList.remove("hidden");
+        document.getElementById("demoWrongReason").focus();
+    });
+
+    document.getElementById("demoSaveWrongBtn").addEventListener("click", () => {
+        const reason = document.getElementById("demoWrongReason").value.trim();
+        if (!reason) {
+            alert("Напиши причину ошибки.");
+            return;
+        }
+        saveDemoAttempt("wrong", reason);
+    });
 
     /* ============================================================
        INITIALIZATION
