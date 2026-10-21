@@ -1277,7 +1277,7 @@
             <div class="brand">
 
                 <div class="brand-icon">
-                    E
+                    O
                 </div>
 
                 <div>
@@ -4994,7 +4994,19 @@
                 heading: { fontSize: 14, bold: true, margin: [0, 10, 0, 8] },
                 taskHeading: { fontSize: 10, bold: true, margin: [0, 8, 0, 3] }
             }
-        }).download(`oge-fipi-report-${safeNickname}.pdf`);
+        }).getBlob(function (blob) {
+            const fileName = `oge-fipi-report-${safeNickname}.pdf`;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            a.target = "_blank";
+            a.rel = "noopener";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+        });
     }
 
 
@@ -5090,7 +5102,19 @@
                 heading: { fontSize: 14, bold: true, margin: [0, 10, 0, 8] },
                 taskHeading: { fontSize: 10, bold: true, margin: [0, 8, 0, 3] }
             }
-        }).download(`oge-demo-report-${safeNickname}.pdf`);
+        }).getBlob(function (blob) {
+            const fileName = `oge-demo-report-${safeNickname}.pdf`;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            a.target = "_blank";
+            a.rel = "noopener";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+        });
     }
 
 
