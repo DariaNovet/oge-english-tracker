@@ -1449,22 +1449,6 @@
                     <div class="stat-card">
 
                         <div class="stat-label">
-                            Прогресс
-                        </div>
-
-                        <div
-                            id="homeProgress"
-                            class="stat-value"
-                        >
-                            0%
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-label">
                             Попыток
                         </div>
 
@@ -1540,7 +1524,7 @@
                         id="taskSearch"
                         class="search-input"
                         type="text"
-                        placeholder="Поиск по номеру задания, варианту или коду..."
+                        placeholder="Поиск по коду, номеру или варианту — по всем заданиям..."
                     >
 
                 </div>
@@ -1590,22 +1574,6 @@
                             class="stat-value"
                         >
                             0
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-label">
-                            Прогресс
-                        </div>
-
-                        <div
-                            id="statsProgress"
-                            class="stat-value"
-                        >
-                            0%
                         </div>
 
                     </div>
@@ -1769,7 +1737,7 @@
                     </h1>
 
                     <div class="page-description">
-                        Задания 1–34. Результаты сохраняются только в этом браузере.
+                        Задания 1–34. Результаты сохраняются в твоём аккаунте.
                     </div>
 
                 </div>
@@ -1788,22 +1756,6 @@
                             class="stat-value"
                         >
                             0
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div class="stat-label">
-                            Прогресс
-                        </div>
-
-                        <div
-                            id="demoHomeProgress"
-                            class="stat-value"
-                        >
-                            0%
                         </div>
 
                     </div>
@@ -2002,22 +1954,6 @@
                             class="profile-value"
                         >
                             0
-                        </div>
-
-                    </div>
-
-
-                    <div class="profile-row">
-
-                        <div class="profile-label">
-                            Прогресс
-                        </div>
-
-                        <div
-                            id="profileProgress"
-                            class="profile-value"
-                        >
-                            0%
                         </div>
 
                     </div>
@@ -3466,42 +3402,51 @@
             );
 
 
-        const query =
+        const queryRaw =
             document
                 .getElementById(
                     "taskSearch"
                 )
                 .value
-                .trim()
-                .toLowerCase();
+                .trim();
+
+        const query = queryRaw.toLowerCase();
 
 
-        let tasks =
-            getTasksForCurrentGroup();
-
+        let tasks;
 
         if (query) {
+            // Поиск по всем заданиям, не только по текущей группе
+            const allTasks =
+                (typeof TASKS !== "undefined" && Array.isArray(TASKS))
+                    ? TASKS
+                    : [];
 
-            tasks =
-                tasks.filter(
-                    task => {
+            tasks = allTasks.filter(task => {
+                const code = getCode(task).toLowerCase();
+                const number = String(getNumber(task)).toLowerCase();
+                const variant = String(getVariant(task)).toLowerCase();
 
-                        return (
-                            getCode(task)
-                                .toLowerCase()
-                                .includes(query) ||
-
-                            String(
-                                getNumber(task)
-                            ).includes(query) ||
-
-                            String(
-                                getVariant(task)
-                            ).includes(query)
-                        );
-
-                    }
+                return (
+                    code.includes(query) ||
+                    number.includes(query) ||
+                    variant.includes(query)
                 );
+            });
+
+            // Точное совпадение по коду — сразу открыть задание
+            const exactByCode = allTasks.filter(
+                task => getCode(task).toLowerCase() === query
+            );
+
+            if (exactByCode.length === 1) {
+                // Не мешаем, если модалка уже открыта на этом же задании
+                if (!currentTask || currentTask.id !== exactByCode[0].id) {
+                    openTask(exactByCode[0]);
+                }
+            }
+        } else {
+            tasks = getTasksForCurrentGroup();
         }
 
 
@@ -4093,36 +4038,39 @@
        STATISTICS
     ============================================================ */
 
-    function getCompletedCount() {
+    function isDemoTaskId(taskId) {
+        return String(taskId || "").startsWith("demo-");
+    }
 
-        return Object.keys(
-            progressMap
+
+    function getCompletedCount() {
+        return Object.keys(progressMap).filter(
+            id => !isDemoTaskId(id)
         ).length;
     }
 
 
     function getAttemptsCount() {
-
-        return attemptHistory.length;
+        return attemptHistory.filter(
+            item => !isDemoTaskId(item.task_id)
+        ).length;
     }
 
 
     function getCorrectCount() {
-
         return attemptHistory.filter(
             item =>
-                item.result ===
-                "correct"
+                item.result === "correct" &&
+                !isDemoTaskId(item.task_id)
         ).length;
     }
 
 
     function getWrongCount() {
-
         return attemptHistory.filter(
             item =>
-                item.result ===
-                "wrong"
+                item.result === "wrong" &&
+                !isDemoTaskId(item.task_id)
         ).length;
     }
 
@@ -4201,22 +4149,12 @@
                 ];
 
 
-        const totalTasks = getTotalTasksCount();
-        const completed = getCompletedCount();
-
         document
             .getElementById(
                 "homeCompleted"
             )
             .textContent =
-                totalTasks
-                    ? `${completed} / ${totalTasks}`
-                    : String(completed);
-
-        const homeProgress = document.getElementById("homeProgress");
-        if (homeProgress) {
-            homeProgress.textContent = getCompletionPercent() + "%";
-        }
+                getCompletedCount();
 
         document
             .getElementById(
@@ -4246,22 +4184,12 @@
 
     function renderStats() {
 
-        const totalTasks = getTotalTasksCount();
-        const completed = getCompletedCount();
-
         document
             .getElementById(
                 "statsCompleted"
             )
             .textContent =
-                totalTasks
-                    ? `${completed} / ${totalTasks}`
-                    : String(completed);
-
-        const statsProgress = document.getElementById("statsProgress");
-        if (statsProgress) {
-            statsProgress.textContent = getCompletionPercent() + "%";
-        }
+                getCompletedCount();
 
         document
             .getElementById(
@@ -4295,6 +4223,7 @@
 
         const recent =
             [...attemptHistory]
+                .filter(item => !isDemoTaskId(item.task_id))
                 .reverse()
                 .slice(
                     0,
@@ -4423,10 +4352,9 @@
                 "errorsContainer"
             );
 
-        // Bank (FIPI) wrong attempts
         const bankWrong =
             attemptHistory
-                .filter(item => item.result === "wrong")
+                .filter(item => item.result === "wrong" && !isDemoTaskId(item.task_id))
                 .map(item => ({
                     source: "bank",
                     task_id: item.task_id,
@@ -4435,21 +4363,16 @@
                     created_at: item.created_at
                 }));
 
-        // Demo wrong attempts
-        let demoWrong = [];
-        try {
-            demoWrong = getDemoHistory()
-                .filter(item => item.result === "wrong")
+        const demoWrong =
+            attemptHistory
+                .filter(item => item.result === "wrong" && isDemoTaskId(item.task_id))
                 .map(item => ({
                     source: "demo",
-                    task_id: null,
-                    task_num: item.task_num,
+                    task_id: item.task_id,
+                    task_num: demoNumFromId(item.task_id),
                     reason: item.reason,
                     created_at: item.created_at
                 }));
-        } catch (e) {
-            demoWrong = [];
-        }
 
         const allWrong = [...bankWrong, ...demoWrong]
             .sort((a, b) => {
@@ -4481,7 +4404,7 @@
                                     Демо · Задание ${escapeHtml(String(attempt.task_num))}
                                 </div>
                                 <div style="color:#9a8da5;font-size:12px;">
-                                    Демоверсия
+                                    Демоверсия · ${escapeHtml(formatDate(attempt.created_at))}
                                 </div>
                             </div>
                             <span class="status-pill wrong">✕ Неверно</span>
@@ -4518,7 +4441,7 @@
                                 }
                             </div>
                             <div style="color:#9a8da5;font-size:12px;">
-                                ${task ? `Код: ${escapeHtml(getCode(task))} · Банк ФИПИ` : "Банк ФИПИ"}
+                                ${task ? `Код: ${escapeHtml(getCode(task))} · ` : ""}Банк ФИПИ · ${escapeHtml(formatDate(attempt.created_at))}
                             </div>
                         </div>
                         <span class="status-pill wrong">✕ Неверно</span>
@@ -4547,7 +4470,6 @@
             card.addEventListener("click", () => {
                 const num = Number(card.dataset.errorDemo);
                 if (!Number.isNaN(num)) {
-                    // switch to demo page then open task
                     document.querySelectorAll(".nav-btn").forEach(btn => {
                         btn.classList.toggle("active", btn.dataset.page === "demo");
                     });
@@ -4619,22 +4541,12 @@
                 email;
 
 
-        const totalTasks = getTotalTasksCount();
-        const completed = getCompletedCount();
-
         document
             .getElementById(
                 "profileCompleted"
             )
             .textContent =
-                totalTasks
-                    ? `${completed} / ${totalTasks}`
-                    : String(completed);
-
-        const profileProgress = document.getElementById("profileProgress");
-        if (profileProgress) {
-            profileProgress.textContent = getCompletionPercent() + "%";
-        }
+                getCompletedCount();
 
         document
             .getElementById(
@@ -5000,8 +4912,7 @@
         content.push({ text: "Общая статистика", style: "heading" });
         content.push({
             ul: [
-                `Выполнено заданий: ${getCompletedCount()}${getTotalTasksCount() ? " из " + getTotalTasksCount() : ""}`,
-                `Прогресс: ${getCompletionPercent()}%`,
+                `Выполнено заданий: ${getCompletedCount()}`,
                 `Всего попыток: ${getAttemptsCount()}`,
                 `Верных ответов: ${getCorrectCount()}`,
                 `Неверных ответов: ${getWrongCount()}`,
@@ -5014,7 +4925,9 @@
 
         const attemptedTasks = (typeof TASKS !== "undefined" && Array.isArray(TASKS))
             ? TASKS.filter(task =>
-                attemptHistory.some(attempt => attempt.task_id === task.id)
+                attemptHistory.some(attempt =>
+                    attempt.task_id === task.id && !isDemoTaskId(attempt.task_id)
+                )
             )
             : [];
 
@@ -5073,8 +4986,8 @@
 
         const generated = new Date().toLocaleString("ru-RU");
         const content = [];
-        const history = getDemoHistory();
-        const progress = getDemoProgress();
+        const history = getDemoHistoryList();
+        const progress = getDemoProgressMap();
 
         content.push({ text: "OGE English Tracker", style: "title" });
         content.push({ text: "Отчёт: демоверсия (задания 1–34)", style: "subtitle" });
@@ -5084,8 +4997,7 @@
         content.push({ text: "Общая статистика (демо)", style: "heading" });
         content.push({
             ul: [
-                `Выполнено заданий: ${getDemoCompletedCount()} из 34`,
-                `Прогресс: ${getDemoCompletionPercent()}%`,
+                `Выполнено заданий: ${getDemoCompletedCount()}`,
                 `Всего попыток: ${getDemoAttemptsCount()}`,
                 `Верных ответов: ${getDemoCorrectCount()}`,
                 `Неверных ответов: ${getDemoWrongCount()}`,
@@ -5098,7 +5010,7 @@
 
         const statusLines = [];
         for (let n = 1; n <= 34; n++) {
-            const st = progress[String(n)];
+            const st = progress[String(n)]?.status || progress[String(n)];
             let label = "не решено";
             if (st === "correct") label = "верно";
             else if (st === "wrong") label = "неверно";
@@ -5116,7 +5028,7 @@
         } else {
             const byTask = {};
             history.forEach(item => {
-                const key = String(item.task_num);
+                const key = String(demoNumFromId(item.task_id) ?? item.task_id);
                 if (!byTask[key]) byTask[key] = [];
                 byTask[key].push(item);
             });
@@ -5157,52 +5069,49 @@
 
 
     /* ============================================================
-       DEMO MODE (localStorage only)
+       DEMO MODE (saved to user account via Supabase)
     ============================================================ */
 
-    const DEMO_STORAGE_KEY = "oge_demo_progress";
-    const DEMO_HISTORY_KEY = "oge_demo_history";
+    function demoTaskId(num) {
+        return "demo-" + String(num);
+    }
+
+    function demoNumFromId(taskId) {
+        const m = String(taskId || "").match(/^demo-(\d+)$/);
+        return m ? Number(m[1]) : null;
+    }
 
     let demoCurrentTaskNum = null;
 
-    function getDemoProgress() {
-        try {
-            return JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY) || "{}");
-        } catch (e) {
-            return {};
-        }
+    function getDemoProgressMap() {
+        const map = {};
+        Object.keys(progressMap).forEach(id => {
+            const num = demoNumFromId(id);
+            if (num !== null) {
+                map[String(num)] = progressMap[id];
+            }
+        });
+        return map;
     }
 
-    function setDemoProgress(map) {
-        localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(map));
-    }
-
-    function getDemoHistory() {
-        try {
-            return JSON.parse(localStorage.getItem(DEMO_HISTORY_KEY) || "[]");
-        } catch (e) {
-            return [];
-        }
-    }
-
-    function setDemoHistory(list) {
-        localStorage.setItem(DEMO_HISTORY_KEY, JSON.stringify(list));
+    function getDemoHistoryList() {
+        return attemptHistory.filter(item => isDemoTaskId(item.task_id));
     }
 
     function getDemoCompletedCount() {
-        return Object.keys(getDemoProgress()).length;
+        return Object.keys(getDemoProgressMap()).length;
     }
 
     function getDemoAttemptsCount() {
-        return getDemoHistory().length;
+        return getDemoHistoryList().length;
     }
 
     function getDemoCorrectCount() {
-        return getDemoHistory().filter(item => item.result === "correct").length;
+        return getDemoHistoryList().filter(item => item.result === "correct").length;
     }
 
     function getDemoWrongCount() {
-        return getDemoHistory().filter(item => item.result === "wrong").length;
+        return getDemoHistoryList().filter(item => item.result === "wrong").length;
     }
 
     function getDemoAccuracy() {
@@ -5222,7 +5131,7 @@
                 <strong>Задание ${escapeHtml(String(num))}</strong>
             </div>
             <div style="margin-top:7px;color:#95889f;font-size:12px;">
-                Демоверсия · локальное сохранение
+                Демоверсия · сохраняется в аккаунте
             </div>
         `;
 
@@ -5248,11 +5157,12 @@
         const grid = document.getElementById("demoTasksGrid");
         if (!grid) return;
 
-        const progress = getDemoProgress();
+        const progress = getDemoProgressMap();
         let html = "";
 
         for (let n = 1; n <= 34; n++) {
-            const status = progress[String(n)] || null;
+            const item = progress[String(n)];
+            const status = item?.status || null;
             let statusHtml = '<div class="demo-task-status neutral">Не решено</div>';
             if (status === "correct") {
                 statusHtml = '<div class="demo-task-status correct-text">✓ Верно</div>';
@@ -5285,9 +5195,8 @@
         const container = document.getElementById("demoAttemptHistory");
         if (!container) return;
 
-        const history = getDemoHistory().filter(
-            item => item.task_num === demoCurrentTaskNum
-        );
+        const taskId = demoTaskId(demoCurrentTaskNum);
+        const history = attemptHistory.filter(item => item.task_id === taskId);
 
         if (!history.length) {
             container.innerHTML = `
@@ -5325,7 +5234,7 @@
         const body = document.getElementById("demoStatsTableBody");
         if (!body) return;
 
-        const recent = [...getDemoHistory()].reverse().slice(0, 30);
+        const recent = [...getDemoHistoryList()].reverse().slice(0, 30);
 
         if (!recent.length) {
             body.innerHTML = `
@@ -5338,9 +5247,10 @@
 
         body.innerHTML = recent.map(attempt => {
             const correct = attempt.result === "correct";
+            const num = demoNumFromId(attempt.task_id);
             return `
                 <tr>
-                    <td>Задание ${escapeHtml(String(attempt.task_num))}</td>
+                    <td>Задание ${escapeHtml(String(num ?? attempt.task_id))}</td>
                     <td>
                         <span class="status-pill ${correct ? "correct" : "wrong"}">
                             ${correct ? "✓ Верно" : "✕ Неверно"}
@@ -5357,12 +5267,7 @@
         const completedEl = document.getElementById("demoHomeCompleted");
         if (!completedEl) return;
 
-        const demoCompleted = getDemoCompletedCount();
-        completedEl.textContent = `${demoCompleted} / 34`;
-        const demoProgress = document.getElementById("demoHomeProgress");
-        if (demoProgress) {
-            demoProgress.textContent = getDemoCompletionPercent() + "%";
-        }
+        completedEl.textContent = getDemoCompletedCount();
         document.getElementById("demoHomeAttempts").textContent = getDemoAttemptsCount();
         document.getElementById("demoHomeCorrect").textContent = getDemoCorrectCount();
         document.getElementById("demoHomeAccuracy").textContent = getDemoAccuracy() + "%";
@@ -5371,23 +5276,51 @@
         renderDemoStatsTable();
     }
 
-    function saveDemoAttempt(result, reason = null) {
-        if (demoCurrentTaskNum === null) {
+    async function saveDemoAttempt(result, reason = null) {
+        if (demoCurrentTaskNum === null || !currentUser) {
+            alert("Нужно войти в аккаунт, чтобы сохранять результаты демо.");
             return;
         }
 
-        const history = getDemoHistory();
-        history.push({
-            task_num: demoCurrentTaskNum,
-            result,
-            reason: result === "wrong" ? cleanVisibleText(reason) : null,
-            created_at: new Date().toISOString()
-        });
-        setDemoHistory(history);
+        const taskId = demoTaskId(demoCurrentTaskNum);
 
-        const progress = getDemoProgress();
-        progress[String(demoCurrentTaskNum)] = result;
-        setDemoProgress(progress);
+        const { data: insertedAttempt, error: historyError } = await sb
+            .from("attempt_history")
+            .insert({
+                user_id: currentUser.id,
+                task_id: taskId,
+                result,
+                reason: result === "wrong" ? cleanVisibleText(reason) : null
+            })
+            .select()
+            .single();
+
+        if (historyError) {
+            alert("Не удалось сохранить попытку: " + historyError.message);
+            return;
+        }
+
+        const { data: savedProgress, error: progressError } = await sb
+            .from("progress")
+            .upsert(
+                {
+                    user_id: currentUser.id,
+                    task_id: taskId,
+                    status: result,
+                    updated_at: new Date().toISOString()
+                },
+                { onConflict: "user_id,task_id" }
+            )
+            .select()
+            .single();
+
+        if (progressError) {
+            alert("Попытка сохранена, но статус не обновился: " + progressError.message);
+            return;
+        }
+
+        attemptHistory.push(insertedAttempt);
+        progressMap[taskId] = savedProgress;
 
         document.getElementById("demoWrongReason").value = "";
         document.getElementById("demoWrongReasonBlock").classList.add("hidden");
@@ -5395,6 +5328,10 @@
 
         renderDemoTaskHistory();
         renderDemoPage();
+        renderErrors();
+        renderHome();
+        renderStats();
+        renderProfile();
     }
 
     document.getElementById("closeDemoTaskModal").addEventListener("click", closeDemoTaskModal);
@@ -5423,6 +5360,7 @@
         }
         saveDemoAttempt("wrong", reason);
     });
+
 
     /* ============================================================
        INITIALIZATION
