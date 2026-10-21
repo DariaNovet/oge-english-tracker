@@ -517,6 +517,26 @@
             font-weight: 800;
         }
 
+        .task-card.status-correct {
+            background: #e7fbee;
+            border-color: #7dd39a;
+        }
+
+        .task-card.status-correct .task-number,
+        .task-card.status-correct .task-code {
+            color: #0a7a32;
+        }
+
+        .task-card.status-wrong {
+            background: #ffe8ed;
+            border-color: #f5a0b0;
+        }
+
+        .task-card.status-wrong .task-number,
+        .task-card.status-wrong .task-code {
+            color: #c01030;
+        }
+
         .empty-box {
             background: white;
             border: 1px dashed #d9cee7;
@@ -915,6 +935,47 @@
         .demo-task-status.neutral { color: #9b90a5; }
         .demo-task-status.correct-text { color: #00a83b; }
         .demo-task-status.wrong-text { color: #f0183d; }
+
+        .demo-task-card.status-correct {
+            background: #e7fbee;
+            border-color: #7dd39a;
+        }
+
+        .demo-task-card.status-correct .demo-task-num {
+            color: #0a7a32;
+        }
+
+        .demo-task-card.status-wrong {
+            background: #ffe8ed;
+            border-color: #f5a0b0;
+        }
+
+        .demo-task-card.status-wrong .demo-task-num {
+            color: #c01030;
+        }
+
+        .pdf-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .pdf-actions .primary-btn {
+            width: auto;
+            max-width: none;
+            padding: 12px 20px;
+        }
+
+        .secondary-btn.as-primary {
+            border: 0;
+            background: #8663d1;
+            color: white;
+        }
+
+        .secondary-btn.as-primary:hover {
+            background: #7552c0;
+        }
 
         @media (max-width: 1100px) {
             .demo-tasks-grid {
@@ -1622,13 +1683,15 @@
                 </div>
 
 
-                <button
-                    id="downloadPdfBtn"
-                    class="primary-btn"
-                    style="max-width:300px;"
-                >
-                    Скачать PDF-отчёт
-                </button>
+                <div class="pdf-actions">
+                    <button
+                        id="downloadPdfBtn"
+                        class="primary-btn"
+                        type="button"
+                    >
+                        Скачать PDF (банк ФИПИ)
+                    </button>
+                </div>
 
             </section>
 
@@ -1786,6 +1849,16 @@
 
                         </table>
 
+                    </div>
+
+                    <div class="pdf-actions">
+                        <button
+                            id="downloadDemoPdfBtn"
+                            class="primary-btn"
+                            type="button"
+                        >
+                            Скачать PDF (демоверсия)
+                        </button>
                     </div>
 
                 </div>
@@ -3528,6 +3601,8 @@
             </div>
         `;
 
+        let cardClass = "task-card";
+
 
         if (
             progress?.status ===
@@ -3541,6 +3616,7 @@
                     ✓ Верно
                 </div>
             `;
+            cardClass = "task-card status-correct";
 
         } else if (
             progress?.status ===
@@ -3554,13 +3630,14 @@
                     ✕ Неверно
                 </div>
             `;
+            cardClass = "task-card status-wrong";
 
         }
 
 
         return `
             <div
-                class="task-card"
+                class="${cardClass}"
                 data-task-id="${escapeHtml(
                     task.id
                 )}"
@@ -4816,76 +4893,37 @@
             downloadPdf
         );
 
+    document
+        .getElementById(
+            "downloadDemoPdfBtn"
+        )
+        .addEventListener(
+            "click",
+            downloadDemoPdf
+        );
+
 
     function downloadPdf() {
 
-        if (
-            typeof pdfMake ===
-            "undefined"
-        ) {
-
-            alert(
-                "PDF-библиотека не загрузилась."
-            );
-
+        if (typeof pdfMake === "undefined") {
+            alert("PDF-библиотека не загрузилась.");
             return;
         }
 
-
         const nickname =
             profile?.nickname ||
-            currentUser?.email?.split(
-                "@"
-            )[0] ||
+            currentUser?.email?.split("@")[0] ||
             "Ученик";
 
-
-        const generated =
-            new Date()
-                .toLocaleString(
-                    "ru-RU"
-                );
-
-
+        const generated = new Date().toLocaleString("ru-RU");
         const content = [];
 
+        content.push({ text: "OGE English Tracker", style: "title" });
+        content.push({ text: "Отчёт: банк заданий ФИПИ", style: "subtitle" });
+        content.push({ text: `Ученик: ${nickname}`, margin: [0, 0, 0, 4] });
+        content.push({ text: `Дата формирования: ${generated}`, margin: [0, 0, 0, 14] });
 
-        content.push({
-            text:
-                "OGE English Tracker",
-            style:
-                "title"
-        });
-
-
-        content.push({
-            text:
-                `Отчёт ученика: ${nickname}`,
-            style:
-                "subtitle"
-        });
-
-
-        content.push({
-            text:
-                `Дата формирования: ${generated}`,
-            margin: [
-                0,
-                0,
-                0,
-                14
-            ]
-        });
-
-
-        content.push({
-            text:
-                "Общая статистика",
-            style:
-                "heading"
-        });
-
-
+        content.push({ text: "Общая статистика", style: "heading" });
         content.push({
             ul: [
                 `Выполнено заданий: ${getCompletedCount()}`,
@@ -4894,215 +4932,152 @@
                 `Неверных ответов: ${getWrongCount()}`,
                 `Точность: ${getAccuracy()}%`
             ],
-            margin: [
-                0,
-                0,
-                0,
-                16
-            ]
+            margin: [0, 0, 0, 16]
         });
 
+        content.push({ text: "История попыток", style: "heading" });
 
-        content.push({
-            text:
-                "История попыток",
-            style:
-                "heading"
-        });
+        const attemptedTasks = (typeof TASKS !== "undefined" && Array.isArray(TASKS))
+            ? TASKS.filter(task =>
+                attemptHistory.some(attempt => attempt.task_id === task.id)
+            )
+            : [];
 
-
-        const attemptedTasks =
-            TASKS.filter(
-                task =>
-                    attemptHistory.some(
-                        attempt =>
-                            attempt.task_id ===
-                            task.id
-                    )
-            );
-
-
-        if (
-            !attemptedTasks.length
-        ) {
-
-            content.push({
-                text:
-                    "Попыток пока нет."
-            });
-
+        if (!attemptedTasks.length) {
+            content.push({ text: "Попыток пока нет." });
         } else {
+            attemptedTasks.forEach(task => {
+                const attempts = attemptHistory.filter(
+                    attempt => attempt.task_id === task.id
+                );
 
-            attemptedTasks.forEach(
-                task => {
+                content.push({
+                    text: `Вариант ${getVariant(task)} · Задание ${getNumber(task)} · Код ${getCode(task)}`,
+                    style: "taskHeading"
+                });
 
-                    const attempts =
-                        attemptHistory.filter(
-                            attempt =>
-                                attempt.task_id ===
-                                task.id
-                        );
-
-
-                    content.push({
-                        text:
-                            `Вариант ${getVariant(
-                                task
-                            )} · Задание ${getNumber(
-                                task
-                            )} · Код ${getCode(
-                                task
-                            )}`,
-                        style:
-                            "taskHeading"
-                    });
-
-
-                    attempts.forEach(
-                        (
-                            attempt,
-                            index
-                        ) => {
-
-                            const result =
-                                attempt.result ===
-                                "correct"
-                                    ? "Верно"
-                                    : "Неверно";
-
-
-                            let text =
-                                `${index + 1}. ${result} — ${formatDate(
-                                    attempt.created_at
-                                )}`;
-
-
-                            if (
-                                attempt.result ===
-                                    "wrong" &&
-                                attempt.reason
-                            ) {
-
-                                text +=
-                                    `\nПричина: ${cleanVisibleText(
-                                        attempt.reason
-                                    )}`;
-
-                            }
-
-
-                            content.push({
-                                text,
-                                margin: [
-                                    8,
-                                    2,
-                                    0,
-                                    5
-                                ]
-                            });
-
-                        }
-                    );
-
-                }
-            );
-
+                attempts.forEach((attempt, index) => {
+                    const result = attempt.result === "correct" ? "Верно" : "Неверно";
+                    let text = `${index + 1}. ${result} — ${formatDate(attempt.created_at)}`;
+                    if (attempt.result === "wrong" && attempt.reason) {
+                        text += `\nПричина: ${cleanVisibleText(attempt.reason)}`;
+                    }
+                    content.push({ text, margin: [8, 2, 0, 5] });
+                });
+            });
         }
 
+        const safeNickname = String(nickname).replace(/[^a-zA-Zа-яА-Я0-9_-]/g, "_");
 
-        const safeNickname =
-            String(
-                nickname
-            ).replace(
-                /[^a-zA-Zа-яА-Я0-9_-]/g,
-                "_"
-            );
-
-
-        pdfMake
-            .createPdf({
-
-                pageSize:
-                    "A4",
-
-                pageMargins: [
-                    28,
-                    32,
-                    28,
-                    32
-                ],
-
-                content,
-
-                defaultStyle: {
-                    font:
-                        "Roboto",
-                    fontSize:
-                        9,
-                    lineHeight:
-                        1.15
-                },
-
-                styles: {
-
-                    title: {
-                        fontSize:
-                            22,
-                        bold:
-                            true,
-                        margin: [
-                            0,
-                            0,
-                            0,
-                            8
-                        ]
-                    },
-
-                    subtitle: {
-                        fontSize:
-                            12,
-                        margin: [
-                            0,
-                            0,
-                            0,
-                            5
-                        ]
-                    },
-
-                    heading: {
-                        fontSize:
-                            14,
-                        bold:
-                            true,
-                        margin: [
-                            0,
-                            10,
-                            0,
-                            8
-                        ]
-                    },
-
-                    taskHeading: {
-                        fontSize:
-                            10,
-                        bold:
-                            true,
-                        margin: [
-                            0,
-                            8,
-                            0,
-                            3
-                        ]
-                    }
-
-                }
-
-            })
-            .download(
-                `oge-english-report-${safeNickname}.pdf`
-            );
+        pdfMake.createPdf({
+            pageSize: "A4",
+            pageMargins: [28, 32, 28, 32],
+            content,
+            defaultStyle: { font: "Roboto", fontSize: 9, lineHeight: 1.15 },
+            styles: {
+                title: { fontSize: 22, bold: true, margin: [0, 0, 0, 8] },
+                subtitle: { fontSize: 12, margin: [0, 0, 0, 5] },
+                heading: { fontSize: 14, bold: true, margin: [0, 10, 0, 8] },
+                taskHeading: { fontSize: 10, bold: true, margin: [0, 8, 0, 3] }
+            }
+        }).download(`oge-fipi-report-${safeNickname}.pdf`);
     }
 
+
+    function downloadDemoPdf() {
+
+        if (typeof pdfMake === "undefined") {
+            alert("PDF-библиотека не загрузилась.");
+            return;
+        }
+
+        const nickname =
+            profile?.nickname ||
+            currentUser?.email?.split("@")[0] ||
+            "Ученик";
+
+        const generated = new Date().toLocaleString("ru-RU");
+        const content = [];
+        const history = getDemoHistory();
+        const progress = getDemoProgress();
+
+        content.push({ text: "OGE English Tracker", style: "title" });
+        content.push({ text: "Отчёт: демоверсия (задания 1–34)", style: "subtitle" });
+        content.push({ text: `Ученик: ${nickname}`, margin: [0, 0, 0, 4] });
+        content.push({ text: `Дата формирования: ${generated}`, margin: [0, 0, 0, 14] });
+
+        content.push({ text: "Общая статистика (демо)", style: "heading" });
+        content.push({
+            ul: [
+                `Выполнено заданий: ${getDemoCompletedCount()}`,
+                `Всего попыток: ${getDemoAttemptsCount()}`,
+                `Верных ответов: ${getDemoCorrectCount()}`,
+                `Неверных ответов: ${getDemoWrongCount()}`,
+                `Точность: ${getDemoAccuracy()}%`
+            ],
+            margin: [0, 0, 0, 16]
+        });
+
+        content.push({ text: "Статус по заданиям 1–34", style: "heading" });
+
+        const statusLines = [];
+        for (let n = 1; n <= 34; n++) {
+            const st = progress[String(n)];
+            let label = "не решено";
+            if (st === "correct") label = "верно";
+            else if (st === "wrong") label = "неверно";
+            statusLines.push(`Задание ${n}: ${label}`);
+        }
+        content.push({
+            text: statusLines.join("\n"),
+            margin: [0, 0, 0, 16]
+        });
+
+        content.push({ text: "История попыток (демо)", style: "heading" });
+
+        if (!history.length) {
+            content.push({ text: "Попыток пока нет." });
+        } else {
+            const byTask = {};
+            history.forEach(item => {
+                const key = String(item.task_num);
+                if (!byTask[key]) byTask[key] = [];
+                byTask[key].push(item);
+            });
+
+            Object.keys(byTask)
+                .sort((a, b) => Number(a) - Number(b))
+                .forEach(key => {
+                    content.push({
+                        text: `Задание ${key}`,
+                        style: "taskHeading"
+                    });
+                    byTask[key].forEach((attempt, index) => {
+                        const result = attempt.result === "correct" ? "Верно" : "Неверно";
+                        let text = `${index + 1}. ${result} — ${formatDate(attempt.created_at)}`;
+                        if (attempt.result === "wrong" && attempt.reason) {
+                            text += `\nПричина: ${cleanVisibleText(attempt.reason)}`;
+                        }
+                        content.push({ text, margin: [8, 2, 0, 5] });
+                    });
+                });
+        }
+
+        const safeNickname = String(nickname).replace(/[^a-zA-Zа-яА-Я0-9_-]/g, "_");
+
+        pdfMake.createPdf({
+            pageSize: "A4",
+            pageMargins: [28, 32, 28, 32],
+            content,
+            defaultStyle: { font: "Roboto", fontSize: 9, lineHeight: 1.15 },
+            styles: {
+                title: { fontSize: 22, bold: true, margin: [0, 0, 0, 8] },
+                subtitle: { fontSize: 12, margin: [0, 0, 0, 5] },
+                heading: { fontSize: 14, bold: true, margin: [0, 10, 0, 8] },
+                taskHeading: { fontSize: 10, bold: true, margin: [0, 8, 0, 3] }
+            }
+        }).download(`oge-demo-report-${safeNickname}.pdf`);
+    }
 
 
     /* ============================================================
@@ -5209,8 +5184,12 @@
                 statusHtml = '<div class="demo-task-status wrong-text">✕ Неверно</div>';
             }
 
+            let cardClass = "demo-task-card";
+            if (status === "correct") cardClass += " status-correct";
+            else if (status === "wrong") cardClass += " status-wrong";
+
             html += `
-                <div class="demo-task-card" data-demo-num="${n}">
+                <div class="${cardClass}" data-demo-num="${n}">
                     <div class="demo-task-num">Задание ${n}</div>
                     ${statusHtml}
                 </div>
