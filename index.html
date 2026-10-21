@@ -387,7 +387,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 14px;
         }
 
@@ -1449,6 +1449,22 @@
                     <div class="stat-card">
 
                         <div class="stat-label">
+                            Прогресс
+                        </div>
+
+                        <div
+                            id="homeProgress"
+                            class="stat-value"
+                        >
+                            0%
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
                             Попыток
                         </div>
 
@@ -1574,6 +1590,22 @@
                             class="stat-value"
                         >
                             0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Прогресс
+                        </div>
+
+                        <div
+                            id="statsProgress"
+                            class="stat-value"
+                        >
+                            0%
                         </div>
 
                     </div>
@@ -1756,6 +1788,22 @@
                             class="stat-value"
                         >
                             0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Прогресс
+                        </div>
+
+                        <div
+                            id="demoHomeProgress"
+                            class="stat-value"
+                        >
+                            0%
                         </div>
 
                     </div>
@@ -1954,6 +2002,22 @@
                             class="profile-value"
                         >
                             0
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-row">
+
+                        <div class="profile-label">
+                            Прогресс
+                        </div>
+
+                        <div
+                            id="profileProgress"
+                            class="profile-value"
+                        >
+                            0%
                         </div>
 
                     </div>
@@ -4082,6 +4146,28 @@
     }
 
 
+    function getTotalTasksCount() {
+        if (typeof TASKS !== "undefined" && Array.isArray(TASKS)) {
+            return TASKS.length;
+        }
+        return 0;
+    }
+
+
+    function getCompletionPercent() {
+        const total = getTotalTasksCount();
+        if (!total) {
+            return 0;
+        }
+        return Math.round(getCompletedCount() / total * 100);
+    }
+
+
+    function getDemoCompletionPercent() {
+        return Math.round(getDemoCompletedCount() / 34 * 100);
+    }
+
+
     function renderHome() {
 
         const nickname =
@@ -4115,13 +4201,22 @@
                 ];
 
 
+        const totalTasks = getTotalTasksCount();
+        const completed = getCompletedCount();
+
         document
             .getElementById(
                 "homeCompleted"
             )
             .textContent =
-                getCompletedCount();
+                totalTasks
+                    ? `${completed} / ${totalTasks}`
+                    : String(completed);
 
+        const homeProgress = document.getElementById("homeProgress");
+        if (homeProgress) {
+            homeProgress.textContent = getCompletionPercent() + "%";
+        }
 
         document
             .getElementById(
@@ -4151,13 +4246,22 @@
 
     function renderStats() {
 
+        const totalTasks = getTotalTasksCount();
+        const completed = getCompletedCount();
+
         document
             .getElementById(
                 "statsCompleted"
             )
             .textContent =
-                getCompletedCount();
+                totalTasks
+                    ? `${completed} / ${totalTasks}`
+                    : String(completed);
 
+        const statsProgress = document.getElementById("statsProgress");
+        if (statsProgress) {
+            statsProgress.textContent = getCompletionPercent() + "%";
+        }
 
         document
             .getElementById(
@@ -4319,181 +4423,142 @@
                 "errorsContainer"
             );
 
-
-        const wrongAttempts =
+        // Bank (FIPI) wrong attempts
+        const bankWrong =
             attemptHistory
-                .filter(
-                    item =>
-                        item.result ===
-                        "wrong"
-                )
-                .reverse();
+                .filter(item => item.result === "wrong")
+                .map(item => ({
+                    source: "bank",
+                    task_id: item.task_id,
+                    task_num: null,
+                    reason: item.reason,
+                    created_at: item.created_at
+                }));
 
+        // Demo wrong attempts
+        let demoWrong = [];
+        try {
+            demoWrong = getDemoHistory()
+                .filter(item => item.result === "wrong")
+                .map(item => ({
+                    source: "demo",
+                    task_id: null,
+                    task_num: item.task_num,
+                    reason: item.reason,
+                    created_at: item.created_at
+                }));
+        } catch (e) {
+            demoWrong = [];
+        }
 
-        if (
-            !wrongAttempts.length
-        ) {
+        const allWrong = [...bankWrong, ...demoWrong]
+            .sort((a, b) => {
+                const da = new Date(a.created_at).getTime() || 0;
+                const db = new Date(b.created_at).getTime() || 0;
+                return db - da;
+            });
 
+        if (!allWrong.length) {
             container.innerHTML = `
                 <div class="empty-box">
                     Ошибок пока нет. Так держать!
                 </div>
             `;
-
             return;
         }
 
-
-        container.innerHTML =
-            wrongAttempts
-                .map(
-                    attempt => {
-
-                        const task =
-                            TASKS.find(
-                                item =>
-                                    item.id ===
-                                    attempt.task_id
-                            );
-
-
-                        return `
-                            <div
-                                class="panel"
-                                style="cursor:pointer;"
-                                data-error-task="${escapeHtml(
-                                    attempt.task_id
-                                )}"
-                            >
-
-                                <div
-                                    style="
-                                        display:flex;
-                                        justify-content:space-between;
-                                        gap:15px;
-                                        align-items:center;
-                                    "
-                                >
-
-                                    <div>
-
-                                        <div
-                                            style="
-                                                font-weight:900;
-                                                color:#4c3b5b;
-                                                margin-bottom:5px;
-                                            "
-                                        >
-                                            ${
-                                                task
-                                                    ? `Вариант ${escapeHtml(
-                                                        getVariant(
-                                                            task
-                                                        )
-                                                    )} · Задание ${escapeHtml(
-                                                        getNumber(
-                                                            task
-                                                        )
-                                                    )}`
-                                                    : escapeHtml(
-                                                        attempt.task_id
-                                                    )
-                                            }
-                                        </div>
-
-
-                                        <div
-                                            style="
-                                                color:#9a8da5;
-                                                font-size:12px;
-                                            "
-                                        >
-                                            ${
-                                                task
-                                                    ? `Код: ${escapeHtml(
-                                                        getCode(
-                                                            task
-                                                        )
-                                                    )}`
-                                                    : ""
-                                            }
-                                        </div>
-
-                                    </div>
-
-
-                                    <span
-                                        class="status-pill wrong"
-                                    >
-                                        ✕ Неверно
-                                    </span>
-
+        container.innerHTML = allWrong.map(attempt => {
+            if (attempt.source === "demo") {
+                return `
+                    <div
+                        class="panel"
+                        style="cursor:pointer;"
+                        data-error-demo="${escapeHtml(String(attempt.task_num))}"
+                    >
+                        <div style="display:flex;justify-content:space-between;gap:15px;align-items:center;">
+                            <div>
+                                <div style="font-weight:900;color:#4c3b5b;margin-bottom:5px;">
+                                    Демо · Задание ${escapeHtml(String(attempt.task_num))}
                                 </div>
-
-
-                                ${
-                                    attempt.reason
-                                        ? `
-                                            <div
-                                                style="
-                                                    margin-top:13px;
-                                                    color:#6e6179;
-                                                    font-size:13px;
-                                                    line-height:1.5;
-                                                "
-                                            >
-
-                                                <strong>
-                                                    Причина:
-                                                </strong>
-
-                                                ${escapeHtml(
-                                                    cleanVisibleText(
-                                                        attempt.reason
-                                                    )
-                                                )}
-
-                                            </div>
-                                        `
-                                        : ""
-                                }
-
+                                <div style="color:#9a8da5;font-size:12px;">
+                                    Демоверсия
+                                </div>
                             </div>
-                        `;
-
-                    }
-                )
-                .join("");
-
-
-        container
-            .querySelectorAll(
-                "[data-error-task]"
-            )
-            .forEach(
-                card => {
-
-                    card.addEventListener(
-                        "click",
-                        () => {
-
-                            const task =
-                                TASKS.find(
-                                    item =>
-                                        item.id ===
-                                        card.dataset.errorTask
-                                );
-
-
-                            if (task) {
-                                openTask(task);
-                            }
-
+                            <span class="status-pill wrong">✕ Неверно</span>
+                        </div>
+                        ${
+                            attempt.reason
+                                ? `<div style="margin-top:13px;color:#6e6179;font-size:13px;line-height:1.5;">
+                                    <strong>Причина:</strong>
+                                    ${escapeHtml(cleanVisibleText(attempt.reason))}
+                                   </div>`
+                                : ""
                         }
-                    );
+                    </div>
+                `;
+            }
 
+            const task = (typeof TASKS !== "undefined" && Array.isArray(TASKS))
+                ? TASKS.find(item => item.id === attempt.task_id)
+                : null;
+
+            return `
+                <div
+                    class="panel"
+                    style="cursor:pointer;"
+                    data-error-task="${escapeHtml(attempt.task_id || "")}"
+                >
+                    <div style="display:flex;justify-content:space-between;gap:15px;align-items:center;">
+                        <div>
+                            <div style="font-weight:900;color:#4c3b5b;margin-bottom:5px;">
+                                ${
+                                    task
+                                        ? `Вариант ${escapeHtml(String(getVariant(task)))} · Задание ${escapeHtml(String(getNumber(task)))}`
+                                        : escapeHtml(attempt.task_id || "")
+                                }
+                            </div>
+                            <div style="color:#9a8da5;font-size:12px;">
+                                ${task ? `Код: ${escapeHtml(getCode(task))} · Банк ФИПИ` : "Банк ФИПИ"}
+                            </div>
+                        </div>
+                        <span class="status-pill wrong">✕ Неверно</span>
+                    </div>
+                    ${
+                        attempt.reason
+                            ? `<div style="margin-top:13px;color:#6e6179;font-size:13px;line-height:1.5;">
+                                <strong>Причина:</strong>
+                                ${escapeHtml(cleanVisibleText(attempt.reason))}
+                               </div>`
+                            : ""
+                    }
+                </div>
+            `;
+        }).join("");
+
+        container.querySelectorAll("[data-error-task]").forEach(card => {
+            card.addEventListener("click", () => {
+                if (typeof TASKS === "undefined" || !Array.isArray(TASKS)) return;
+                const task = TASKS.find(item => item.id === card.dataset.errorTask);
+                if (task) openTask(task);
+            });
+        });
+
+        container.querySelectorAll("[data-error-demo]").forEach(card => {
+            card.addEventListener("click", () => {
+                const num = Number(card.dataset.errorDemo);
+                if (!Number.isNaN(num)) {
+                    // switch to demo page then open task
+                    document.querySelectorAll(".nav-btn").forEach(btn => {
+                        btn.classList.toggle("active", btn.dataset.page === "demo");
+                    });
+                    document.querySelectorAll(".page").forEach(section => {
+                        section.classList.toggle("active", section.id === "page-demo");
+                    });
+                    renderDemoPage();
+                    openDemoTask(num);
                 }
-            );
+            });
+        });
     }
 
 
@@ -4554,13 +4619,22 @@
                 email;
 
 
+        const totalTasks = getTotalTasksCount();
+        const completed = getCompletedCount();
+
         document
             .getElementById(
                 "profileCompleted"
             )
             .textContent =
-                getCompletedCount();
+                totalTasks
+                    ? `${completed} / ${totalTasks}`
+                    : String(completed);
 
+        const profileProgress = document.getElementById("profileProgress");
+        if (profileProgress) {
+            profileProgress.textContent = getCompletionPercent() + "%";
+        }
 
         document
             .getElementById(
@@ -4926,7 +5000,8 @@
         content.push({ text: "Общая статистика", style: "heading" });
         content.push({
             ul: [
-                `Выполнено заданий: ${getCompletedCount()}`,
+                `Выполнено заданий: ${getCompletedCount()}${getTotalTasksCount() ? " из " + getTotalTasksCount() : ""}`,
+                `Прогресс: ${getCompletionPercent()}%`,
                 `Всего попыток: ${getAttemptsCount()}`,
                 `Верных ответов: ${getCorrectCount()}`,
                 `Неверных ответов: ${getWrongCount()}`,
@@ -5009,7 +5084,8 @@
         content.push({ text: "Общая статистика (демо)", style: "heading" });
         content.push({
             ul: [
-                `Выполнено заданий: ${getDemoCompletedCount()}`,
+                `Выполнено заданий: ${getDemoCompletedCount()} из 34`,
+                `Прогресс: ${getDemoCompletionPercent()}%`,
                 `Всего попыток: ${getDemoAttemptsCount()}`,
                 `Верных ответов: ${getDemoCorrectCount()}`,
                 `Неверных ответов: ${getDemoWrongCount()}`,
@@ -5281,7 +5357,12 @@
         const completedEl = document.getElementById("demoHomeCompleted");
         if (!completedEl) return;
 
-        completedEl.textContent = getDemoCompletedCount();
+        const demoCompleted = getDemoCompletedCount();
+        completedEl.textContent = `${demoCompleted} / 34`;
+        const demoProgress = document.getElementById("demoHomeProgress");
+        if (demoProgress) {
+            demoProgress.textContent = getDemoCompletionPercent() + "%";
+        }
         document.getElementById("demoHomeAttempts").textContent = getDemoAttemptsCount();
         document.getElementById("demoHomeCorrect").textContent = getDemoCorrectCount();
         document.getElementById("demoHomeAccuracy").textContent = getDemoAccuracy() + "%";
