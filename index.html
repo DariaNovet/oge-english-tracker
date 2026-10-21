@@ -874,69 +874,37 @@
            DEMO
         ========================= */
 
-        .demo-banner {
-            background: white;
-            border: 1px solid #ece5f5;
-            border-radius: 20px;
-            padding: 22px;
-            margin-bottom: 22px;
-            cursor: pointer;
-            transition: .18s;
-        }
-
-        .demo-banner:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 9px 25px rgba(72, 52, 95, .08);
-        }
-
-        .demo-banner .quote-label {
-            color: #947db2;
-            font-size: 12px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: .07em;
-            margin-bottom: 9px;
-        }
-
-        .demo-banner .quote-text {
-            font-size: 18px;
-            font-weight: 700;
-            color: #564566;
-            line-height: 1.5;
-        }
-
         .demo-tasks-grid {
             display: grid;
             grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 10px;
-            margin-top: 10px;
         }
 
         .demo-task-card {
             background: white;
             border: 1px solid #e8e0f1;
-            border-radius: 14px;
-            padding: 14px 10px;
-            text-align: center;
+            border-radius: 16px;
+            padding: 15px;
+            min-height: 110px;
+            transition: .18s;
             cursor: pointer;
-            transition: .15s;
-            min-height: 90px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
         }
 
         .demo-task-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(72, 52, 95, .1);
+            box-shadow: 0 9px 25px rgba(72, 52, 95, .08);
         }
 
         .demo-task-num {
             font-weight: 900;
             font-size: 18px;
             color: #4d3d5c;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .demo-task-status {
@@ -948,13 +916,13 @@
         .demo-task-status.correct-text { color: #00a83b; }
         .demo-task-status.wrong-text { color: #f0183d; }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1100px) {
             .demo-tasks-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 620px) {
             .demo-tasks-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -1298,6 +1266,13 @@
 
                 <button
                     class="nav-btn"
+                    data-page="demo"
+                >
+                    Демоверсия
+                </button>
+
+                <button
+                    class="nav-btn"
                     data-page="profile"
                 >
                     Профиль
@@ -1390,12 +1365,6 @@
                     ></div>
 
                 </div>
-
-
-                <div class="demo-banner" id="demoBanner">
-                    <div class="quote-label">
-                        Демоверсия
-                    </div>
                     <div class="quote-text">
                         Попробуй задания 1–34. Нажми, чтобы открыть и отметить результат.
                     </div>
@@ -1694,6 +1663,139 @@
             </section>
 
 
+            <!-- DEMO -->
+
+            <section
+                id="page-demo"
+                class="page"
+            >
+
+                <div class="page-header">
+
+                    <h1 class="page-title">
+                        Демоверсия
+                    </h1>
+
+                    <div class="page-description">
+                        Задания 1–34. Отмечай результат — данные сохраняются только в этом браузере.
+                    </div>
+
+                </div>
+
+
+                <div class="stats-grid" style="margin-bottom: 22px;">
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Выполнено
+                        </div>
+
+                        <div
+                            id="demoHomeCompleted"
+                            class="stat-value"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Попыток
+                        </div>
+
+                        <div
+                            id="demoHomeAttempts"
+                            class="stat-value"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Верно
+                        </div>
+
+                        <div
+                            id="demoHomeCorrect"
+                            class="stat-value"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-label">
+                            Точность
+                        </div>
+
+                        <div
+                            id="demoHomeAccuracy"
+                            class="stat-value"
+                        >
+                            0%
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel" style="margin-bottom: 18px;">
+
+                    <div class="panel-title">
+                        Задания 1–34
+                    </div>
+
+                    <div id="demoTasksGrid" class="demo-tasks-grid"></div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-title">
+                        Последние попытки (демо)
+                    </div>
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Задание</th>
+                                    <th>Результат</th>
+                                    <th>Причина</th>
+                                    <th>Дата</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="demoStatsTableBody"></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
             <!-- PROFILE -->
 
             <section
@@ -1917,52 +2019,6 @@
 
 </div>
 
-
-
-<!-- ============================================================
-     DEMO MODAL (list 1–34)
-============================================================ -->
-
-<div
-    id="demoModal"
-    class="modal-overlay hidden"
->
-
-    <div class="modal" style="max-width: 900px;">
-
-        <div class="modal-header">
-
-            <div>
-
-                <div class="modal-title">
-                    Демоверсия · Задания 1–34
-                </div>
-
-            </div>
-
-
-            <button
-                id="closeDemoModal"
-                class="close-btn"
-                type="button"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <p style="color:#8a7c99; margin:0 0 16px; line-height:1.45;">
-            Нажми на задание, чтобы открыть его и отметить результат.
-            Данные сохраняются только в этом браузере (демо).
-        </p>
-
-
-        <div id="demoTasksGrid" class="demo-tasks-grid"></div>
-
-    </div>
-
-</div>
 
 
 <!-- ============================================================
@@ -4493,6 +4549,11 @@
                                 }
                             );
 
+
+                        if (page === "demo") {
+                            renderDemoPage();
+                        }
+
                     }
                 );
 
@@ -4583,6 +4644,7 @@
             renderStats();
             renderErrors();
             renderProfile();
+            renderDemoPage();
 
         } catch (error) {
 
@@ -5079,13 +5141,26 @@
         localStorage.setItem(DEMO_HISTORY_KEY, JSON.stringify(list));
     }
 
-    function openDemoModal() {
-        document.getElementById("demoModal").classList.remove("hidden");
-        renderDemoTasks();
+    function getDemoCompletedCount() {
+        return Object.keys(getDemoProgress()).length;
     }
 
-    function closeDemoModal() {
-        document.getElementById("demoModal").classList.add("hidden");
+    function getDemoAttemptsCount() {
+        return getDemoHistory().length;
+    }
+
+    function getDemoCorrectCount() {
+        return getDemoHistory().filter(item => item.result === "correct").length;
+    }
+
+    function getDemoWrongCount() {
+        return getDemoHistory().filter(item => item.result === "wrong").length;
+    }
+
+    function getDemoAccuracy() {
+        const attempts = getDemoAttemptsCount();
+        if (!attempts) return 0;
+        return Math.round(getDemoCorrectCount() / attempts * 100);
     }
 
     function openDemoTask(num) {
@@ -5118,14 +5193,16 @@
         document.getElementById("demoWrongReason").value = "";
         document.getElementById("demoWrongReasonBlock").classList.add("hidden");
         document.getElementById("demoModalActions").classList.remove("hidden");
-        renderDemoTasks();
+        renderDemoPage();
     }
 
-    function renderDemoTasks() {
+    function renderDemoTasksGrid() {
         const grid = document.getElementById("demoTasksGrid");
-        const progress = getDemoProgress();
+        if (!grid) return;
 
+        const progress = getDemoProgress();
         let html = "";
+
         for (let n = 1; n <= 34; n++) {
             const status = progress[String(n)] || null;
             let statusHtml = '<div class="demo-task-status neutral">Не решено</div>';
@@ -5137,23 +5214,25 @@
 
             html += `
                 <div class="demo-task-card" data-demo-num="${n}">
-                    <div class="demo-task-num">${n}</div>
+                    <div class="demo-task-num">Задание ${n}</div>
                     ${statusHtml}
                 </div>
             `;
         }
+
         grid.innerHTML = html;
 
         grid.querySelectorAll(".demo-task-card").forEach(card => {
             card.addEventListener("click", () => {
-                const num = Number(card.dataset.demoNum);
-                openDemoTask(num);
+                openDemoTask(Number(card.dataset.demoNum));
             });
         });
     }
 
     function renderDemoTaskHistory() {
         const container = document.getElementById("demoAttemptHistory");
+        if (!container) return;
+
         const history = getDemoHistory().filter(
             item => item.task_num === demoCurrentTaskNum
         );
@@ -5190,6 +5269,51 @@
         }).join("");
     }
 
+    function renderDemoStatsTable() {
+        const body = document.getElementById("demoStatsTableBody");
+        if (!body) return;
+
+        const recent = [...getDemoHistory()].reverse().slice(0, 30);
+
+        if (!recent.length) {
+            body.innerHTML = `
+                <tr>
+                    <td colspan="4">Пока нет попыток.</td>
+                </tr>
+            `;
+            return;
+        }
+
+        body.innerHTML = recent.map(attempt => {
+            const correct = attempt.result === "correct";
+            return `
+                <tr>
+                    <td>Задание ${escapeHtml(String(attempt.task_num))}</td>
+                    <td>
+                        <span class="status-pill ${correct ? "correct" : "wrong"}">
+                            ${correct ? "✓ Верно" : "✕ Неверно"}
+                        </span>
+                    </td>
+                    <td>${attempt.reason ? escapeHtml(cleanVisibleText(attempt.reason)) : "—"}</td>
+                    <td>${escapeHtml(formatDate(attempt.created_at))}</td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    function renderDemoPage() {
+        const completedEl = document.getElementById("demoHomeCompleted");
+        if (!completedEl) return;
+
+        completedEl.textContent = getDemoCompletedCount();
+        document.getElementById("demoHomeAttempts").textContent = getDemoAttemptsCount();
+        document.getElementById("demoHomeCorrect").textContent = getDemoCorrectCount();
+        document.getElementById("demoHomeAccuracy").textContent = getDemoAccuracy() + "%";
+
+        renderDemoTasksGrid();
+        renderDemoStatsTable();
+    }
+
     function saveDemoAttempt(result, reason = null) {
         if (demoCurrentTaskNum === null) {
             return;
@@ -5213,19 +5337,11 @@
         document.getElementById("demoModalActions").classList.remove("hidden");
 
         renderDemoTaskHistory();
-        renderDemoTasks();
+        renderDemoPage();
     }
 
-    document.getElementById("demoBanner").addEventListener("click", openDemoModal);
-
-    document.getElementById("closeDemoModal").addEventListener("click", closeDemoModal);
-    document.getElementById("demoModal").addEventListener("click", event => {
-        if (event.target.id === "demoModal") {
-            closeDemoModal();
-        }
-    });
-
     document.getElementById("closeDemoTaskModal").addEventListener("click", closeDemoTaskModal);
+
     document.getElementById("demoTaskModal").addEventListener("click", event => {
         if (event.target.id === "demoTaskModal") {
             closeDemoTaskModal();
