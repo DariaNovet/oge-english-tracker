@@ -1,34 +1,514 @@
-.demo-task-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 9px;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Путь к ОГЭ — Английский</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="./data/tasks.js"></script>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--purple:#9b7bea;--purple2:#8063d5;--bg:#faf8ff;--text:#302b3f;--muted:#8b8498;--green:#55c58b;--red:#e97878;--shadow:0 8px 28px rgba(117,91,174,.12)}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:radial-gradient(circle at 0 0,#eee6ff 0,transparent 28%),radial-gradient(circle at 100% 0,#f9e7f4 0,transparent 25%),var(--bg);color:var(--text);min-height:100vh}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+#authScreen{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.auth-box{width:100%;max-width:440px;background:rgba(255,255,255,.97);border-radius:30px;padding:32px 27px;box-shadow:var(--shadow)}
+.auth-logo{width:70px;height:70px;margin:0 auto 18px;border-radius:23px;display:flex;align-items:center;justify-content:center;font-size:31px;color:#fff;background:linear-gradient(135deg,#b8a1ff,#e8a7d8)}
+.auth-title{text-align:center;font-size:28px;font-weight:800}
+.auth-subtitle{text-align:center;color:var(--muted);margin:7px 0 24px;font-size:14px}
+.auth-tabs{display:flex;background:#f1edff;padding:4px;border-radius:14px;margin-bottom:20px}
+.auth-tab{flex:1;border:0;background:transparent;padding:11px;border-radius:11px;color:var(--muted);font-weight:700}
+.auth-tab.active{background:#fff;color:var(--purple2);box-shadow:0 3px 10px rgba(80,50,140,.08)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+.field input,.field textarea{width:100%;border:2px solid #eee9f7;background:#fcfbff;border-radius:13px;padding:13px 14px;outline:none;color:var(--text)}
+.field input:focus,.field textarea:focus{border-color:#b19af4;background:#fff}
+.primary-btn{width:100%;border:0;border-radius:14px;padding:14px;background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;font-weight:800;box-shadow:0 8px 20px rgba(128,99,213,.22)}
+.primary-btn:disabled{opacity:.65}
+.text-btn{border:0;background:transparent;color:var(--purple2);font-weight:700;padding:11px 0}
+.auth-error,.auth-success{padding:12px;border-radius:12px;margin-bottom:14px;font-size:13px;line-height:1.4}
+.auth-error{background:#fff0f0;color:#b44d4d}
+.auth-success{background:#ebfff4;color:#39825d}
+#app{min-height:100vh}
+.top{padding:18px}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{font-size:23px;font-weight:850}
+.brand-small{color:var(--muted);font-size:13px;margin-top:3px}
+.profile-mini{display:flex;align-items:center;gap:8px;border:0;background:#fff;border-radius:15px;padding:7px 10px;box-shadow:0 4px 14px rgba(100,80,140,.07)}
+.avatar,.big-avatar{background:linear-gradient(135deg,#b39af8,#e3a5d3);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+.avatar{width:35px;height:35px;border-radius:50%}
+.hero{margin:5px 18px 0;padding:25px;border-radius:25px;color:#fff;background:linear-gradient(135deg,#a88bed,#c59de7,#e0a9d2);box-shadow:0 15px 32px rgba(139,108,207,.18)}
+.hero-title{font-size:26px;font-weight:850}
+.hero-text{margin-top:5px;opacity:.9;font-size:14px}
+.progress-number{font-size:31px;font-weight:850;margin-top:21px}
+.progress-caption{font-size:13px;opacity:.85}
+.progress-bar{height:9px;background:rgba(255,255,255,.3);border-radius:20px;overflow:hidden;margin-top:12px}
+.progress-fill{height:100%;width:0;background:#fff;border-radius:20px;transition:width .3s}
+.content{padding:10px 18px 40px}
+.section-title{font-size:19px;font-weight:850;margin:22px 0 12px}
+.search{width:100%;border:2px solid #eee9f7;border-radius:14px;padding:13px 15px;background:#fff;outline:none}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.menu-card{border:0;background:#fff;border-radius:19px;padding:19px;text-align:left;min-height:112px;box-shadow:var(--shadow)}
+.menu-icon{font-size:27px;margin-bottom:12px}
+.menu-title{font-weight:800;font-size:15px}
+.menu-desc{color:var(--muted);font-size:12px;margin-top:5px}
+.screen{display:none}
+.screen.active{display:block}
+.back-btn{border:0;background:#eee8ff;color:var(--purple2);padding:10px 14px;border-radius:12px;font-weight:800}
+.task-block,.stat-card,.profile-card{background:#fff;border-radius:19px;padding:17px;margin-bottom:12px;box-shadow:var(--shadow)}
+.task-block-title{font-weight:850;margin-bottom:12px}
+.variant-list{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.variant-btn{border:1px solid #e7e0f5;background:#faf8ff;color:var(--purple2);border-radius:13px;padding:13px;font-weight:800}
+.demo-task-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.demo-task-number{min-height:54px;border:1px solid #e7e0f5;background:#fff;border-radius:14px;color:var(--purple2);font-weight:850;box-shadow:0 4px 12px rgba(117,91,174,.07)}
+.demo-task-number.status-correct{background:#e8faef;border-color:#8ed9ad;color:#32835d}
+.demo-task-number.status-wrong{background:#fff0f0;border-color:#f1b0b0;color:#b65050}
+.demo-status{display:block;font-size:10px;font-weight:700;margin-top:3px}
+.task-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.task-number{width:45px;height:40px;border:1px solid #e4def1;background:#faf8ff;border-radius:11px;font-weight:800}
+.task-number.done{background:var(--green);color:#fff;border-color:var(--green)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.stat-value{font-size:28px;font-weight:850;color:var(--purple2)}
+.stat-label{color:var(--muted);font-size:12px;margin-top:4px}
+.profile-card{text-align:center;padding:24px}
+.big-avatar{width:80px;height:80px;border-radius:27px;margin:0 auto 13px;font-size:31px}
+.profile-name{font-size:21px;font-weight:850}
+.profile-email{color:var(--muted);font-size:13px;margin-top:4px}
+.logout-btn,.secondary-btn{margin-top:12px;width:100%;border:0;border-radius:13px;padding:13px;font-weight:800}
+.logout-btn{background:#fff0f0;color:#b55050}
+.secondary-btn{background:#f1edff;color:var(--purple2)}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(47,39,61,.42);display:flex;align-items:flex-end}
+.modal-box{width:100%;max-height:90vh;overflow:auto;background:#fff;border-radius:25px 25px 0 0;padding:22px 18px 30px}
+.modal-close{float:right;width:37px;height:37px;border:0;border-radius:50%;background:#f0ebff;color:var(--purple2)}
+.task-code{color:var(--muted);font-size:13px;margin-bottom:8px}
+.task-question{font-size:18px;font-weight:750;line-height:1.45;margin-bottom:18px}
+.answer-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.correct-btn,.wrong-btn{border:0;border-radius:13px;padding:14px;font-weight:800}
+.correct-btn{background:#e8faef;color:#32835d}
+.wrong-btn{background:#fff0f0;color:#b65050}
+.history-item{border-top:1px solid #eeeaf5;padding:12px 0;font-size:13px}
+.profile-edit{display:none;text-align:left;margin-top:18px}
+.profile-edit.active{display:block}
+.report-error{border-top:1px solid #eeeaf5;padding:12px 0}
+.muted{color:var(--muted);font-size:12px}
+@media(max-width:380px){.menu-grid,.answer-buttons{grid-template-columns:1fr}}
+@media print{.top,.hero,.back-btn,#printBtn{display:none!important}.screen{display:none!important}#reportScreen{display:block!important}.profile-card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div id="authScreen"><div class="auth-box">
+<div class="auth-tabs"><button class="auth-tab active" id="loginTab">Войти</button><button class="auth-tab" id="registerTab">Регистрация</button></div>
+<div id="loginForm"><div class="auth-logo">📚</div><div class="auth-title">ОГЭ Английский</div><div class="auth-subtitle">Трекер подготовки к экзамену</div><div id="loginMessage"></div><div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="Введите email"></div><div class="field"><label>Пароль</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Введите пароль"></div><button class="primary-btn" id="loginBtn">Войти</button><div style="text-align:center"><button class="text-btn" id="forgotBtn">Забыли пароль?</button></div></div>
+<div id="registerForm" class="hidden"><div class="auth-logo">✨</div><div class="auth-title">Создать аккаунт</div><div class="auth-subtitle">Регистрация в трекере</div><div id="registerMessage"></div><div class="field"><label>Никнейм</label><input id="registerUsername" maxlength="30" placeholder="Например, Даша"></div><div class="field"><label>Email</label><input id="registerEmail" type="email" autocomplete="email" placeholder="Введите email"></div><div class="field"><label>Пароль</label><input id="registerPassword" type="password" autocomplete="new-password" placeholder="Минимум 6 символов"></div><div class="field"><label>Повторите пароль</label><input id="registerPassword2" type="password" autocomplete="new-password" placeholder="Повторите пароль"></div><button class="primary-btn" id="registerBtn">Создать аккаунт</button></div>
+<div id="forgotForm" class="hidden"><div class="auth-logo">🔑</div><div class="auth-title">Восстановление</div><div class="auth-subtitle">Введи email своего аккаунта</div><div id="forgotMessage"></div><div class="field"><label>Email</label><input id="forgotEmail" type="email" placeholder="Введите email"></div><button class="primary-btn" id="sendResetBtn">Отправить письмо</button><div style="text-align:center"><button class="text-btn" id="backToLoginBtn">← Вернуться ко входу</button></div></div>
+<div id="resetForm" class="hidden"><div class="auth-logo">🔐</div><div class="auth-title">Новый пароль</div><div class="auth-subtitle">Придумай новый пароль</div><div id="resetMessage"></div><div class="field"><label>Новый пароль</label><input id="newPassword" type="password"></div><div class="field"><label>Повторите пароль</label><input id="newPassword2" type="password"></div><button class="primary-btn" id="updatePasswordBtn">Сохранить пароль</button></div>
+</div></div>
+<div id="app" class="hidden"><div class="top"><div class="top-row"><div><div class="brand">Путь к ОГЭ</div><div class="brand-small">Английский язык</div></div><button class="profile-mini" id="profileBtn"><div class="avatar" id="miniAvatar">П</div><span id="miniName">Профиль</span></button></div></div>
+<section id="homeScreen" class="screen active"><div class="hero"><div class="hero-title">Твоя подготовка 💜</div><div class="hero-text">Маленькие шаги каждый день — и ты справишься!</div><div class="progress-number" id="progressNumber">0 / 95</div><div class="progress-caption">выполнено заданий</div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div><div class="content"><div class="section-title">Найти задание</div><input id="searchInput" class="search" placeholder="Например: 1.3"><div class="section-title">Разделы</div><div class="menu-grid"><button class="menu-card" id="tasksMenu"><div class="menu-icon">📚</div><div class="menu-title">Задания</div><div class="menu-desc">Все варианты и номера</div></button><button class="menu-card" id="statsMenu"><div class="menu-icon">📊</div><div class="menu-title">Статистика</div><div class="menu-desc">Твой результат</div></button><button class="menu-card" id="errorsMenu"><div class="menu-icon">❌</div><div class="menu-title">Ошибки</div><div class="menu-desc">Что нужно повторить</div></button><button class="menu-card" id="reportMenu"><div class="menu-icon">📄</div><div class="menu-title">Отчёт</div><div class="menu-desc">Твой прогресс</div></button><button class="menu-card" id="demoMenu"><div class="menu-icon">📝</div><div class="menu-title">Демоверсия</div><div class="menu-desc">Задания 1–34 · отметь статус</div></button></div></div></section>
+<section id="tasksScreen" class="screen content"><button class="back-btn" id="tasksBack">← Назад</button><div class="section-title">Задания</div><div id="tasksContainer"></div></section>
+<section id="demoScreen" class="screen content"><button class="back-btn" id="demoBack">← Назад</button><div class="section-title">Демоверсия</div><div class="task-block"><div class="task-block-title">Задания 1–34</div><div class="muted" style="margin-bottom:12px">Нажми на номер задания, чтобы отметить результат.</div><div id="demoTasksContainer" class="demo-task-grid"></div></div></section>
+<section id="variantScreen" class="screen content"><button class="back-btn" id="variantBack">← Назад</button><div class="section-title" id="variantTitle">Вариант</div><div id="variantTasks"></div></section>
+<section id="statsScreen" class="screen content"><button class="back-btn" id="statsBack">← Назад</button><div class="section-title">Статистика</div><div class="stat-grid"><div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Всего попыток</div></div><div class="stat-card"><div class="stat-value" id="statCorrect">0</div><div class="stat-label">Правильных</div></div><div class="stat-card"><div class="stat-value" id="statWrong">0</div><div class="stat-label">Ошибок</div></div><div class="stat-card"><div class="stat-value" id="statPercent">0%</div><div class="stat-label">Правильных ответов</div></div></div></section>
+<section id="errorsScreen" class="screen content"><button class="back-btn" id="errorsBack">← Назад</button><div class="section-title">Ошибки</div><div id="errorsContainer"></div></section>
+<section id="reportScreen" class="screen content"><button class="back-btn" id="reportBack">← Назад</button><div class="section-title">Отчёт</div><div class="profile-card"><h3>Моя подготовка</h3><div id="reportText"></div><div id="reportHistory"></div><button class="primary-btn" id="printBtn">🖨 Печать / PDF</button></div></section>
+<section id="profileScreen" class="screen content"><button class="back-btn" id="profileBack">← Назад</button><div class="section-title">Личный кабинет</div><div class="profile-card"><div class="big-avatar" id="bigAvatar">П</div><div class="profile-name" id="profileName">Пользователь</div><div class="profile-email" id="profileEmail">—</div><button class="secondary-btn" id="editProfileBtn">Изменить никнейм</button><div class="profile-edit" id="profileEdit"><div class="field"><label>Новый никнейм</label><input id="newUsername" maxlength="30"></div><button class="primary-btn" id="saveUsernameBtn">Сохранить</button></div><button class="logout-btn" id="logoutBtn">Выйти из аккаунта</button></div></section>
+</div>
+<div id="taskModal" class="modal hidden"><div class="modal-box"><button class="modal-close" id="modalClose">✕</button><div class="task-code" id="modalCode"></div><div class="task-question" id="modalQuestion"></div><div class="answer-buttons"><button class="correct-btn" id="correctBtn">✓ Правильно</button><button class="wrong-btn" id="wrongBtn">✕ Ошибка</button></div><div id="wrongReasonBox" class="hidden"><div class="field" style="margin-top:18px"><label>Почему ошиблась?</label><textarea id="wrongReason" rows="4" placeholder="Напиши причину ошибки"></textarea></div><button class="primary-btn" id="saveWrongBtn">Сохранить ошибку</button></div><div class="section-title" style="font-size:15px">История</div><div id="taskHistory"></div></div></div>
+<script>
+  document.addEventListener("DOMContentLoaded",()=>{
+const URL="https://akaslsblnvxwtzlhveh.supabase.co";
+const KEY="sb_publishable_0ZKH4SeD5Dg81SaxX7gz-g_1fp-pnch";
+const REDIRECT="https://darianovet.github.io/oge-english-tracker/";
+const sb=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}});
+const $=id=>document.getElementById(id);
+const show=id=>{const e=$(id);if(e){e.classList.remove("hidden");if(e.classList.contains("screen"))e.classList.add("active")}};
+const hide=id=>{const e=$(id);if(e){e.classList.add("hidden");if(e.classList.contains("screen"))e.classList.remove("active")}};
+const esc=v=>String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+let user=null,task=null,variant=null,attempts=[],busy=false;
+const all=()=>Array.isArray(window.TASKS)?window.TASKS:(typeof TASKS!=="undefined"&&Array.isArray(TASKS)?TASKS:[]);
+const id=t=>String(t.id??t.taskId??t.code??"");
+const num=t=>String(t.number??t.task??t.taskNumber??"");
+const v=t=>String(t.variant??t.variantNumber??t.variant_number??"");
+const code=t=>String(t.code??id(t));
+const txt=t=>String(t.text??t.question??t.title??t.description??t.content??"Задание");
+const uname=()=>user?.user_metadata?.username||user?.user_metadata?.name||user?.email?.split("@")[0]||"Пользователь";
+
+function message(el,text,type="error"){
+  if($(el))$(el).innerHTML=`<div class="${type==="success"?"auth-success":"auth-error"}">${esc(text)}</div>`;
+}
+function auth(form){
+  ["loginForm","registerForm","forgotForm","resetForm"].forEach(hide);
+  show(form);hide("app");show("authScreen");
+}
+function tabs(login){
+  $("loginTab").classList.toggle("active",login);
+  $("registerTab").classList.toggle("active",!login);
+}
+$("loginTab").onclick=()=>{tabs(true);auth("loginForm")};
+$("registerTab").onclick=()=>{tabs(false);auth("registerForm")};
+$("forgotBtn").onclick=()=>auth("forgotForm");
+$("backToLoginBtn").onclick=()=>{tabs(true);auth("loginForm")};
+
+async function enter(session){
+  if(!session?.user)return;
+  if(busy)return;
+  busy=true;user=session.user;
+  hide("authScreen");show("app");
+  loadLocal();
+  await loadCloud();
+  profile();renderTasks();update();home();
+  busy=false;
 }
 
-.demo-task-number {
-  min-height: 54px;
-  border: 1px solid #e7e0f5;
-  background: #fff;
-  border-radius: 14px;
-  color: var(--purple2);
-  font-weight: 850;
-  box-shadow: 0 4px 12px rgba(117,91,174,.07);
+async function login(){
+  const email=$("loginEmail").value.trim();
+  const password=$("loginPassword").value;
+  if(!email||!password)return message("loginMessage","Введите email и пароль.");
+  const b=$("loginBtn");b.disabled=true;b.textContent="Входим...";
+  try{
+    const r=await sb.auth.signInWithPassword({email,password});
+    if(r.error)throw r.error;
+    if(!r.data.session)throw new Error("Сессия не создана. Если аккаунт новый, сначала подтверди email.");
+    await enter(r.data.session);
+  }catch(e){
+    console.error(e);
+    let m=e.message||"Не удалось войти.";
+    if(e.code==="invalid_credentials")m="Неверный email или пароль.";
+    if(e.code==="email_not_confirmed")m="Сначала подтверди email через письмо.";
+    message("loginMessage",m);
+  }finally{
+    b.disabled=false;b.textContent="Войти";
+  }
+}
+$("loginBtn").onclick=login;
+$("loginPassword").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+
+$("registerBtn").onclick=async()=>{
+  const n=$("registerUsername").value.trim();
+  const email=$("registerEmail").value.trim();
+  const p=$("registerPassword").value;
+  const p2=$("registerPassword2").value;
+  if(!n)return message("registerMessage","Введите никнейм.");
+  if(!email)return message("registerMessage","Введите email.");
+  if(p.length<6)return message("registerMessage","Пароль должен содержать минимум 6 символов.");
+  if(p!==p2)return message("registerMessage","Пароли не совпадают.");
+  const b=$("registerBtn");b.disabled=true;b.textContent="Создаём аккаунт...";
+  try{
+    const r=await sb.auth.signUp({email,password:p,options:{data:{username:n},emailRedirectTo:REDIRECT}});
+    if(r.error)throw r.error;
+    if(r.data.session)await enter(r.data.session);
+    else message("registerMessage","Аккаунт создан! Проверь почту и перейди по ссылке подтверждения.","success");
+  }catch(e){
+    message("registerMessage",e.message||"Не удалось создать аккаунт.");
+  }finally{
+    b.disabled=false;b.textContent="Создать аккаунт";
+  }
+};
+
+$("sendResetBtn").onclick=async()=>{
+  const email=$("forgotEmail").value.trim();
+  if(!email)return message("forgotMessage","Введите email.");
+  const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:REDIRECT});
+  if(r.error)message("forgotMessage",r.error.message);
+  else message("forgotMessage","Письмо для восстановления отправлено на почту.","success");
+};
+
+$("updatePasswordBtn").onclick=async()=>{
+  const a=$("newPassword").value,b=$("newPassword2").value;
+  if(a.length<6)return message("resetMessage","Пароль должен содержать минимум 6 символов.");
+  if(a!==b)return message("resetMessage","Пароли не совпадают.");
+  const r=await sb.auth.updateUser({password:a});
+  if(r.error)return message("resetMessage",r.error.message);
+  message("resetMessage","Пароль изменён.","success");
+  setTimeout(()=>{tabs(true);auth("loginForm")},1000);
+};
+
+function profile(){
+  const n=uname(),i=n.trim()[0]?.toUpperCase()||"П";
+  $("miniName").textContent=n;
+  $("profileName").textContent=n;
+  $("profileEmail").textContent=user?.email||"";
+  $("miniAvatar").textContent=i;
+  $("bigAvatar").textContent=i;
+}
+$("editProfileBtn").onclick=()=>{
+  $("profileEdit").classList.toggle("active");
+  $("newUsername").value=uname();
+};
+$("saveUsernameBtn").onclick=async()=>{
+  const n=$("newUsername").value.trim();
+  if(!n)return alert("Введите никнейм.");
+  const r=await sb.auth.updateUser({data:{username:n}});
+  if(r.error)return alert(r.error.message);
+  user=r.data.user;profile();
+  $("profileEdit").classList.remove("active");
+};
+
+function key(){return user?`oge_english_tracker_attempts_${user.id}`:null}
+function loadLocal(){
+  try{
+    attempts=JSON.parse(localStorage.getItem(key())||"[]");
+    if(!Array.isArray(attempts))attempts=[];
+  }catch{attempts=[]}
+}
+function saveLocal(){
+  if(key())localStorage.setItem(key(),JSON.stringify(attempts));
 }
 
-.demo-task-number.status-correct {
-  background: #e8faef;
-  border-color: #8ed9ad;
-  color: #32835d;
+async function loadCloud(){
+  if(!user)return;
+  let got=false;
+  try{
+    const r=await sb.from("attempt_history").select("id,task_id,result,reason,created_at").eq("user_id",user.id).order("created_at",{ascending:true});
+    if(!r.error){
+      attempts=(r.data||[]).map(x=>({dbId:x.id,taskId:String(x.task_id),result:x.result,reason:x.reason||"",date:x.created_at}));
+      got=true;
+    }
+  }catch(e){}
+  if(!got){
+    try{
+      const r=await sb.from("progress").select("task_id,completed,updated_at,created_at").eq("user_id",user.id);
+      if(!r.error){
+        const ids=new Set(attempts.map(a=>`${a.taskId}|${a.result}`));
+        (r.data||[]).forEach(x=>{
+          if(x.completed&&!ids.has(`${x.task_id}|correct`)){
+            attempts.push({taskId:String(x.task_id),result:"correct",reason:"",date:x.updated_at||x.created_at||new Date().toISOString()});
+          }
+        });
+      }
+    }catch(e){}
+  }
+  saveLocal();
 }
 
-.demo-task-number.status-wrong {
-  background: #fff0f0;
-  border-color: #f1b0b0;
-  color: #b65050;
+function latest(tid){
+  const h=attempts.filter(a=>String(a.taskId)===String(tid)).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  return h.at(-1);
+}
+function done(tid){return latest(tid)?.result==="correct"}
+
+function update(){
+  const a=all(),total=a.length||95;
+  const d=a.filter(t=>done(id(t))).length;
+  const regularAttempts=attempts.filter(a=>!String(a.taskId).startsWith("demo-"));
+  $("progressNumber").textContent=`${d} / ${total}`;
+  $("progressFill").style.width=`${total?d/total*100:0}%`;
+  $("statTotal").textContent=regularAttempts.length;
+  $("statCorrect").textContent=regularAttempts.filter(a=>a.result==="correct").length;
+  $("statWrong").textContent=regularAttempts.filter(a=>a.result==="wrong").length;
+  $("statPercent").textContent=`${regularAttempts.length?Math.round(regularAttempts.filter(a=>a.result==="correct").length/regularAttempts.length*100):0}%`;
+  if(!$("demoScreen").classList.contains("hidden"))renderDemoTasks();
 }
 
-.demo-status {
-  display: block;
-  font-size: 10px;
-  font-weight: 700;
-  margin-top: 3px;
+async function saveAttempt(t,result,reason){
+  const row={taskId:id(t),result,reason:reason||"",date:new Date().toISOString()};
+  attempts.push(row);saveLocal();update();history();errors();
+  if(isDemoTask(t))return;
+  try{
+    const r=await sb.from("attempt_history").insert({user_id:user.id,task_id:row.taskId,result:row.result,reason:row.reason,created_at:row.date});
+    if(r.error)console.warn("attempt_history:",r.error.message);
+  }catch(e){}
+  try{
+    const q=await sb.from("progress").select("id").eq("user_id",user.id).eq("task_id",row.taskId).order("id",{ascending:false}).limit(1);
+    if(!q.error&&q.data?.length){
+      await sb.from("progress").update({completed:result==="correct",updated_at:row.date}).eq("id",q.data[0].id);
+    }else if(!q.error){
+      await sb.from("progress").insert({user_id:user.id,task_id:row.taskId,completed:result==="correct",updated_at:row.date});
+    }
+  }catch(e){console.warn(e)}
 }
+
+function screens(){
+  ["homeScreen","tasksScreen","demoScreen","variantScreen","statsScreen","errorsScreen","reportScreen","profileScreen"].forEach(hide);
+}
+function home(){screens();show("homeScreen");update()}
+
+$("profileBtn").onclick=()=>{screens();show("profileScreen");profile()};
+$("profileBack").onclick=home;
+$("tasksMenu").onclick=()=>{screens();show("tasksScreen");renderTasks()};
+$("tasksBack").onclick=home;
+$("demoMenu").onclick=()=>{screens();show("demoScreen");renderDemoTasks()};
+$("demoBack").onclick=home;
+$("statsMenu").onclick=()=>{screens();show("statsScreen");update()};
+$("statsBack").onclick=home;
+$("errorsMenu").onclick=()=>{screens();show("errorsScreen");errors()};
+$("errorsBack").onclick=home;
+$("reportMenu").onclick=()=>{screens();show("reportScreen");report()};
+$("reportBack").onclick=home;
+$("variantBack").onclick=()=>{screens();show("tasksScreen");renderTasks()};
+
+function isDemoTask(t){return String(id(t)).startsWith("demo-")}
+
+function renderDemoTasks(){
+  const c=$("demoTasksContainer");
+  if(!c)return;
+  c.innerHTML="";
+  for(let n=1;n<=34;n++){
+    const demoTask={id:`demo-${n}`,variant:"Демоверсия",number:n,code:"—",text:`Отметь статус выполнения задания №${n}.`};
+    const h=attempts.filter(a=>String(a.taskId)===demoTask.id).sort((a,b)=>new Date(a.date)-new Date(b.date));
+    const latestDemo=h.at(-1);
+    const b=document.createElement("button");
+    b.className="demo-task-number"+(latestDemo?.result==="correct"?" status-correct":latestDemo?.result==="wrong"?" status-wrong":"");
+    b.innerHTML=`${n}<span class="demo-status">${latestDemo?.result==="correct"?"✓ Выполнено":latestDemo?.result==="wrong"?"✕ Ошибка":"Не отмечено"}</span>`;
+    b.onclick=()=>openDemoTask(demoTask);
+    c.appendChild(b);
+  }
+}
+
+function openDemoTask(t){
+  task=t;
+  $("modalCode").textContent=`Демоверсия · Задание ${num(t)}`;
+  $("modalQuestion").textContent=`Отметь статус выполнения задания №${num(t)}.`;
+  $("wrongReason").value="";
+  hide("wrongReasonBox");
+  history();
+  show("taskModal");
+}
+
+function renderTasks(){
+  const c=$("tasksContainer");c.innerHTML="";
+  const groups=[["Задания 1–5",1,5],["Задания 6–11",6,11],["Задание 12",12,12],["Задания 13–19",13,19],["Задания 20–28",20,28],["Задания 29–34",29,34]];
+  groups.forEach(g=>{
+    const ts=all().filter(t=>+num(t)>=g[1]&&+num(t)<=g[2]);
+    if(!ts.length)return;
+    const b=document.createElement("div");b.className="task-block";
+    b.innerHTML=`<div class="task-block-title">${g[0]}</div>`;
+    const l=document.createElement("div");l.className="variant-list";
+    [...new Set(ts.map(v))].filter(Boolean).sort((a,b)=>+a-+b).forEach(x=>{
+      const q=document.createElement("button");q.className="variant-btn";q.textContent=`Вариант ${x}`;
+      q.onclick=()=>openVariant(x,g[1],g[2]);l.appendChild(q);
+    });
+    b.appendChild(l);c.appendChild(b);
+  });
+}
+
+function openVariant(x,min,max){
+  variant=String(x);screens();show("variantScreen");
+  $("variantTitle").textContent=`Вариант ${x}`;
+  const c=$("variantTasks");c.innerHTML="";
+  const ts=all().filter(t=>v(t)===String(x)&&+num(t)>=min&&+num(t)<=max).sort((a,b)=>+num(a)-+num(b));
+  const b=document.createElement("div");b.className="task-block";
+  const l=document.createElement("div");l.className="task-buttons";
+  ts.forEach(t=>{
+    const q=document.createElement("button");
+    q.className="task-number"+(done(id(t))?" done":"");
+    q.textContent=num(t);q.onclick=()=>openTask(t);l.appendChild(q);
+  });
+  b.appendChild(l);c.appendChild(b);
+}
+
+function openTask(t){
+  task=t;
+  $("modalCode").textContent=`Вариант ${v(t)} · Задание ${num(t)} · Код ${code(t)}`;
+  $("modalQuestion").textContent=txt(t);
+  $("wrongReason").value="";
+  hide("wrongReasonBox");history();show("taskModal");
+}
+
+$("modalClose").onclick=()=>hide("taskModal");
+$("correctBtn").onclick=async()=>{if(task)await saveAttempt(task,"correct","")};
+$("wrongBtn").onclick=()=>show("wrongReasonBox");
+$("saveWrongBtn").onclick=async()=>{
+  if(task)await saveAttempt(task,"wrong",$("wrongReason").value.trim()||"Причина не указана");
+  hide("wrongReasonBox");
+};
+    function date(d){
+  return new Date(d).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});
+}
+
+function history(){
+  const c=$("taskHistory");
+  if(!c||!task)return;
+  c.innerHTML="";
+  const h=attempts.filter(a=>String(a.taskId)===id(task)).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(!h.length){
+    c.innerHTML='<div class="muted">Попыток пока нет.</div>';
+    return;
+  }
+  h.forEach(a=>{
+    const d=document.createElement("div");
+    d.className="history-item";
+    d.innerHTML=`<b>${a.result==="correct"?"✓ Правильно":"✕ Ошибка"}</b><div class="muted">${date(a.date)}</div>${a.reason?`<div>${esc(a.reason)}</div>`:""}`;
+    c.appendChild(d);
+  });
+}
+
+function errors(){
+  const c=$("errorsContainer");
+  c.innerHTML="";
+  const h=attempts.filter(a=>a.result==="wrong"&&!String(a.taskId).startsWith("demo-")).slice().reverse();
+  if(!h.length){
+    c.innerHTML='<div class="task-block">Ошибок пока нет 🎉</div>';
+    return;
+  }
+  h.forEach(a=>{
+    const t=all().find(x=>id(x)===a.taskId);
+    const d=document.createElement("div");
+    d.className="task-block";
+    d.innerHTML=`<b>${t?`Вариант ${v(t)} · Задание ${num(t)} · Код ${code(t)}`:`Задание ${esc(a.taskId)}`}</b><div style="margin-top:7px">${esc(a.reason)}</div><div class="muted">${date(a.date)}</div>`;
+    if(t)d.onclick=()=>openTask(t);
+    c.appendChild(d);
+  });
+}
+
+function report(){
+  const regularAttempts=attempts.filter(a=>!String(a.taskId).startsWith("demo-"));
+  const correct=regularAttempts.filter(a=>a.result==="correct").length;
+  const wrong=regularAttempts.filter(a=>a.result==="wrong").length;
+  $("reportText").innerHTML=`<b>${esc(uname())}</b><div class="muted">${esc(user?.email||"")}</div><br>Всего попыток: ${regularAttempts.length}<br>Правильных: ${correct}<br>Ошибок: ${wrong}<br>Процент правильных: ${regularAttempts.length?Math.round(correct/regularAttempts.length*100):0}%`;
+  const c=$("reportHistory");
+  c.innerHTML="";
+  regularAttempts.slice().reverse().forEach(a=>{
+    const t=all().find(x=>id(x)===a.taskId);
+    const d=document.createElement("div");
+    d.className="report-error";
+    d.innerHTML=`<b>${t?`Вариант ${v(t)} · Задание ${num(t)} · Код ${code(t)}`:esc(a.taskId)}</b><div>${a.result==="correct"?"✓ Правильно":"✕ Ошибка"}</div>${a.reason?`<div>${esc(a.reason)}</div>`:""}<div class="muted">${date(a.date)}</div>`;
+    c.appendChild(d);
+  });
+}
+$("printBtn").onclick=()=>window.print();
+
+$("searchInput").onkeydown=e=>{
+  if(e.key!=="Enter")return;
+  const q=e.target.value.trim().toLowerCase();
+  const t=all().find(t=>`${v(t)}.${num(t)}`.toLowerCase()===q||id(t).toLowerCase()===q||code(t).toLowerCase()===q);
+  if(t)openTask(t);
+  else alert("Задание не найдено.");
+};
+
+$("logoutBtn").onclick=async()=>{
+  await sb.auth.signOut();
+  user=null;attempts=[];task=null;
+  hide("app");hide("taskModal");tabs(true);auth("loginForm");
+};
+
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==="PASSWORD_RECOVERY"){
+    auth("resetForm");
+    return;
+  }
+  if(event==="SIGNED_OUT"){
+    user=null;attempts=[];hide("app");auth("loginForm");
+    return;
+  }
+  if(session?.user&&!user)enter(session);
+});
+
+(async()=>{
+  try{
+    const r=await sb.auth.getSession();
+    if(r.data?.session?.user)await enter(r.data.session);
+    else auth("loginForm");
+  }catch(e){
+    console.error(e);
+    auth("loginForm");
+    message("loginMessage","Не удалось проверить сессию. Обнови страницу и попробуй войти ещё раз.");
+  }
+})();
+});
+</script>
+</body>
+</html>
