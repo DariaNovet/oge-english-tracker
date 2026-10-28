@@ -5012,16 +5012,7 @@
             }
         }).getBlob(function (blob) {
             const fileName = `oge-fipi-report-${safeNickname}.pdf`;
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            a.target = "_blank";
-            a.rel = "noopener";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(() => URL.revokeObjectURL(url), 5000);
+            saveGeneratedPdf(blob, fileName);
         });
     }
 
@@ -5045,6 +5036,77 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+    }
+
+    function isTelegramMiniApp() {
+        try {
+            return !!(window.Telegram && Telegram.WebApp && Telegram.WebApp.initData !== undefined);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /** Надёжное сохранение сгенерированного PDF (в т.ч. в Telegram Mini App) */
+    async function saveGeneratedPdf(blob, fileName) {
+        const file = new File([blob], fileName, { type: "application/pdf" });
+
+        // 1) Web Share API — часто работает в мобильном Telegram
+        try {
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: fileName,
+                    text: "Отчёт OGE English Tracker"
+                });
+                return;
+            }
+        } catch (e) {
+            // пользователь отменил или share недоступен — идём дальше
+            if (e && e.name === "AbortError") {
+                return;
+            }
+        }
+
+        const url = URL.createObjectURL(blob);
+
+        // 2) Классическое скачивание через <a download>
+        try {
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            a.target = "_blank";
+            a.rel = "noopener";
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (e) {}
+
+        // 3) Запасной путь: открыть blob в новой вкладке (можно «Поделиться» / «Сохранить»)
+        try {
+            const opened = window.open(url, "_blank");
+            if (!opened && isTelegramMiniApp()) {
+                alert(
+                    "Если файл не сохранился, нажми «⋯» вверху → «Открыть в браузере» и скачай отчёт там. В браузере скачивание всегда стабильное."
+                );
+            } else if (isTelegramMiniApp()) {
+                setTimeout(function () {
+                    alert(
+                        "Отчёт сформирован. Если скачивание не началось автоматически — в открывшемся окне нажми «Поделиться» или «Сохранить», либо открой трекер через «⋯ → Открыть в браузере»."
+                    );
+                }, 400);
+            }
+        } catch (e) {
+            if (isTelegramMiniApp()) {
+                alert(
+                    "Не удалось скачать внутри Telegram. Нажми «⋯» → «Открыть в браузере» и скачай отчёт оттуда."
+                );
+            }
+        }
+
+        setTimeout(function () {
+            try { URL.revokeObjectURL(url); } catch (e) {}
+        }, 60000);
     }
 
     function downloadDemoTasksPdf() {
@@ -5145,16 +5207,7 @@
             }
         }).getBlob(function (blob) {
             const fileName = `oge-demo-report-${safeNickname}.pdf`;
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            a.target = "_blank";
-            a.rel = "noopener";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(() => URL.revokeObjectURL(url), 5000);
+            saveGeneratedPdf(blob, fileName);
         });
     }
 
