@@ -1749,6 +1749,9 @@
                         >
                             Скачать задания демоверсии (PDF)
                         </button>
+                        <p style="margin: 8px 0 0; font-size: 12px; color: #8a7f96; line-height: 1.4;">
+                            Файл откроется в браузере — сохраните его там.
+                        </p>
                     </div>
 
                 </div>
@@ -1870,6 +1873,7 @@
                         >
                             Скачать отчёт (статистика демо)
                         </button>
+
                     </div>
 
                 </div>
@@ -4932,6 +4936,14 @@
 
 
     function downloadPdf() {
+        // В Telegram Mini App на телефоне blob-скачивание не работает —
+        // один рабочий путь: открыть трекер в обычном браузере и нажать кнопку там.
+        try {
+            if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initData) {
+                Telegram.WebApp.openLink(window.location.href.split("#")[0]);
+                return;
+            }
+        } catch (e) {}
 
         if (typeof pdfMake === "undefined") {
             alert("PDF-библиотека не загрузилась.");
@@ -5010,110 +5022,32 @@
                 heading: { fontSize: 14, bold: true, margin: [0, 10, 0, 8] },
                 taskHeading: { fontSize: 10, bold: true, margin: [0, 8, 0, 3] }
             }
-        }).getBlob(function (blob) {
-            const fileName = `oge-fipi-report-${safeNickname}.pdf`;
-            saveGeneratedPdf(blob, fileName);
-        });
+        }).download(`oge-fipi-report-${safeNickname}.pdf`);
     }
 
 
 
-    const DEMO_TASKS_PDF = "./demo-oge-2027.pdf";
-
-    function openFileForDownload(url) {
-        const abs = new URL(url, window.location.href).href;
-        try {
-            if (window.Telegram && Telegram.WebApp && typeof Telegram.WebApp.openLink === "function") {
-                Telegram.WebApp.openLink(abs);
-                return;
-            }
-        } catch (e) {}
-        const a = document.createElement("a");
-        a.href = abs;
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.download = "";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
-    function isTelegramMiniApp() {
-        try {
-            return !!(window.Telegram && Telegram.WebApp && Telegram.WebApp.initData !== undefined);
-        } catch (e) {
-            return false;
-        }
-    }
-
-    /** Надёжное сохранение сгенерированного PDF (в т.ч. в Telegram Mini App) */
-    async function saveGeneratedPdf(blob, fileName) {
-        const file = new File([blob], fileName, { type: "application/pdf" });
-
-        // 1) Web Share API — часто работает в мобильном Telegram
-        try {
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    files: [file],
-                    title: fileName,
-                    text: "Отчёт OGE English Tracker"
-                });
-                return;
-            }
-        } catch (e) {
-            // пользователь отменил или share недоступен — идём дальше
-            if (e && e.name === "AbortError") {
-                return;
-            }
-        }
-
-        const url = URL.createObjectURL(blob);
-
-        // 2) Классическое скачивание через <a download>
-        try {
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            a.target = "_blank";
-            a.rel = "noopener";
-            a.style.display = "none";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        } catch (e) {}
-
-        // 3) Запасной путь: открыть blob в новой вкладке (можно «Поделиться» / «Сохранить»)
-        try {
-            const opened = window.open(url, "_blank");
-            if (!opened && isTelegramMiniApp()) {
-                alert(
-                    "Если файл не сохранился, нажми «⋯» вверху → «Открыть в браузере» и скачай отчёт там. В браузере скачивание всегда стабильное."
-                );
-            } else if (isTelegramMiniApp()) {
-                setTimeout(function () {
-                    alert(
-                        "Отчёт сформирован. Если скачивание не началось автоматически — в открывшемся окне нажми «Поделиться» или «Сохранить», либо открой трекер через «⋯ → Открыть в браузере»."
-                    );
-                }, 400);
-            }
-        } catch (e) {
-            if (isTelegramMiniApp()) {
-                alert(
-                    "Не удалось скачать внутри Telegram. Нажми «⋯» → «Открыть в браузере» и скачай отчёт оттуда."
-                );
-            }
-        }
-
-        setTimeout(function () {
-            try { URL.revokeObjectURL(url); } catch (e) {}
-        }, 60000);
-    }
+    // Один рабочий способ для Telegram/телефона: открыть PDF по HTTPS во внешнем браузере
+    const DEMO_TASKS_PDF_URL = "https://darianovet.github.io/oge-english-tracker/demo-oge-2027.pdf";
 
     function downloadDemoTasksPdf() {
-        openFileForDownload(DEMO_TASKS_PDF);
+        const url = DEMO_TASKS_PDF_URL;
+        try {
+            if (window.Telegram && Telegram.WebApp && typeof Telegram.WebApp.openLink === "function") {
+                Telegram.WebApp.openLink(url);
+                return;
+            }
+        } catch (e) {}
+        window.location.href = url;
     }
 
     function downloadDemoPdf() {
+        try {
+            if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initData) {
+                Telegram.WebApp.openLink(window.location.href.split("#")[0]);
+                return;
+            }
+        } catch (e) {}
 
         if (typeof pdfMake === "undefined") {
             alert("PDF-библиотека не загрузилась.");
@@ -5205,10 +5139,7 @@
                 heading: { fontSize: 14, bold: true, margin: [0, 10, 0, 8] },
                 taskHeading: { fontSize: 10, bold: true, margin: [0, 8, 0, 3] }
             }
-        }).getBlob(function (blob) {
-            const fileName = `oge-demo-report-${safeNickname}.pdf`;
-            saveGeneratedPdf(blob, fileName);
-        });
+        }).download(`oge-demo-report-${safeNickname}.pdf`);
     }
 
 
