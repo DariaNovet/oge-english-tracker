@@ -1749,9 +1749,6 @@
                         >
                             Скачать задания демоверсии (PDF)
                         </button>
-                        <p style="margin: 8px 0 0; font-size: 12px; color: #8a7f96; line-height: 1.4;">
-                            Файл откроется в браузере — сохраните его там.
-                        </p>
                     </div>
 
                 </div>
@@ -1873,7 +1870,6 @@
                         >
                             Скачать отчёт (статистика демо)
                         </button>
-
                     </div>
 
                 </div>
@@ -4936,14 +4932,6 @@
 
 
     function downloadPdf() {
-        // В Telegram Mini App на телефоне blob-скачивание не работает —
-        // один рабочий путь: открыть трекер в обычном браузере и нажать кнопку там.
-        try {
-            if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initData) {
-                Telegram.WebApp.openLink(window.location.href.split("#")[0]);
-                return;
-            }
-        } catch (e) {}
 
         if (typeof pdfMake === "undefined") {
             alert("PDF-библиотека не загрузилась.");
@@ -5022,32 +5010,48 @@
                 heading: { fontSize: 14, bold: true, margin: [0, 10, 0, 8] },
                 taskHeading: { fontSize: 10, bold: true, margin: [0, 8, 0, 3] }
             }
-        }).download(`oge-fipi-report-${safeNickname}.pdf`);
+        }).getBlob(function (blob) {
+            const fileName = `oge-fipi-report-${safeNickname}.pdf`;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            a.target = "_blank";
+            a.rel = "noopener";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+        });
     }
 
 
 
-    // Один рабочий способ для Telegram/телефона: открыть PDF по HTTPS во внешнем браузере
-    const DEMO_TASKS_PDF_URL = "https://darianovet.github.io/oge-english-tracker/demo-oge-2027.pdf";
+    const DEMO_TASKS_PDF = "./demo-oge-2027.pdf";
 
-    function downloadDemoTasksPdf() {
-        const url = DEMO_TASKS_PDF_URL;
+    function openFileForDownload(url) {
+        const abs = new URL(url, window.location.href).href;
         try {
             if (window.Telegram && Telegram.WebApp && typeof Telegram.WebApp.openLink === "function") {
-                Telegram.WebApp.openLink(url);
+                Telegram.WebApp.openLink(abs);
                 return;
             }
         } catch (e) {}
-        window.location.href = url;
+        const a = document.createElement("a");
+        a.href = abs;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.download = "";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function downloadDemoTasksPdf() {
+        openFileForDownload(DEMO_TASKS_PDF);
     }
 
     function downloadDemoPdf() {
-        try {
-            if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initData) {
-                Telegram.WebApp.openLink(window.location.href.split("#")[0]);
-                return;
-            }
-        } catch (e) {}
 
         if (typeof pdfMake === "undefined") {
             alert("PDF-библиотека не загрузилась.");
@@ -5139,7 +5143,19 @@
                 heading: { fontSize: 14, bold: true, margin: [0, 10, 0, 8] },
                 taskHeading: { fontSize: 10, bold: true, margin: [0, 8, 0, 3] }
             }
-        }).download(`oge-demo-report-${safeNickname}.pdf`);
+        }).getBlob(function (blob) {
+            const fileName = `oge-demo-report-${safeNickname}.pdf`;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            a.target = "_blank";
+            a.rel = "noopener";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+        });
     }
 
 
